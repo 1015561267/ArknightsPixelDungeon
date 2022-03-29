@@ -15,14 +15,20 @@ Again in lack of almost everything,from pictures to data and design,even time to
 
 A Roguelike RPG, with randomly generated levels, items, enemies, and traps!
 Based on the source code of Pixel Dungeon, by Watabou.
+
 Look below for compilation instructions.
+
 Shattered Pixel Dungeon on Google Play:
 https://play.google.com/store/apps/details?id=pixeldungeonofteller
+
 On Amazon:
 https://www.amazon.com/Shattered-Pixel-Dungeon/dp/B00OH2C21M
+
 On F-Droid (Which compiles directly from this source code):
 https://f-droid.org/repository/browse/?fdid=pixeldungeonofteller
+
 Official website and blog:
 http://www.shatteredpixel.com
+
 Source code of original Pixel Dungeon (adapted to use newer build tools):
 https://github.com/00-Evan/pixel-dungeon-gradle
