@@ -1,0 +1,52 @@
+buildscript {
+    
+
+    repositories {
+        google()
+        mavenCentral()
+        mavenLocal()
+        gradlePluginPortal()
+        jcenter()
+        maven {
+            allowInsecureProtocol = true
+            url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.4'
+        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.13'
+    }
+}
+
+allprojects {
+    ext {
+        appName = "Arknights Pixel Dungeon"
+        appPackageName = 'com.unifier.arknightspixeldungeon'
+
+        appVersionCode = 1
+        appVersionName = 'Arknights PD Demo'
+
+        appJavaCompatibility = JavaVersion.VERSION_1_8
+
+        appAndroidCompileSDK = 30
+        appAndroidMinSDK = 9
+        appAndroidTargetSDK = 30
+
+        gdxVersion = '1.9.10'
+    }
+
+    version = appVersionName
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+        jcenter()
+        gradlePluginPortal()
+        //maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        //maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { allowInsecureProtocol = true
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    }
+}
