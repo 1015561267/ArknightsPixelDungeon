@@ -26,6 +26,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.effects.DarkBlock;
 import com.unifier.arknightspixeldungeon.effects.EmoIcon;
+import com.unifier.arknightspixeldungeon.effects.Flare;
 import com.unifier.arknightspixeldungeon.effects.FloatingText;
 import com.unifier.arknightspixeldungeon.effects.IceBlock;
 import com.unifier.arknightspixeldungeon.effects.Speck;
@@ -671,6 +672,30 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			
 		}
 	}
+
+    protected Flare aura;
+
+    public void aura( int color ){
+        if (aura != null){
+            aura.killAndErase();
+        }
+        float size = Math.max(width(), height());
+        size = Math.max(size+4, 16);
+        aura = new Flare(5, size);
+        aura.angularSpeed = 90;
+        aura.color(color, true);
+
+        if (parent != null) {
+            aura.show(this, 0);
+        }
+    }
+
+    public void clearAura(){
+        if (aura != null){
+            aura.killAndErase();
+            aura = null;
+        }
+    }
 
 	private static class JumpTweener extends Tweener {
 

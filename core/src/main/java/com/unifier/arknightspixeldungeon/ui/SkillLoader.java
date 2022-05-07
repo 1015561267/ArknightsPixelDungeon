@@ -29,13 +29,14 @@ public class SkillLoader extends Tag{
 
     public SkillLoader(HeroSkill loader) {
 
-        super(0x00FFFFFF);
+        super(0xAA222222);
 
         skill = loader;
         icon = skill == null ? new ItemSprite(ItemSpriteSheet.NULLWARN ) : skill.skillIcon();
         add(icon);
 
         coolDownBlock = new ColorBlock(32f,32f,0xAA222222);
+        add(coolDownBlock);
 
         setSize( 32f, 32f );
     }
@@ -79,18 +80,28 @@ public class SkillLoader extends Tag{
 
         coolDownBlock.x = bg.x;
         coolDownBlock.y = bg.y;
-        coolDownBlock.scale.x = 1.0f;
+        coolDownBlock.scale.y = -1.0f;
     }
 
     @Override
     public void update() {
         super.update();
 
-        cooldownRatio = skill == null ? 1 : skill.cooldownRatio();
+        if(!skill.activated())
+        {
+            bg.lightness(0.25f);
+            icon.lightness(0.75f);
+        }
+        else
+        {
+            bg.resetColor();
+            icon.resetColor();
+        }
 
+        cooldownRatio = skill == null ? 1 : skill.cooldownRatio();
         coolDownBlock.size(bg.width(),bg.height() * cooldownRatio);
 
-        if (Dungeon.hero.isAlive() && cooldownRatio==0) {
+        if ( Dungeon.hero.isAlive() && cooldownRatio==0 ) {
             enable( Dungeon.hero.ready );
         } else {
             enable( false );

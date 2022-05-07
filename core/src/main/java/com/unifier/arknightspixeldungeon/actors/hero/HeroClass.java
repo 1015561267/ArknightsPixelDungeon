@@ -31,6 +31,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
+import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
 import com.unifier.arknightspixeldungeon.items.bags.PotionBandolier;
@@ -45,9 +46,11 @@ import com.unifier.arknightspixeldungeon.items.rings.RingOfHaste;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicalInfusion;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfRage;
+import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.unifier.arknightspixeldungeon.items.stones.StoneOfAugmentation;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfMagicMissile;
+import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Dagger;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Knuckles;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MagesStaff;
@@ -121,11 +124,43 @@ public enum HeroClass {
             new ScrollOfMagicMapping().identify().collect();
             new ScrollOfMagicMapping().identify().collect();
             new ScrollOfRage().identify().collect();
+            new SmallRation().collect();
+            new ScrollOfRemoveCurse().identify().collect();
         }
 
         new ScrollOfRage().identify().collect();
 
         new TomeOfMastery().collect();
+
+        WornShortsword sword = new WornShortsword();
+        sword.cursed = true;
+        sword.enchant(Weapon.Enchantment.randomCurse());
+        sword.collect();
+
+        sword = new WornShortsword();
+        sword.cursed = true;
+        sword.enchant(Weapon.Enchantment.randomCurse());
+        sword.collect();
+
+        sword = new WornShortsword();
+        sword.cursed = true;
+        sword.enchant(Weapon.Enchantment.randomCurse());
+        sword.collect();
+
+        ClothArmor armor = new ClothArmor();
+        armor.cursed = true;
+        armor.inscribe(Armor.Glyph.randomCurse());
+        armor.collect();
+
+        armor = new ClothArmor();
+        armor.cursed = true;
+        armor.inscribe(Armor.Glyph.randomCurse());
+        armor.collect();
+
+        armor = new ClothArmor();
+        armor.cursed = true;
+        armor.inscribe(Armor.Glyph.randomCurse());
+        armor.collect();
 	}
 
 	public Badges.Badge masteryBadge() {

@@ -34,7 +34,9 @@ public class Regeneration extends Buff {
 	}
 	
 	private static final float REGENERATION_DELAY = 10;
-	
+
+
+
 	@Override
 	public boolean act() {
 		if (target.isAlive()) {
@@ -42,8 +44,10 @@ public class Regeneration extends Buff {
 			if (target.HP < regencap() && !((Hero)target).isStarving()) {
 				LockedFloor lock = target.buff(LockedFloor.class);
 				if (target.HP > 0 && (lock == null || lock.regenOn())) {
-					target.HP += 1;
-					if (target.HP == regencap()) {
+
+				    target.heal(this,1);
+
+                    if (target.HP == regencap()) {
 						((Hero) target).resting = false;
 					}
 				}

@@ -179,4 +179,9 @@ public class TalentsPane extends ScrollPane {
             }
         }
     }
+
+    public float middleLine()
+    {
+        return points.get(2).x + points.get(2).width()/2;
+    }
 }

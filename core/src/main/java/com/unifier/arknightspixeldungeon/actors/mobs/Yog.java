@@ -98,8 +98,8 @@ public class Yog extends Mob {
 	@Override
 	protected boolean act() {
 		//heals 1 health per turn
-		HP = Math.min( HT, HP+1 );
-
+        heal(null,1);
+		//HP = Math.min( HT, HP+1 );
 		return super.act();
 	}
 
@@ -248,7 +248,8 @@ public class Yog extends Mob {
 			
 			if (Dungeon.level.water[pos] && HP < HT) {
 				sprite.emitter().burst( ShadowParticle.UP, 2 );
-				HP += REGENERATION;
+				heal(null,REGENERATION);
+				//HP += REGENERATION;
 			}
 			
 			return super.act();

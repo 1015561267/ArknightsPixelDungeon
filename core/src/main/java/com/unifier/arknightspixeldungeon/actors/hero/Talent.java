@@ -1,9 +1,19 @@
 package com.unifier.arknightspixeldungeon.actors.hero;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.EmergencyRecoveryTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
+import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
+import com.unifier.arknightspixeldungeon.items.armor.Armor;
+import com.unifier.arknightspixeldungeon.items.food.Food;
+import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +67,22 @@ public enum Talent {
             }};
         }
     },
-    VIGILANCE(19 , 2),LAST_CHANCE(20,1,2),EMERGENCY_RECOVERY(21,2),
+    VIGILANCE(19 , 2){
+        @Override
+        public boolean PreconditionFulfilled() {
+            return Dungeon.hero.hasTalent(FAST_RECOVERY);
+        }
+    },LAST_CHANCE(20,1,2){
+        @Override
+        public boolean PreconditionFulfilled() {
+            return Dungeon.hero.hasTalent(FAST_RECOVERY);
+        }
+    },EMERGENCY_RECOVERY(21,2){
+        @Override
+        public boolean PreconditionFulfilled() {
+            return Dungeon.hero.hasTalent(FAST_RECOVERY);
+        }
+    },
     UNSHEATH(22,2), FLASH(23,2) {
         @Override
         public boolean PreconditionFulfilled() {
@@ -397,30 +422,6 @@ public enum Talent {
         return checkResult.AVAILABLE;
     }
 
-    public static void onTalentUpgraded(Hero hero, Talent talent) {
-        /*if(hero.heroClass == HeroClass.WARRIOR)
-        {
-            if(talent == Talent.SHEATHED_STRIKE)
-            {
-                hero.skill_1 =  new SheathedStrike();
-                hero.skill_1.attachTo(hero);
-                GameScene.scene.updateSkill(1,hero.skill_1);
-            }
-            else if(talent == Talent.UNSHEATH)
-            {
-                hero.skill_2 = new Unsheath();
-                hero.skill_2.attachTo(hero);
-                GameScene.scene.updateSkill(2,hero.skill_2);
-            }
-            else if(talent == Talent.SHADOWLESS)
-            {
-                hero.skill_3 = new Shadowless();
-                hero.skill_3.attachTo(hero);
-                GameScene.scene.updateSkill(3,hero.skill_3);
-            }
-        }**/
-    }
-
     public static final int MAX_TALENT_TIERS = 5;
 
     private static final String TALENT_TIER = "talents_tier_";
@@ -504,7 +505,72 @@ public enum Talent {
             default:break;
         }
     }
+
+    public static void onTalentUpgraded(Hero hero, Talent talent) {
+        if(talent == EMERGENCY_RECOVERY)
+        {
+            Buff.affect(hero, EmergencyRecoveryTracker.class);
+        }
+
+        else if(talent == LAST_CHANCE)
+        {
+            Buff.affect(hero,LastChanceTracker.class);
+        }
+    }
+
+    public static class LastChanceTracker extends Buff{};
+
+    public static void onFoodEaten( Hero hero, float foodVal, Item foodSource ){
+        if (hero.hasTalent( FAST_RECOVERY )){
+            //10%/20% HP healed,another 10% when below 30% health
+            int recovery = 0;
+            if (hero.HP <= hero.HT * 0.3f)
+            {
+                recovery += Math.ceil(hero.HT * 0.1f);
+            }
+            recovery += Math.ceil(hero.HT) * 0.1f * hero.pointsInTalent(FAST_RECOVERY);
+            hero.heal(FAST_RECOVERY,recovery);
+        }
+        if (hero.hasTalent(VIGILANCE)){
+            if (hero.cooldown() > 0) {
+                Buff.affect(hero, VigilanceModifier.class, Food.TIME_TO_EAT);
+            }
+        }
+    }
+
+    public static class VigilanceModifier extends FlavourBuff {//See hero.damage
+        { actPriority = HERO_PRIO+1; }
+    }
+
+    public static boolean onItemEquipped( Hero hero, Item item ){
+
+        if(item instanceof Weapon || item instanceof Armor)
+        {
+            if(hero.pointsInTalent(ARM_INTUITION) == 2 && !item.isIdentified() && item.cursed && Random.Float() <= 0.3f)
+            {
+                item.cursedKnown = true;
+                return false;
+            }
+            else {
+                item.identify();
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    public static int onAttackProc(Hero hero, Char enemy, int dmg ){
+        if (hero.hasTalent(Talent.PREEMPTIVE_STRIKE) && Random.Float() < 0.1f + 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)
+                && enemy instanceof Mob && enemy.HP >= Math.floor(enemy.HT * (0.9f - 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)))
+                && enemy.buff(PreemptiveStrikeUsedTracker.class) == null) // Have 30% possibility when enemy above 70%HP at level 1 and 50% possibility when enemy above 50%HP at level 2
+             {
+                Buff.affect(enemy, PreemptiveStrikeUsedTracker.class);
+                Buff.affect(Dungeon.hero, PreemptiveStrikeActiveTracker.class);//See Hero.attackDelay()
+             }
+        return dmg;
+    }
+    //Well damn the onAttackProc() cannot return things like you can have extra turns,I have to make two buffs,one show if the talent should work and the other inform that the talent effect should be in use
+    public static class PreemptiveStrikeUsedTracker extends Buff{};
+    public static class PreemptiveStrikeActiveTracker extends Buff{};
 }
-
-
-

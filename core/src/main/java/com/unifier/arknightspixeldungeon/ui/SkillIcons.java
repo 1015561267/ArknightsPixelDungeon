@@ -13,8 +13,8 @@ public class SkillIcons extends Image {
     public static final int NONE    = 31;
 
     public static final int SHEATHED_STRIKE   = 0;
-    public static final int UNSHEATH   = 21;
-    public static final int SHADOWLESS  = 40;
+    public static final int UNSHEATH   = 22;
+    public static final int SHADOWLESS  = 42;
 
     public SkillIcons(int number){
         super( Assets.TALENT_ICONS );

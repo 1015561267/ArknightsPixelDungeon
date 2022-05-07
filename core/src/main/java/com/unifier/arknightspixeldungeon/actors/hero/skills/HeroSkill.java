@@ -20,7 +20,7 @@ public abstract class HeroSkill extends Buff {
     }
 
     public Hero owner;
-    private float cooldown;
+    protected float cooldown;
     public int charge = 0;
 
     abstract public boolean activated();
@@ -33,7 +33,12 @@ public abstract class HeroSkill extends Buff {
 
     public abstract int getMaxCharge();
 
-    public float cooldownRatio() { return cooldown / rawCD(); }
+    public float cooldownRatio() {//For now it means to handle cooldown for multi charge skill have problem when there are only one charge
+        if(charge == 1 && getMaxCharge() == 1 )
+            return 0;
+        else
+        return cooldown / rawCD();
+    }
 
     @Override
     public boolean act() {
@@ -102,9 +107,9 @@ public abstract class HeroSkill extends Buff {
     public static final int MAX_SKILL_AMOUNT = 4;//start from 1
 
     public static void storeSkillsInBundle(Bundle bundle, Hero hero ) {
-        bundle.put(SKILL_PLACE+ 1 , hero.skill_1);
-        bundle.put(SKILL_PLACE+ 2 , hero.skill_2);
-        bundle.put(SKILL_PLACE+ 3, hero.skill_3);
+        bundle.put(SKILL_PLACE + 1 , hero.skill_1);
+        bundle.put(SKILL_PLACE + 2 , hero.skill_2);
+        bundle.put(SKILL_PLACE + 3, hero.skill_3);
     }
 
     public static void restoreSkillsFromBundle( Bundle bundle, Hero hero ) {
@@ -114,16 +119,20 @@ public abstract class HeroSkill extends Buff {
             {
                 hero.skill_1 = (HeroSkill)bundle.get(SKILL_PLACE + 1 );
                 hero.skill_1.owner = hero;
+                hero.skill_1.attachTo(hero);
+
             }
             if(bundle.contains(SKILL_PLACE + 2))
             {
                 hero.skill_2 = (HeroSkill)bundle.get(SKILL_PLACE + 2 );
                 hero.skill_2.owner = hero;
+                hero.skill_2.attachTo(hero);
             }
             if(bundle.contains(SKILL_PLACE + 3))
             {
                 hero.skill_3 = (HeroSkill)bundle.get(SKILL_PLACE + 3 );
                 hero.skill_3.owner = hero;
+                hero.skill_3.attachTo(hero);
             }
         }
     }

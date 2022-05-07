@@ -23,15 +23,13 @@ package com.unifier.arknightspixeldungeon.items.food;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
+import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.Statistics;
-import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Hunger;
-import com.unifier.arknightspixeldungeon.actors.buffs.Recharging;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
-import com.unifier.arknightspixeldungeon.effects.Speck;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.SpellSprite;
 import com.unifier.arknightspixeldungeon.items.Item;
-import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.utils.GLog;
@@ -74,7 +72,7 @@ public class Food extends Item {
 			(hero.buff( Hunger.class )).satisfy( energy );
 			GLog.i( message );
 			
-			switch (hero.heroClass) {
+			/*switch (hero.heroClass) {
 			case WARRIOR:
 				if (hero.HP < hero.HT) {
 					hero.HP = Math.min( hero.HP + 5, hero.HT );
@@ -89,21 +87,32 @@ public class Food extends Item {
 			case ROGUE:
 			case HUNTRESS:
 				break;
-			}
+			}*/
 			
 			hero.sprite.operate( hero.pos );
 			hero.busy();
 			SpellSprite.show( hero, SpellSprite.FOOD );
 			Sample.INSTANCE.play( Assets.SND_EAT );
 			
-			hero.spend( TIME_TO_EAT );
-			
+			hero.spend(  eatingTime()  );
+
+            Talent.onFoodEaten(hero, energy, this);
+
 			Statistics.foodEaten++;
 			Badges.validateFoodEaten();
 			
 		}
 	}
-	
+
+    protected float eatingTime(){
+        if (Dungeon.hero.hasTalent(Talent.VIGILANCE)){
+            return TIME_TO_EAT - 2;
+        } else {
+            return TIME_TO_EAT;
+        }
+    }
+
+
 	@Override
 	public boolean isUpgradable() {
 		return false;

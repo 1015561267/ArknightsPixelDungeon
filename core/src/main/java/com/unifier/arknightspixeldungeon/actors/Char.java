@@ -161,17 +161,32 @@ public abstract class Char extends Actor {
 			}
 		}
 	}
-	
+
+	public void heal(Object source,int amount)//I have to make it more clear for some method need consult heal amount
+    {
+        HP = Math.min( HT , HP + amount );
+    }
+
 	public boolean attack( Char enemy ) {
 
 		if (enemy == null || !enemy.isAlive()) return false;
 		
 		boolean visibleFight = Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[enemy.pos];
-		
-		if (hit( this, enemy, false )) {
+
+        if (enemy.isInvulnerable(getClass())) {
+
+            if (visibleFight) {
+                enemy.sprite.showStatus( CharSprite.POSITIVE, Messages.get(this, "invulnerable") );
+                Sample.INSTANCE.play(Assets.SND_GOLD, 1f, Random.Float(0.96f, 1.05f));
+            }
+
+            return false;
+
+        }
+		else if (hit( this, enemy, false )) {
 			
 			int dr = enemy.drRoll();
-			
+
 			if (this instanceof Hero){
 				Hero h = (Hero)this;
 				if (h.belongings.weapon instanceof MissileWeapon
@@ -292,6 +307,12 @@ public abstract class Char extends Actor {
 		if (!isAlive() || dmg < 0) {
 			return;
 		}
+
+        if(isInvulnerable(src.getClass())){
+            sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
+            return;
+        }
+
 		if (this.buff(Frost.class) != null){
 			Buff.detach( this, Frost.class );
 		}
@@ -449,8 +470,10 @@ public abstract class Char extends Actor {
 	public int stealth() {
 		return 0;
 	}
-	
-	public void move( int step ) {
+
+    public boolean isInvulnerable(Class effect){return false;};
+
+    public void move(int step ) {
 
 		if (Dungeon.level.adjacent( step, pos ) && buff( Vertigo.class ) != null) {
 			sprite.interruptMotion();

@@ -21,6 +21,7 @@
 
 package com.unifier.arknightspixeldungeon.windows;
 
+import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.PDSettings;
@@ -31,8 +32,10 @@ import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
+import com.unifier.arknightspixeldungeon.scenes.TalentScene;
 import com.unifier.arknightspixeldungeon.sprites.HeroSprite;
 import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
+import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.ScrollPane;
 import com.unifier.arknightspixeldungeon.ui.TalentsPane;
@@ -188,23 +191,38 @@ public class WndHero extends WndTabbed {
 
     public class TalentsTab extends Component {
 
+        private static final int GAP = 2;
+
         TalentsPane pane;
+
+        RedButton talentButton;
 
         @Override
         protected void createChildren() {
             super.createChildren();
-            pane = new TalentsPane(true,Dungeon.hero.talents,Dungeon.hero.talentTiers());
-            add(pane);
+            //pane = new TalentsPane(true,Dungeon.hero.talents,Dungeon.hero.talentTiers());
+            //add(pane);
+
+            talentButton = new RedButton(Messages.get(this, "entrance")) {
+                @Override
+                protected void onClick() {
+                    ArknightsPixelDungeon.switchScene(TalentScene.class);
+                }
+            };
+
+            add(talentButton);
         }
 
         @Override
         protected void layout() {
             super.layout();
-            pane.setRect(0, 0, width, height);
+            //pane.setRect(0, 0, width, height);
+
+            talentButton.setRect(0,0 ,width ,height);
         }
 
         protected void reset(){
-            pane.reset();
+            //pane.reset();
         }
     }
 	

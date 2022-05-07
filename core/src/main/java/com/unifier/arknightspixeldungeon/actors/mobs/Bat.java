@@ -68,7 +68,7 @@ public class Bat extends Mob {
 		int reg = Math.min( damage, HT - HP );
 		
 		if (reg > 0) {
-			HP += reg;
+			heal(null,reg);
 			sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
 		}
 		

@@ -237,7 +237,8 @@ public class CursedWand {
 							int damage = user.lvl * 2;
 							switch (Random.Int(2)) {
 								case 0:
-									user.HP = Math.min(user.HT, user.HP + damage);
+								    user.heal(this,damage);
+									//user.HP = Math.min(user.HT, user.HP + damage);
 									user.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
 									target.damage(damage, wand);
 									target.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
@@ -245,7 +246,8 @@ public class CursedWand {
 								case 1:
 									user.damage( damage, this );
 									user.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
-									target.HP = Math.min(target.HT, target.HP + damage);
+									//target.HP = Math.min(target.HT, target.HP + damage);
+									target.heal(this,damage);
 									target.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
 									Sample.INSTANCE.play(Assets.SND_CURSED);
 									if (!user.isAlive()) {

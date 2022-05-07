@@ -94,8 +94,9 @@ public class DM300 extends Mob {
 		super.move( step );
 		
 		if (Dungeon.level.map[step] == Terrain.INACTIVE_TRAP && HP < HT) {
-			
-			HP += Random.Int( 1, HT - HP );
+
+		    heal(null, Random.Int( 1, HT - HP ));
+			//HP += Random.Int( 1, HT - HP );
 			sprite.emitter().burst( ElmoParticle.FACTORY, 5 );
 			
 			if (Dungeon.level.heroFOV[step] && Dungeon.hero.isAlive()) {

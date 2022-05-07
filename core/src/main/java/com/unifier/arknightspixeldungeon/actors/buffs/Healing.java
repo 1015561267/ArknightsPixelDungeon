@@ -45,8 +45,10 @@ public class Healing extends Buff {
 		int healingThisTick = Math.round(healingLeft * percentHealPerTick) + flatHealPerTick;
 		
 		healingThisTick = (int)GameMath.gate(1, healingThisTick, healingLeft);
-		
-		target.HP = Math.min(target.HT, target.HP + healingThisTick);
+
+		target.heal(this,healingThisTick);
+
+		//target.HP = Math.min(target.HT, target.HP + healingThisTick);
 		
 		target.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "value", healingThisTick));
 		

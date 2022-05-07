@@ -89,7 +89,8 @@ public class Sungrass extends Plant {
 			partialHeal += (40 + target.HT)/150f;
 			
 			if (partialHeal > 1){
-				target.HP += (int)partialHeal;
+				//target.HP += (int)partialHeal;
+                target.heal(this, (int) partialHeal);
 				level -= (int)partialHeal;
 				partialHeal -= (int)partialHeal;
 				target.sprite.emitter().burst(Speck.factory(Speck.HEALING), 1);

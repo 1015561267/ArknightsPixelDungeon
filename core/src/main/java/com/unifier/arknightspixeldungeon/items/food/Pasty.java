@@ -107,7 +107,8 @@ public class Pasty extends Food {
 					break; //do nothing extra
 				case HWEEN:
 					//heals for 10% max hp
-					hero.HP = Math.min(hero.HP + hero.HT/10, hero.HT);
+                    hero.heal(Holiday.HWEEN,hero.HT/10);
+					//hero.HP = Math.min(hero.HP + hero.HT/10, hero.HT);
 					hero.sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
 					break;
 				case XMAS:

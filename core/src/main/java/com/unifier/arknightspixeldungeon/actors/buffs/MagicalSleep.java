@@ -62,7 +62,8 @@ public class MagicalSleep extends Buff {
 			return true;
 		}
 		if (target instanceof Hero) {
-			target.HP = Math.min(target.HP+1, target.HT);
+		    target.heal(this,1);
+			//target.HP = Math.min(target.HP+1, target.HT);
 			((Hero) target).resting = true;
 			if (target.HP == target.buff(Regeneration.class).regencap()) {
 				GLog.p(Messages.get(this, "wakeup"));

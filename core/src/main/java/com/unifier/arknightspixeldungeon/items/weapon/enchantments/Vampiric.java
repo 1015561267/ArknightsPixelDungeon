@@ -46,7 +46,9 @@ public class Vampiric extends Weapon.Enchantment {
 		
 		if (effValue > 0) {
 		
-			attacker.HP += effValue;
+			//attacker.HP += effValue;
+			attacker.heal(this,effValue);
+
 			attacker.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 1 );
 			attacker.sprite.showStatus( CharSprite.POSITIVE, Integer.toString( effValue ) );
 			

@@ -25,16 +25,13 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.Statistics;
-import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Hunger;
-import com.unifier.arknightspixeldungeon.actors.buffs.Recharging;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
-import com.unifier.arknightspixeldungeon.effects.Speck;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.SpellSprite;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.food.Blandfruit;
 import com.unifier.arknightspixeldungeon.items.food.Food;
-import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
@@ -92,23 +89,7 @@ public class HornOfPlenty extends Artifact {
 				if (chargesToUse > charge) chargesToUse = charge;
 				hero.buff(Hunger.class).satisfy((Hunger.STARVING/10) * chargesToUse);
 
-				//if you get at least 80 food energy from the horn
-				switch (hero.heroClass) {
-					case WARRIOR:
-						if (hero.HP < hero.HT) {
-							hero.HP = Math.min(hero.HP + 5, hero.HT);
-							hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), 1);
-						}
-						break;
-					case MAGE:
-						//1 charge
-						Buff.affect( hero, Recharging.class, 4f );
-						ScrollOfRecharging.charge(hero);
-						break;
-					case ROGUE:
-					case HUNTRESS:
-						break;
-				}
+                Talent.onFoodEaten(hero,chargesToUse,this);
 
 				Statistics.foodEaten++;
 

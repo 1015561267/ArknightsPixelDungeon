@@ -40,6 +40,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Fury;
 import com.unifier.arknightspixeldungeon.actors.buffs.Hunger;
 import com.unifier.arknightspixeldungeon.actors.buffs.Invisibility;
+import com.unifier.arknightspixeldungeon.actors.buffs.Invulnerability;
 import com.unifier.arknightspixeldungeon.actors.buffs.MindVision;
 import com.unifier.arknightspixeldungeon.actors.buffs.Momentum;
 import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
@@ -75,6 +76,7 @@ import com.unifier.arknightspixeldungeon.items.keys.IronKey;
 import com.unifier.arknightspixeldungeon.items.keys.Key;
 import com.unifier.arknightspixeldungeon.items.keys.SkeletonKey;
 import com.unifier.arknightspixeldungeon.items.potions.Potion;
+import com.unifier.arknightspixeldungeon.items.potions.PotionOfHealing;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfMight;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfStrength;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfEvasion;
@@ -513,6 +515,13 @@ public class Hero extends Char {
 	}
 	
 	public float attackDelay() {
+
+	    if(buff(Talent.PreemptiveStrikeActiveTracker.class)!=null)
+        {
+            buff(Talent.PreemptiveStrikeActiveTracker.class).detach();
+            return 0;
+        }
+
 		if (belongings.weapon != null) {
 			
 			return belongings.weapon.speedFactor( this );
@@ -1028,7 +1037,8 @@ public class Hero extends Char {
 		default:
 		}
 
-		
+		damage = Talent.onAttackProc(this,enemy,damage);
+
 		return damage;
 	}
 	
@@ -1079,6 +1089,11 @@ public class Hero extends Char {
 				&& AntiMagic.RESISTS.contains(src.getClass())){
 			dmg -= Random.NormalIntRange(belongings.armor.DRMin(), belongings.armor.DRMax())/3;
 		}
+
+        if (buff(Talent.VigilanceModifier.class) != null){
+            if (pointsInTalent(Talent.VIGILANCE) == 1)       dmg = Math.round(dmg*0.50f);
+            else if (pointsInTalent(Talent.VIGILANCE) == 2)  dmg = Math.round(dmg*0.25f);
+        }
 
 		super.damage( dmg, src );
 	}
@@ -1420,7 +1435,30 @@ public class Hero extends Char {
 
 			return;
 		}
-		
+
+		else if((buff(Talent.LastChanceTracker.class)!=null)) {
+
+            Buff.prolong(this, Invulnerability.class, Invulnerability.DURATION);
+
+            GameScene.flash(0xFF0000);
+            HP = HT;
+            sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 4 );
+
+            PotionOfHealing.cure( this);
+            belongings.uncurseEquipped();
+
+            this.buff( Hunger.class ).satisfy( Hunger.STARVING );
+
+            new Flare(8, 32).color(0xFFFF66, true).show(sprite, 2f);
+            CellEmitter.get(this.pos).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
+
+            Sample.INSTANCE.play( Assets.SND_CHALLENGE );
+            GLog.w( Messages.get(this, "lastchance") );
+            Buff.detach(this, Talent.LastChanceTracker.class);
+
+            return;
+        }
+
 		Actor.fixTime();
 		super.die( cause );
 
@@ -1511,6 +1549,11 @@ public class Hero extends Char {
 		}
 	}
 
+    @Override
+    public boolean isInvulnerable(Class effect) {
+        return buff(Invulnerability.class) != null;
+    }
+
 	@Override
 	public void move( int step ) {
 		super.move( step );
@@ -1541,6 +1584,8 @@ public class Hero extends Char {
 		}
 		
 		Invisibility.dispel();
+
+
 		spend( attackDelay() );
 
 		curAction = null;

@@ -23,6 +23,7 @@ package com.unifier.arknightspixeldungeon.items;
 
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Random;
@@ -39,8 +40,14 @@ abstract public class KindOfWeapon extends EquipableItem {
 	@Override
 	public boolean doEquip( Hero hero ) {
 
+	    if (!Talent.onItemEquipped(hero, this))
+        {
+            GLog.w(Messages.get(KindOfWeapon.class,"cursed_avoided"));
+            hero.spendAndNext( TIME_TO_EQUIP );
+            return true;
+        }
+
 		detachAll( hero.belongings.backpack );
-		
 		if (hero.belongings.weapon == null || hero.belongings.weapon.doUnequip( hero, true )) {
 			
 			hero.belongings.weapon = this;
