@@ -44,10 +44,10 @@ public class Dagger extends MeleeWeapon {
 	}
 	
 	@Override
-	public int damageRoll(Char owner) {
+    public int damageRoll(Char owner ,Char enemy ,boolean isMagic) {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
-			Char enemy = hero.enemy();
+			//Char enemy = hero.enemy();
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
 				//deals 75% toward max to max on surprise, instead of min to max.
 				int diff = max() - min();
@@ -61,7 +61,7 @@ public class Dagger extends MeleeWeapon {
 				return damage;
 			}
 		}
-		return super.damageRoll(owner);
+        return super.damageRoll(owner,enemy,isMagic);
 	}
 
 }

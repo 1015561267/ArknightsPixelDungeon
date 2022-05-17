@@ -63,7 +63,7 @@ public class ThrowingKnife extends MissileWeapon {
 	}
 	
 	@Override
-	public int damageRoll(Char owner) {
+    public int damageRoll(Char owner ,Char enemy ,boolean isMagic) {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
@@ -80,7 +80,7 @@ public class ThrowingKnife extends MissileWeapon {
 				return damage;
 			}
 		}
-		return super.damageRoll(owner);
+		return super.damageRoll(owner ,enemy ,isMagic);
 	}
 	
 	@Override

@@ -83,8 +83,8 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
-		return weapon.damageRoll(this);
+	public int damageRoll(Char enemy, boolean isMagic) {
+		return weapon.damageRoll(this,enemy,isMagic);
 	}
 	
 	@Override

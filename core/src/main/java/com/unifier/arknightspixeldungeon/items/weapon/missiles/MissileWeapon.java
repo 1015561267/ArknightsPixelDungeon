@@ -179,8 +179,8 @@ abstract public class MissileWeapon extends Weapon {
 	}
 	
 	@Override
-	public int damageRoll(Char owner) {
-		int damage = augment.damageFactor(super.damageRoll( owner ));
+    public int damageRoll(Char owner ,Char enemy ,boolean isMagic) {
+        int damage = augment.damageFactor(super.damageRoll( owner ,enemy ,isMagic ));
 		damage = Math.round( damage * RingOfSharpshooting.damageMultiplier( owner ));
 		
 		if (owner instanceof Hero &&

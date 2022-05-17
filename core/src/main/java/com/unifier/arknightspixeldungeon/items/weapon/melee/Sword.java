@@ -23,12 +23,16 @@ package com.unifier.arknightspixeldungeon.items.weapon.melee;
 
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Sword extends MeleeWeapon {
-	
+
 	{
 		image = ItemSpriteSheet.SWORD;
 
 		tier = 3;
 	}
 
+    public ArrayList<type> weaponType() { return new ArrayList<type>(Arrays.asList(type.SWORD)); }
 }

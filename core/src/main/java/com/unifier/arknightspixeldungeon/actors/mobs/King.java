@@ -87,7 +87,7 @@ public class King extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return Random.NormalIntRange( 25, 40 );
 	}
 	
@@ -269,7 +269,7 @@ public class King extends Mob {
 		}
 		
 		@Override
-		public int damageRoll() {
+		public int damageRoll(Char enemy, boolean isMagic) {
 			return Random.NormalIntRange( 15, 25 );
 		}
 		

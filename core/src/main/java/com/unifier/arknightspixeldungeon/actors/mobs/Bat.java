@@ -48,7 +48,7 @@ public class Bat extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return Random.NormalIntRange( 5, 18 );
 	}
 	

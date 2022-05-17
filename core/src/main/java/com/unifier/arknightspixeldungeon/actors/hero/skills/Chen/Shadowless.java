@@ -2,6 +2,8 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills.Chen;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.SwordRainTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
@@ -95,7 +97,8 @@ public class Shadowless extends HeroSkill {
         ChenSlash.hit(mob.pos, Random.Int(360),new Callback() {
             @Override
             public void call() {
-                mob.damage(hero.damageRoll(), hero);
+
+                mob.damage(skillDamage(mob, false), hero);
 
                 if (!mob.isAlive()){
                     GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name)) );
@@ -107,6 +110,10 @@ public class Shadowless extends HeroSkill {
                     targets.remove(mob);
                 }
 
+                if(hero.hasTalent(Talent.SWORD_RAIN)){
+                    Buff.affect(target,SwordRainTracker.class).stack();
+                }
+
                 if(t>=9 || targets.isEmpty()){
                     owner.sprite.visible=true;
                     ((HeroSprite)owner.sprite).setSkillCallbackAnimation(new Callback() {
@@ -115,6 +122,10 @@ public class Shadowless extends HeroSkill {
                             ((HeroSprite) owner.sprite).setAfterSkillAnimation();
                             doAfterAction();
                             owner.spendAndNext(1f);
+                            if (owner.pointsInTalent(Talent.SWORD_RAIN) == 2 && t<10){
+                                cooldown -=  rawCD() * 0.05f * (10 - t);
+                            }
+
                         }
                     },HeroSprite.skillAnimationType.shadowless_over);
                 }
@@ -124,10 +135,24 @@ public class Shadowless extends HeroSkill {
     }
 
     public int range(){
-       return 3;
+        return 3 + 2 * Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION);//3*3 at lvl 0,5*5 at lvl 1,7*7 at lvl 2
     }
 
     public int time(){
-        return 10;
+        return 10 + 2 * Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) + Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) == 2 ? 0 : 1;//10 at lvl 0,12 at lvl 1,15 at lvl 2
+    }
+
+    public int skillDamage(Char enemy,boolean isMagic){
+
+        if(enemy.buff(SwordRainTracker.class)!=null){
+            return (int) (owner.rawdamageRoll(enemy,isMagic) * (1 + 0.05f * enemy.buff(SwordRainTracker.class).stack));
+        }
+        return owner.rawdamageRoll(enemy,isMagic);
+    }
+
+    @Override
+    public boolean act() {
+        detach();
+        return super.act();
     }
 }

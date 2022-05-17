@@ -506,10 +506,10 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public int damageRoll() {
+		public int damageRoll(Char enemy, boolean isMagic) {
 			int dmg = 0;
 			if (rose != null && rose.weapon != null){
-				dmg += rose.weapon.damageRoll(this);
+				dmg += rose.weapon.damageRoll(this,enemy,isMagic);
 			} else {
 				dmg += Random.NormalIntRange(0, 5);
 			}

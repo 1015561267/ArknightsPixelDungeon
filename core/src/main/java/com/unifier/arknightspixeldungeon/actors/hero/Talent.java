@@ -3,8 +3,12 @@ package com.unifier.arknightspixeldungeon.actors.hero;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
-import com.unifier.arknightspixeldungeon.actors.buffs.EmergencyRecoveryTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
+import com.unifier.arknightspixeldungeon.actors.buffs.Regeneration;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.EmergencyRecoveryTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RallyForceTracker;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
@@ -504,18 +508,21 @@ public enum Talent {
             case 4:Collections.addAll(tierTalents, FLOWING_WATER, SLASH_ECHO, LIGHTNING_REFLEXES,MORTAL_SKILL,FURY_RAMPAGE,MOTION_ACCUMULATION,BLADE_STORM,FULL_SUPPRESSION);break;
             default:break;
         }
+        //Mostly weapon damage modify can be found at MeleeWeapon.damageRoll
+        //WEAPON_ADAPT have hit chance modify at MeleeWeapon.accuracyFactor
     }
 
     public static void onTalentUpgraded(Hero hero, Talent talent) {
-        if(talent == EMERGENCY_RECOVERY)
+        if(talent == EMERGENCY_RECOVERY) { Buff.affect(hero, EmergencyRecoveryTracker.class);}//see class file in buff for more info
+        else if(talent == LAST_CHANCE) { Buff.affect(hero,LastChanceTracker.class); }
+        else if(talent == RALLY_FORCE)
         {
-            Buff.affect(hero, EmergencyRecoveryTracker.class);
+            if(hero.buff(RallyForceTracker.class)!=null) {
+                hero.buff(RallyForceTracker.class).doubledSpeed = true;
+            } else Buff.affect(hero,RallyForceTracker.class);
         }
 
-        else if(talent == LAST_CHANCE)
-        {
-            Buff.affect(hero,LastChanceTracker.class);
-        }
+        else if(talent == RESENTMENT){ Buff.affect(hero, RageTracker.class); }
     }
 
     public static class LastChanceTracker extends Buff{};
@@ -561,16 +568,44 @@ public enum Talent {
     }
 
     public static int onAttackProc(Hero hero, Char enemy, int dmg ){
-        if (hero.hasTalent(Talent.PREEMPTIVE_STRIKE) && Random.Float() < 0.1f + 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)
+        if (hero.hasTalent(Talent.PREEMPTIVE_STRIKE) && Random.Float() < 0.1f + 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)// Have 30% possibility when enemy above 70%HP at level 1 and 50% possibility when enemy above 50%HP at level 2
                 && enemy instanceof Mob && enemy.HP >= Math.floor(enemy.HT * (0.9f - 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)))
-                && enemy.buff(PreemptiveStrikeUsedTracker.class) == null) // Have 30% possibility when enemy above 70%HP at level 1 and 50% possibility when enemy above 50%HP at level 2
-             {
+                && enemy.buff(PreemptiveStrikeUsedTracker.class) == null){
                 Buff.affect(enemy, PreemptiveStrikeUsedTracker.class);
                 Buff.affect(Dungeon.hero, PreemptiveStrikeActiveTracker.class);//See Hero.attackDelay()
              }
+
+        if(hero.hasTalent(Talent.BLADE_STORM)){
+            hero.buff(BladeStormTracker.class).refresh();
+        }
+
         return dmg;
     }
     //Well damn the onAttackProc() cannot return things like you can have extra turns,I have to make two buffs,one show if the talent should work and the other inform that the talent effect should be in use
     public static class PreemptiveStrikeUsedTracker extends Buff{};
     public static class PreemptiveStrikeActiveTracker extends Buff{};
+
+    public static class LightWeaponMasteryTracker extends Buff{};//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
+
+
+    public static int onDefenseProc(Hero hero,Object source,int damage)//it should be before damage taken,so check Hero.damage for it
+    {
+        if (hero.buff(Talent.VigilanceModifier.class) != null){
+            if (hero.pointsInTalent(Talent.VIGILANCE) == 1)       damage = Math.round(damage*0.50f);
+            else if (hero.pointsInTalent(Talent.VIGILANCE) == 2)  damage = Math.round(damage*0.25f);
+        }
+        return damage;
+    }
+
+    public static void onHealthGain(Hero hero,Object source, int amount) {
+        if(hero.buff(RallyForceTracker.class)!=null){
+            hero.buff(RallyForceTracker.class).getCharge(source instanceof Regeneration ? amount * 2 : amount);//doubled amount for auto-regeneration
+        }
+    }
+
+    public static void onHealthLose(Hero hero,Object source, int damage) {
+        if(hero.buff(RageTracker.class)!=null) {
+
+        }
+    }
 }

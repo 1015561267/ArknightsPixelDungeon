@@ -62,7 +62,7 @@ public class Guard extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return Random.NormalIntRange(4, 12);
 	}
 

@@ -23,6 +23,9 @@ package com.unifier.arknightspixeldungeon.items.weapon.melee;
 
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Shortsword extends MeleeWeapon {
 
 	{
@@ -31,4 +34,5 @@ public class Shortsword extends MeleeWeapon {
 		tier = 2;
 	}
 
+    public ArrayList<type> weaponType() { return new ArrayList<type>(Arrays.asList(type.SWORD)); }
 }

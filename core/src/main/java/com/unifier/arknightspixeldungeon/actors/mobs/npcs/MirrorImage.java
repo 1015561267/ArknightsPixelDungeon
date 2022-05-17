@@ -68,7 +68,7 @@ public class MirrorImage extends NPC {
 	public void duplicate( Hero hero ) {
 		tier = hero.tier();
 		attack = hero.attackSkill( hero );
-		damage = hero.damageRoll();
+		damage = hero.damageRoll(enemy, false);
 	}
 	
 	@Override
@@ -77,7 +77,7 @@ public class MirrorImage extends NPC {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return damage;
 	}
 	

@@ -67,7 +67,7 @@ public class DM300 extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return Random.NormalIntRange( 20, 25 );
 	}
 	

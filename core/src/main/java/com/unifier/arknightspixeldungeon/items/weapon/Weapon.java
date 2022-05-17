@@ -25,6 +25,7 @@ import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfFuror;
@@ -145,7 +146,10 @@ abstract public class Weapon extends KindOfWeapon {
 		int encumbrance = 0;
 		
 		if( owner instanceof Hero ){
-			encumbrance = STRReq() - ((Hero)owner).STR();
+		    encumbrance = STRReq() - ((Hero)owner).STR();
+		   if (encumbrance <= 1 && ((Hero) owner).hasTalent(Talent.WEAPON_ADAPT)){
+                encumbrance = 0;
+            }
 		}
 
 		if (hasEnchant(Wayward.class))

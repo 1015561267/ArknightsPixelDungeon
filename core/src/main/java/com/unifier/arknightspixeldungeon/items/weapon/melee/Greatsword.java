@@ -23,6 +23,9 @@ package com.unifier.arknightspixeldungeon.items.weapon.melee;
 
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Greatsword extends MeleeWeapon {
 
 	{
@@ -30,5 +33,7 @@ public class Greatsword extends MeleeWeapon {
 
 		tier=5;
 	}
+
+    public ArrayList<type> weaponType() { return new ArrayList<type>(Arrays.asList(type.SWORD)); }
 
 }

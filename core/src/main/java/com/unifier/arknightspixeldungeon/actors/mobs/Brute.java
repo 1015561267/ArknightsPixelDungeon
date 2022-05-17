@@ -55,7 +55,7 @@ public class Brute extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return enraged ?
 			Random.NormalIntRange( 15, 45 ) :
 			Random.NormalIntRange( 6, 26 );

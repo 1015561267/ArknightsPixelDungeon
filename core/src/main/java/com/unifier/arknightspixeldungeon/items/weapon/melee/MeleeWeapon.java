@@ -21,22 +21,13 @@
 
 package com.unifier.arknightspixeldungeon.items.weapon.melee;
 
-import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
-import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
-import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.effects.CellEmitter;
-import com.unifier.arknightspixeldungeon.effects.Speck;
-import com.unifier.arknightspixeldungeon.effects.Wound;
-import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
-import com.unifier.arknightspixeldungeon.sprites.CharSprite;
-import com.unifier.arknightspixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -45,96 +36,24 @@ public class MeleeWeapon extends Weapon {
 	
 	public int tier;
 
-    public static final String AC_REDDUCK = "REDDUCK";//绝影
+    //public static final String AC_REDDUCK = "REDDUCK";//绝影
+
+    public enum type{SWORD}
+
+    public ArrayList<type> weaponType()
+    {
+        return null;
+    }
 
     @Override
     public ArrayList<String> actions(Hero hero ) {
         ArrayList<String> actions = super.actions( hero );
-
-        if (hero.heroClass == HeroClass.WARRIOR && isEquipped(hero))
-        {
-            actions.add(AC_REDDUCK);
-        }
         return actions;
     }
 
     @Override
     public void execute( Hero hero, String action ) {
-
-        super.execute( hero, action );
-
-        if (action.equals(AC_REDDUCK)) {
-            //In addition to equipping itself, item reassigns itself to the quickslot
-            //This is a special case as the item is being removed from inventory, but is staying with the hero.
-
-           int intialPos=hero.pos;
-
-            ArrayList<Mob> targets =  new ArrayList<Mob>();
-
-            KindOfWeapon curWep = Dungeon.hero.belongings.weapon;
-            if (curWep == null) {
-                GLog.i("You need a melee weapon to use this skill");
-                return;
-            }
-
-            for (Mob mob : Dungeon.level.mobs) {
-                if (Dungeon.level.heroFOV[mob.pos] && mob.alignment == Char.Alignment.ENEMY) {
-                    targets.add( mob );
-                }
-            }
-
-            hero.busy();
-
-            if (Dungeon.level.heroFOV[hero.pos]) CellEmitter.get( hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
-            hero.sprite.visible = false;
-            Sample.INSTANCE.play( Assets.SND_PUFF );
-
-            if(!targets.isEmpty())
-            {
-                doSlash(targets,0);
-            }
-            else {
-                GLog.i("No enemy in sight");
-                hero.sprite.visible = true;
-                Sample.INSTANCE.play( Assets.SND_PUFF );
-                hero.spendAndNext(1f);
-            }
-
-
-        }
-    }
-
-    private void doSlash(ArrayList<Mob> targets, int t){
-        Hero hero = Dungeon.hero;
-
-        Mob mob=targets.get(Random.Int(targets.size()));
-
-        Wound.hit(mob.pos, Random.Int(360),new Callback() {
-            @Override
-            public void call() {
-                mob.damage(hero.damageRoll(), hero);
-
-                if (!mob.isAlive()){
-                    GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name)) );
-                    int exp = Dungeon.hero.lvl <= mob.maxLvl ? mob.EXP : 0;
-                    if (exp > 0) {
-                        Dungeon.hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
-                        Dungeon.hero.earnExp(exp);
-                    }
-                    targets.remove(mob);
-                }
-
-                if(t>=9 || targets.isEmpty()){
-                    hero.spendAndNext(1f);
-                    if (Dungeon.level.heroFOV[hero.pos]) CellEmitter.get( hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
-                    hero.sprite.visible = true;
-                    Sample.INSTANCE.play( Assets.SND_PUFF );
-                }
-                else {
-                    doSlash(targets,t+1);
-                }
-            }
-        });
+        super.execute(hero, action);
     }
 
 	@Override
@@ -156,18 +75,53 @@ public class MeleeWeapon extends Weapon {
 	}
 	
 	@Override
-	public int damageRoll(Char owner) {
-		int damage = augment.damageFactor(super.damageRoll( owner ));
+	public int damageRoll(Char owner ,Char enemy ,boolean isMagic ) {
+        int min = min();
+        int max = max();
 
-		if (owner instanceof Hero) {
-			int exStr = ((Hero)owner).STR() - STRReq();
-			if (exStr > 0) {
-				damage += Random.IntRange( 0, exStr );
-			}
-		}
-		
+        int damage = 0;
+
+        if (owner instanceof Hero) {
+            int exStr = ((Hero)owner).STR() - STRReq();
+
+            if(this.weaponType().contains(type.SWORD) && ((Hero) owner).hasTalent(Talent.SWORD_WEAPON_MASTERY)){
+                min = (int) Math.max(min,max * 0.2f);
+            }
+
+            if(((Hero) owner).hasTalent(Talent.WEAPON_ADAPT))
+            {
+                int buffedStr = Math.min(3,exStr);//first 3 str have double effect
+
+                min += buffedStr;
+                max += buffedStr * 2;
+                exStr -= buffedStr;
+            }
+
+            if(((Hero) owner).hasTalent(Talent.LIGHT_WEAPON_MASTERY)){
+                min += tier;
+                max += level();
+
+                if(((Hero) owner).pointsInTalent(Talent.LIGHT_WEAPON_MASTERY)==2){
+                    Buff.affect(((Hero) owner).enemy(), Talent.LightWeaponMasteryTracker.class);//check Char.attack for more info(in 0.6.5 it consult before drroll and drroll happens before damageRoll,so it changed for convenience
+                }
+            }
+
+            if (exStr > 0) {
+                damage += Random.IntRange( 0, exStr );
+            }
+
+            damage += augment.damageFactor(Random.NormalIntRange(min,max));
+
+            return damage;
+        }
+
 		return damage;
 	}
+
+	@Override
+    public int rawdamageRoll( Char owner ,Char enemy ,boolean isMagic) {
+        return augment.damageFactor(Random.NormalIntRange( min(), max() ));
+    }
 	
 	@Override
 	public String info() {

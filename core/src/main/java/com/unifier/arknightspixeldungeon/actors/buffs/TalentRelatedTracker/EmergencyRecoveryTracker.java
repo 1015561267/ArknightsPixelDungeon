@@ -1,5 +1,6 @@
-package com.unifier.arknightspixeldungeon.actors.buffs;
+package com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker;
 
+import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.watabou.utils.Bundle;
@@ -31,9 +32,14 @@ public class EmergencyRecoveryTracker extends Buff
         if (target.isAlive()&& target instanceof Hero) {
             if(((Hero) target).hasTalent(Talent.EMERGENCY_RECOVERY))
             {
-                if(target.HP <= target.HT * 0.75f - 0.25 * ((Hero) target).pointsInTalent(Talent.EMERGENCY_RECOVERY))
+                if(target.HP <= target.HT * 0.5f && ((Hero) target).pointsInTalent(Talent.EMERGENCY_RECOVERY)>=1 )
                 {
-                    particalAmount += ((Hero) target).pointsInTalent(Talent.EMERGENCY_RECOVERY) * 0.5f;
+                    particalAmount += 0.5f;
+                }
+
+                if(target.HP <= target.HT * 0.25f && ((Hero) target).pointsInTalent(Talent.EMERGENCY_RECOVERY)>= 2)
+                {
+                    particalAmount += 0.5f;
                 }
 
                 if(particalAmount >= 1)

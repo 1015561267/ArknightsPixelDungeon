@@ -50,6 +50,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Speed;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.armor.glyphs.Potential;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfElements;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfPsionicBlast;
@@ -183,26 +184,31 @@ public abstract class Char extends Actor {
             return false;
 
         }
-		else if (hit( this, enemy, false )) {
-			
-			int dr = enemy.drRoll();
 
-			if (this instanceof Hero){
-				Hero h = (Hero)this;
-				if (h.belongings.weapon instanceof MissileWeapon
-						&& h.subClass == HeroSubClass.SNIPER){
-					dr = 0;
-				}
-			}
-			
+		else if (hit( this, enemy, false )) {
 			int dmg;
 			Preparation prep = buff(Preparation.class);
 			if (prep != null){
 				dmg = prep.damageRoll(this, enemy);
 			} else {
-				dmg = damageRoll();
+				dmg = damageRoll(enemy,false);//There might be other hit check so raw damageroll function need to be improved
 			}
-			
+
+
+			int dr = enemy.drRoll();
+            if(enemy.buff(Talent.LightWeaponMasteryTracker.class)!=null)
+            {
+                dr /= 2 ;
+                enemy.buff(Talent.LightWeaponMasteryTracker.class).detach();
+            }
+            if (this instanceof Hero){
+                Hero h = (Hero)this;
+                if (h.belongings.weapon instanceof MissileWeapon
+                        && h.subClass == HeroSubClass.SNIPER){
+                    dr = 0;
+                }
+            }
+
 			int effectiveDamage = enemy.defenseProc( this, dmg );
 			effectiveDamage = Math.max( effectiveDamage - dr, 0 );
 			effectiveDamage = attackProc( enemy, effectiveDamage );
@@ -286,7 +292,7 @@ public abstract class Char extends Actor {
 		return 0;
 	}
 	
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return 1;
 	}
 	
@@ -343,7 +349,11 @@ public abstract class Char extends Actor {
 			HP -= (dmg - SHLD);
 			SHLD = 0;
 		}
-		
+
+		if(this instanceof Hero) {
+            Talent.onHealthLose((Hero) this, src, Math.min(dmg, HP));
+        }
+
 		sprite.showStatus( HP > HT / 2 ?
 			CharSprite.WARNING :
 			CharSprite.NEGATIVE,

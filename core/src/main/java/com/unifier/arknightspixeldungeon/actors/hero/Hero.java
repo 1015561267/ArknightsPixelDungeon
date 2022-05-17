@@ -46,6 +46,8 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Momentum;
 import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
 import com.unifier.arknightspixeldungeon.actors.buffs.Regeneration;
 import com.unifier.arknightspixeldungeon.actors.buffs.SnipersMark;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
@@ -443,12 +445,12 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		KindOfWeapon wep = belongings.weapon;
 		int dmg;
 
 		if (wep != null) {
-			dmg = wep.damageRoll( this ) + RingOfForce.armedDamageBonus(this);
+			dmg = wep.damageRoll( this ,enemy ,isMagic ) + RingOfForce.armedDamageBonus(this);
 		} else {
 			dmg = RingOfForce.damageRoll(this);
 		}
@@ -456,10 +458,35 @@ public class Hero extends Char {
 		
 		Berserk berserk = buff(Berserk.class);
 		if (berserk != null) dmg = berserk.damageFactor(dmg);
+
+		ComboTracker tracker = buff(ComboTracker.class);
+
+		if(tracker!=null){
+
+		    dmg *= 1 + 0.05f * enemy.buff(ComboTracker.class).getStack();
+
+		    if(enemy.buff(ComboTracker.class).combo()){
+		        dmg *= 1.5f;
+            }
+		}
 		
 		return buff( Fury.class ) != null ? (int)(dmg * 1.5f) : dmg;
 	}
-	
+
+    public int rawdamageRoll(Char enemy, boolean isMagic) {
+        KindOfWeapon wep = belongings.weapon;
+        int dmg;
+
+        if (wep != null) {
+            dmg = wep.rawdamageRoll( this ,enemy ,isMagic );
+        } else {
+            dmg = RingOfForce.damageRoll(this);
+        }
+        if (dmg < 0) dmg = 0;
+
+        return dmg;
+    }
+
 	@Override
 	public float speed() {
 
@@ -522,16 +549,22 @@ public class Hero extends Char {
             return 0;
         }
 
+	    float delay;
+
 		if (belongings.weapon != null) {
-			
-			return belongings.weapon.speedFactor( this );
-						
+            delay = belongings.weapon.speedFactor( this );
+
 		} else {
 			//Normally putting furor speed on unarmed attacks would be unnecessary
 			//But there's going to be that one guy who gets a furor+force ring combo
 			//This is for that one guy, you shall get your fists of fury!
-			return RingOfFuror.modifyAttackDelay(1f, this);
+            delay = RingOfFuror.modifyAttackDelay(1f, this);
 		}
+
+		if(this.buff(BladeStormTracker.class)!=null){
+            delay = (float) Math.max(0.2f,delay * Math.pow( 0.9 , buff(BladeStormTracker.class).getStack()));
+		}
+		return delay;
 	}
 
 	@Override
@@ -1077,6 +1110,8 @@ public class Hero extends Char {
 			GLog.w( Messages.get(this, "pain_resist") );
 		}
 
+        Talent.onDefenseProc(this,src,dmg);
+
 		CapeOfThorns.Thorns thorns = buff( CapeOfThorns.Thorns.class );
 		if (thorns != null) {
 			dmg = thorns.proc(dmg, (src instanceof Char ? (Char)src : null),  this);
@@ -1089,11 +1124,6 @@ public class Hero extends Char {
 				&& AntiMagic.RESISTS.contains(src.getClass())){
 			dmg -= Random.NormalIntRange(belongings.armor.DRMin(), belongings.armor.DRMax())/3;
 		}
-
-        if (buff(Talent.VigilanceModifier.class) != null){
-            if (pointsInTalent(Talent.VIGILANCE) == 1)       dmg = Math.round(dmg*0.50f);
-            else if (pointsInTalent(Talent.VIGILANCE) == 2)  dmg = Math.round(dmg*0.25f);
-        }
 
 		super.damage( dmg, src );
 	}
@@ -1582,6 +1612,15 @@ public class Hero extends Char {
 				if (combo != null) combo.miss();
 			}
 		}
+
+        if(hasTalent(Talent.CONTINUOUS_ASSAULT)){
+            if(hit){
+                Buff.affect(enemy,ComboTracker.class).hit();
+            }else {
+                ComboTracker tracker = enemy.buff(ComboTracker.class);
+                if(tracker!=null) tracker.miss();
+            }
+        }
 		
 		Invisibility.dispel();
 
@@ -1745,6 +1784,13 @@ public class Hero extends Char {
 
 		live();
 	}
+
+    public void heal(Object source,int amount)
+    {
+        amount = Math.min(amount,HT - HP);
+        HP += amount;
+        Talent.onHealthGain(this,source,amount);
+    }
 
 	@Override
 	public void next() {

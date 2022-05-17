@@ -102,7 +102,7 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return 0;
 	}
 

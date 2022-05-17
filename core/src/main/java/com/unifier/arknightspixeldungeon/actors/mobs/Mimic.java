@@ -77,7 +77,7 @@ public class Mimic extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return Random.NormalIntRange( HT / 10, HT / 4 );
 	}
 	

@@ -181,8 +181,8 @@ public class Boomerang extends Weapon {
         }
 
         @Override
-        public int damageRoll(Char owner) {
-            return Boomerang.this.damageRoll(owner);
+        public int damageRoll(Char owner ,Char enemy ,boolean isMagic) {
+            return Boomerang.this.damageRoll(owner,enemy,isMagic);
         }
 
         @Override

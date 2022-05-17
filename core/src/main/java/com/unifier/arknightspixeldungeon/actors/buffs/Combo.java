@@ -206,7 +206,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 			AttackIndicator.target(enemy);
 
-			int dmg = target.damageRoll();
+			int dmg = target.damageRoll(enemy, false);
 
 			//variance in damage dealt
 			switch(type){
@@ -218,14 +218,14 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					break;
 				case SLAM:
 					//rolls 2 times, takes the highest roll
-					int dmgReroll = target.damageRoll();
+					int dmgReroll = target.damageRoll(enemy, false);
 					if (dmgReroll > dmg) dmg = dmgReroll;
 					dmg = Math.round(dmg*1.6f);
 					break;
 				case CRUSH:
 					//rolls 4 times, takes the highest roll
 					for (int i = 1; i < 4; i++) {
-						dmgReroll = target.damageRoll();
+						dmgReroll = target.damageRoll(enemy, false);
 						if (dmgReroll > dmg) dmg = dmgReroll;
 					}
 					dmg = Math.round(dmg*2.5f);

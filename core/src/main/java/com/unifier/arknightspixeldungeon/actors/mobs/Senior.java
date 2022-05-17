@@ -34,7 +34,7 @@ public class Senior extends Monk {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		return Random.NormalIntRange( 16, 24 );
 	}
 	

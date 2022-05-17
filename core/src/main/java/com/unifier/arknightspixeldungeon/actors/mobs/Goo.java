@@ -67,7 +67,7 @@ public class Goo extends Mob {
 	private int pumpedUp = 0;
 
 	@Override
-	public int damageRoll() {
+	public int damageRoll(Char enemy, boolean isMagic) {
 		int min = 1;
 		int max = (HP*2 <= HT) ? 15 : 10;
 		if (pumpedUp > 0) {

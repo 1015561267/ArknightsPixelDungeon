@@ -222,7 +222,7 @@ public class Yog extends Mob {
 		}
 		
 		@Override
-		public int damageRoll() {
+		public int damageRoll(Char enemy, boolean isMagic) {
 			return Random.NormalIntRange( 20, 50 );
 		}
 		
@@ -295,7 +295,7 @@ public class Yog extends Mob {
 		}
 		
 		@Override
-		public int damageRoll() {
+		public int damageRoll(Char enemy, boolean isMagic) {
 			return Random.NormalIntRange( 26, 32 );
 		}
 		
@@ -317,7 +317,7 @@ public class Yog extends Mob {
 				
 				if (hit( this, enemy, true )) {
 					
-					int dmg =  damageRoll();
+					int dmg =  damageRoll(enemy, false);
 					enemy.damage( dmg, this );
 					
 					enemy.sprite.bloodBurstA( sprite.center(), dmg );
@@ -389,7 +389,7 @@ public class Yog extends Mob {
 		}
 		
 		@Override
-		public int damageRoll() {
+		public int damageRoll(Char enemy, boolean isMagic) {
 			return Random.NormalIntRange( 22, 30 );
 		}
 		

@@ -76,9 +76,9 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		}
 		
 		public int damageRoll( Char attacker, Char defender){
-			int dmg = attacker.damageRoll();
+			int dmg = attacker.damageRoll(defender, false);
 			for( int i = 1; i < damageRolls; i++){
-				int newDmg = attacker.damageRoll();
+				int newDmg = attacker.damageRoll(defender, false);
 				if (newDmg > dmg) dmg = newDmg;
 			}
 			float defenderHPPercent = 1f - (defender.HP / (float)defender.HT);
