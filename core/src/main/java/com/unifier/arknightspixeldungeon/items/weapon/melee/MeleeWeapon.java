@@ -22,10 +22,13 @@
 package com.unifier.arknightspixeldungeon.items.weapon.melee;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.Invisibility;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.watabou.utils.Random;
@@ -187,4 +190,15 @@ public class MeleeWeapon extends Weapon {
 		return price;
 	}
 
+    @Override
+    protected void onThrow( int cell ) {
+        Char enemy = Actor.findChar(cell);
+
+        if ( curUser.hasTalent(Talent.WEAPON_THROW) && enemy != null && enemy instanceof Mob && enemy.alignment == Char.Alignment.ENEMY ) {
+            curUser.attack( enemy );
+            Invisibility.dispel();
+        }
+
+        super.onThrow(cell);
+    }
 }

@@ -190,6 +190,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		}
 	}
 
+    //returns where the center of this sprite will be after it completes any motion in progress
     public PointF destinationCenter(){
         PosTweener motion = this.motion;
         if (motion != null && motion.elapsed >= 0){
@@ -661,7 +662,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (anim == attack) {
 				
 				idle();
-				ch.onAttackComplete();
+				ch.onAttackComplete(Char.rangeType.Dismiss);
 				
 			} else if (anim == operate) {
 				

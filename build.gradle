@@ -8,8 +8,13 @@ buildscript {
         gradlePluginPortal()
         jcenter()
         maven {
-            allowInsecureProtocol = true
-            url "https://oss.sonatype.org/content/repositories/snapshots/" }
+            url "​https://maven.aliyun.com/repository/google​"
+        }
+
+        maven {
+            url "​https://maven.aliyun.com/repository/jcenter​"
+        }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.4'
@@ -42,11 +47,8 @@ allprojects {
         google()
         jcenter()
         gradlePluginPortal()
-        //maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        //maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven { allowInsecureProtocol = true
-            url "http://maven.aliyun.com/nexus/content/groups/public/"
-        }
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 }
+

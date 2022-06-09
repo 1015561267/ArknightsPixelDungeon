@@ -41,7 +41,7 @@ public abstract class HeroSkill extends Buff {
     }
 
     @Override
-    public boolean act() {
+     public boolean act() {
         spend( TICK );
         if(activated()) {
             getCoolDown(TICK);
@@ -94,6 +94,7 @@ public abstract class HeroSkill extends Buff {
 
     public boolean attachTo( Hero hero ) {
         this.owner = hero;
+        this.target = hero;
         hero.add( this );
         return true;
     }

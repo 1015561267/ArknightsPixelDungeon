@@ -55,8 +55,7 @@ public class ShamanSprite extends MobSprite {
 	public void zap( int pos ) {
 
 		parent.add( new Lightning( ch.pos, pos, (Shaman)ch ) );
-		
-		turnTo( ch.pos, pos );
-		play( zap );
+
+        super.zap( pos );
 	}
 }

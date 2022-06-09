@@ -22,6 +22,7 @@
 package com.unifier.arknightspixeldungeon.sprites;
 
 import com.unifier.arknightspixeldungeon.Assets;
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.effects.MagicMissile;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.audio.Sample;
@@ -71,7 +72,7 @@ public class BurningFistSprite extends MobSprite {
 					new Callback() {
 						@Override
 						public void call() {
-							ch.onAttackComplete();
+							ch.onAttackComplete(Char.rangeType.Dismiss);
 						}
 					} );
 

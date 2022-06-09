@@ -21,6 +21,7 @@
 
 package com.unifier.arknightspixeldungeon.scenes;
 
+import com.badlogic.gdx.Gdx;
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
@@ -113,6 +114,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class GameScene extends PixelScene {
+
+    public static boolean logActorThread;
 
 	public static GameScene scene;
 
@@ -527,6 +530,26 @@ public class GameScene extends PixelScene {
 		super.update();
 		
 		if (!freezeEmitters) water.offset( 0, -5 * Game.elapsed );
+
+        if(logActorThread){
+            if (actorThread != null){
+                logActorThread = false;
+                String s = "";
+                for (StackTraceElement t : actorThread.getStackTrace()){
+                    s += "\n";
+                    s += t.toString();
+                }
+                Class<? extends Actor> cl = Actor.getCurrentActorClass();
+                String msg = "Actor thread dump was requested. " +
+                        "Seed:" + Dungeon.seed + " depth:" + Dungeon.depth + " challenges:" +
+                        " current actor:" + cl + "\ntrace:" + s;
+                Gdx.app.getClipboard().setContents(msg);
+                ArknightsPixelDungeon.reportException(
+                        new RuntimeException(msg)
+                );
+                add(new WndMessage(Messages.get(this, "copied")));
+            }
+        }
 
 		if (!Actor.processing() && Dungeon.hero.isAlive()) {
 			if (!actorThread.isAlive()) {

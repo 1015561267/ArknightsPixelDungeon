@@ -55,7 +55,7 @@ public class TalentButton extends Button {
 	private TextureFilm film;
 
 	private float warning = 0f;
-    private float talentBlink = 10f;
+    private float talentBlink = 0f;
 
 
 	int tier;

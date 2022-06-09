@@ -32,8 +32,6 @@ import com.watabou.utils.Callback;
 
 public class TenguSprite extends MobSprite {
 	
-	private Animation cast;
-	
 	public TenguSprite() {
 		super();
 		
@@ -50,7 +48,7 @@ public class TenguSprite extends MobSprite {
 		attack = new Animation( 15, false );
 		attack.frames( frames, 9, 10, 11, 12,13 );
 		
-		cast = attack.clone();
+		zap = attack.clone();
 		
 		die = new Animation( 8, false );
 		die.frames( frames, 14,14,15,15,15 );
@@ -82,14 +80,13 @@ public class TenguSprite extends MobSprite {
 
 			((MissileSprite)parent.recycle( MissileSprite.class )).
 				reset( ch.pos, cell, new Shuriken(), new Callback() {
-					@Override
-					public void call() {
-						ch.next();
-						if (enemy != null) ch.attack(enemy);
-					}
+                    @Override
+                    public void call() {
+                        ch.onAttackComplete(Char.rangeType.Tengu);
+                    }
 				} );
 			
-			play( cast );
+			play( zap );
 			turnTo( ch.pos , cell );
 			
 		} else {

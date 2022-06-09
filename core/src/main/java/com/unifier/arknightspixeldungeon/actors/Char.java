@@ -51,6 +51,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.glyphs.Potential;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfElements;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfPsionicBlast;
@@ -60,17 +61,22 @@ import com.unifier.arknightspixeldungeon.items.weapon.enchantments.Blazing;
 import com.unifier.arknightspixeldungeon.items.weapon.enchantments.Grim;
 import com.unifier.arknightspixeldungeon.items.weapon.enchantments.Shocking;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.MissileWeapon;
+import com.unifier.arknightspixeldungeon.items.weapon.missiles.Shuriken;
+import com.unifier.arknightspixeldungeon.items.weapon.missiles.darts.Dart;
+import com.unifier.arknightspixeldungeon.items.weapon.missiles.darts.ParalyticDart;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.darts.ShockingDart;
 import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.levels.features.Door;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
+import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -180,12 +186,11 @@ public abstract class Char extends Actor {
                 enemy.sprite.showStatus( CharSprite.POSITIVE, Messages.get(this, "invulnerable") );
                 Sample.INSTANCE.play(Assets.SND_GOLD, 1f, Random.Float(0.96f, 1.05f));
             }
-
             return false;
-
         }
 
 		else if (hit( this, enemy, false )) {
+
 			int dmg;
 			Preparation prep = buff(Preparation.class);
 			if (prep != null){
@@ -246,7 +251,7 @@ public abstract class Char extends Actor {
 
 					Dungeon.fail( getClass() );
 					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name)) );
-					
+
 				} else if (this == Dungeon.hero) {
 					GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)) );
 				}
@@ -267,6 +272,62 @@ public abstract class Char extends Actor {
 			
 		}
 	}
+
+    public boolean attack( Char enemy , rangeType type) {//physical part of reflect talent,magical part can be found in mob.java
+
+        if (enemy == null || !enemy.isAlive()) return false;
+
+        boolean visibleFight = Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[enemy.pos];
+
+        if (enemy.isInvulnerable(getClass())) {
+
+            if (visibleFight) {
+                enemy.sprite.showStatus( CharSprite.POSITIVE, Messages.get(this, "invulnerable") );
+                Sample.INSTANCE.play(Assets.SND_GOLD, 1f, Random.Float(0.96f, 1.05f));
+            }
+            return false;
+        }
+
+        if(enemy instanceof Hero && type != rangeType.Dismiss && ((Hero) enemy).hasTalent(Talent.REFLECT)){
+            Item sprite;
+            switch (type){
+                default:
+                case GnollTrickster:sprite = new ParalyticDart();break;
+                case Tengu:sprite = new Shuriken();break;
+                case Scorpio:sprite = new Dart();break;
+            }
+
+            Char reflected = this;
+            //With ranged physical attack somehow same in anime,the only variable is the sprite 
+            ((MissileSprite)this.sprite.parent.recycle( MissileSprite.class )).
+                    reset( enemy.pos,this.pos, sprite, new Callback() {
+                        @Override
+                        public void call() {
+                            int dmg = reflected.damageRoll(reflected,false);
+                            int dr = reflected.drRoll();
+
+                            int effectiveDamage = reflected.defenseProc( reflected, dmg );
+                            effectiveDamage = Math.max( effectiveDamage - dr, 0 );
+                            effectiveDamage = attackProc( reflected, effectiveDamage );
+
+                            if (visibleFight) {
+                                Sample.INSTANCE.play( Assets.SND_HIT, 1, 1, Random.Float( 0.8f, 1.25f ) );
+                            }
+
+                            reflected.damage( effectiveDamage, this );
+                            reflected.sprite.bloodBurstA( reflected.sprite.center(), effectiveDamage );
+                            reflected.sprite.flash();
+                            if (!reflected.isAlive() && visibleFight) {
+                                GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", name)) );
+                                //Actor.remove(reflected);
+
+                            }
+                        }
+                    } );
+            return false;
+        }
+        else return attack(enemy);
+    }
 	
 	public static boolean hit( Char attacker, Char defender, boolean magic ) {
 		float acuRoll = Random.Float( attacker.attackSkill( defender ) );
@@ -524,8 +585,17 @@ public abstract class Char extends Actor {
 		//The main actor thread already accounts for motion,
 		// so calling next() here isn't necessary (see Actor.process)
 	}
-	
-	public void onAttackComplete() {
+
+	public enum rangeType{
+        Dismiss,//With some should not be considered able to reflect
+        GnollTrickster,Tengu,Scorpio
+    }
+
+    public enum magicType{
+        Dismiss,Shaman,Eye,Warlock
+    }
+
+	public void onAttackComplete(rangeType Type) {
 		next();
 	}
 	

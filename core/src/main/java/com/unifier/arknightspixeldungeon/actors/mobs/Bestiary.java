@@ -43,9 +43,13 @@ public class Bestiary {
 			// Sewers
 			case 1: default:
 				//10x rat
-				return new ArrayList<Class<? extends Mob>>(Arrays.asList(
-						Rat.class, Rat.class, Rat.class, Rat.class, Rat.class,
-						Rat.class, Rat.class, Rat.class, Rat.class, Rat.class));
+				//return new ArrayList<Class<? extends Mob>>(Arrays.asList(
+				//		Rat.class, Rat.class, Rat.class, Rat.class, Rat.class,
+				//		Rat.class, Rat.class, Rat.class, Rat.class, Rat.class));
+
+            return new ArrayList<Class<? extends Mob>>(Arrays.asList(
+                    Shaman.class, Shaman.class, Warlock.class, Eye.class, Warlock.class,
+                    Shaman.class, Eye.class, Eye.class, Warlock.class, Eye.class));
 			case 2:
 				//3x rat, 3x gnoll
 				return new ArrayList<>(Arrays.asList(Rat.class, Rat.class, Rat.class,

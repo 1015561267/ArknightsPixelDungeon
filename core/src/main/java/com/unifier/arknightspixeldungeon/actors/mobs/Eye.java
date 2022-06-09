@@ -26,6 +26,9 @@ import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Light;
 import com.unifier.arknightspixeldungeon.actors.buffs.Terror;
+import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.effects.Beam;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.particles.PurpleParticle;
 import com.unifier.arknightspixeldungeon.items.Dewdrop;
@@ -36,6 +39,7 @@ import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.EyeSprite;
+import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -128,6 +132,19 @@ public class Eye extends Mob {
 			spend( attackDelay() );
 			
 			beam = new Ballistica(pos, beamTarget, Ballistica.STOP_TERRAIN);
+
+			int reflectedPos = beam.collisionPos;
+
+            for (int pos : beam.subPath(1, beam.dist)) {
+                Char ch = Actor.findChar( pos );
+                if (ch instanceof Hero && ((Hero) ch).hasTalent(Talent.REFLECT)) {
+                    reflectedPos = ch.pos;
+                    break;
+                }
+            }
+
+            beam = new Ballistica(pos, reflectedPos, Ballistica.STOP_TERRAIN);
+
 			if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[beam.collisionPos] ) {
 				sprite.zap( beam.collisionPos );
 				return false;
@@ -146,6 +163,11 @@ public class Eye extends Mob {
 	}
 
 	public void deathGaze(){
+
+	    boolean tracker = false;
+
+	    Char hero = null;
+
 		if (!beamCharged || beamCooldown > 0 || beam == null)
 			return;
 
@@ -169,30 +191,56 @@ public class Eye extends Mob {
 				continue;
 			}
 
-			if (hit( this, ch, true )) {
-				ch.damage( Random.NormalIntRange( 30, 50 ), this );
 
-				if (Dungeon.level.heroFOV[pos]) {
-					ch.sprite.flash();
-					CellEmitter.center( pos ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
-				}
-
-				if (!ch.isAlive() && ch == Dungeon.hero) {
-					Dungeon.fail( getClass() );
-					GLog.n( Messages.get(this, "deathgaze_kill") );
-				}
-			} else {
-				ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.defenseVerb() );
-			}
-		}
+            if (ch instanceof Hero && ((Hero) ch).hasTalent(Talent.REFLECT)){
+                tracker = true;
+                hero = ch;
+                break;
+            }
+            else magicHit(this,ch);
+    }
 
 		if (terrainAffected) {
 			Dungeon.observe();
 		}
 
+		if(tracker)
+        {
+            hero.sprite.parent.add(new Beam.DeathRay(hero.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(this.pos)));
+            beam = new Ballistica(hero.pos, this.pos, Ballistica.STOP_TERRAIN);
+
+            for (int pos : beam.subPath(1, beam.dist)) {
+
+                Char ch = Actor.findChar( pos );
+                if (ch == null) {
+                    continue;
+                }
+                magicHit(this,ch);
+            }
+        }
+
 		beam = null;
 		beamTarget = -1;
 	}
+
+    public void magicHit(Char from,Char to){
+
+        if (hit( from, to, true )) {
+            to.damage( Random.NormalIntRange( 30, 50 ), this );
+
+            if (Dungeon.level.heroFOV[pos]) {
+                to.sprite.flash();
+                CellEmitter.center( pos ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
+            }
+
+            if (!to.isAlive() && to == Dungeon.hero) {
+                Dungeon.fail( getClass() );
+                GLog.n( Messages.get(this, "deathgaze_kill") );
+            }
+        } else {
+            to.sprite.showStatus( CharSprite.NEUTRAL,  to.defenseVerb() );
+        }
+    }
 
 	private static final String BEAM_TARGET     = "beamTarget";
 	private static final String BEAM_COOLDOWN   = "beamCooldown";
@@ -235,4 +283,7 @@ public class Eye extends Mob {
 			return super.act(enemyInFOV, justAlerted);
 		}
 	}
+
+
+
 }

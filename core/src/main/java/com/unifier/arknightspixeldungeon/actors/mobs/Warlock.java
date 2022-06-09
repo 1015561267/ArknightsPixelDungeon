@@ -88,38 +88,43 @@ public class Warlock extends Mob implements Callback {
 			if (visible) {
 				sprite.zap( enemy.pos );
 			} else {
-				zap();
+			    zap();
 			}
-			
 			return !visible;
 		}
 	}
 	
 	private void zap() {
 		spend( TIME_TO_ZAP );
-		
-		if (hit( this, enemy, true )) {
-			if (enemy == Dungeon.hero && Random.Int( 2 ) == 0) {
-				Buff.prolong( enemy, Weakness.class, Weakness.DURATION );
-			}
-			
-			int dmg = Random.Int( 12, 18 );
-			enemy.damage( dmg, this );
-			
-			if (!enemy.isAlive() && enemy == Dungeon.hero) {
-				Dungeon.fail( getClass() );
-				GLog.n( Messages.get(this, "bolt_kill") );
-			}
-		} else {
-			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
-		}
+
+		if(!doMagicAttack(enemy,magicType.Warlock)){
+		    magicHit(this,enemy);
+        }
 	}
 	
 	public void onZapComplete() {
 		zap();
 		next();
 	}
-	
+
+    public void magicHit(Char from,Char to){
+        if (hit( from, to, true )) {
+            if (to == Dungeon.hero && Random.Int( 2 ) == 0) {
+                Buff.prolong( to, Weakness.class, Weakness.DURATION );
+            }
+
+            int dmg = Random.Int( 12, 18 );
+            to.damage( dmg, this );
+
+            if (!to.isAlive() && to == Dungeon.hero) {
+                Dungeon.fail( getClass() );
+                GLog.n( Messages.get(this, "bolt_kill") );
+            }
+        } else {
+            to.sprite.showStatus( CharSprite.NEUTRAL,  to.defenseVerb() );
+        }
+    }
+
 	@Override
 	public void call() {
 		next();

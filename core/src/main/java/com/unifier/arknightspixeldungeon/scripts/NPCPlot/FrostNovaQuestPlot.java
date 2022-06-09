@@ -544,7 +544,7 @@ public class FrostNovaQuestPlot extends Plot {
 
         public static void spawn( SewerLevel level ) {
             if (!spawned && Dungeon.depth > 1 && Random.Int( 5 - Dungeon.depth ) == 0) {
-
+              //  if (!spawned && Dungeon.depth == 3) {
                 Ghost ghost = new Ghost();
                 do {
                     ghost.pos = level.randomRespawnCell();

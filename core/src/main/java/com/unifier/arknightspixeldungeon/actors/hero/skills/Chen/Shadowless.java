@@ -111,7 +111,7 @@ public class Shadowless extends HeroSkill {
                 }
 
                 if(hero.hasTalent(Talent.SWORD_RAIN)){
-                    Buff.affect(target,SwordRainTracker.class).stack();
+                    Buff.affect(mob,SwordRainTracker.class).stack();
                 }
 
                 if(t>=9 || targets.isEmpty()){
@@ -148,11 +148,5 @@ public class Shadowless extends HeroSkill {
             return (int) (owner.rawdamageRoll(enemy,isMagic) * (1 + 0.05f * enemy.buff(SwordRainTracker.class).stack));
         }
         return owner.rawdamageRoll(enemy,isMagic);
-    }
-
-    @Override
-    public boolean act() {
-        detach();
-        return super.act();
     }
 }

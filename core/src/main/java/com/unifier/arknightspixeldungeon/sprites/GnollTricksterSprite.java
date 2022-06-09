@@ -23,6 +23,7 @@ package com.unifier.arknightspixeldungeon.sprites;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.darts.ParalyticDart;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.TextureFilm;
@@ -64,7 +65,7 @@ public class GnollTricksterSprite extends MobSprite {
 					reset( ch.pos, cell, new ParalyticDart(), new Callback() {
 						@Override
 						public void call() {
-							ch.onAttackComplete();
+							ch.onAttackComplete(Char.rangeType.GnollTrickster);
 						}
 					} );
 

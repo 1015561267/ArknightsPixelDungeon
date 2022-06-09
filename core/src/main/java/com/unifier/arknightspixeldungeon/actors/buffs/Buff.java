@@ -72,6 +72,7 @@ public class Buff extends Actor {
 	}
 	
 	public void detach() {
+        //GLog.w(this.toString());
 		if (target.sprite != null) fx( false );
 		target.remove( this );
 	}

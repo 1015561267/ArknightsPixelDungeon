@@ -31,7 +31,6 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
-import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
 import com.unifier.arknightspixeldungeon.items.bags.PotionBandolier;
@@ -52,8 +51,12 @@ import com.unifier.arknightspixeldungeon.items.stones.StoneOfAugmentation;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfMagicMissile;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Dagger;
+import com.unifier.arknightspixeldungeon.items.weapon.melee.Flail;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Knuckles;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MagesStaff;
+import com.unifier.arknightspixeldungeon.items.weapon.melee.Sai;
+import com.unifier.arknightspixeldungeon.items.weapon.melee.Spear;
+import com.unifier.arknightspixeldungeon.items.weapon.melee.Whip;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.WornShortsword;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.Boomerang;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingKnife;
@@ -132,7 +135,7 @@ public enum HeroClass {
 
         new TomeOfMastery().collect();
 
-        WornShortsword sword = new WornShortsword();
+        /*WornShortsword sword = new WornShortsword();
         sword.cursed = true;
         sword.enchant(Weapon.Enchantment.randomCurse());
         sword.collect();
@@ -160,7 +163,23 @@ public enum HeroClass {
         armor = new ClothArmor();
         armor.cursed = true;
         armor.inscribe(Armor.Glyph.randomCurse());
-        armor.collect();
+        armor.collect();*/
+
+        Weapon weapon = new Flail();
+        weapon.identify();
+        weapon.collect();
+
+        weapon = new Spear();
+        weapon.identify();
+        weapon.collect();
+
+        weapon = new Whip();
+        weapon.identify();
+        weapon.collect();
+
+        weapon = new Sai();
+        weapon.identify();
+        weapon.collect();
 	}
 
 	public Badges.Badge masteryBadge() {

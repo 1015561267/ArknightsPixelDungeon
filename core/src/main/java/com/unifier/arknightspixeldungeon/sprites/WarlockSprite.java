@@ -69,6 +69,7 @@ public class WarlockSprite extends MobSprite {
 						((Warlock)ch).onZapComplete();
 					}
 				} );
+
 		Sample.INSTANCE.play( Assets.SND_ZAP );
 	}
 	

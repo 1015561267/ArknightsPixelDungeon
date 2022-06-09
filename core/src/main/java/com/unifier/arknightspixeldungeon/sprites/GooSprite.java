@@ -144,7 +144,7 @@ public class GooSprite extends MobSprite {
 		if (anim == pumpAttack) {
 
 			idle();
-			ch.onAttackComplete();
+			ch.onAttackComplete(Char.rangeType.Dismiss);
 		} else if (anim == die) {
 			spray.killAndErase();
 		}

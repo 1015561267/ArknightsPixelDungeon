@@ -24,9 +24,12 @@ package com.unifier.arknightspixeldungeon.sprites;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Eye;
 import com.unifier.arknightspixeldungeon.effects.Beam;
 import com.unifier.arknightspixeldungeon.effects.MagicMissile;
+import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.particles.Emitter;
@@ -102,9 +105,20 @@ public class EyeSprite extends MobSprite {
 	@Override
 	public void onComplete( Animation anim ) {
 		super.onComplete( anim );
-		
-		if (anim == zap) {
-			idle();
+
+        if (anim == zap) {
+            idle();
+
+            Ballistica beam = new Ballistica(ch.pos, zapPos, Ballistica.STOP_TERRAIN);
+
+            for (int pos : beam.subPath(1, beam.dist)) {
+                Char ch = Actor.findChar( pos );
+                if (ch instanceof Hero && ((Hero) ch).hasTalent(Talent.REFLECT)){
+                    zapPos = ch.pos; // fix the sprite as it appear before logic
+                    break;
+                }
+            }
+
 			if (Actor.findChar(zapPos) != null){
 				parent.add(new Beam.DeathRay(center(), Actor.findChar(zapPos).sprite.center()));
 			} else {

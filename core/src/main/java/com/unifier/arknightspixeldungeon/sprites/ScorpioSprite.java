@@ -23,6 +23,7 @@ package com.unifier.arknightspixeldungeon.sprites;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.darts.Dart;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.utils.Callback;
@@ -84,7 +85,7 @@ public class ScorpioSprite extends MobSprite {
 			reset( ch.pos, cellToAttack, new Dart(), new Callback() {
 				@Override
 				public void call() {
-					ch.onAttackComplete();
+					ch.onAttackComplete(Char.rangeType.Scorpio);
 				}
 			} );
 		} else {

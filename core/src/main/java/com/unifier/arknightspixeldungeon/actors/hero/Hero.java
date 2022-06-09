@@ -1598,7 +1598,7 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public void onAttackComplete() {
+	public void onAttackComplete(rangeType type) {
 		
 		AttackIndicator.target(enemy);
 		
@@ -1624,12 +1624,11 @@ public class Hero extends Char {
 		
 		Invisibility.dispel();
 
-
 		spend( attackDelay() );
 
 		curAction = null;
 
-		super.onAttackComplete();
+		super.onAttackComplete(rangeType.Dismiss);
 	}
 	
 	@Override
@@ -1788,7 +1787,9 @@ public class Hero extends Char {
     public void heal(Object source,int amount)
     {
         amount = Math.min(amount,HT - HP);
-        HP += amount;
+
+        HP = Math.min(HT, HP + amount);
+
         Talent.onHealthGain(this,source,amount);
     }
 

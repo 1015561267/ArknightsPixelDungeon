@@ -23,6 +23,7 @@ package com.unifier.arknightspixeldungeon.actors.mobs;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.effects.Lightning;
 import com.unifier.arknightspixeldungeon.effects.particles.SparkParticle;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
@@ -85,11 +86,18 @@ public class Shaman extends Mob implements Callback {
 			boolean visible = fieldOfView[pos] || fieldOfView[enemy.pos];
 			if (visible) {
 				sprite.zap( enemy.pos );
-			}
-			
+			}else sprite.parent.add( new Lightning( this.pos, enemy.pos, (Shaman)this) );
+
 			spend( TIME_TO_ZAP );
-			
-			if (hit( this, enemy, true )) {
+
+			if(doMagicAttack(enemy,magicType.Shaman))
+            {
+                magicHit(enemy,this);
+            }
+
+			else magicHit(this,enemy);
+
+			/*if (hit( this, enemy, true )) {
 				int dmg = Random.NormalIntRange(3, 10);
 				if (Dungeon.level.water[enemy.pos] && !enemy.flying) {
 					dmg *= 1.5f;
@@ -110,7 +118,7 @@ public class Shaman extends Mob implements Callback {
 				}
 			} else {
 				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
-			}
+			}*/
 			
 			return !visible;
 		}
@@ -120,5 +128,29 @@ public class Shaman extends Mob implements Callback {
 	public void call() {
 		next();
 	}
-	
+
+    public void magicHit(Char from,Char to){
+        if (hit( from, to, true )) {
+            int dmg = Random.NormalIntRange(3, 10);
+            if (Dungeon.level.water[to.pos] && !to.flying) {
+                dmg *= 1.5f;
+            }
+            to.damage( dmg, from );
+
+            to.sprite.centerEmitter().burst( SparkParticle.FACTORY, 3 );
+            to.sprite.flash();
+
+            if (to == Dungeon.hero) {
+
+                Camera.main.shake( 2, 0.3f );
+
+                if (!to.isAlive()) {
+                    Dungeon.fail( getClass() );
+                    GLog.n( Messages.get(this, "zap_kill") );
+                }
+            }
+        } else {
+            to.sprite.showStatus( CharSprite.NEUTRAL,  to.defenseVerb() );
+        }
+    }
 }

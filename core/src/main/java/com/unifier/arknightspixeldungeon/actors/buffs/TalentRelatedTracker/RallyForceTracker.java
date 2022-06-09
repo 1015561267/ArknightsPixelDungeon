@@ -1,7 +1,6 @@
 package com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker;
 
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
-import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 
@@ -45,18 +44,24 @@ public class RallyForceTracker extends Buff {
         switch (state){
             default:
             case WAITING:
-                if (target.HP<=target.HT /4 ){
+                if (target.HP <= target.HT /4 ){
                     state = State.RECOVERING;
                     recoverAmount = target.HT / 2;
                 }
                 break;
             case RECOVERING:
                 float recover = target.HT * 0.05f * (doubledSpeed ? 2 : 1);
-                int heal = (int)Math.min(Math.min(recover,rechargeAmount),target.HT- target.HP);
+
+                //GLog.w(recover + " " + recoverAmount + " "+Math.min(recover,recoverAmount) + " " + (target.HT - target.HP) );
+
+                int heal = (int)Math.min(Math.min(recover,recoverAmount),target.HT - target.HP);
                 recoverAmount -= heal;
                 if(recoverAmount<=1) {recoverAmount = 0;heal++;}
+
+
                 target.heal(this, heal);
-                target.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, (int) Math.ceil( heal / 10 ));
+                //target.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, (int) Math.ceil( heal / 50 ));
+
                 if(recoverAmount <= 0)
                 {
                     state = State.RECHARGING;

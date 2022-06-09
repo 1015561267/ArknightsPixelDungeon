@@ -22,6 +22,7 @@
 package com.unifier.arknightspixeldungeon.windows;
 
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
+import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.GamesInProgress;
 import com.unifier.arknightspixeldungeon.messages.Messages;
@@ -32,6 +33,7 @@ import com.unifier.arknightspixeldungeon.scenes.TitleScene;
 import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.Window;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.Image;
 
 import java.io.IOException;
 
@@ -123,7 +125,20 @@ public class WndGame extends Window {
 				hide();
 			}
 		} );
-		
+
+        RedButton curBtn;
+        //如果回合未完成 显示该按钮
+        if(!Dungeon.hero.ready) {
+            // Debug
+            addButton(curBtn = new RedButton(Messages.get(this, "debug")) {
+                @Override
+                protected void onClick() {
+                    GameScene.logActorThread = true;
+                }
+            });
+            curBtn.icon(new Image(Assets.SPINNER, 144, 0, 16, 16));
+        }
+
 		resize( WIDTH, pos );
 	}
 	
