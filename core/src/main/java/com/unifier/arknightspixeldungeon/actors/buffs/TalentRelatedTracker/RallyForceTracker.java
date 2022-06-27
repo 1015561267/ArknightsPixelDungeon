@@ -1,6 +1,8 @@
 package com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker;
 
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.effects.TalentSprite;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 
@@ -47,6 +49,7 @@ public class RallyForceTracker extends Buff {
                 if (target.HP <= target.HT /4 ){
                     state = State.RECOVERING;
                     recoverAmount = target.HT / 2;
+                    TalentSprite.show(target, Talent.RALLY_FORCE,TalentSprite.Phase.FADE_IN);
                 }
                 break;
             case RECOVERING:
@@ -66,6 +69,7 @@ public class RallyForceTracker extends Buff {
                 {
                     state = State.RECHARGING;
                     rechargeAmount = getNeededRecharge();
+                    TalentSprite.show(target, Talent.RALLY_FORCE,TalentSprite.Phase.STATIC);
                 }
                 break;
             case RECHARGING:{

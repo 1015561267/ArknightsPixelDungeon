@@ -41,6 +41,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Doom;
 import com.unifier.arknightspixeldungeon.actors.buffs.Drowsy;
 import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Frost;
+import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
 import com.unifier.arknightspixeldungeon.actors.buffs.MagicalSleep;
 import com.unifier.arknightspixeldungeon.actors.buffs.Ooze;
 import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
@@ -51,6 +52,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Slow;
 import com.unifier.arknightspixeldungeon.actors.buffs.SoulMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.Terror;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
+import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.mobs.Bee;
 import com.unifier.arknightspixeldungeon.actors.mobs.King;
@@ -89,6 +91,7 @@ public class WandOfCorruption extends Wand {
 	private static final HashMap<Class<? extends Buff>, Float> MINOR_DEBUFFS = new HashMap<>();
 	static{
 		MINOR_DEBUFFS.put(Weakness.class,       2f);
+        MINOR_DEBUFFS.put(Vulnerable.class,     2f);
 		MINOR_DEBUFFS.put(Cripple.class,        1f);
 		MINOR_DEBUFFS.put(Blindness.class,      1f);
 		MINOR_DEBUFFS.put(Terror.class,         1f);
@@ -108,6 +111,7 @@ public class WandOfCorruption extends Wand {
 	static{
 		MAJOR_DEBUFFS.put(Amok.class,           3f);
 		MAJOR_DEBUFFS.put(Slow.class,           2f);
+        MAJOR_DEBUFFS.put(Hex.class,            2f);
 		MAJOR_DEBUFFS.put(Paralysis.class,      1f);
 		
 		MAJOR_DEBUFFS.put(Charm.class,          0f);

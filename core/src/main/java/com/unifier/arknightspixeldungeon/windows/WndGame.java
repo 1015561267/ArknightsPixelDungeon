@@ -34,6 +34,7 @@ import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.Window;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
+import com.watabou.utils.DeviceCompat;
 
 import java.io.IOException;
 
@@ -126,9 +127,11 @@ public class WndGame extends Window {
 			}
 		} );
 
+
+
         RedButton curBtn;
-        //如果回合未完成 显示该按钮
-        if(!Dungeon.hero.ready) {
+        //如果回合未完成 显示该按钮//Used for debug especially for process jam problems,from too cruel dungeon - Teller 2022/6/13
+        if(!Dungeon.hero.ready && DeviceCompat.isDebug()) {
             // Debug
             addButton(curBtn = new RedButton(Messages.get(this, "debug")) {
                 @Override

@@ -21,6 +21,7 @@
 
 package com.unifier.arknightspixeldungeon.actors.mobs;
 
+import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
@@ -30,6 +31,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.Beam;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
+import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.effects.particles.PurpleParticle;
 import com.unifier.arknightspixeldungeon.items.Dewdrop;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfDisintegration;
@@ -41,6 +43,7 @@ import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.EyeSprite;
 import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
 import com.unifier.arknightspixeldungeon.utils.GLog;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -206,8 +209,14 @@ public class Eye extends Mob {
 
 		if(tracker)
         {
-            hero.sprite.parent.add(new Beam.DeathRay(hero.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(this.pos)));
-            beam = new Ballistica(hero.pos, this.pos, Ballistica.STOP_TERRAIN);
+            enemy.sprite.turnTo(enemy.pos,this.pos);
+            Char reflected = this;
+
+            enemy.sprite.centerEmitter().burst( Speck.factory( Speck.FORGE ), 3 );
+            Sample.INSTANCE.play( Assets.SND_EVOKE, 0.2f, 0.2f, 0.8f  );
+
+            enemy.sprite.parent.add(new Beam.DeathRay(enemy.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(reflected.pos)));
+            beam = new Ballistica(enemy.pos, reflected.pos, Ballistica.STOP_TERRAIN);
 
             for (int pos : beam.subPath(1, beam.dist)) {
 
@@ -215,12 +224,14 @@ public class Eye extends Mob {
                 if (ch == null) {
                     continue;
                 }
-                magicHit(this,ch);
+                if(ch.isAlive()) {
+                    magicHit(reflected, ch);
+                }
             }
-        }
 
-		beam = null;
-		beamTarget = -1;
+        }
+        beam = null;
+        beamTarget = -1;
 	}
 
     public void magicHit(Char from,Char to){

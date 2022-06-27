@@ -28,10 +28,19 @@ import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 abstract public class KindOfWeapon extends EquipableItem {
 	
 	protected static final float TIME_TO_EQUIP = 1f;
-	
+
+    public enum type{SWORD}
+
+    public ArrayList<KindOfWeapon.type> weaponType()
+    {
+        return new ArrayList<>();
+    }
+
 	@Override
 	public boolean isEquipped( Hero hero ) {
 		return hero.belongings.weapon == this;

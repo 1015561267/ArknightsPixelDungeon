@@ -2,6 +2,8 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills;
 
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
@@ -44,7 +46,9 @@ public abstract class HeroSkill extends Buff {
      public boolean act() {
         spend( TICK );
         if(activated()) {
-            getCoolDown(TICK);
+            if(owner.hasTalent(Talent.SWORD_WEAPON_MASTERY) && owner.belongings.weapon != null && owner.belongings.weapon.weaponType().contains(KindOfWeapon.type.SWORD))
+                getCoolDown(TICK * 1.2f);
+            else getCoolDown(TICK);
         }
         return true;
     }

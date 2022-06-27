@@ -21,7 +21,6 @@
 
 package com.unifier.arknightspixeldungeon.ui;
 
-import com.unifier.arknightspixeldungeon.PDSettings;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.RenderedText;
@@ -200,10 +199,10 @@ public class RenderedTextBlock extends Component {
 		ArrayList<RenderedText> curLine = new ArrayList<>();
 		lines.add(curLine);
 
-		float modifier=0f;
-        switch (PDSettings.language()) {
-            case CHINESE: modifier = 1f;
-            default: }
+		//float modifier=0f;
+        ///switch (PDSettings.language()) {
+        //    case CHINESE: modifier = 1f;
+         //   default: }
 
 		width = 0;
 		for (RenderedText word : words){
@@ -211,7 +210,7 @@ public class RenderedTextBlock extends Component {
 				x += 1.5f;
 			} else if (word == NEWLINE) {
 				//newline
-				y += height + 2f + modifier;
+				y += height + 2f;
 				x = this.x;
 				nLines++;
 				curLine = new ArrayList<>();
@@ -220,7 +219,7 @@ public class RenderedTextBlock extends Component {
 				if (word.height() > height) height = word.height();
 
 				if ((x - this.x) + word.width() > maxWidth && !curLine.isEmpty()){
-					y += height + 2f + modifier;
+					y += height + 2f;
 					x = this.x;
 					nLines++;
 					curLine = new ArrayList<>();

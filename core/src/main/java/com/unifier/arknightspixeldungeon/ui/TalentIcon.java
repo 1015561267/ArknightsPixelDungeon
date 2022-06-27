@@ -16,9 +16,7 @@ public class TalentIcon extends Image {
 
     public TalentIcon(int icon) {
         super(Assets.TALENT_ICONS);
-
         if (film == null) film = new TextureFilm(texture, SIZE, SIZE);
-
         frame(film.get(icon));
     }
 }

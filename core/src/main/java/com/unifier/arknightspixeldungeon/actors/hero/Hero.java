@@ -49,7 +49,6 @@ import com.unifier.arknightspixeldungeon.actors.buffs.SnipersMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
-import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.NPC;
@@ -57,6 +56,7 @@ import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.CheckedCell;
 import com.unifier.arknightspixeldungeon.effects.Flare;
 import com.unifier.arknightspixeldungeon.effects.Speck;
+import com.unifier.arknightspixeldungeon.effects.TalentSprite;
 import com.unifier.arknightspixeldungeon.items.Amulet;
 import com.unifier.arknightspixeldungeon.items.Ankh;
 import com.unifier.arknightspixeldungeon.items.Dewdrop;
@@ -93,6 +93,7 @@ import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicalInfusion;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Flail;
+import com.unifier.arknightspixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.unifier.arknightspixeldungeon.journal.Notes;
 import com.unifier.arknightspixeldungeon.levels.Level;
@@ -211,7 +212,7 @@ public class Hero extends Char {
 
 		STR += RingOfMight.strengthBonus( this );
 
-		return (buff(Weakness.class) != null) ? STR - 2 : STR;
+		return STR;
 	}
 
 	private static final String ATTACK		= "attackSkill";
@@ -394,11 +395,16 @@ public class Hero extends Char {
 				&& Dungeon.level.distance( pos, target.pos ) == 1) {
 			accuracy *= 0.5f;
 		}
-		
+
+		int modifier = 0;
+		if(hasTalent(Talent.HEAVY_WEAPON_MASTERY) && wep instanceof MeleeWeapon){
+		    modifier = Math.max( wep!=null ? STR - ((MeleeWeapon) wep).STRReq() : STR - 10 , 0);
+        }
+
 		if (wep != null) {
-			return (int)(attackSkill * accuracy * wep.accuracyFactor( this ));
+			return (int)(attackSkill * accuracy * wep.accuracyFactor( this )) + modifier;
 		} else {
-			return (int)(attackSkill * accuracy);
+			return (int)(attackSkill * accuracy) + modifier;
 		}
 	}
 	
@@ -545,6 +551,7 @@ public class Hero extends Char {
 
 	    if(buff(Talent.PreemptiveStrikeActiveTracker.class)!=null)
         {
+            TalentSprite.show(this, Talent.PREEMPTIVE_STRIKE,TalentSprite.Phase.FADE_IN);
             buff(Talent.PreemptiveStrikeActiveTracker.class).detach();
             return 0;
         }
@@ -1057,6 +1064,9 @@ public class Hero extends Char {
 	
 	@Override
 	public int attackProc( Char enemy, int damage ) {
+
+        damage = super.attackProc( enemy, damage );
+
 		KindOfWeapon wep = belongings.weapon;
 
 		if (wep != null) damage = wep.proc( this, enemy, damage );
@@ -1110,7 +1120,7 @@ public class Hero extends Char {
 			GLog.w( Messages.get(this, "pain_resist") );
 		}
 
-        Talent.onDefenseProc(this,src,dmg);
+        dmg = Talent.onDefenseProc(this,src,dmg);
 
 		CapeOfThorns.Thorns thorns = buff( CapeOfThorns.Thorns.class );
 		if (thorns != null) {
@@ -1615,6 +1625,12 @@ public class Hero extends Char {
 
         if(hasTalent(Talent.CONTINUOUS_ASSAULT)){
             if(hit){
+                if(hasTalent(Talent.MORTAL_SKILL)){
+                    ComboTracker tracker = enemy.buff(ComboTracker.class);
+                    if(tracker!=null){
+                        skill_1.getCoolDown(skill_1.rawCD() * 0.05f);
+                    }
+                }
                 Buff.affect(enemy,ComboTracker.class).hit();
             }else {
                 ComboTracker tracker = enemy.buff(ComboTracker.class);

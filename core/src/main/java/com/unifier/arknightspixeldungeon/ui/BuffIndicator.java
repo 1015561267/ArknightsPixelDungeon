@@ -58,7 +58,12 @@ public class BuffIndicator extends Component {
 	public static final int ROOTS		= 11;
 	public static final int INVISIBLE	= 12;
 	public static final int SHADOWS		= 13;
+
 	public static final int WEAKNESS	= 14;
+	public static final int VULNERABLE  = 14;
+    public static final int HEX         = 14;
+
+
 	public static final int FROST		= 15;
 	public static final int BLINDNESS	= 16;
 	public static final int COMBO		= 17;
@@ -87,6 +92,8 @@ public class BuffIndicator extends Component {
 	public static final int BERSERK     = 40;
 	public static final int MOMENTUM    = 41;
 	public static final int PREPARATION = 42;
+
+
 
 	public static final int SIZE	= 7;
 	

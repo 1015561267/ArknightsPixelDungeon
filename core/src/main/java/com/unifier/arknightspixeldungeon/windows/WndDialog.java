@@ -12,7 +12,6 @@ import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.SkipIndicator;
 import com.unifier.arknightspixeldungeon.ui.Window;
 import com.watabou.input.PointerEvent;
-import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.PointerArea;
@@ -40,6 +39,7 @@ public class WndDialog extends Window {
     private RenderedTextBlock rightname;
 
     private RenderedTextBlock text;
+    private String script;
 
     public static Plot settedPlot = null;
 
@@ -47,7 +47,7 @@ public class WndDialog extends Window {
 
     public SkipIndicator skip = null;
 
-    public ColorBlock blocks[];
+    //public ColorBlock blocks[];
     public boolean readed;
     private final int color = 0xFF2F2F2F;
 
@@ -55,6 +55,9 @@ public class WndDialog extends Window {
 
     private boolean haveChoice = false;
     private Choice storedChoice[];
+
+    private float timeLeft = 0.2f;
+    private int times = 0;
 
     public WndDialog(Plot plot,Boolean regained) {
 
@@ -124,7 +127,7 @@ public class WndDialog extends Window {
 
         float modifier = 0;
 
-        switch (PDSettings.language()) {
+       /* switch (PDSettings.language()) {
             case CHINESE: modifier = 1f;
             default: }
             //FIXME Well it sounds weird but it really happens:Chinese characters have bigger possible height than English,so with its margin,in fact there are some small overlap between lines.
@@ -148,7 +151,7 @@ public class WndDialog extends Window {
                     blocks[i].y = blocks[ i - 1].y + blocks[ i - 1 ].height() - modifier;
                 }
                 add( blocks[i]);
-            }
+            }*/
 
         if(regained)
         {
@@ -172,6 +175,9 @@ public class WndDialog extends Window {
                     if (settedPlot.end()) {
                         hide();
                     } else {
+                        timeLeft = 0.02f;
+                        times = 0;
+                        readed = false;
                         settedPlot.process();
                     }
                 }
@@ -290,13 +296,14 @@ public class WndDialog extends Window {
     }
 
     public void changeText(String txt) {
-        this.text.text(txt);
+        script = txt;
+        //this.text.text(txt);
         resetBlock();
     }
 
     public void resetBlock()
     {
-        nowAt = 0;
+        /*nowAt = 0;
         readed = false;
 
         boolean landscape = false;
@@ -313,7 +320,7 @@ public class WndDialog extends Window {
                 b.x = text.left();
                 b.size(text.width(), textSize + 2f);
             }
-        }
+        }*/
     }
 
     public void showBackground(String txt) {
@@ -403,8 +410,6 @@ public class WndDialog extends Window {
                 final int finalI = i;
                 ChoiceButton btn = new ChoiceButton(existing[i].text , 6) {
 
-                    float time = 0f;
-
                     @Override
                     protected void onClick() {
                         resizeAfterChoice();
@@ -455,53 +460,30 @@ public class WndDialog extends Window {
     public void update()
     {
             if(!readed) {
-                boolean landscape = false;
-                if(PDSettings.landscape()!=null)
-                {
-                    landscape = PDSettings.landscape();//yeah it sounds stupid but without it when entering game first time without minding this would cause crash.And mostly android device don't use landscape as default
-                }
-
-                int textSize = landscape ? 10 : 8;
-
-                float speed = (120 + 30 * (text.nLines - 1 ));
-
-                blocks[nowAt].x += speed * Game.elapsed;
-
-                float width = blocks[nowAt].width() - speed * Game.elapsed;
-
-                if(width < 0 ) width = 0;
-
-                blocks[nowAt].size( width ,textSize + 2f );
-
-                if(nowAt == text.nLines - 1)
-                {
-                    if( text.lastLineWidth <= blocks[nowAt].x)
-                    {
+                if ((timeLeft -= Game.elapsed) <= 0) {
+                    timeLeft = 0.02f;
+                    if (times++ < script.length()) {
+                        text.text(script.substring(0,times) , text.maxWidth());
+                    }
+                    else {
                         readed = true;
-                        if(haveChoice)
-                        {
+                        if (haveChoice) {
                             haveChoice = false;
                             showChoice(storedChoice);
                         }
                     }
-                }
-                else if (blocks[nowAt].width() <= 0) {
-                    nowAt++;
                 }
             }
     }
 
     public void skipWait()
     {
-        for(ColorBlock block : blocks)
-        {
-            if(block!=null)
-                block.size(0 ,0);
-        }
+        times = script.length();
+        text.text(script.substring(0,times) , text.maxWidth());
         readed = true;
-
         if(haveChoice)
         {
+            haveChoice = false;
             showChoice(storedChoice);
         }
     }

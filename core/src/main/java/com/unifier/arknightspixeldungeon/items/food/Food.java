@@ -37,6 +37,8 @@ import com.watabou.noosa.audio.Sample;
 
 import java.util.ArrayList;
 
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.VIGILANCE;
+
 public class Food extends Item {
 
 	public static final float TIME_TO_EAT	= 3f;
@@ -104,8 +106,8 @@ public class Food extends Item {
 		}
 	}
 
-    protected float eatingTime(){
-        if (Dungeon.hero.hasTalent(Talent.VIGILANCE)){
+    public static float eatingTime(){
+        if (Dungeon.hero.hasTalent(VIGILANCE)){
             return TIME_TO_EAT - 2;
         } else {
             return TIME_TO_EAT;

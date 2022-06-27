@@ -23,10 +23,15 @@ package com.unifier.arknightspixeldungeon.items.potions;
 
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Bleeding;
+import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
+import com.unifier.arknightspixeldungeon.actors.buffs.Drowsy;
 import com.unifier.arknightspixeldungeon.actors.buffs.Healing;
 import com.unifier.arknightspixeldungeon.actors.buffs.Poison;
+import com.unifier.arknightspixeldungeon.actors.buffs.Slow;
+import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
+import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.messages.Messages;
@@ -44,17 +49,22 @@ public class PotionOfHealing extends Potion {
 	public void apply( Hero hero ) {
 		setKnown();
 		//starts out healing 30 hp, equalizes with hero health total at level 11
-		Buff.affect( hero, Healing.class ).setHeal((int)(0.8f*hero.HT + 14), 0.333f, 0);
+		Buff.affect( hero, Healing.class ).stackHeal((int)(0.8f*hero.HT + 14), 0.333f, 0);
 		cure( hero );
 		GLog.p( Messages.get(this, "heal") );
 	}
 	
 	public static void cure( Char ch ) {
-		Buff.detach( ch, Poison.class );
-		Buff.detach( ch, Cripple.class );
-		Buff.detach( ch, Weakness.class );
-		Buff.detach( ch, Bleeding.class );
-		
+        Buff.detach( ch, Poison.class );
+        Buff.detach( ch, Cripple.class );
+        Buff.detach( ch, Weakness.class );
+        Buff.detach( ch, Vulnerable.class );
+        Buff.detach( ch, Bleeding.class );
+        //Buff.detach( ch, Hex.class);
+        Buff.detach( ch, Blindness.class );
+        Buff.detach( ch, Drowsy.class );
+        Buff.detach( ch, Slow.class );
+        Buff.detach( ch, Vertigo.class);
 	}
 
 	@Override

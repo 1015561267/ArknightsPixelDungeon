@@ -36,12 +36,8 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Preparation;
 import com.unifier.arknightspixeldungeon.actors.buffs.Sleep;
 import com.unifier.arknightspixeldungeon.actors.buffs.SoulMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.Terror;
-import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
-import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.Flare;
-import com.unifier.arknightspixeldungeon.effects.Lightning;
-import com.unifier.arknightspixeldungeon.effects.MagicMissile;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.effects.Surprise;
 import com.unifier.arknightspixeldungeon.effects.Wound;
@@ -56,7 +52,6 @@ import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 
@@ -456,59 +451,13 @@ public abstract class Mob extends Char {
 		return !visible;
 	}
 
-    protected boolean doMagicAttack( Char enemy ,magicType type) {
 
-        boolean visible = Dungeon.level.heroFOV[pos];
-
-        Char reflected = this;
-
-        if (enemy instanceof Hero && type != magicType.Dismiss && ((Hero) enemy).hasTalent(Talent.REFLECT)){
-
-            switch (type){
-                default:
-                case Dismiss: break;
-                case Shaman: enemy.sprite.parent.add( new Lightning( enemy.pos, this.pos, (Shaman)this ) );break;
-                case Warlock:	MagicMissile.boltFromChar( enemy.sprite.parent,
-                        MagicMissile.SHADOW,
-                        enemy.sprite,
-                        this.pos,
-                        new Callback() {
-                            @Override
-                            public void call() {
-                                magicHit(enemy,reflected);
-                                next();
-                            }
-                        } );break;
-                case Eye:
-                    break;
-            }
-            return true;
-        }
-        else return false;
-    }
-
-    public void magicHit(Char from,Char to){
-        if (hit( this, enemy, true )) {
-
-        } else {
-            enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
-        }
-    }
 
 	@Override
 	public void onAttackComplete(Char.rangeType type) {
         attack( enemy , type);
 		super.onAttackComplete(type);
 		//If the ranged attack can be reflected,then mob can die because of that,so next() better be called in callback(see function in Char.java) in avoid of process jam
-	}
-	
-	@Override
-	public int attackProc(Char enemy, int damage) {
-		damage = super.attackProc(enemy, damage);
-		if (buff(Weakness.class) != null){
-			damage *= 0.67f;
-		}
-		return damage;
 	}
 	
 	@Override

@@ -2,14 +2,23 @@ package com.unifier.arknightspixeldungeon.actors.hero;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.buffs.Bleeding;
+import com.unifier.arknightspixeldungeon.actors.buffs.Bless;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
 import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
+import com.unifier.arknightspixeldungeon.actors.buffs.Healing;
+import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
+import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
 import com.unifier.arknightspixeldungeon.actors.buffs.Regeneration;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
-import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.EmergencyRecoveryTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.DragonScaleTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RallyForceTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
+import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
+import com.unifier.arknightspixeldungeon.effects.TalentSprite;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
@@ -81,7 +90,7 @@ public enum Talent {
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(FAST_RECOVERY);
         }
-    },EMERGENCY_RECOVERY(21,2){
+    }, DRAGON_SCALE(21,2){
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(FAST_RECOVERY);
@@ -137,7 +146,7 @@ public enum Talent {
     RALLY_FORCE(35,3){
         @Override
         public boolean PreconditionFulfilled() {
-            return Dungeon.hero.hasTalent(VIGILANCE) || Dungeon.hero.hasTalent(EMERGENCY_RECOVERY);
+            return Dungeon.hero.hasTalent(VIGILANCE) || Dungeon.hero.hasTalent(DRAGON_SCALE);
         }
     },
     FORMATION_BREAKER(36, 3) {
@@ -502,7 +511,7 @@ public enum Talent {
         switch (tier)
         {
             case 0:Collections.addAll(tierTalents, SHEATHED_STRIKE,FAST_RECOVERY,PREEMPTIVE_STRIKE,ARM_INTUITION);break;
-            case 1:Collections.addAll(tierTalents, SHEATH_THROW,REPRIMAND,PARRY,VIGILANCE,LAST_CHANCE,EMERGENCY_RECOVERY,UNSHEATH,FLASH, REFLECT,CONTINUOUS_ASSAULT,RESENTMENT, WEAPON_ADAPT);break;
+            case 1:Collections.addAll(tierTalents, SHEATH_THROW,REPRIMAND,PARRY,VIGILANCE,LAST_CHANCE, DRAGON_SCALE,UNSHEATH,FLASH, REFLECT,CONTINUOUS_ASSAULT,RESENTMENT, WEAPON_ADAPT);break;
             case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE,FORMATION_BREAKER, WIND_CUTTER,SKILLFUL_GUARD, FAULTLESS_DEFENSE,DEADLY_COMBO,EVIL_ABHORRENCE,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
             case 3:Collections.addAll(tierTalents, WEAPON_THROW, SEIZE_OPPORTUNITY,CONSISTENT_PRINCIPLE,HEART_STRIKER,BOTHSIDE_ATTACK,CRIMSON_RAGE,SWORD_RAIN,CRIMSON_EXTENSION);break;
             case 4:Collections.addAll(tierTalents, FLOWING_WATER, SLASH_ECHO, LIGHTNING_REFLEXES,MORTAL_SKILL,FURY_RAMPAGE,MOTION_ACCUMULATION,BLADE_STORM,FULL_SUPPRESSION);break;
@@ -513,7 +522,11 @@ public enum Talent {
     }
 
     public static void onTalentUpgraded(Hero hero, Talent talent) {
-        if(talent == EMERGENCY_RECOVERY) { Buff.affect(hero, EmergencyRecoveryTracker.class);}//see class file in buff for more info
+        if(talent == DRAGON_SCALE) {
+            if(hero.buff(DragonScaleTracker.class)!=null) {
+                hero.buff(DragonScaleTracker.class).upgrade();
+            } else Buff.affect(hero,DragonScaleTracker.class);
+        }//see class file in buff for more info
         else if(talent == LAST_CHANCE) { Buff.affect(hero,LastChanceTracker.class); }
         else if(talent == RALLY_FORCE)
         {
@@ -521,7 +534,6 @@ public enum Talent {
                 hero.buff(RallyForceTracker.class).doubledSpeed = true;
             } else Buff.affect(hero,RallyForceTracker.class);
         }
-
         else if(talent == RESENTMENT){ Buff.affect(hero, RageTracker.class); }
     }
 
@@ -529,18 +541,18 @@ public enum Talent {
 
     public static void onFoodEaten( Hero hero, float foodVal, Item foodSource ){
         if (hero.hasTalent( FAST_RECOVERY )){
-            //10%/20% HP healed,another 10% when below 30% health
-            int recovery = 0;
+            //10%/20% gradual HP healed,another instant 10% when below 30% health
             if (hero.HP <= hero.HT * 0.3f)
             {
-                recovery += Math.ceil(hero.HT * 0.1f);
+                hero.heal(FAST_RECOVERY, (int) Math.ceil(hero.HT * 0.1f));
             }
-            recovery += Math.ceil(hero.HT) * 0.1f * hero.pointsInTalent(FAST_RECOVERY);
-            hero.heal(FAST_RECOVERY,recovery);
+            Buff.affect( hero, Healing.class ).stackHeal((int) (Math.ceil(hero.HT) * 0.1f * hero.pointsInTalent(FAST_RECOVERY)), 0.333f, 0);
+            TalentSprite.show(hero, Talent.FAST_RECOVERY,TalentSprite.Phase.FADE_IN);
         }
         if (hero.hasTalent(VIGILANCE)){
             if (hero.cooldown() > 0) {
                 Buff.affect(hero, VigilanceModifier.class, Food.TIME_TO_EAT);
+                TalentSprite.show(hero, Talent.VIGILANCE,TalentSprite.Phase.FADE_IN);
             }
         }
     }
@@ -555,6 +567,7 @@ public enum Talent {
         {
             if(hero.pointsInTalent(ARM_INTUITION) == 2 && !item.isIdentified() && item.cursed && Random.Float() <= 0.3f)
             {
+                TalentSprite.show(hero, Talent.ARM_INTUITION,TalentSprite.Phase.FADE_IN);
                 item.cursedKnown = true;
                 return false;
             }
@@ -587,6 +600,37 @@ public enum Talent {
 
     public static class LightWeaponMasteryTracker extends Buff{};//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
 
+    public static void doAfterDamage(Hero hero, Char enemy, int effectiveDamage) {
+
+        if(hero.pointsInTalent(HEAVY_WEAPON_MASTERY) == 2)
+        {
+            float acuRoll = Random.Float( hero.attackSkill( enemy ) / 2 );
+            float defRoll = Random.Float( enemy.defenseSkill( hero ) );
+            if (hero.buff(Bless.class) != null) acuRoll *= 1.25f;
+            if (hero.buff(Hex.class) != null) acuRoll *= 0.8f;
+            if (enemy.buff(Bless.class) != null) defRoll *= 1.25f;
+            if (enemy.buff(Hex.class) != null) defRoll *= 0.8f;//FIXME Well may improve it with char.hit() later
+
+            if(acuRoll > defRoll){
+                int result = Random.Int(100);//20% Weakness,20% Vulnerable,20% Cripple,20% Bleeding,10% Hex,10% Paralysis
+                if(result <= 20)
+                {
+                    Buff.prolong( enemy, Weakness.class, (int)Math.sqrt(effectiveDamage) + 5f );
+                }else if(result <= 40){
+                    Buff.prolong( enemy, Vulnerable.class, (int)Math.sqrt(effectiveDamage) + 5f );
+                }else if(result <= 60){
+                    Buff.prolong( enemy, Cripple.class, (int)Math.sqrt(effectiveDamage) + 5f );
+                }else if(result <= 80){
+                    Buff.affect( enemy, Bleeding.class).set(effectiveDamage/4);
+                }else if(result <= 90){
+                    Buff.prolong( enemy, Hex.class, (int)Math.sqrt(effectiveDamage) + 3f );
+                }else{
+                    Buff.prolong( enemy, Paralysis.class, (int)Math.sqrt(effectiveDamage) );
+                }
+            }
+        }
+    }
+
 
     public static int onDefenseProc(Hero hero,Object source,int damage)//it should be before damage taken,so check Hero.damage for it
     {
@@ -594,6 +638,12 @@ public enum Talent {
             if (hero.pointsInTalent(Talent.VIGILANCE) == 1)       damage = Math.round(damage*0.50f);
             else if (hero.pointsInTalent(Talent.VIGILANCE) == 2)  damage = Math.round(damage*0.25f);
         }
+
+        if(hero.buff(DragonScaleTracker.class)!=null)
+        {
+            damage = hero.buff(DragonScaleTracker.class).affect(damage,source);
+        }
+
         return damage;
     }
 
@@ -603,9 +653,15 @@ public enum Talent {
         }
     }
 
-    public static void onHealthLose(Hero hero,Object source, int damage) {
+    public static int onHealthLose(Hero hero,Object source, int damage) {
         if(hero.buff(RageTracker.class)!=null) {
 
         }
+
+        if(hero.buff(DragonScaleTracker.class)!=null){
+            hero.buff(DragonScaleTracker.class).stack(damage,source);
+        }
+
+        return damage;
     }
 }

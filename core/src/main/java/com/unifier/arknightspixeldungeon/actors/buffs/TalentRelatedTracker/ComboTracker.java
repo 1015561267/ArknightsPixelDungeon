@@ -13,6 +13,7 @@ public class ComboTracker extends Buff {
     private static final String COMBO = "combo";
 
     private static final float DURATION = 5f;
+    private static final int MAX_COMBO = 10;
 
     protected int stack = 0;
     protected float fadeTime = DURATION;
@@ -51,7 +52,7 @@ public class ComboTracker extends Buff {
 
     public void hit() {
 
-        stack++;
+        stack();
         fadeTime = DURATION;
         missTracker = false;
 
@@ -71,6 +72,8 @@ public class ComboTracker extends Buff {
         if (comboTracker>=2) {comboTracker = 0 ; return true;}
         else return false;
     }
+
+    public void stack(){ stack = Math.max(stack++,MAX_COMBO); }
 
     public int getStack(){return stack;}
 }

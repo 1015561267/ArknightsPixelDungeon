@@ -39,6 +39,7 @@ import com.unifier.arknightspixeldungeon.effects.Flare;
 import com.unifier.arknightspixeldungeon.effects.FloatingText;
 import com.unifier.arknightspixeldungeon.effects.Ripple;
 import com.unifier.arknightspixeldungeon.effects.SpellSprite;
+import com.unifier.arknightspixeldungeon.effects.TalentSprite;
 import com.unifier.arknightspixeldungeon.items.Heap;
 import com.unifier.arknightspixeldungeon.items.Honeypot;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -149,6 +150,7 @@ public class GameScene extends PixelScene {
 	private Group effects;
 	private Group gases;
 	private Group spells;
+	private Group talents;
 	private Group statuses;
 	private Group emoicons;
 	private Group healthIndicators;
@@ -278,7 +280,10 @@ public class GameScene extends PixelScene {
 
 		spells = new Group();
 		add( spells );
-		
+
+		talents = new Group();
+		add( talents );
+
 		statuses = new Group();
 		add( statuses );
 		
@@ -531,6 +536,7 @@ public class GameScene extends PixelScene {
 		
 		if (!freezeEmitters) water.offset( 0, -5 * Game.elapsed );
 
+
         if(logActorThread){
             if (actorThread != null){
                 logActorThread = false;
@@ -782,6 +788,10 @@ public class GameScene extends PixelScene {
 	public static SpellSprite spellSprite() {
 		return (SpellSprite)scene.spells.recycle( SpellSprite.class );
 	}
+
+    public static TalentSprite talentSprite() {
+        return (TalentSprite)scene.talents.recycle( TalentSprite.class );
+    }
 	
 	public static Emitter emitter() {
 		if (scene != null) {

@@ -3,12 +3,13 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills.Chen;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.SwordRainTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.effects.ChenSlash;
+import com.unifier.arknightspixeldungeon.effects.Wound;
 import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
@@ -94,7 +95,7 @@ public class Shadowless extends HeroSkill {
 
         Mob mob=targets.get(Random.Int(targets.size()));
 
-        ChenSlash.hit(mob.pos, Random.Int(360),new Callback() {
+        Wound.hit(mob.pos, Random.Int(360),new Callback() {
             @Override
             public void call() {
 
@@ -108,6 +109,10 @@ public class Shadowless extends HeroSkill {
                         Dungeon.hero.earnExp(exp);
                     }
                     targets.remove(mob);
+                }else{
+                    if(hero.hasTalent(Talent.MORTAL_SKILL)){
+                        Buff.affect(mob, ComboTracker.class).stack();
+                    }
                 }
 
                 if(hero.hasTalent(Talent.SWORD_RAIN)){

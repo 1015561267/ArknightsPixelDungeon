@@ -39,6 +39,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Doom;
 import com.unifier.arknightspixeldungeon.actors.buffs.EarthImbue;
 import com.unifier.arknightspixeldungeon.actors.buffs.FireImbue;
 import com.unifier.arknightspixeldungeon.actors.buffs.Frost;
+import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
 import com.unifier.arknightspixeldungeon.actors.buffs.Hunger;
 import com.unifier.arknightspixeldungeon.actors.buffs.MagicalSleep;
 import com.unifier.arknightspixeldungeon.actors.buffs.Ooze;
@@ -48,9 +49,15 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Preparation;
 import com.unifier.arknightspixeldungeon.actors.buffs.Slow;
 import com.unifier.arknightspixeldungeon.actors.buffs.Speed;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
+import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
+import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.actors.mobs.Shaman;
+import com.unifier.arknightspixeldungeon.effects.Lightning;
+import com.unifier.arknightspixeldungeon.effects.MagicMissile;
+import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.glyphs.Potential;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfElements;
@@ -216,8 +223,15 @@ public abstract class Char extends Actor {
 
 			int effectiveDamage = enemy.defenseProc( this, dmg );
 			effectiveDamage = Math.max( effectiveDamage - dr, 0 );
+
+            if ( enemy.buff( Vulnerable.class ) != null){
+                effectiveDamage *= 1.33f;
+            }
+
 			effectiveDamage = attackProc( enemy, effectiveDamage );
-			
+
+
+
 			if (visibleFight) {
 				Sample.INSTANCE.play( Assets.SND_HIT, 1, 1, Random.Float( 0.8f, 1.25f ) );
 			}
@@ -256,7 +270,10 @@ public abstract class Char extends Actor {
 					GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)) );
 				}
 			}
-			
+
+			if(this instanceof Hero)
+			    Talent.doAfterDamage((Hero) this,enemy,effectiveDamage);
+
 			return true;
 			
 		} else {
@@ -289,20 +306,32 @@ public abstract class Char extends Actor {
         }
 
         if(enemy instanceof Hero && type != rangeType.Dismiss && ((Hero) enemy).hasTalent(Talent.REFLECT)){
+
+            enemy.sprite.turnTo(enemy.pos,this.pos);
+
+            Char reflected = this;
+            enemy.sprite.centerEmitter().burst( Speck.factory( Speck.FORGE ), 3 );
+            Sample.INSTANCE.play( Assets.SND_EVOKE, 0.2f, 0.2f, 0.8f  );
+
             Item sprite;
             switch (type){
                 default:
-                case GnollTrickster:sprite = new ParalyticDart();break;
-                case Tengu:sprite = new Shuriken();break;
-                case Scorpio:sprite = new Dart();break;
+                    case GnollTrickster:sprite = new ParalyticDart();break;
+                    case Tengu:sprite = new Shuriken();break;
+                    case Scorpio:sprite = new Dart();break;
             }
 
-            Char reflected = this;
-            //With ranged physical attack somehow same in anime,the only variable is the sprite 
-            ((MissileSprite)this.sprite.parent.recycle( MissileSprite.class )).
-                    reset( enemy.pos,this.pos, sprite, new Callback() {
+            //With ranged physical attack somehow same in anime,the only variable is the sprite
+            ((MissileSprite)reflected.sprite.parent.recycle( MissileSprite.class )).
+                    reset( enemy.pos,reflected.pos, sprite, new Callback() {
                         @Override
                         public void call() {
+
+                            if(reflected==null || !reflected.isAlive())
+                            {
+                                return;
+                            }
+
                             int dmg = reflected.damageRoll(reflected,false);
                             int dr = reflected.drRoll();
 
@@ -320,7 +349,6 @@ public abstract class Char extends Actor {
                             if (!reflected.isAlive() && visibleFight) {
                                 GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", name)) );
                                 //Actor.remove(reflected);
-
                             }
                         }
                     } );
@@ -332,11 +360,65 @@ public abstract class Char extends Actor {
 	public static boolean hit( Char attacker, Char defender, boolean magic ) {
 		float acuRoll = Random.Float( attacker.attackSkill( defender ) );
 		float defRoll = Random.Float( defender.defenseSkill( attacker ) );
-		if (attacker.buff(Bless.class) != null) acuRoll *= 1.20f;
-		if (defender.buff(Bless.class) != null) defRoll *= 1.20f;
-		return (magic ? acuRoll * 2 : acuRoll) >= defRoll;
+
+		if (attacker.buff(Bless.class) != null) acuRoll *= 1.25f;
+        if (attacker.buff(Hex.class) != null) acuRoll *= 0.8f;
+
+		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
+        if (defender.buff(Hex.class) != null) defRoll *= 0.8f;
+
+        return (magic ? acuRoll * 2 : acuRoll) >= defRoll;
 	}
-	
+    protected boolean doMagicAttack( Char enemy ,magicType type) {
+
+        boolean visible = Dungeon.level.heroFOV[pos];
+
+        Char reflected = this;
+
+        if (enemy instanceof Hero && type != magicType.Dismiss && ((Hero) enemy).hasTalent(Talent.REFLECT)){
+
+            enemy.sprite.turnTo(enemy.pos,this.pos);
+
+            enemy.sprite.centerEmitter().burst( Speck.factory( Speck.FORGE ), 3 );
+            Sample.INSTANCE.play( Assets.SND_EVOKE, 0.2f, 0.2f, 0.8f  );
+
+
+            switch (type){
+                default:
+                    case Dismiss: break;
+                    case Shaman: enemy.sprite.parent.add( new Lightning( enemy.pos, reflected.pos, (Shaman)reflected ) );break;
+                    case Warlock:	MagicMissile.boltFromChar( enemy.sprite.parent,
+                            MagicMissile.SHADOW,
+                            enemy.sprite,
+                            reflected.pos,
+                            new Callback() {
+                        @Override
+                        public void call() {
+                            if(reflected!=null && reflected.isAlive())
+                            {
+                                magicHit(enemy,reflected);
+                            }
+                            next();
+                        }
+                    } );break;
+                    case Eye:
+                        break;//Eye is somehow different as gaze radial involve in sprite handle,see deathgaze() in Eye.java for more info
+            }
+            return true;
+        }
+        else return false;
+    }
+
+    public void magicHit(Char from,Char to){
+        if (hit( from, to, true )) {
+
+        } else {
+            to.sprite.showStatus( CharSprite.NEUTRAL,to.defenseVerb() );
+        }
+    }
+
+
+
 	public int attackSkill( Char target ) {
 		return 0;
 	}
@@ -358,6 +440,9 @@ public abstract class Char extends Actor {
 	}
 	
 	public int attackProc( Char enemy, int damage ) {
+        if ( buff(Weakness.class) != null ){
+            damage *= 0.67f;
+        }
 		return damage;
 	}
 	

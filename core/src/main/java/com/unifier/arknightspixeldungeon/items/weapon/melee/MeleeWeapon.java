@@ -24,8 +24,15 @@ package com.unifier.arknightspixeldungeon.items.weapon.melee;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
+import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
 import com.unifier.arknightspixeldungeon.actors.buffs.Invisibility;
+import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
+import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
+import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
+import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
@@ -41,11 +48,9 @@ public class MeleeWeapon extends Weapon {
 
     //public static final String AC_REDDUCK = "REDDUCK";//绝影
 
-    public enum type{SWORD}
-
     public ArrayList<type> weaponType()
     {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -87,10 +92,6 @@ public class MeleeWeapon extends Weapon {
         if (owner instanceof Hero) {
             int exStr = ((Hero)owner).STR() - STRReq();
 
-            if(this.weaponType().contains(type.SWORD) && ((Hero) owner).hasTalent(Talent.SWORD_WEAPON_MASTERY)){
-                min = (int) Math.max(min,max * 0.2f);
-            }
-
             if(((Hero) owner).hasTalent(Talent.WEAPON_ADAPT))
             {
                 int buffedStr = Math.min(3,exStr);//first 3 str have double effect
@@ -113,7 +114,19 @@ public class MeleeWeapon extends Weapon {
                 damage += Random.IntRange( 0, exStr );
             }
 
-            damage += augment.damageFactor(Random.NormalIntRange(min,max));
+            int rawDamage = Random.NormalIntRange(min,max);
+
+            int agumentDamage = augment.damageFactor(rawDamage);
+
+            if(((Hero) owner).hasTalent(Talent.FULL_SUPPRESSION))
+            {
+                if( enemy.buff(Weakness.class) != null || enemy.buff(Vulnerable.class) != null || enemy.buff(Cripple.class) != null || enemy.buff(Blindness.class) != null || enemy.buff(Vertigo.class) != null || enemy.buff(Hex.class) != null || enemy.buff(Paralysis.class) != null)
+                {
+                    agumentDamage += agumentDamage * Random.Float(0.1f,0.3f);
+                }
+            }
+
+            damage += agumentDamage;
 
             return damage;
         }

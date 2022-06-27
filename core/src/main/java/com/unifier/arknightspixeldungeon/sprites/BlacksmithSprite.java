@@ -22,8 +22,11 @@
 package com.unifier.arknightspixeldungeon.sprites;
 
 import com.unifier.arknightspixeldungeon.Assets;
+import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 
 public class BlacksmithSprite extends MobSprite {
@@ -72,11 +75,11 @@ public class BlacksmithSprite extends MobSprite {
 	public void onComplete( Animation anim ) {
 		super.onComplete( anim );
 		
-		//if (visible && emitter != null && anim == idle) {
-		//	emitter.burst( Speck.factory( Speck.FORGE ), 3 );
-		//	float volume = 0.2f / (Dungeon.level.distance( ch.pos, Dungeon.hero.pos ));
-		//	Sample.INSTANCE.play( Assets.SND_EVOKE, volume, volume, 0.8f  );
-		//}
+		if (visible && emitter != null && anim == idle) {
+			emitter.burst( Speck.factory( Speck.FORGE ), 3 );
+			float volume = 0.2f / (Dungeon.level.distance( ch.pos, Dungeon.hero.pos ));
+			Sample.INSTANCE.play( Assets.SND_EVOKE, volume, volume, 0.8f  );
+		}
 	}
 
 }

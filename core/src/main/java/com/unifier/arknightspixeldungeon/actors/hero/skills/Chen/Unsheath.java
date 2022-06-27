@@ -4,6 +4,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.FormationBreakerTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WindCutterTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
@@ -89,35 +90,66 @@ public class Unsheath extends HeroSkill {
         @Override
         public void onSelect(Integer cell) {
             if (cell != null && owner != null) {
-                Ballistica attack = new Ballistica(owner.pos, cell, Ballistica.DISMISS_CHAR);
+                Ballistica attack = new Ballistica(owner.pos, cell, Ballistica.STOP_TERRAIN);
+                //Here we take a rather complex logic to make hero get the further,unoccupied but close to desired pos
+                //For begin,if pointed position is stand-able then that's all,if not,
+                //First,if the pointed position is too long then take the furthest pos
+                //Second,if the pointed position is occupied then check if further pos is both unoccupied and stand-able until max range
+                //Third,if second step cannot get,roll back to the pointed position,then get closer to check possible pos
+                //Finally,if reach the zero pos,it represent finding failure.
 
-                int maxDistance = Math.min(range(), attack.dist);
+                int result = cell;
+                boolean dropedTracker = false;
 
-                int result = attack.collisionPos;
+                Char enemy;
+                List<Integer> availablePath = attack.subPath(1, range());
+                int desired = availablePath.indexOf(cell);
 
-                if (result == owner.pos) {
+                int maxTracker = Math.min(availablePath.indexOf(cell) < 0 ? availablePath.size() - 1 :availablePath.indexOf(cell) //get the so-called max range possible if pointed place is out of range
+                        ,availablePath.size() - 1);
+
+                for(int c : availablePath){
+                    GLog.w(String.valueOf(c));
+                }
+
+
+                if(desired != -1) //represent pointed place is in range,otherwise dismiss further search cause we directly use the longest pos as start
+                {
+                    for (int c : availablePath) {
+                        if(availablePath.indexOf(c) >= availablePath.indexOf(cell)){//search front to seek possible further drop place
+                            GLog.w(String.valueOf(c));
+                             enemy = Actor.findChar(c);
+                            if (enemy == null && Dungeon.level.passable[c]) {
+                                result = c;
+                                dropedTracker = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                GLog.w(String.valueOf(" "+maxTracker+" "+cell +" "+ desired+" "+dropedTracker));
+
+                if (!dropedTracker) {//then search back
+                    //List<Integer> reversePath = attack.subPath(maxTracker,1); Warning,Arraylist.sublist must have start<end,else throw exception,so reserve ergodic has had to take other ways
+                    for(int i = maxTracker;i>=0;i--){
+                        int c =availablePath.get(i);
+                        GLog.w(i+" "+c);
+                        enemy = Actor.findChar(c);
+                        if (enemy == null && Dungeon.level.passable[c]) {
+                            result = c;
+                            dropedTracker = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!dropedTracker || result == owner.pos) {
                     GLog.i("Unable to use");
                     return;
                 }
 
-                Char enemy;
                 int dropPos = result;
-
-                List<Integer> path = attack.subPath(maxDistance, 1);
-
-                for (int c : path) {
-                    if (path.indexOf(c) == path.size() - 1) {
-                        GLog.i("Full of enemy");
-                        return;
-                    }
-
-                    enemy = Actor.findChar(c);
-                    if (enemy == null) {
-                        dropPos = c;
-                        break;
-                    }
-                }
-
                 Ballistica real = new Ballistica(owner.pos, dropPos, Ballistica.DISMISS_CHAR);
 
                 owner.busy();
@@ -164,6 +196,13 @@ public class Unsheath extends HeroSkill {
                                             else tracker = (int) (skillDamage(enemy,false) * factor);
 
                                             enemy.damage(tracker,owner);
+
+                                            if(owner.hasTalent(Talent.MORTAL_SKILL)){
+                                                ComboTracker comboTracker = enemy.buff(ComboTracker.class);
+                                                if(comboTracker!=null && comboTracker.getStack()>=3 ){
+                                                    owner.skill_3.getCoolDown(owner.skill_3.rawCD() * 0.25f);
+                                                }
+                                            }
 
                                             if (!enemy.isAlive()) {
                                                 GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)));

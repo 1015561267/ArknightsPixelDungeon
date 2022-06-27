@@ -74,7 +74,7 @@ public class ChenSkillTreeLayouter {
 
         talentsPane.allbuttons.get(1).get(3).setPos(3 * Horizontal_Separator + ButtonWidth(),4 * Vertical_separator + 3 * ButtonHeight() + HUDHeight());//VIGILANCE
         talentsPane.allbuttons.get(1).get(4).setPos(3 * Horizontal_Separator + ButtonWidth(),5 * Vertical_separator + 4 * ButtonHeight() + HUDHeight());//LAST_CHANCE
-        talentsPane.allbuttons.get(1).get(5).setPos(3 * Horizontal_Separator + ButtonWidth(),6 * Vertical_separator + 5 * ButtonHeight() + HUDHeight());//EMERGENCY_RECOVERY
+        talentsPane.allbuttons.get(1).get(5).setPos(3 * Horizontal_Separator + ButtonWidth(),6 * Vertical_separator + 5 * ButtonHeight() + HUDHeight());//DRAGON_SCALE
 
         talentsPane.allbuttons.get(1).get(6).setPos(3 * Horizontal_Separator + ButtonWidth(),8 * Vertical_separator + 7 * ButtonHeight() + HUDHeight());//UNSHEATH
         talentsPane.allbuttons.get(1).get(7).setPos(3 * Horizontal_Separator + ButtonWidth(),9 * Vertical_separator + 8 * ButtonHeight() + HUDHeight());//FLASH

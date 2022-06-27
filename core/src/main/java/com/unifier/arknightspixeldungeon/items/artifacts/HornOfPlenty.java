@@ -244,7 +244,7 @@ public class HornOfPlenty extends Artifact {
 					Hero hero = Dungeon.hero;
 					hero.sprite.operate( hero.pos );
 					hero.busy();
-					hero.spend( Food.TIME_TO_EAT );
+                    hero.spend(  Food.eatingTime()  );
 
 					((HornOfPlenty)curItem).gainFoodValue(((Food)item));
 					item.detach(hero.belongings.backpack);

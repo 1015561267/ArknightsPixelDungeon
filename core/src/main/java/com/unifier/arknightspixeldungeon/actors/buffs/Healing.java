@@ -68,6 +68,12 @@ public class Healing extends Buff {
 		percentHealPerTick = percentPerTick;
 		flatHealPerTick = flatPerTick;
 	}
+
+	public void stackHeal(int amount,float percentPerTick,int flatPerTick){
+        healingLeft += amount;
+        percentHealPerTick = percentPerTick;
+        flatHealPerTick  = flatPerTick;
+    }
 	
 	public void increaseHeal( int amount ){
 		healingLeft += amount;
