@@ -25,6 +25,8 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.Challenges;
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.Exusiai.AdjustTool;
+import com.unifier.arknightspixeldungeon.Exusiai.skills.Exusiai.ExusiaiSkill_1;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Shadowless;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
@@ -266,6 +268,17 @@ public enum HeroClass {
 		new PotionOfMindVision().identify();
 
 		new TomeOfMastery().identify().collect();
+
+		new AdjustTool().collect();
+
+		hero.skill_1 = new ExusiaiSkill_1();
+		hero.skill_1.attachTo(hero);
+
+		hero.skill_2 = new Unsheath();
+		hero.skill_2.attachTo(hero);
+
+		hero.skill_3 = new Shadowless();
+		hero.skill_3.attachTo(hero);
 	}
 	
 	public String title() {

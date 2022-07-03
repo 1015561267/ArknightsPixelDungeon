@@ -242,4 +242,9 @@ public class Assets {
         public static final String WINDOWS  = "messages/windows/windows";
         public static final String SCRIPTS  = "messages/scripts/scripts";
     }
+
+    public static class Exusiai {
+        public static final String REVOLVER = "miscs/exusiai/revolver.png";
+        public static final String SIGHT = "miscs/exusiai/sight.png";
+    }
 }
