@@ -8,12 +8,12 @@ import com.watabou.utils.Callback;
 public class ChenSlash extends Wound {
 
     public ChenSlash() {
-        super( Effects.get( Effects.Type.CHEN_SLASH ));
+        super( Effects.get( Effects.Type.WOUND ));
     }
 
     public ChenSlash(Callback callback)
     {
-        super( Effects.get( Effects.Type.CHEN_SLASH ),callback);
+        super( Effects.get( Effects.Type.WOUND ),callback);
     }
 
     protected static float fadeTime(){ return 0.2f; }

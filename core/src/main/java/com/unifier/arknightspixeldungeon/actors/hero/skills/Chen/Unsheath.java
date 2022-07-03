@@ -35,7 +35,7 @@ import static com.unifier.arknightspixeldungeon.Dungeon.hero;
 
 public class Unsheath extends HeroSkill {
     @Override
-    public boolean activated() { return hero.hasTalent(Talent.UNSHEATH); }
+    public boolean activated() { return owner.hasTalent(Talent.UNSHEATH); }
 
     public String desc() { return Messages.get(this, "desc",range());}
 
@@ -108,11 +108,6 @@ public class Unsheath extends HeroSkill {
                 int maxTracker = Math.min(availablePath.indexOf(cell) < 0 ? availablePath.size() - 1 :availablePath.indexOf(cell) //get the so-called max range possible if pointed place is out of range
                         ,availablePath.size() - 1);
 
-                for(int c : availablePath){
-                    GLog.w(String.valueOf(c));
-                }
-
-
                 if(desired != -1) //represent pointed place is in range,otherwise dismiss further search cause we directly use the longest pos as start
                 {
                     for (int c : availablePath) {
@@ -128,13 +123,12 @@ public class Unsheath extends HeroSkill {
                     }
                 }
 
-                GLog.w(String.valueOf(" "+maxTracker+" "+cell +" "+ desired+" "+dropedTracker));
+                //GLog.w(String.valueOf(" "+maxTracker+" "+cell +" "+ desired+" "+dropedTracker));
 
                 if (!dropedTracker) {//then search back
                     //List<Integer> reversePath = attack.subPath(maxTracker,1); Warning,Arraylist.sublist must have start<end,else throw exception,so reserve ergodic has had to take other ways
                     for(int i = maxTracker;i>=0;i--){
                         int c =availablePath.get(i);
-                        GLog.w(i+" "+c);
                         enemy = Actor.findChar(c);
                         if (enemy == null && Dungeon.level.passable[c]) {
                             result = c;
@@ -206,10 +200,10 @@ public class Unsheath extends HeroSkill {
 
                                             if (!enemy.isAlive()) {
                                                 GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)));
-                                                int exp = hero.lvl <= ((Mob) enemy).maxLvl ? ((Mob) enemy).EXP : 0;
+                                                int exp = owner.lvl <= ((Mob) enemy).maxLvl ? ((Mob) enemy).EXP : 0;
                                                 if (exp > 0) {
-                                                    hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
-                                                    hero.earnExp(exp);
+                                                    owner.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
+                                                    owner.earnExp(exp);
                                                 }
                                             } else if(owner.hasTalent(Talent.WIND_CUTTER)){
                                                 Buff.affect(enemy, WindCutterTracker.class).set((int) (tracker * 0.5f));

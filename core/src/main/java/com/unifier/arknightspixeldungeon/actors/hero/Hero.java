@@ -149,8 +149,11 @@ public class Hero extends Char {
 
     public ArrayList<LinkedHashMap<Talent, Integer>> talents = new ArrayList<>();
 	
-	private int attackSkill = 10;
-	private int defenseSkill = 5;
+	//private int attackSkill = 10;
+	///private int defenseSkill = 5;
+
+    private int attackSkill = 35;
+    private int defenseSkill = 30;
 
 	public boolean ready = false;
 	private boolean damageInterrupt = true;
@@ -186,7 +189,7 @@ public class Hero extends Char {
 		super();
 		name = Messages.get(this, "name");
 		
-		HP = HT = 165;
+		HP = HT = 20;
 		STR = STARTING_STR;
 		
 		belongings = new Belongings( this );

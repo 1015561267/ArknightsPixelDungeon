@@ -29,7 +29,8 @@ public class TalentScene extends PixelScene {
 
         if (PDSettings.landscape() != null) {
             if (!PDSettings.landscape()) {
-                PDSettings.scale((int)Math.ceil(Game.density));
+                PDSettings.scale((int)Math.ceil(2* Game.density));
+                ArknightsPixelDungeon.seamlessResetScene();
             }
         }
 

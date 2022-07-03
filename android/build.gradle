@@ -2,7 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion appAndroidCompileSDK
-    compileOptions.sourceCompatibility = compileOptions.targetCompatibility = appJavaCompatibility
+    compileOptions {
+        sourceCompatibility = appJavaCompatibility
+        targetCompatibility = appJavaCompatibility
+        compileOptions.sourceCompatibility = compileOptions.targetCompatibility = appJavaCompatibility
+    }
 
     sourceSets.main.assets.srcDirs = [new File(project(':core').projectDir, "/src/main/assets")]
 
@@ -51,6 +55,7 @@ configurations { natives }
 
 dependencies {
     implementation project(':core')
+    implementation 'cat.ereza:customactivityoncrash:2.3.0'
 
     implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"

@@ -9,7 +9,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.effects.Wound;
+import com.unifier.arknightspixeldungeon.effects.ChenSlash;
 import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class Shadowless extends HeroSkill {
 
     @Override
-    public boolean activated() { return Dungeon.hero.hasTalent(Talent.SHADOWLESS); }
+    public boolean activated() { return owner.hasTalent(Talent.SHADOWLESS); }
 
     @Override
     public Image skillIcon() {
@@ -73,7 +73,7 @@ public class Shadowless extends HeroSkill {
 
         if (!targets.isEmpty())
         {
-            GLog.i("Start");
+            //GLog.i("Start");
             owner.busy();
             ((HeroSprite)owner.sprite).setSkillCallbackAnimation(
                     new Callback() {
@@ -95,7 +95,7 @@ public class Shadowless extends HeroSkill {
 
         Mob mob=targets.get(Random.Int(targets.size()));
 
-        Wound.hit(mob.pos, Random.Int(360),new Callback() {
+        ChenSlash.hit(mob.pos, Random.Int(360),new Callback() {
             @Override
             public void call() {
 
@@ -103,10 +103,10 @@ public class Shadowless extends HeroSkill {
 
                 if (!mob.isAlive()){
                     GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name)) );
-                    int exp = Dungeon.hero.lvl <= mob.maxLvl ? mob.EXP : 0;
+                    int exp = owner.lvl <= mob.maxLvl ? mob.EXP : 0;
                     if (exp > 0) {
-                        Dungeon.hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
-                        Dungeon.hero.earnExp(exp);
+                        owner.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
+                        owner.earnExp(exp);
                     }
                     targets.remove(mob);
                 }else{

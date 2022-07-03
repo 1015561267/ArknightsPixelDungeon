@@ -131,7 +131,7 @@ public class MeleeWeapon extends Weapon {
             return damage;
         }
 
-		return damage;
+		return  augment.damageFactor(Random.NormalIntRange(min,max));
 	}
 
 	@Override

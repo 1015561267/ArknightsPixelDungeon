@@ -519,12 +519,17 @@ public class GameScene extends PixelScene {
 		}
 	}
 
-	private static final Thread actorThread = new Thread() {
+	private static Thread actorThread;
+            /*= new Thread() {
 		@Override
 		public void run() {
 			Actor.process();
 		}
-	};
+	};*/
+
+    private float notifyDelay = 1/60f;
+
+    public static boolean updateItemDisplays = false;
 
 	@Override
 	public synchronized void update() {
@@ -533,8 +538,10 @@ public class GameScene extends PixelScene {
 		}
 
 		super.update();
-		
-		if (!freezeEmitters) water.offset( 0, -5 * Game.elapsed );
+
+        if (notifyDelay > 0) notifyDelay -= Game.elapsed;
+
+        if (!freezeEmitters) water.offset( 0, -5 * Game.elapsed );
 
 
         if(logActorThread){
@@ -557,19 +564,31 @@ public class GameScene extends PixelScene {
             }
         }
 
-		if (!Actor.processing() && Dungeon.hero.isAlive()) {
-			if (!actorThread.isAlive()) {
-				//if cpu cores are limited, game should prefer drawing the current frame
-				if (Runtime.getRuntime().availableProcessors() == 1) {
-					actorThread.setPriority(Thread.NORM_PRIORITY - 1);
-				}
-				actorThread.start();
-			} else {
-				synchronized (actorThread) {
-					actorThread.notify();
-				}
-			}
-		}
+        if (!Actor.processing() && Dungeon.hero.isAlive()) {
+            if (actorThread == null || !actorThread.isAlive()) {
+
+                actorThread = new Thread() {
+                    @Override
+                    public void run() {
+                        Actor.process();
+                    }
+                };
+
+                //if cpu cores are limited, game should prefer drawing the current frame
+                if (Runtime.getRuntime().availableProcessors() == 1) {
+                    actorThread.setPriority(Thread.NORM_PRIORITY - 1);
+                }
+                actorThread.setName("SHPD Actor Thread");
+                Thread.currentThread().setName("SHPD Render Thread");
+                Actor.keepActorThreadAlive = true;
+                actorThread.start();
+            } else if (notifyDelay <= 0f) {
+                notifyDelay += 1/60f;
+                synchronized (actorThread) {
+                    actorThread.notify();
+                }
+            }
+        }
 		
 		if (Dungeon.hero.ready && Dungeon.hero.paralysed == 0) {
 			log.newLine();

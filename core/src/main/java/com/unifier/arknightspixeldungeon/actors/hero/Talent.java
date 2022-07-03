@@ -20,7 +20,6 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.TalentSprite;
 import com.unifier.arknightspixeldungeon.items.Item;
-import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.food.Food;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
@@ -105,8 +104,6 @@ public enum Talent {
      REFLECT(24 , 2),
     CONTINUOUS_ASSAULT(25, 1, 2) {
         @Override
-        public boolean needItem(){return true;}
-        @Override
         public ArrayList<Talent> Mutex() {
             return new ArrayList<Talent>() {{
                 add(RESENTMENT);
@@ -114,8 +111,6 @@ public enum Talent {
         }
     },
     RESENTMENT(26, 1,2) {
-        @Override
-        public boolean needItem(){return true;}
         @Override
         public ArrayList<Talent> Mutex() {
             return new ArrayList<Talent>() {{
@@ -421,13 +416,13 @@ public enum Talent {
             else return checkResult.NOT_ENOUGH_POINTS_RUN_OUT;
         }
 
-        if(talent.needItem())
-        {
-            TomeOfMastery tomeOfMastery = hero.belongings.getItem( TomeOfMastery.class );
-            if(tomeOfMastery == null) {
-                return checkResult.NEED_ITEM;
-            }
-        }
+        //if(talent.needItem())
+        //{
+        //    TomeOfMastery tomeOfMastery = hero.belongings.getItem( TomeOfMastery.class );
+        //    if(tomeOfMastery == null) {
+        //        return checkResult.NEED_ITEM;
+        //    }
+        //}
 
         if(hero.hasTalent(talent))
             return checkResult.ALREADY_UPGRADED_AVAILABLE;
@@ -571,7 +566,8 @@ public enum Talent {
                 item.cursedKnown = true;
                 return false;
             }
-            else {
+            else if (hero.hasTalent(ARM_INTUITION))
+            {
                 item.identify();
                 return true;
             }
@@ -581,12 +577,13 @@ public enum Talent {
     }
 
     public static int onAttackProc(Hero hero, Char enemy, int dmg ){
-        if (hero.hasTalent(Talent.PREEMPTIVE_STRIKE) && Random.Float() < 0.1f + 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)// Have 30% possibility when enemy above 70%HP at level 1 and 50% possibility when enemy above 50%HP at level 2
-                && enemy instanceof Mob && enemy.HP >= Math.floor(enemy.HT * (0.9f - 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)))
-                && enemy.buff(PreemptiveStrikeUsedTracker.class) == null){
-                Buff.affect(enemy, PreemptiveStrikeUsedTracker.class);
+        if (hero.hasTalent(Talent.PREEMPTIVE_STRIKE) && enemy instanceof Mob && enemy.HP >= Math.floor(enemy.HT * (0.9f - 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE))) && enemy.buff(PreemptiveStrikeUsedTracker.class) == null ){// Have 30% possibility when enemy above 70%HP at level 1 and 50% possibility when enemy above 50%HP at level 2
+            if(Random.Float() < 0.1f + 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)) {
                 Buff.affect(Dungeon.hero, PreemptiveStrikeActiveTracker.class);//See Hero.attackDelay()
-             }
+            }
+            Buff.affect(enemy, PreemptiveStrikeUsedTracker.class);
+        }
+
 
         if(hero.hasTalent(Talent.BLADE_STORM)){
             hero.buff(BladeStormTracker.class).refresh();

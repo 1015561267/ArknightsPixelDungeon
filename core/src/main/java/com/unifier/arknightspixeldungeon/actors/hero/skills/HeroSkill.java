@@ -1,5 +1,6 @@
 package com.unifier.arknightspixeldungeon.actors.hero.skills;
 
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
@@ -96,11 +97,11 @@ public abstract class HeroSkill extends Buff {
         charge--;
     }
 
-    public boolean attachTo( Hero hero ) {
-        this.owner = hero;
+    public boolean attachTo( Char hero ) {
+        this.owner = (Hero)hero;
         this.target = hero;
         hero.add( this );
-        return true;
+        return super.attachTo(hero);
     }
 
     protected String dispTurns(float input){
@@ -123,20 +124,17 @@ public abstract class HeroSkill extends Buff {
             if(bundle.contains(SKILL_PLACE + 1))
             {
                 hero.skill_1 = (HeroSkill)bundle.get(SKILL_PLACE + 1 );
-                hero.skill_1.owner = hero;
                 hero.skill_1.attachTo(hero);
 
             }
             if(bundle.contains(SKILL_PLACE + 2))
             {
                 hero.skill_2 = (HeroSkill)bundle.get(SKILL_PLACE + 2 );
-                hero.skill_2.owner = hero;
                 hero.skill_2.attachTo(hero);
             }
             if(bundle.contains(SKILL_PLACE + 3))
             {
                 hero.skill_3 = (HeroSkill)bundle.get(SKILL_PLACE + 3 );
-                hero.skill_3.owner = hero;
                 hero.skill_3.attachTo(hero);
             }
         }

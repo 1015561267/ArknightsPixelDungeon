@@ -31,6 +31,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
+import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
 import com.unifier.arknightspixeldungeon.items.bags.PotionBandolier;
@@ -116,9 +117,10 @@ public enum HeroClass {
 			new SmallRation().collect();
 		}
 
+
         Ring ring= new RingOfHaste();
-		ring.level(10);
-		ring.collect();
+		ring.level(6);
+		ring.identify().collect();
 
         for(int j=0;j<10;j++) {
             new ScrollOfMagicalInfusion().identify().collect();
@@ -131,39 +133,21 @@ public enum HeroClass {
             new ScrollOfRemoveCurse().identify().collect();
         }
 
-        new ScrollOfRage().identify().collect();
+        //new ScrollOfRage().identify().collect();
 
-        new TomeOfMastery().collect();
+        //new TomeOfMastery().collect();
 
-        /*WornShortsword sword = new WornShortsword();
+        WornShortsword sword = new WornShortsword();
+        sword.upgrade();
         sword.cursed = true;
         sword.enchant(Weapon.Enchantment.randomCurse());
-        sword.collect();
-
-        sword = new WornShortsword();
-        sword.cursed = true;
-        sword.enchant(Weapon.Enchantment.randomCurse());
-        sword.collect();
-
-        sword = new WornShortsword();
-        sword.cursed = true;
-        sword.enchant(Weapon.Enchantment.randomCurse());
-        sword.collect();
+        sword.identify().collect();
 
         ClothArmor armor = new ClothArmor();
+        armor.upgrade();
         armor.cursed = true;
         armor.inscribe(Armor.Glyph.randomCurse());
-        armor.collect();
-
-        armor = new ClothArmor();
-        armor.cursed = true;
-        armor.inscribe(Armor.Glyph.randomCurse());
-        armor.collect();
-
-        armor = new ClothArmor();
-        armor.cursed = true;
-        armor.inscribe(Armor.Glyph.randomCurse());
-        armor.collect();*/
+        armor.identify().collect();
 
         Weapon weapon = new Flail();
         weapon.identify();

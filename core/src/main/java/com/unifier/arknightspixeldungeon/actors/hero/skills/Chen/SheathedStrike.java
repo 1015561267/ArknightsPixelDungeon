@@ -1,6 +1,5 @@
 package com.unifier.arknightspixeldungeon.actors.hero.skills.Chen;
 
-import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
@@ -22,7 +21,7 @@ public class SheathedStrike extends HeroSkill {
     public boolean enable = false;
 
     @Override
-    public boolean activated() { return Dungeon.hero.hasTalent(Talent.SHEATHED_STRIKE); }//I'd like to use owner but it somehow doesn't work
+    public boolean activated() { return owner.hasTalent(Talent.SHEATHED_STRIKE); }//I'd like to use owner but it somehow doesn't work
 
     @Override
     public Image skillIcon() {
