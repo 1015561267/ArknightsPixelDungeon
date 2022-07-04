@@ -2,6 +2,7 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills.Chen;
 
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
@@ -59,7 +60,11 @@ public class SheathedStrike extends HeroSkill {
         {
             GameScene.selectCell(reprimand_selector);
         }
-        else enable = true;//PARRY effect can be found at damage roll :
+        else {
+            Buff.affect(owner,Talent.SheathedStrikeTracker1.class);
+            Buff.affect(owner,Talent.SheathedStrikeTracker2.class,3f);
+        }
+//            enable = true;//PARRY effect can be found at damage roll :
         doAfterAction();
     }
 

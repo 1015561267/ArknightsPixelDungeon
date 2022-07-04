@@ -468,7 +468,7 @@ public class Hero extends Char {
 		Berserk berserk = buff(Berserk.class);
 		if (berserk != null) dmg = berserk.damageFactor(dmg);
 
-		ComboTracker tracker = buff(ComboTracker.class);
+		ComboTracker tracker = enemy.buff(ComboTracker.class);
 
 		if(tracker!=null){
 
@@ -529,21 +529,23 @@ public class Hero extends Char {
 		if (enemy == null || pos == enemy.pos)
 			return false;
 
+		Buff sheathedstriketracker = buff(Talent.SheathedStrikeTracker1.class);
+
 		//can always attack adjacent enemies
 		if (Dungeon.level.adjacent(pos, enemy.pos))
 			return true;
 
 		KindOfWeapon wep = Dungeon.hero.belongings.weapon;
 
-		if (wep != null && Dungeon.level.distance( pos, enemy.pos ) <= wep.reachFactor(this)){
+		if (wep != null && Dungeon.level.distance(pos,enemy.pos) <= (sheathedstriketracker == null ? wep.reachFactor(this) : wep.reachFactor(this) + 2)){
 
 			boolean[] passable = BArray.not(Dungeon.level.solid, null);
 			for (Mob m : Dungeon.level.mobs)
 				passable[m.pos] = false;
 
-			PathFinder.buildDistanceMap(enemy.pos, passable, wep.reachFactor(this));
+			PathFinder.buildDistanceMap(enemy.pos, passable, (sheathedstriketracker == null ? wep.reachFactor(this) : wep.reachFactor(this) + 2));
 
-			return PathFinder.distance[pos] <= wep.reachFactor(this);
+			return PathFinder.distance[pos] <= (sheathedstriketracker == null ? wep.reachFactor(this) : wep.reachFactor(this) + 2);
 
 		} else {
 			return false;

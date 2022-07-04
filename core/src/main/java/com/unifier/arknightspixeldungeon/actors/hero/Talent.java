@@ -15,6 +15,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.Blade
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.DragonScaleTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RallyForceTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
@@ -584,9 +585,13 @@ public enum Talent {
             Buff.affect(enemy, PreemptiveStrikeUsedTracker.class);
         }
 
-
         if(hero.hasTalent(Talent.BLADE_STORM)){
             hero.buff(BladeStormTracker.class).refresh();
+        }
+
+        if (hero.hasTalent(Talent.SHEATHED_STRIKE) && hero.buff(SheathedStrikeTracker1.class) != null) {
+            dmg /= 2;
+            Buff.affect(enemy,Vertigo.class,3f);
         }
 
         return dmg;
@@ -594,6 +599,9 @@ public enum Talent {
     //Well damn the onAttackProc() cannot return things like you can have extra turns,I have to make two buffs,one show if the talent should work and the other inform that the talent effect should be in use
     public static class PreemptiveStrikeUsedTracker extends Buff{};
     public static class PreemptiveStrikeActiveTracker extends Buff{};
+
+    public static class SheathedStrikeTracker1 extends Buff{};
+    public static class SheathedStrikeTracker2 extends FlavourBuff{};
 
     public static class LightWeaponMasteryTracker extends Buff{};//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
 
@@ -625,6 +633,11 @@ public enum Talent {
                     Buff.prolong( enemy, Paralysis.class, (int)Math.sqrt(effectiveDamage) );
                 }
             }
+        }
+
+        SheathedStrikeTracker1 sheathedStrikeTracker = hero.buff(SheathedStrikeTracker1.class);
+        if (sheathedStrikeTracker != null) {
+            sheathedStrikeTracker.detach();
         }
     }
 

@@ -149,9 +149,17 @@ public class Shadowless extends HeroSkill {
 
     public int skillDamage(Char enemy,boolean isMagic){
 
+        int dmg = owner.rawdamageRoll(enemy,isMagic);
+        float factor = 1;
+
         if(enemy.buff(SwordRainTracker.class)!=null){
-            return (int) (owner.rawdamageRoll(enemy,isMagic) * (1 + 0.05f * enemy.buff(SwordRainTracker.class).stack));
+            factor += 0.05f * enemy.buff(SwordRainTracker.class).stack;
         }
-        return owner.rawdamageRoll(enemy,isMagic);
+
+        if (owner.buff(Talent.SheathedStrikeTracker2.class) != null && owner.pointsInTalent(Talent.SHEATHED_STRIKE) == 2) {
+            factor += 0.2;
+        }
+
+        return (int)(dmg * factor);
     }
 }

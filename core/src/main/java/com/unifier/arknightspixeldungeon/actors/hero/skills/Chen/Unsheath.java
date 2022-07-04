@@ -181,6 +181,10 @@ public class Unsheath extends HeroSkill {
                                         factor += owner.pointsInTalent(Talent.FLASH) * 0.1f;
                                         factor +=  owner.pointsInTalent(Talent.UNSHEATH) == 2 ? 0.2f : 0f;
 
+                                        if (owner.buff(Talent.SheathedStrikeTracker2.class) != null && owner.pointsInTalent(Talent.SHEATHED_STRIKE) == 2) {
+                                            factor += 0.2f;
+                                        }
+
                                         int tracker = 0;
 
                                         for(Char enemy : enemys){
