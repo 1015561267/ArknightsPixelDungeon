@@ -14,6 +14,7 @@ import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.PARRY;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.REPRIMAND;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATH_THROW;
 
@@ -26,6 +27,15 @@ public class SheathedStrike extends HeroSkill {
 
     @Override
     public Image skillIcon() {
+
+        if (owner.hasTalent(Talent.SHEATH_THROW)) {
+            return new SkillIcons(SkillIcons.SHEATH_THROW);
+        } else if (owner.hasTalent(Talent.REPRIMAND)) {
+            return new SkillIcons(SkillIcons.REPRIMAND);
+        } else if (owner.hasTalent(Talent.PARRY)) {
+            return new SkillIcons(SkillIcons.PARRY);
+        }
+
         return new SkillIcons(SkillIcons.SHEATHED_STRIKE);
     }
 
@@ -63,6 +73,9 @@ public class SheathedStrike extends HeroSkill {
         else {
             Buff.affect(owner,Talent.SheathedStrikeTracker1.class);
             Buff.affect(owner,Talent.SheathedStrikeTracker2.class,3f);
+            if (owner.hasTalent(PARRY)) {
+                Buff.affect(owner,Talent.ParryTrackerPrepare.class);
+            }
         }
 //            enable = true;//PARRY effect can be found at damage roll :
         doAfterAction();

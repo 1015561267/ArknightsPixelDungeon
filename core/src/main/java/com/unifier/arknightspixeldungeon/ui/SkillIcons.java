@@ -13,6 +13,10 @@ public class SkillIcons extends Image {
     public static final int NONE    = 31;
 
     public static final int SHEATHED_STRIKE   = 0;
+    public static final int SHEATH_THROW = 16;
+    public static final int REPRIMAND = 17;
+    public static final int PARRY = 18;
+
     public static final int UNSHEATH   = 22;
     public static final int SHADOWLESS  = 42;
 

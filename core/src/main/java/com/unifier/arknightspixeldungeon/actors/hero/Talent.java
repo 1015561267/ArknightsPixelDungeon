@@ -22,9 +22,12 @@ import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.TalentSprite;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
+import com.unifier.arknightspixeldungeon.items.artifacts.ChaliceOfBlood;
 import com.unifier.arknightspixeldungeon.items.food.Food;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
+import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -603,6 +606,10 @@ public enum Talent {
     public static class SheathedStrikeTracker1 extends Buff{};
     public static class SheathedStrikeTracker2 extends FlavourBuff{};
 
+    public static class ParryTrackerPrepare extends Buff{};
+    public static class ParryTrackerUsing extends FlavourBuff{};
+    public static class ParryTrackerUsed extends Buff{};
+
     public static class LightWeaponMasteryTracker extends Buff{};//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
 
     public static void doAfterDamage(Hero hero, Char enemy, int effectiveDamage) {
@@ -644,6 +651,10 @@ public enum Talent {
 
     public static int onDefenseProc(Hero hero,Object source,int damage)//it should be before damage taken,so check Hero.damage for it
     {
+        if (source instanceof Chasm || source instanceof ChaliceOfBlood) {
+            return damage;
+        }
+
         if (hero.buff(Talent.VigilanceModifier.class) != null){
             if (hero.pointsInTalent(Talent.VIGILANCE) == 1)       damage = Math.round(damage*0.50f);
             else if (hero.pointsInTalent(Talent.VIGILANCE) == 2)  damage = Math.round(damage*0.25f);
@@ -654,6 +665,19 @@ public enum Talent {
             damage = hero.buff(DragonScaleTracker.class).affect(damage,source);
         }
 
+        if (hero.buff(ParryTrackerUsing.class) != null && (source instanceof Mob && Dungeon.level.adjacent(hero.pos,((Mob)source).pos))) {
+            damage = 0;
+        }
+
+        if (hero.buff(ParryTrackerPrepare.class) != null && (source instanceof Mob && Dungeon.level.adjacent(hero.pos,((Mob)source).pos))) {
+            damage = 0;
+            Buff.affect(hero,ParryTrackerUsing.class,1f);
+            hero.buff(ParryTrackerPrepare.class).detach();
+
+            if (hero.pointsInTalent(PARRY) == 2 && source instanceof Mob) {
+                Buff.affect(((Mob)source),Paralysis.class,3f);
+            }
+        }
         return damage;
     }
 
