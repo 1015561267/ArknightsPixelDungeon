@@ -103,19 +103,39 @@ public class Unsheath extends HeroSkill {
 
                 Char enemy;
                 List<Integer> availablePath = attack.subPath(1, range());
+
+                GLog.w( "All path:");
+                for (int c : availablePath) {
+                    GLog.w( c + " ");
+                }
+
                 int desired = availablePath.indexOf(cell);
 
                 int maxTracker = Math.min(availablePath.indexOf(cell) < 0 ? availablePath.size() - 1 :availablePath.indexOf(cell) //get the so-called max range possible if pointed place is out of range
                         ,availablePath.size() - 1);
 
+                GLog.w(cell+" "+desired+" "+maxTracker);
+
                 if(desired != -1) //represent pointed place is in range,otherwise dismiss further search cause we directly use the longest pos as start
                 {
+                    GLog.w( "further:");
                     for (int c : availablePath) {
                         if(availablePath.indexOf(c) >= availablePath.indexOf(cell)){//search front to seek possible further drop place
-                            GLog.w(String.valueOf(c));
+                             GLog.w(String.valueOf(c));
                              enemy = Actor.findChar(c);
+
+                            if (Dungeon.level.solid[c]) {
+                                if(Dungeon.level.map[c] == Terrain.DOOR)
+                                {
+                                    result = c;
+                                    GLog.w( "on door:"+result);
+                                    dropedTracker = true;
+                                }else break;
+                            }//We need to consider that former terrain can block further search so for now if there are a solid terrain expect unlocked door,just break and consider futher search as a failure
+
                             if (enemy == null && Dungeon.level.passable[c]) {
                                 result = c;
+                                GLog.w( "further search:"+result);
                                 dropedTracker = true;
                                 break;
                             }
@@ -123,15 +143,15 @@ public class Unsheath extends HeroSkill {
                     }
                 }
 
-                //GLog.w(String.valueOf(" "+maxTracker+" "+cell +" "+ desired+" "+dropedTracker));
-
                 if (!dropedTracker) {//then search back
                     //List<Integer> reversePath = attack.subPath(maxTracker,1); Warning,Arraylist.sublist must have start<end,else throw exception,so reserve ergodic has had to take other ways
+                    GLog.w( "narrow:");
                     for(int i = maxTracker;i>=0;i--){
                         int c =availablePath.get(i);
                         enemy = Actor.findChar(c);
                         if (enemy == null && Dungeon.level.passable[c]) {
                             result = c;
+                            GLog.w( "narrow search:"+result);
                             dropedTracker = true;
                             break;
                         }
