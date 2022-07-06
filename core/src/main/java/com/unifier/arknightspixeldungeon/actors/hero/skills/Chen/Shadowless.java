@@ -119,7 +119,7 @@ public class Shadowless extends HeroSkill {
                     Buff.affect(mob,SwordRainTracker.class).stack();
                 }
 
-                if(t>=9 || targets.isEmpty()){
+                if(t>=time()-1 || targets.isEmpty()){
                     owner.sprite.visible=true;
                     ((HeroSprite)owner.sprite).setSkillCallbackAnimation(new Callback() {
                         @Override
