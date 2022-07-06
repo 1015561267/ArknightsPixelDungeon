@@ -14,6 +14,7 @@ import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.COUNTER_STRIKE;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.PARRY;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.REPRIMAND;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATH_THROW;
@@ -75,6 +76,9 @@ public class SheathedStrike extends HeroSkill {
             Buff.affect(owner,Talent.SheathedStrikeTracker2.class,3f);
             if (owner.hasTalent(PARRY)) {
                 Buff.affect(owner,Talent.ParryTrackerPrepare.class);
+            }
+            if (owner.hasTalent(COUNTER_STRIKE)) {
+                Buff.affect(owner,Talent.CounterStrikeTracker.class,10f);
             }
         }
 //            enable = true;//PARRY effect can be found at damage roll :

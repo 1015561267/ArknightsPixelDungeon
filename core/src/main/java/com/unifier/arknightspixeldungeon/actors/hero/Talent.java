@@ -536,7 +536,7 @@ public enum Talent {
         else if(talent == RESENTMENT){ Buff.affect(hero, RageTracker.class); }
     }
 
-    public static class LastChanceTracker extends Buff{};
+    public static class LastChanceTracker extends Buff{}
 
     public static void onFoodEaten( Hero hero, float foodVal, Item foodSource ){
         if (hero.hasTalent( FAST_RECOVERY )){
@@ -600,17 +600,24 @@ public enum Talent {
         return dmg;
     }
     //Well damn the onAttackProc() cannot return things like you can have extra turns,I have to make two buffs,one show if the talent should work and the other inform that the talent effect should be in use
-    public static class PreemptiveStrikeUsedTracker extends Buff{};
-    public static class PreemptiveStrikeActiveTracker extends Buff{};
+    public static class PreemptiveStrikeUsedTracker extends Buff{}
 
-    public static class SheathedStrikeTracker1 extends Buff{};
-    public static class SheathedStrikeTracker2 extends FlavourBuff{};
+    public static class PreemptiveStrikeActiveTracker extends Buff{}
 
-    public static class ParryTrackerPrepare extends Buff{};
-    public static class ParryTrackerUsing extends FlavourBuff{};
-    public static class ParryTrackerUsed extends Buff{};
+    public static class SheathedStrikeTracker1 extends Buff{}
 
-    public static class LightWeaponMasteryTracker extends Buff{};//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
+    public static class SheathedStrikeTracker2 extends FlavourBuff{}
+
+    public static class ParryTrackerPrepare extends Buff{}
+
+    public static class ParryTrackerUsing extends FlavourBuff{}
+
+    public static class CounterStrikeTracker extends FlavourBuff{
+        public int AbsorbDamage = -1;
+        public int time = -1;
+    }
+
+    public static class LightWeaponMasteryTracker extends Buff{}//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
 
     public static void doAfterDamage(Hero hero, Char enemy, int effectiveDamage) {
 
@@ -670,11 +677,24 @@ public enum Talent {
         }
 
         if (hero.buff(ParryTrackerPrepare.class) != null && (source instanceof Mob && Dungeon.level.adjacent(hero.pos,((Mob)source).pos))) {
+
+            CounterStrikeTracker counterStrikeTracker = hero.buff(CounterStrikeTracker.class);
+            if (counterStrikeTracker != null && counterStrikeTracker.AbsorbDamage == -1 && counterStrikeTracker.time == -1) {
+                if (hero.pointsInTalent(COUNTER_STRIKE) == 1) {
+                    counterStrikeTracker.AbsorbDamage = damage / 2;
+                    counterStrikeTracker.time = 1;
+                } else if (hero.pointsInTalent(COUNTER_STRIKE) == 2) {
+                    counterStrikeTracker.AbsorbDamage = damage / 4;
+                    counterStrikeTracker.time = 3;
+                }
+
+            }
+
             damage = 0;
             Buff.affect(hero,ParryTrackerUsing.class,1f);
             hero.buff(ParryTrackerPrepare.class).detach();
 
-            if (hero.pointsInTalent(PARRY) == 2 && source instanceof Mob) {
+            if (hero.pointsInTalent(PARRY) == 2) {
                 Buff.affect(((Mob)source),Paralysis.class,3f);
             }
         }

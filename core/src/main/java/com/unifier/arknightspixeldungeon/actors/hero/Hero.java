@@ -464,6 +464,15 @@ public class Hero extends Char {
 			dmg = RingOfForce.damageRoll(this);
 		}
 		if (dmg < 0) dmg = 0;
+
+		Talent.CounterStrikeTracker counterStrikeTracker = buff(Talent.CounterStrikeTracker.class);
+		if (counterStrikeTracker != null && counterStrikeTracker.AbsorbDamage != -1 && counterStrikeTracker.time > 0) {
+			dmg += counterStrikeTracker.AbsorbDamage;
+			counterStrikeTracker.time--;
+			if (counterStrikeTracker.time == 0) {
+				counterStrikeTracker.detach();
+			}
+		}
 		
 		Berserk berserk = buff(Berserk.class);
 		if (berserk != null) dmg = berserk.damageFactor(dmg);
