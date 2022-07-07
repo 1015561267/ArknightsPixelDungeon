@@ -614,7 +614,14 @@ public enum Talent {
     public static class SheathedStrikeTracker1 extends Buff{}
     public static class SheathedStrikeTracker2 extends FlavourBuff{}
 
-    public class ReprimandTracker extends FlavourBuff{}
+    public static class ReprimandTracker extends FlavourBuff{}
+    public static class WellPrepared extends FlavourBuff{
+        public int time = -1;
+        public WellPrepared setTime(int time) {
+            this.time = time;
+            return this;
+        }
+    }
 
     public static class ParryTrackerPrepare extends Buff{}
     public static class ParryTrackerUsing extends FlavourBuff{}
@@ -679,32 +686,6 @@ public enum Talent {
             damage = hero.buff(DragonScaleTracker.class).affect(damage,source);
         }
 
-        if (hero.buff(ParryTrackerUsing.class) != null && (source instanceof Mob && Dungeon.level.adjacent(hero.pos,((Mob)source).pos))) {
-            damage = 0;
-        }
-
-        if (hero.buff(ParryTrackerPrepare.class) != null && (source instanceof Mob && Dungeon.level.adjacent(hero.pos,((Mob)source).pos))) {
-
-            CounterStrikeTracker counterStrikeTracker = hero.buff(CounterStrikeTracker.class);
-            if (counterStrikeTracker != null && counterStrikeTracker.AbsorbDamage == -1 && counterStrikeTracker.time == -1) {
-                if (hero.pointsInTalent(COUNTER_STRIKE) == 1) {
-                    counterStrikeTracker.AbsorbDamage = damage / 2;
-                    counterStrikeTracker.time = 1;
-                } else if (hero.pointsInTalent(COUNTER_STRIKE) == 2) {
-                    counterStrikeTracker.AbsorbDamage = damage / 4;
-                    counterStrikeTracker.time = 3;
-                }
-
-            }
-
-            damage = 0;
-            Buff.affect(hero,ParryTrackerUsing.class,1f);
-            hero.buff(ParryTrackerPrepare.class).detach();
-
-            if (hero.pointsInTalent(PARRY) == 2) {
-                Buff.affect(((Mob)source),Paralysis.class,3f);
-            }
-        }
         return damage;
     }
 

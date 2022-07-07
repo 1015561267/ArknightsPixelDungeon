@@ -1,5 +1,6 @@
 package com.unifier.arknightspixeldungeon.actors.hero.skills.Chen;
 
+import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
@@ -20,6 +21,7 @@ import static com.unifier.arknightspixeldungeon.actors.hero.Talent.COUNTER_STRIK
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.PARRY;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.REPRIMAND;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATH_THROW;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.WELL_PREPARED;
 
 public class SheathedStrike extends HeroSkill {
 
@@ -123,14 +125,24 @@ public class SheathedStrike extends HeroSkill {
                 Char enemy = Actor.findChar( cell );
                 if(enemy != null && enemy.alignment == Char.Alignment.ENEMY)
                 {
+                    enemy.fieldOfView = new boolean[Dungeon.level.length()];
+                    Dungeon.level.updateFieldOfView(enemy,enemy.fieldOfView);
                     if(enemy.charInView(owner)) {
-                        Buff.affect(enemy,Talent.ReprimandTracker.class,7);
+                        Buff.affect(enemy,Talent.ReprimandTracker.class,7f);
                         if (((Mob)enemy).state == ((Mob) enemy).SLEEPING) {
                             ((Mob)enemy).state = ((Mob) enemy).HUNTING;
                         }
                         ((Mob)enemy).target = owner.pos;
-                    }
 
+                        if (owner.pointsInTalent(WELL_PREPARED) == 1) {
+                            Buff.affect(owner,Talent.WellPrepared.class,3f).setTime(1);
+                        }
+
+                        if (owner.pointsInTalent(WELL_PREPARED) == 2) {
+                            Buff.affect(owner,Talent.WellPrepared.class,3f).setTime(3);
+                        }
+
+                    }
 
                 } else {
 

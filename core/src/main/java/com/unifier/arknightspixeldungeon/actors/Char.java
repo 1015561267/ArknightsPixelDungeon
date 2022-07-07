@@ -54,6 +54,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.Shaman;
 import com.unifier.arknightspixeldungeon.effects.Lightning;
 import com.unifier.arknightspixeldungeon.effects.MagicMissile;
@@ -123,7 +124,7 @@ public abstract class Char extends Actor {
 	
 	public int viewDistance	= 8;
 	
-	protected boolean[] fieldOfView = null;
+	public boolean[] fieldOfView = null;
 	
 	private HashSet<Buff> buffs = new HashSet<>();
 
@@ -220,6 +221,31 @@ public abstract class Char extends Actor {
                     dr = 0;
                 }
             }
+
+			if (enemy == Dungeon.hero && Dungeon.hero.buff(Talent.ParryTrackerUsing.class) != null) {
+				dmg = 0;
+			}
+
+			if (enemy == Dungeon.hero && Dungeon.hero.buff(Talent.ParryTrackerPrepare.class) != null) {
+				Talent.CounterStrikeTracker counterStrikeTracker = Dungeon.hero.buff(Talent.CounterStrikeTracker.class);
+				if (counterStrikeTracker != null && counterStrikeTracker.AbsorbDamage == -1 && counterStrikeTracker.time == -1) {
+					if (Dungeon.hero.pointsInTalent(Talent.COUNTER_STRIKE) == 1) {
+						counterStrikeTracker.AbsorbDamage = dmg / 2;
+						counterStrikeTracker.time = 1;
+					} else if (Dungeon.hero.pointsInTalent(Talent.COUNTER_STRIKE) == 2) {
+						counterStrikeTracker.AbsorbDamage = dmg / 4;
+						counterStrikeTracker.time = 3;
+					}
+				}
+
+				dmg = 0;
+				Buff.affect(Dungeon.hero, Talent.ParryTrackerUsing.class,1f);
+				Dungeon.hero.buff(Talent.ParryTrackerPrepare.class).detach();
+
+				if (Dungeon.hero.pointsInTalent(Talent.PARRY) == 2) {
+					Buff.affect(this,Paralysis.class,3f);
+				}
+			}
 
 			int effectiveDamage = enemy.defenseProc( this, dmg );
 			effectiveDamage = Math.max( effectiveDamage - dr, 0 );
@@ -366,6 +392,18 @@ public abstract class Char extends Actor {
 
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
         if (defender.buff(Hex.class) != null) defRoll *= 0.8f;
+
+        if (defender instanceof Hero && defender.buff(Talent.WellPrepared.class) != null) {
+        	int newTime = defender.buff(Talent.WellPrepared.class).time - 1;
+
+        	if (newTime == 0) {
+				defender.buff(Talent.WellPrepared.class).detach();
+			} else {
+				defender.buff(Talent.WellPrepared.class).setTime(newTime);
+			}
+
+        	return false;
+		}
 
         return (magic ? acuRoll * 2 : acuRoll) >= defRoll;
 	}
