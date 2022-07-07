@@ -50,6 +50,7 @@ import com.unifier.arknightspixeldungeon.items.rings.Ring;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfHaste;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicalInfusion;
+import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMirrorImage;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfRage;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
@@ -209,6 +210,7 @@ public enum HeroClass {
         hero.skill_3.attachTo(hero);
 
         new LevelTeleporter().identify().collect();
+        new ScrollOfMirrorImage().identify().collect();
 	}
 
 	private static void initMage( Hero hero ) {

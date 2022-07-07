@@ -477,15 +477,17 @@ public class Hero extends Char {
 		Berserk berserk = buff(Berserk.class);
 		if (berserk != null) dmg = berserk.damageFactor(dmg);
 
-		ComboTracker tracker = enemy.buff(ComboTracker.class);
+		if (enemy != null) {
+			ComboTracker tracker = enemy.buff(ComboTracker.class);
 
-		if(tracker!=null){
+			if(tracker!=null){
 
-		    dmg *= 1 + 0.05f * enemy.buff(ComboTracker.class).getStack();
+				dmg *= 1 + 0.05f * enemy.buff(ComboTracker.class).getStack();
 
-		    if(enemy.buff(ComboTracker.class).combo()){
-		        dmg *= 1.5f;
-            }
+				if(enemy.buff(ComboTracker.class).combo()){
+					dmg *= 1.5f;
+				}
+			}
 		}
 		
 		return buff( Fury.class ) != null ? (int)(dmg * 1.5f) : dmg;
