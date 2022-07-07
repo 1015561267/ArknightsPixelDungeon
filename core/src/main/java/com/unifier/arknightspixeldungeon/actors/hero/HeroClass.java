@@ -32,6 +32,8 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Item;
+import com.unifier.arknightspixeldungeon.items.LevelTeleporter;
+import com.unifier.arknightspixeldungeon.items.TestItem;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
@@ -206,7 +208,7 @@ public enum HeroClass {
         hero.skill_3 = new Shadowless();
         hero.skill_3.attachTo(hero);
 
-        new PotionOfInvisibility().identify().collect();
+        new LevelTeleporter().identify().collect();
 	}
 
 	private static void initMage( Hero hero ) {

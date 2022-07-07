@@ -144,7 +144,15 @@ public class Shadowless extends HeroSkill {
     }
 
     public int time(){
-        return 10 + 2 * Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) + Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) == 2 ? 0 : 1;//10 at lvl 0,12 at lvl 1,15 at lvl 2
+        int time = 10;
+        if (Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) == 1) {
+            time += 2;
+        }
+        if (Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) == 2) {
+            time += 5;
+        }
+        return time;
+//        return 10 + 2 * Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) + Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) == 2 ? 0 : 1;//10 at lvl 0,12 at lvl 1,15 at lvl 2
     }
 
     public int skillDamage(Char enemy,boolean isMagic){
