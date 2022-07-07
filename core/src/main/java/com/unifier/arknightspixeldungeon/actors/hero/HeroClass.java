@@ -42,6 +42,7 @@ import com.unifier.arknightspixeldungeon.items.bags.VelvetPouch;
 import com.unifier.arknightspixeldungeon.items.food.Food;
 import com.unifier.arknightspixeldungeon.items.food.SmallRation;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfHealing;
+import com.unifier.arknightspixeldungeon.items.potions.PotionOfInvisibility;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfMindVision;
 import com.unifier.arknightspixeldungeon.items.rings.Ring;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfHaste;
@@ -204,6 +205,8 @@ public enum HeroClass {
 
         hero.skill_3 = new Shadowless();
         hero.skill_3.attachTo(hero);
+
+        new PotionOfInvisibility().identify().collect();
 	}
 
 	private static void initMage( Hero hero ) {

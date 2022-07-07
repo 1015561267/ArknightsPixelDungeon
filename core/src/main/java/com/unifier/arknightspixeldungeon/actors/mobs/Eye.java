@@ -123,7 +123,7 @@ public class Eye extends Mob {
 	@Override
 	protected boolean doAttack( Char enemy ) {
 
-		if (beamCooldown > 0) {
+		if (beamCooldown > 0 || buff(Talent.ReprimandTracker.class) != null) {
 			return super.doAttack(enemy);
 		} else if (!beamCharged){
 			((EyeSprite)sprite).charge( enemy.pos );

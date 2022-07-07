@@ -82,7 +82,7 @@ public abstract class Mob extends Char {
 	
 	public Class<? extends CharSprite> spriteClass;
 	
-	protected int target = -1;
+	public int target = -1;
 	
 	protected int defenseSkill = 0;
 	

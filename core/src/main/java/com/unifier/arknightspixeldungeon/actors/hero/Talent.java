@@ -581,6 +581,14 @@ public enum Talent {
     }
 
     public static int onAttackProc(Hero hero, Char enemy, int dmg ){
+
+        if (enemy.buff(ReprimandTracker.class) != null) {
+            if (hero.pointsInTalent(REPRIMAND) == 2) {
+                dmg *= 1.5;
+            }
+            enemy.buff(ReprimandTracker.class).detach();
+        }
+
         if (hero.hasTalent(Talent.PREEMPTIVE_STRIKE) && enemy instanceof Mob && enemy.HP >= Math.floor(enemy.HT * (0.9f - 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE))) && enemy.buff(PreemptiveStrikeUsedTracker.class) == null ){// Have 30% possibility when enemy above 70%HP at level 1 and 50% possibility when enemy above 50%HP at level 2
             if(Random.Float() < 0.1f + 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)) {
                 Buff.affect(Dungeon.hero, PreemptiveStrikeActiveTracker.class);//See Hero.attackDelay()
@@ -601,15 +609,14 @@ public enum Talent {
     }
     //Well damn the onAttackProc() cannot return things like you can have extra turns,I have to make two buffs,one show if the talent should work and the other inform that the talent effect should be in use
     public static class PreemptiveStrikeUsedTracker extends Buff{}
-
     public static class PreemptiveStrikeActiveTracker extends Buff{}
 
     public static class SheathedStrikeTracker1 extends Buff{}
-
     public static class SheathedStrikeTracker2 extends FlavourBuff{}
 
-    public static class ParryTrackerPrepare extends Buff{}
+    public class ReprimandTracker extends FlavourBuff{}
 
+    public static class ParryTrackerPrepare extends Buff{}
     public static class ParryTrackerUsing extends FlavourBuff{}
 
     public static class CounterStrikeTracker extends FlavourBuff{

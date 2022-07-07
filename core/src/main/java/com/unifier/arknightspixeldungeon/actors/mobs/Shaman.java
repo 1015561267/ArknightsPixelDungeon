@@ -23,6 +23,7 @@ package com.unifier.arknightspixeldungeon.actors.mobs;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.Lightning;
 import com.unifier.arknightspixeldungeon.effects.particles.SparkParticle;
 import com.unifier.arknightspixeldungeon.items.Generator;
@@ -77,7 +78,7 @@ public class Shaman extends Mob implements Callback {
 	@Override
 	protected boolean doAttack( Char enemy ) {
 
-		if (Dungeon.level.distance( pos, enemy.pos ) <= 1) {
+		if (Dungeon.level.distance( pos, enemy.pos ) <= 1 || buff(Talent.ReprimandTracker.class) != null) {
 			
 			return super.doAttack( enemy );
 			

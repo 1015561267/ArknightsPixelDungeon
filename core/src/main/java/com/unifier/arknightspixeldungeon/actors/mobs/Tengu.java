@@ -30,6 +30,7 @@ import com.unifier.arknightspixeldungeon.actors.blobs.ToxicGas;
 import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
 import com.unifier.arknightspixeldungeon.actors.buffs.Poison;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
@@ -147,7 +148,7 @@ public class Tengu extends Mob {
 
 	@Override
 	protected boolean canAttack( Char enemy ) {
-		return new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE).collisionPos == enemy.pos;
+		return new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE).collisionPos == enemy.pos && buff(Talent.ReprimandTracker.class) == null;
 	}
 
 	//tengu's attack is always visible

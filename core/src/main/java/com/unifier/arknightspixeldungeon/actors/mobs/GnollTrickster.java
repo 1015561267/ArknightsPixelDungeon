@@ -28,6 +28,7 @@ import com.unifier.arknightspixeldungeon.actors.blobs.Fire;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Burning;
 import com.unifier.arknightspixeldungeon.actors.buffs.Poison;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.MissileWeapon;
@@ -67,7 +68,7 @@ public class GnollTrickster extends Gnoll {
 	@Override
 	protected boolean canAttack( Char enemy ) {
 		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-		return !Dungeon.level.adjacent(pos, enemy.pos) && attack.collisionPos == enemy.pos;
+		return !Dungeon.level.adjacent(pos, enemy.pos) && attack.collisionPos == enemy.pos && buff(Talent.ReprimandTracker.class) == null;
 	}
 
 	@Override

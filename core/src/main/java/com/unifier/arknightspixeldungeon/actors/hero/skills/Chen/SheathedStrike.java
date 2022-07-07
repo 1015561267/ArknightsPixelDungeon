@@ -2,10 +2,12 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills.Chen;
 
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.CellSelector;
@@ -21,7 +23,7 @@ import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATH_THROW;
 
 public class SheathedStrike extends HeroSkill {
 
-    public boolean enable = false;
+//    public boolean enable = false;
 
     @Override
     public boolean activated() { return owner.hasTalent(Talent.SHEATHED_STRIKE); }//I'd like to use owner but it somehow doesn't work
@@ -121,11 +123,16 @@ public class SheathedStrike extends HeroSkill {
                 Char enemy = Actor.findChar( cell );
                 if(enemy != null && enemy.alignment == Char.Alignment.ENEMY)
                 {
-                    if(!enemy.charInView(owner))
-                    {
-
+                    if(enemy.charInView(owner)) {
+                        Buff.affect(enemy,Talent.ReprimandTracker.class,7);
+                        if (((Mob)enemy).state == ((Mob) enemy).SLEEPING) {
+                            ((Mob)enemy).state = ((Mob) enemy).HUNTING;
+                        }
+                        ((Mob)enemy).target = owner.pos;
                     }
-                }else {
+
+
+                } else {
 
                 }
             }

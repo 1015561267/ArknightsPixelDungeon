@@ -38,6 +38,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Poison;
 import com.unifier.arknightspixeldungeon.actors.buffs.Sleep;
 import com.unifier.arknightspixeldungeon.actors.buffs.Terror;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.Pushing;
 import com.unifier.arknightspixeldungeon.effects.particles.ShadowParticle;
 import com.unifier.arknightspixeldungeon.items.keys.SkeletonKey;
@@ -306,7 +307,7 @@ public class Yog extends Mob {
 		
 		@Override
 		protected boolean canAttack( Char enemy ) {
-			return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+			return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos && buff(Talent.ReprimandTracker.class) == null;
 		}
 		
 		@Override

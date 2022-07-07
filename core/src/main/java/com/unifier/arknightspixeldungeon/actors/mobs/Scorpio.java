@@ -26,6 +26,7 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
 import com.unifier.arknightspixeldungeon.actors.buffs.Light;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.food.MysteryMeat;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfHealing;
@@ -69,7 +70,7 @@ public class Scorpio extends Mob {
 	@Override
 	protected boolean canAttack( Char enemy ) {
 		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-		return !Dungeon.level.adjacent( pos, enemy.pos ) && attack.collisionPos == enemy.pos;
+		return !Dungeon.level.adjacent( pos, enemy.pos ) && attack.collisionPos == enemy.pos && buff(Talent.ReprimandTracker.class) == null;
 	}
 	
 	@Override
