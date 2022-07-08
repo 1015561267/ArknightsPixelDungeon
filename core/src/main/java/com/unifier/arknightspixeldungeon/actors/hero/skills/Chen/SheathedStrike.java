@@ -3,8 +3,9 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills.Chen;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WellPreparedTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
@@ -82,7 +83,7 @@ public class SheathedStrike extends HeroSkill {
                 Buff.affect(owner,Talent.ParryTrackerPrepare.class);
             }
             if (owner.hasTalent(COUNTER_STRIKE)) {
-                Buff.affect(owner,Talent.CounterStrikeTracker.class,10f);
+                Buff.affect(owner,CounterStrikeTracker.class,10f);
             }
         }
 //            enable = true;//PARRY effect can be found at damage roll :
@@ -135,11 +136,11 @@ public class SheathedStrike extends HeroSkill {
                         ((Mob)enemy).target = owner.pos;
 
                         if (owner.pointsInTalent(WELL_PREPARED) == 1) {
-                            Buff.affect(owner,Talent.WellPrepared.class,3f).setTime(1);
+                            Buff.affect(owner, WellPreparedTracker.class,3f).setTime(1);
                         }
 
                         if (owner.pointsInTalent(WELL_PREPARED) == 2) {
-                            Buff.affect(owner,Talent.WellPrepared.class,3f).setTime(3);
+                            Buff.affect(owner, WellPreparedTracker.class,3f).setTime(3);
                         }
 
                     }

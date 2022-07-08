@@ -48,6 +48,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Regeneration;
 import com.unifier.arknightspixeldungeon.actors.buffs.SnipersMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
@@ -465,9 +466,9 @@ public class Hero extends Char {
 		}
 		if (dmg < 0) dmg = 0;
 
-		Talent.CounterStrikeTracker counterStrikeTracker = buff(Talent.CounterStrikeTracker.class);
-		if (counterStrikeTracker != null && counterStrikeTracker.AbsorbDamage != -1 && counterStrikeTracker.time > 0) {
-			dmg += counterStrikeTracker.AbsorbDamage;
+		CounterStrikeTracker counterStrikeTracker = buff(CounterStrikeTracker.class);
+		if (counterStrikeTracker != null && counterStrikeTracker.absorbDamage != -1 && counterStrikeTracker.time > 0) {
+			dmg += counterStrikeTracker.absorbDamage;
 			counterStrikeTracker.time--;
 			if (counterStrikeTracker.time == 0) {
 				counterStrikeTracker.detach();

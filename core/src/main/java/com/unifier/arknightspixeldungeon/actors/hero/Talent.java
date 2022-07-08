@@ -27,7 +27,6 @@ import com.unifier.arknightspixeldungeon.items.food.Food;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.messages.Messages;
-import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -615,21 +614,9 @@ public enum Talent {
     public static class SheathedStrikeTracker2 extends FlavourBuff{}
 
     public static class ReprimandTracker extends FlavourBuff{}
-    public static class WellPrepared extends FlavourBuff{
-        public int time = -1;
-        public WellPrepared setTime(int time) {
-            this.time = time;
-            return this;
-        }
-    }
 
     public static class ParryTrackerPrepare extends Buff{}
     public static class ParryTrackerUsing extends FlavourBuff{}
-
-    public static class CounterStrikeTracker extends FlavourBuff{
-        public int AbsorbDamage = -1;
-        public int time = -1;
-    }
 
     public static class LightWeaponMasteryTracker extends Buff{}//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
 

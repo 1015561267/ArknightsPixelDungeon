@@ -65,7 +65,7 @@ public class Shadowless extends HeroSkill {
         }
 
         for (Mob mob : Dungeon.level.mobs) {
-            if (Dungeon.level.heroFOV[mob.pos] && mob.alignment == Char.Alignment.ENEMY) {
+            if (Dungeon.level.heroFOV[mob.pos] && mob.alignment == Char.Alignment.ENEMY && Dungeon.level.distance(owner.pos,mob.pos) <= range() ) {
                 targets.add( mob );
             }
         }
