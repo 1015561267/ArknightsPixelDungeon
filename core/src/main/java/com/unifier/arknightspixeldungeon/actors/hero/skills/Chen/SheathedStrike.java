@@ -10,13 +10,16 @@ import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
+import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingStone;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.CellSelector;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
+import com.watabou.utils.Callback;
 
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.COUNTER_STRIKE;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.PARRY;
@@ -85,49 +88,67 @@ public class SheathedStrike extends HeroSkill {
             if (owner.hasTalent(COUNTER_STRIKE)) {
                 Buff.affect(owner,CounterStrikeTracker.class,10f);
             }
+            doAfterAction();
         }
 //            enable = true;//PARRY effect can be found at damage roll :
-        doAfterAction();
     }
 
     protected CellSelector.Listener sheath_throw_selector = new CellSelector.Listener() {
 
         @Override
         public void onSelect(Integer cell) {
-            if (owner != null)
-            {
-                Ballistica attack = new Ballistica( owner.pos, cell, Ballistica.PROJECTILE);
-                int result =  attack.collisionPos;
-                Char enemy = Actor.findChar( result );
-                if(enemy != null && owner.alignment == Char.Alignment.ENEMY)
-                {
+            if (owner != null && cell != null) {
+                Ballistica ballistica = new Ballistica(owner.pos,cell,Ballistica.PROJECTILE);
+                int result =  ballistica.collisionPos;
+                Char enemy = Actor.findChar(result);
+                if (enemy != null && enemy.alignment == Char.Alignment.ENEMY) {
+                    SheathedStrike.this.fx(ballistica, new Callback() {
+                        @Override
+                        public void call() {
+                            int dmg = 0;
 
-                }else {
+                            if (owner.pointsInTalent(SHEATH_THROW) == 1) {
+                                dmg = 1;
+                            } else if (owner.pointsInTalent(SHEATH_THROW) == 2) {
+                                dmg = 9999;
+                            }
 
+                            enemy.damage(dmg,owner);
+                        }
+                    });
+
+                    doAfterAction();
+                    owner.spendAndNext(1f);
+                } else {
                 }
-            }
-            else {
-
+            } else {
             }
         }
 
         @Override
         public String prompt() {
-            return null;
+            return Messages.get(CellSelector.class, "prompt");
         }
     };
+
+    protected void fx(Ballistica ba, Callback callback) {
+        int cell = ba.collisionPos;
+        ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(owner.sprite,cell,new ThrowingStone(),callback);
+//        Sample.INSTANCE.play(Assets.Sounds.ZAP);
+    }
 
     protected CellSelector.Listener reprimand_selector = new CellSelector.Listener() {
 
         @Override
         public void onSelect(Integer cell) {
-            if (owner != null)
-            {
-                Char enemy = Actor.findChar( cell );
-                if(enemy != null && enemy.alignment == Char.Alignment.ENEMY)
-                {
+            if (owner != null && cell != null) {
+                Char enemy = Actor.findChar(cell);
+
+                if(enemy != null && enemy.alignment == Char.Alignment.ENEMY) {
+
                     enemy.fieldOfView = new boolean[Dungeon.level.length()];
                     Dungeon.level.updateFieldOfView(enemy,enemy.fieldOfView);
+
                     if(enemy.charInView(owner)) {
                         Buff.affect(enemy,Talent.ReprimandTracker.class,7f);
                         if (((Mob)enemy).state == ((Mob) enemy).SLEEPING) {
@@ -145,6 +166,8 @@ public class SheathedStrike extends HeroSkill {
 
                     }
 
+                    doAfterAction();
+                    owner.spendAndNext(1f);
                 } else {
 
                 }
