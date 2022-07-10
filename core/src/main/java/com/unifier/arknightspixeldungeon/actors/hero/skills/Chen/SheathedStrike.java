@@ -20,12 +20,17 @@ import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Callback;
+import com.watabou.utils.Random;
 
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.COUNTER_STRIKE;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.PARRY;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.REPRIMAND;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATH_THROW;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.WELL_PREPARED;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class SheathedStrike extends HeroSkill {
 
@@ -102,23 +107,10 @@ public class SheathedStrike extends HeroSkill {
                 int result =  ballistica.collisionPos;
                 Char enemy = Actor.findChar(result);
                 if (enemy != null && enemy.alignment == Char.Alignment.ENEMY) {
-                    SheathedStrike.this.fx(ballistica, new Callback() {
-                        @Override
-                        public void call() {
-                            int dmg = 0;
 
-                            if (owner.pointsInTalent(SHEATH_THROW) == 1) {
-                                dmg = 1;
-                            } else if (owner.pointsInTalent(SHEATH_THROW) == 2) {
-                                dmg = 9999;
-                            }
+                    owner.busy();
+                    doThrow(enemy,ballistica,1);
 
-                            enemy.damage(dmg,owner);
-                        }
-                    });
-
-                    doAfterAction();
-                    owner.spendAndNext(1f);
                 } else {
                 }
             } else {
@@ -132,9 +124,76 @@ public class SheathedStrike extends HeroSkill {
     };
 
     protected void fx(Ballistica ba, Callback callback) {
-        int cell = ba.collisionPos;
-        ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(owner.sprite,cell,new ThrowingStone(),callback);
+        int from = ba.sourcePos;
+        int to = ba.collisionPos;
+        ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(from,to,new ThrowingStone(),callback);
 //        Sample.INSTANCE.play(Assets.Sounds.ZAP);
+    }
+
+    protected void doThrow(Char enemy,Ballistica ballistica,int t) {
+        SheathedStrike.this.fx(ballistica, new Callback() {
+            @Override
+            public void call() {
+                int dmg = 0;
+
+                if (owner.pointsInTalent(SHEATH_THROW) == 1) {
+                    dmg = 1;
+                } else if (owner.pointsInTalent(SHEATH_THROW) == 2) {
+                    dmg = 9999;
+                }
+
+                int From = enemy.pos;
+                Mob To = null;
+                ArrayList<Mob> targets =  new ArrayList<Mob>();
+
+                for (Mob mob : Dungeon.level.mobs) {
+                    if (Dungeon.level.heroFOV[mob.pos] && mob.alignment == Char.Alignment.ENEMY && Dungeon.level.distance(From,mob.pos) <= 99) {
+                        targets.add(mob);
+                    }
+                }
+
+                enemy.damage(dmg,owner);
+
+                if (owner.hasTalent(Talent.SHEATH_BOUNCE)) {
+
+//                    Mob mob = targets.get(Random.Int(targets.size()));
+                    if (targets.size() != 0) {
+                        Collections.shuffle(targets);
+                        for (Mob mob : targets) {
+                            To = mob;
+                            Ballistica ba = new Ballistica(From,To.pos,Ballistica.PROJECTILE);
+                            if (ba.collisionPos != To.pos || !To.isAlive() || To.pos == From) {
+                                To = null;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (To != null && t <= 100) {
+                        Ballistica ba1 = new Ballistica(From,To.pos,Ballistica.PROJECTILE);
+                        doThrow(To,ba1,t+1);
+                    } else {
+                        Ballistica ba2 = new Ballistica(From,owner.pos,Ballistica.PROJECTILE);
+                        if (ba2.collisionPos == owner.pos) {
+                            SheathedStrike.this.fx(ba2, new Callback() {
+                                public void call() {
+                                    doAfterAction();
+                                    owner.spendAndNext(1f);
+                                }
+                            });
+                        } else {
+                            doAfterAction();
+                            owner.spendAndNext(1f);
+                        }
+                    }
+                } else {
+                    doAfterAction();
+                    owner.spendAndNext(1f);
+                }
+            }
+        });
+
     }
 
     protected CellSelector.Listener reprimand_selector = new CellSelector.Listener() {

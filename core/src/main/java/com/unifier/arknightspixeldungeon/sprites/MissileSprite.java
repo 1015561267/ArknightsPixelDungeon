@@ -31,6 +31,7 @@ import com.unifier.arknightspixeldungeon.items.weapon.missiles.Javelin;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.Shuriken;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingSpear;
+import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingStone;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.Trident;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.darts.Dart;
 import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
@@ -137,6 +138,10 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
         {
             speed *= 2f;
         }
+
+//		if (item instanceof ThrowingStone) {
+//			speed /= 3f;
+//		}
 
 		PosTweener tweener = new PosTweener( this, to, d.length() / speed );
 		tweener.listener = this;
