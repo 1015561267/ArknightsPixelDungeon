@@ -35,6 +35,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
 import com.unifier.arknightspixeldungeon.actors.buffs.MindVision;
 import com.unifier.arknightspixeldungeon.actors.buffs.Shadows;
+import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
@@ -786,26 +787,30 @@ public abstract class Level implements Bundlable {
 		}
 
 		if (trap != null) {
-			
+
 			TimekeepersHourglass.timeFreeze timeFreeze =
 					ch != null ? ch.buff(TimekeepersHourglass.timeFreeze.class) : null;
+			TimeBubble timeBubble =
+					ch != null ? ch.buff(TimeBubble.class) : null;
 			
-			if (timeFreeze == null) {
+			if (timeFreeze != null) {
+
+				Sample.INSTANCE.play(Assets.SND_TRAP);
+				discover(cell);
+				timeFreeze.setDelayedPress(cell);
+
+			} else if (timeBubble != null) {
+
+				Sample.INSTANCE.play(Assets.SND_TRAP);
+				discover(cell);
+				timeBubble.setDelayedPress(cell);
+
+			} else {
 
 				if (ch == Dungeon.hero) {
 					Dungeon.hero.interrupt();
 				}
-
 				trap.trigger();
-
-			} else {
-
-				Sample.INSTANCE.play(Assets.SND_TRAP);
-
-				discover(cell);
-
-				timeFreeze.setDelayedPress(cell);
-
 			}
 		}
 		

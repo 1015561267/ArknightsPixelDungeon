@@ -20,13 +20,6 @@ import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Callback;
-import com.watabou.utils.Random;
-
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.COUNTER_STRIKE;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.PARRY;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.REPRIMAND;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATH_THROW;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.WELL_PREPARED;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,21 +69,26 @@ public class SheathedStrike extends HeroSkill {
             return;
         }
 
-        if(owner.hasTalent(SHEATH_THROW))
+        if (owner.hasTalent(Talent.SEIZE_OPPORTUNITY)) {
+            Buff.affect(owner,Talent.SeizeOpportunityTracker.class,3f);
+
+        }
+
+        if(owner.hasTalent(Talent.SHEATH_THROW))
         {
             GameScene.selectCell(sheath_throw_selector);
         }
-        else if(owner.hasTalent(REPRIMAND))
+        else if(owner.hasTalent(Talent.REPRIMAND))
         {
             GameScene.selectCell(reprimand_selector);
         }
         else {
             Buff.affect(owner,Talent.SheathedStrikeTracker1.class);
             Buff.affect(owner,Talent.SheathedStrikeTracker2.class,3f);
-            if (owner.hasTalent(PARRY)) {
+            if (owner.hasTalent(Talent.PARRY)) {
                 Buff.affect(owner,Talent.ParryTrackerPrepare.class);
             }
-            if (owner.hasTalent(COUNTER_STRIKE)) {
+            if (owner.hasTalent(Talent.COUNTER_STRIKE)) {
                 Buff.affect(owner,CounterStrikeTracker.class,10f);
             }
             doAfterAction();
@@ -136,9 +134,9 @@ public class SheathedStrike extends HeroSkill {
             public void call() {
                 int dmg = 0;
 
-                if (owner.pointsInTalent(SHEATH_THROW) == 1) {
+                if (owner.pointsInTalent(Talent.SHEATH_THROW) == 1) {
                     dmg = 1;
-                } else if (owner.pointsInTalent(SHEATH_THROW) == 2) {
+                } else if (owner.pointsInTalent(Talent.SHEATH_THROW) == 2) {
                     dmg = 9999;
                 }
 
@@ -215,11 +213,11 @@ public class SheathedStrike extends HeroSkill {
                         }
                         ((Mob)enemy).target = owner.pos;
 
-                        if (owner.pointsInTalent(WELL_PREPARED) == 1) {
+                        if (owner.pointsInTalent(Talent.WELL_PREPARED) == 1) {
                             Buff.affect(owner, WellPreparedTracker.class,3f).setTime(1);
                         }
 
-                        if (owner.pointsInTalent(WELL_PREPARED) == 2) {
+                        if (owner.pointsInTalent(Talent.WELL_PREPARED) == 2) {
                             Buff.affect(owner, WellPreparedTracker.class,3f).setTime(3);
                         }
 

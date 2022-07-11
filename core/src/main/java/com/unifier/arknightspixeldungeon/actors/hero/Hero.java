@@ -49,6 +49,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.SnipersMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
@@ -594,12 +595,20 @@ public class Hero extends Char {
 	@Override
 	public void spend( float time ) {
 		justMoved = false;
+
 		TimekeepersHourglass.timeFreeze buff = buff(TimekeepersHourglass.timeFreeze.class);
+		TimeBubble timeBubble = buff(TimeBubble.class);
+
 		if (buff != null){
 			buff.processTime(time);
-		} else {
-			super.spend(time);
+			return;
 		}
+		if (timeBubble != null) {
+			timeBubble.processTime(time);
+			return;
+		}
+
+		super.spend(time);
 	}
 	
 	public void spendAndNext( float time ) {
@@ -983,6 +992,8 @@ public class Hero extends Char {
 
 			Buff buff = buff(TimekeepersHourglass.timeFreeze.class);
 			if (buff != null) buff.detach();
+			TimeBubble timeBubble = buff(TimeBubble.class);
+			if (timeBubble != null) timeBubble.detach();
 			
 			InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
 			Game.switchScene( InterlevelScene.class );
@@ -1026,6 +1037,8 @@ public class Hero extends Char {
 
 				Buff buff = buff(TimekeepersHourglass.timeFreeze.class);
 				if (buff != null) buff.detach();
+				TimeBubble timeBubble = buff(TimeBubble.class);
+				if (timeBubble != null) timeBubble.detach();
 
 				InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
 				Game.switchScene( InterlevelScene.class );

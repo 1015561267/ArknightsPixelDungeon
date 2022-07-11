@@ -618,6 +618,8 @@ public enum Talent {
     public static class ParryTrackerPrepare extends Buff{}
     public static class ParryTrackerUsing extends FlavourBuff{}
 
+    public static class SeizeOpportunityTracker extends FlavourBuff{}
+
     public static class LightWeaponMasteryTracker extends Buff{}//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
 
     public static void doAfterDamage(Hero hero, Char enemy, int effectiveDamage) {

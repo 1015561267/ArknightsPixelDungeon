@@ -27,6 +27,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.buffs.Bleeding;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
+import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.items.artifacts.TimekeepersHourglass;
@@ -81,6 +82,8 @@ public class Chasm {
 
 		Buff buff = Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
 		if (buff != null) buff.detach();
+		TimeBubble timeBubble = Dungeon.hero.buff(TimeBubble.class);
+		if (timeBubble != null) timeBubble.detach();
 		
 		if (Dungeon.hero.isAlive()) {
 			Dungeon.hero.interrupt();

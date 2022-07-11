@@ -36,6 +36,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Preparation;
 import com.unifier.arknightspixeldungeon.actors.buffs.Sleep;
 import com.unifier.arknightspixeldungeon.actors.buffs.SoulMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.Terror;
+import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.effects.Flare;
 import com.unifier.arknightspixeldungeon.effects.Speck;
@@ -428,7 +429,8 @@ public abstract class Mob extends Char {
 	@Override
 	public void updateSpriteState() {
 		super.updateSpriteState();
-		if (Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class) != null)
+		if (Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class) != null
+				|| Dungeon.hero.buff(TimeBubble.class) != null)
 			sprite.add( CharSprite.State.PARALYSED );
 	}
 	

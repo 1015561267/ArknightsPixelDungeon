@@ -100,5 +100,10 @@ public class Invisibility extends FlavourBuff {
 		if (timeFreeze != null) {
 			timeFreeze.detach();
 		}
+
+		TimeBubble bubble =  Dungeon.hero.buff(TimeBubble.class);
+		if (bubble != null){
+			bubble.detach();
+		}
 	}
 }
