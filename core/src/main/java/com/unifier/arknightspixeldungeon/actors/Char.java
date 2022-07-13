@@ -50,6 +50,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Slow;
 import com.unifier.arknightspixeldungeon.actors.buffs.Speed;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WellPreparedTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
@@ -393,6 +394,11 @@ public abstract class Char extends Actor {
 
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
         if (defender.buff(Hex.class) != null) defRoll *= 0.8f;
+
+        if (attacker instanceof Hero && attacker.buff(Talent.SeizeOpportunityTracker.class) != null && attacker.buff(TimeBubble.class) != null) {
+			attacker.buff(Talent.SeizeOpportunityTracker.class).detach();
+        	return true;
+		}
 
         if (defender instanceof Hero && defender.buff(WellPreparedTracker.class) != null) {
         	int newTime = defender.buff(WellPreparedTracker.class).time - 1;

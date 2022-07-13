@@ -2,6 +2,7 @@ package com.unifier.arknightspixeldungeon.actors.buffs;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.levels.traps.Trap;
 import com.unifier.arknightspixeldungeon.messages.Messages;
@@ -33,8 +34,9 @@ public class TimeBubble extends FlavourBuff {
         icon.hardlight(1f, 1f, 0);
     }
 
-    public void reset(){
-        left = 7f;
+    public TimeBubble reset(float left){
+        this.left = left;
+        return this;
     }
 
     @Override
@@ -52,6 +54,11 @@ public class TimeBubble extends FlavourBuff {
 
         //use 1/1,000 to account for rounding errors
         if (left < -0.001f){
+
+            if (Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class) != null) {
+                Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class).detach();
+            }
+
             detach();
         }
 

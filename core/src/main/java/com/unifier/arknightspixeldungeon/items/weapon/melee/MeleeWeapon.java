@@ -38,6 +38,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -207,8 +208,14 @@ public class MeleeWeapon extends Weapon {
     protected void onThrow( int cell ) {
         Char enemy = Actor.findChar(cell);
 
-        if ( curUser.hasTalent(Talent.WEAPON_THROW) && enemy != null && enemy instanceof Mob && enemy.alignment == Char.Alignment.ENEMY ) {
-            curUser.attack( enemy );
+        if (curUser.hasTalent(Talent.WEAPON_THROW) && enemy instanceof Mob && enemy.alignment == Char.Alignment.ENEMY) {
+            int damage;
+            damage = rawdamageRoll(curUser,enemy,false);
+            if (curUser.pointsInTalent(Talent.WEAPON_THROW) == 2 && hasGoodEnchant()) {
+            	int damage1 = enchantment.proc(this,curUser,enemy,damage);
+            	damage = damage1;
+            }
+            enemy.damage(damage,curUser);
             Invisibility.dispel();
         }
 

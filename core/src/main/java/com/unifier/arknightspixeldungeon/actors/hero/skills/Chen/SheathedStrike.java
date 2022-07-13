@@ -6,6 +6,7 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WellPreparedTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
@@ -70,8 +71,8 @@ public class SheathedStrike extends HeroSkill {
         }
 
         if (owner.hasTalent(Talent.SEIZE_OPPORTUNITY)) {
-            Buff.affect(owner,Talent.SeizeOpportunityTracker.class,3f);
-
+            Buff.affect(owner,Talent.SeizeOpportunityTracker.class);
+            Buff.affect(owner,TimeBubble.class).reset(2f);
         }
 
         if(owner.hasTalent(Talent.SHEATH_THROW))
