@@ -59,6 +59,11 @@ public class TimeBubble extends FlavourBuff {
                 Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class).detach();
             }
 
+            if (Dungeon.hero.pointsInTalent(Talent.SEIZE_OPPORTUNITY) == 2) {
+                Dungeon.hero.skill_2.getCoolDown(Dungeon.hero.skill_2.rawCD() * 0.25f);
+                Dungeon.hero.skill_3.getCoolDown(Dungeon.hero.skill_3.rawCD() * 0.25f);
+            }
+
             detach();
         }
 
