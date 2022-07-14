@@ -37,7 +37,7 @@ public abstract class HeroSkill extends Buff {
     public abstract int getMaxCharge();
 
     public float cooldownRatio() {//For now it means to handle cooldown for multi charge skill have problem when there are only one charge
-        if(charge == 1 && getMaxCharge() == 1 )
+        if(charge == getMaxCharge())
             return 0;
         else
         return cooldown / rawCD();
@@ -77,7 +77,13 @@ public abstract class HeroSkill extends Buff {
 
     public String name() { return Messages.get(this, "name"); };
 
-    public String otherInfo(){ return Messages.get(this, "cooldown",cooldown) + "\n\n" + Messages.get(this, "chargeinfo",charge,getMaxCharge()); }
+    public String otherInfo() {
+        if (getMaxCharge() == charge) {
+            return Messages.get(this, "chargeinfo",getMaxCharge(),charge);
+        } else {
+            return Messages.get(this, "cooldown", cooldown) + "\n\n" + Messages.get(this, "chargeinfo", getMaxCharge(), charge);
+        }
+    }
 
     public String desc() { return Messages.get(this, "desc");};
 

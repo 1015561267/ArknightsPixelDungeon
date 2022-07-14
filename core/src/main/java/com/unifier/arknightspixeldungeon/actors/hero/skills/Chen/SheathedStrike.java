@@ -150,7 +150,6 @@ public class SheathedStrike extends HeroSkill {
                         targets.add(mob);
                     }
                 }
-
                 enemy.damage(dmg,owner);
 
                 if (owner.hasTalent(Talent.SHEATH_BOUNCE)) {

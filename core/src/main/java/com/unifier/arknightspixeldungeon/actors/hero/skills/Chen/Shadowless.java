@@ -32,7 +32,9 @@ public class Shadowless extends HeroSkill {
         return new SkillIcons(SkillIcons.SHADOWLESS);
     }
 
-    public String desc() { return Messages.get(this, "desc",range(),time());}
+    public String desc() {
+        return Messages.get(this, "desc",range(),time());
+    }
 
     @Override
     public float CD(Hero hero) {
@@ -46,6 +48,9 @@ public class Shadowless extends HeroSkill {
 
     @Override
     public int getMaxCharge() {
+        if (owner.hasTalent(Talent.MOTION_ACCUMULATION)) {
+            return 2;
+        }
         return 1;
     }
 
@@ -140,6 +145,7 @@ public class Shadowless extends HeroSkill {
     }
 
     public int range(){
+//        return 999;
         return 3 + 2 * Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION);//3*3 at lvl 0,5*5 at lvl 1,7*7 at lvl 2
     }
 
@@ -152,6 +158,7 @@ public class Shadowless extends HeroSkill {
             time += 5;
         }
         return time;
+//        return 999;
 //        return 10 + 2 * Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) + Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) == 2 ? 0 : 1;//10 at lvl 0,12 at lvl 1,15 at lvl 2
     }
 
@@ -168,6 +175,31 @@ public class Shadowless extends HeroSkill {
             factor += 0.2;
         }
 
+        if (cooldown < rawCD()) {
+            factor += ((rawCD() - cooldown) / rawCD());
+        }
+
         return (int)(dmg * factor);
+    }
+
+    @Override
+    public void doAfterAction(){
+        charge = 0;
+        cooldown = rawCD();
+    }
+
+    @Override
+    public String otherInfo() {
+        String info;
+        if (getMaxCharge() == charge) {
+            info = Messages.get(this, "chargeinfo",getMaxCharge(),charge);
+        } else {
+            info = Messages.get(this, "cooldown", cooldown) + "\n\n" + Messages.get(this, "chargeinfo", getMaxCharge(), charge);
+        }
+
+        if (charge > 0 && cooldown < rawCD()) {
+            info += "\n\n额外的充能将使你下一次绝影伤害提高" + "_" + (int)((rawCD() - cooldown) / rawCD() * 100) + "_" + "%";
+        }
+        return info;
     }
 }

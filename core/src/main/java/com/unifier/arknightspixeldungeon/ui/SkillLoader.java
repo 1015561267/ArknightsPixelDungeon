@@ -2,6 +2,7 @@ package com.unifier.arknightspixeldungeon.ui;
 
 import com.unifier.arknightspixeldungeon.Chrome;
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
@@ -101,7 +102,8 @@ public class SkillLoader extends Tag{
         cooldownRatio = skill == null ? 1 : skill.cooldownRatio();
         coolDownBlock.size(bg.width(),bg.height() * cooldownRatio);
 
-        if ( Dungeon.hero.isAlive() && cooldownRatio==0 ) {
+
+        if (Dungeon.hero.isAlive() && (cooldownRatio ==0 || (Dungeon.hero.hasTalent(Talent.MOTION_ACCUMULATION) && skill.charge > 0))) {
             enable( Dungeon.hero.ready );
         } else {
             enable( false );
