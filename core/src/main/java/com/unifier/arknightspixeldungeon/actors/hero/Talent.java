@@ -19,6 +19,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
+import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.effects.TalentSprite;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
@@ -602,6 +603,14 @@ public enum Talent {
         if (hero.hasTalent(Talent.SHEATHED_STRIKE) && hero.buff(SheathedStrikeTracker1.class) != null) {
             dmg /= 2;
             Buff.affect(enemy,Vertigo.class,3f);
+        }
+
+        if (hero.hasTalent(Talent.FURY_RAMPAGE)) {
+            float factor = Math.max(0,0.75f - (float)(hero.HP / hero.HT));
+            dmg *= (1 + factor);
+            int heal = (int)(dmg * (factor/2));
+            hero.heal(null,heal);
+            hero.sprite.emitter().burst(Speck.factory(Speck.HEALING),1);
         }
 
         return dmg;

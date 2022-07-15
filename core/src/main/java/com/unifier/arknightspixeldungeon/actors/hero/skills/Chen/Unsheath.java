@@ -230,7 +230,7 @@ public class Unsheath extends HeroSkill {
                                                     owner.earnExp(exp);
                                                 }
                                             } else if(owner.hasTalent(Talent.WIND_CUTTER)){
-                                                Buff.affect(enemy, WindCutterTracker.class).set((int) (tracker * 0.5f));
+                                                Buff.affect(enemy, WindCutterTracker.class,3f).set((int) (tracker * 0.5f));
                                             }
                                         }
 

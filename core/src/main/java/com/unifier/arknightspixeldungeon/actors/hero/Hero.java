@@ -190,8 +190,10 @@ public class Hero extends Char {
 	public Hero() {
 		super();
 		name = Messages.get(this, "name");
-		
-		HP = HT = 20;
+
+//		HP = HT = 20;
+		HP = HT = 2000;
+
 		STR = STARTING_STR;
 		
 		belongings = new Belongings( this );
