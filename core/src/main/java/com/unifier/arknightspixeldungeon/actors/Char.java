@@ -49,6 +49,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Preparation;
 import com.unifier.arknightspixeldungeon.actors.buffs.Slow;
 import com.unifier.arknightspixeldungeon.actors.buffs.Speed;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WellPreparedTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
@@ -223,6 +224,11 @@ public abstract class Char extends Actor {
                     dr = 0;
                 }
             }
+
+			RageTracker rageTracker = buff(RageTracker.class);
+            if (rageTracker != null) {
+            	dmg = rageTracker.damageFactor(dmg);
+			}
 
 			if (enemy == Dungeon.hero && Dungeon.hero.buff(Talent.ParryTrackerUsing.class) != null) {
 				dmg = 0;

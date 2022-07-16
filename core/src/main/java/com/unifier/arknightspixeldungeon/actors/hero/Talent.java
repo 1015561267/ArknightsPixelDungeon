@@ -533,7 +533,7 @@ public enum Talent {
                 hero.buff(RallyForceTracker.class).doubledSpeed = true;
             } else Buff.affect(hero,RallyForceTracker.class);
         }
-        else if(talent == RESENTMENT){ Buff.affect(hero, RageTracker.class); }
+//        else if(talent == RESENTMENT){ Buff.affect(hero, RageTracker.class); }
     }
 
     public static class LastChanceTracker extends Buff{}
