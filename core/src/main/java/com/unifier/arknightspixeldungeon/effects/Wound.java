@@ -56,7 +56,7 @@ public class Wound extends Image {
     public Wound(Image image)
     {
         super( image );
-        hardlight(1f, 0f, 0f);
+		hardlight(1f, 0f, 0f);
         origin.set( width / 2, height / 2 );
         this.callback=callback;
     }

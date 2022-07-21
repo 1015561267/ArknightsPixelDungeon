@@ -10,19 +10,31 @@ import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.ChenSlash;
+import com.unifier.arknightspixeldungeon.effects.Effects;
+import com.unifier.arknightspixeldungeon.effects.Speck;
+import com.unifier.arknightspixeldungeon.effects.Splash;
+import com.unifier.arknightspixeldungeon.effects.particles.BloodParticle;
 import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.HeroSprite;
+import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.utils.GLog;
+import com.watabou.noosa.Game;
+import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Callback;
+import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
 public class Shadowless extends HeroSkill {
+
+    private ArrayList<Image> images = new ArrayList<>();
 
     @Override
     public boolean activated() { return owner.hasTalent(Talent.SHADOWLESS); }
@@ -100,11 +112,33 @@ public class Shadowless extends HeroSkill {
 
         Mob mob=targets.get(Random.Int(targets.size()));
 
-        ChenSlash.hit(mob.pos, Random.Int(360),new Callback() {
+//        Emitter emitter = new Emitter();
+//        emitter.autoKill = false;
+//        emitter.pos(mob.sprite.center());
+//        Group parent = Dungeon.hero.sprite.parent;
+//        parent.add(emitter);
+//        emitter.pour(BloodParticle.FACTORY, 0.3f);
+
+//        mob.sprite.flash();
+//        Random.Int(0,30)
+        float angle = Random.Int(195,255);
+
+        Image image = new Image(Effects.get(Effects.Type.CHEN_SLASH));
+        image.origin.set(image.width / 2,image.height / 2);
+        image.point(mob.sprite.center(image));
+        image.angle = angle;
+
+
+        ChenSlash.hit(mob,angle,new Callback() {
             @Override
             public void call() {
 
-                mob.damage(skillDamage(mob, false), hero);
+                hero.sprite.parent.add(image);
+//                Game.scene().add(image);
+                images.add(image);
+
+                mob.damage(1, hero);
+//                mob.damage(skillDamage(mob, false), hero);
 
                 if (!mob.isAlive()){
                     GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name)) );
@@ -125,11 +159,19 @@ public class Shadowless extends HeroSkill {
                 }
 
                 if(t>=time()-1 || targets.isEmpty()){
+
                     owner.sprite.visible=true;
                     ((HeroSprite)owner.sprite).setSkillCallbackAnimation(new Callback() {
                         @Override
                         public void call() {
                             ((HeroSprite) owner.sprite).setAfterSkillAnimation();
+
+                            for (Image i : images) {
+                                hero.sprite.parent.remove(i);
+//                                Game.scene().remove(i);
+                            }
+                            images = new ArrayList<>();
+
                             doAfterAction();
                             owner.spendAndNext(1f);
                             if (owner.pointsInTalent(Talent.SWORD_RAIN) == 2 && t<10){

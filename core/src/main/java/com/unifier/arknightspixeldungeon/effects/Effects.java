@@ -31,6 +31,7 @@ public class Effects {
 		LIGHTNING,
 		WOUND,
         CHEN_SLASH,
+		CHEN_NEWSLASH,
 		EXCLAMATION,
 		CHAIN,
 		DEATH_RAY,
@@ -54,7 +55,10 @@ public class Effects {
             case CHEN_SLASH:
                 icon.frame(icon.texture.uvRect(0, 44, 20, 64));
                 break;
-
+			case CHEN_NEWSLASH:
+				icon = new Image(Assets.NEWSLASH);
+//				icon.frame(icon.texture.uvRect(0, 0, 20, 20));
+				break;
 			case EXCLAMATION:
 				icon.frame(icon.texture.uvRect(0, 16, 6, 25));
 				break;
@@ -71,9 +75,8 @@ public class Effects {
 				icon.frame(icon.texture.uvRect(16, 30, 32, 38));
 				break;
             case CHEN_UNSHEATH:
-                icon.frame(icon.texture.uvRect(16, 37, 32, 42));
+                icon.frame(icon.texture.uvRect(16, 38, 32, 44));
                 break;
-
 		}
 		return icon;
 	}

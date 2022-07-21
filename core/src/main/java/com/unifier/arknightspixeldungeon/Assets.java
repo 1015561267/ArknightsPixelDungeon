@@ -146,6 +146,7 @@ public class Assets {
     public static final String FIREBALL		= EFFECT + "fireball.png";
     public static final String SPECKS		= EFFECT + "specks.png";
     public static final String EFFECTS		= EFFECT + "effects.png";
+    public static final String NEWSLASH		= EFFECT + "1.png";
 
     private static final String FONTS = MISCS + "fonts/";
     public static final String PIXELFONT    = FONTS + "pixel_font.png";
