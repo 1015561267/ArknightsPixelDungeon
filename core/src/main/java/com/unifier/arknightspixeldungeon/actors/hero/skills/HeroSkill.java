@@ -2,6 +2,7 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills;
 
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
@@ -45,11 +46,20 @@ public abstract class HeroSkill extends Buff {
 
     @Override
      public boolean act() {
-        spend( TICK );
+        spend(TICK);
+
+        float factor = 1;
         if(activated()) {
-            if(owner.hasTalent(Talent.SWORD_WEAPON_MASTERY) && owner.belongings.weapon != null && owner.belongings.weapon.weaponType().contains(KindOfWeapon.type.SWORD))
-                getCoolDown(TICK * 1.2f);
-            else getCoolDown(TICK);
+            if (owner.hasTalent(Talent.SWORD_WEAPON_MASTERY) && owner.belongings.weapon != null && owner.belongings.weapon.weaponType().contains(KindOfWeapon.type.SWORD)) {
+                factor += 0.2;
+            }
+
+            RageTracker rageTracker = owner.buff(RageTracker.class);
+            if (owner.hasTalent(Talent.EVIL_ABHORRENCE) && rageTracker != null && rageTracker.rage > 0) {
+                factor += rageTracker.rage;
+            }
+
+            getCoolDown(TICK * factor);
         }
         return true;
     }
