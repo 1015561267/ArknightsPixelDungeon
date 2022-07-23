@@ -28,6 +28,7 @@ import com.unifier.arknightspixeldungeon.items.food.Food;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -665,6 +666,16 @@ public enum Talent {
         if (sheathedStrikeTracker != null) {
             sheathedStrikeTracker.detach();
         }
+
+        if (!enemy.isAlive() && hero.hasTalent(Talent.CRIMSON_RAGE)) {
+            RageTracker rageTracker = Buff.affect(hero,RageTracker.class);
+            rageTracker.rage = rageTracker.rage + 0.1f;
+            if (hero.pointsInTalent(Talent.CRIMSON_RAGE) == 1) {
+                rageTracker.rageLossBuffer = Math.max(rageTracker.rageLossBuffer,5);
+            } else {
+                rageTracker.rageLossBuffer = Math.max(rageTracker.rageLossBuffer,10);
+            }
+        }
     }
 
 
@@ -682,6 +693,12 @@ public enum Talent {
         if(hero.buff(DragonScaleTracker.class)!=null)
         {
             damage = hero.buff(DragonScaleTracker.class).affect(damage,source);
+        }
+
+        if (hero.pointsInTalent(CRIMSON_RAGE) == 2) {
+            if (hero.buff(RageTracker.class) != null && hero.buff(RageTracker.class).rage > 0.8f) {
+                damage = Math.round(damage * (1.8f - hero.buff(RageTracker.class).rage));
+            }
         }
 
         return damage;
