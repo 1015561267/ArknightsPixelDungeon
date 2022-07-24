@@ -15,7 +15,7 @@ public class ComboTracker extends Buff {
     private static final float DURATION = 5f;
     private static final int MAX_COMBO = 10;
 
-    protected int stack = 0;
+    public int stack = 0;
     protected float fadeTime = DURATION;
     protected boolean missTracker = false;
     protected int comboTracker = 0;

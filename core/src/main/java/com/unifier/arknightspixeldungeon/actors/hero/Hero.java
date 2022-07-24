@@ -47,6 +47,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
 import com.unifier.arknightspixeldungeon.actors.buffs.Regeneration;
 import com.unifier.arknightspixeldungeon.actors.buffs.SnipersMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CollectComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
@@ -1672,11 +1673,32 @@ public class Hero extends Char {
                     }
                 }
                 Buff.affect(enemy,ComboTracker.class).hit();
+                if (buff(CollectComboTracker.class) != null) {
+                	buff(ComboTracker.class).stack += buff(CollectComboTracker.class).combo;
+					buff(CollectComboTracker.class).detach();
+				}
+
             }else {
                 ComboTracker tracker = enemy.buff(ComboTracker.class);
                 if(tracker!=null) tracker.miss();
             }
         }
+
+        if (hasTalent(Talent.BOTHSIDE_ATTACK) && enemy.buff(ComboTracker.class) != null && hit) {
+        	if (Random.Float() <= (enemy.buff(ComboTracker.class).getStack() * 0.05f)) {
+        		switch (Random.Int(3)) {
+					case 0:
+						skill_1.getCoolDown(skill_1.rawCD() * 0.1f);
+						break;
+					case 1:
+						skill_2.getCoolDown(skill_2.rawCD() * 0.1f);
+						break;
+					case 2:
+						skill_3.getCoolDown(skill_3.rawCD() * 0.1f);
+						break;
+				}
+			}
+		}
 		
 		Invisibility.dispel();
 

@@ -48,6 +48,8 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Poison;
 import com.unifier.arknightspixeldungeon.actors.buffs.Preparation;
 import com.unifier.arknightspixeldungeon.actors.buffs.Slow;
 import com.unifier.arknightspixeldungeon.actors.buffs.Speed;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CollectComboTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WellPreparedTracker;
@@ -202,6 +204,11 @@ public abstract class Char extends Actor {
 
 		else if (hit( this, enemy, false )) {
 
+			int CollectCombo = 0;
+			if (Dungeon.hero.pointsInTalent(Talent.BOTHSIDE_ATTACK) == 2 && enemy.buff(ComboTracker.class) != null) {
+				CollectCombo = Math.min(enemy.buff(ComboTracker.class).getStack() / 2,5);
+			}
+
 			int dmg;
 			Preparation prep = buff(Preparation.class);
 			if (prep != null){
@@ -264,8 +271,6 @@ public abstract class Char extends Actor {
 
 			effectiveDamage = attackProc( enemy, effectiveDamage );
 
-
-
 			if (visibleFight) {
 				Sample.INSTANCE.play( Assets.SND_HIT, 1, 1, Random.Float( 0.8f, 1.25f ) );
 			}
@@ -293,6 +298,10 @@ public abstract class Char extends Actor {
 
 			enemy.sprite.bloodBurstA( sprite.center(), effectiveDamage );
 			enemy.sprite.flash();
+
+			if (!enemy.isAlive() && CollectCombo != 0 && this == Dungeon.hero) {
+				Buff.affect(Dungeon.hero,CollectComboTracker.class).set(CollectCombo);
+			}
 
 			if (!enemy.isAlive() && visibleFight) {
 				if (enemy == Dungeon.hero) {
