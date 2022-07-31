@@ -263,8 +263,12 @@ public class Unsheath extends HeroSkill {
                                                         ((HeroSprite) owner.sprite).setAfterSkillAnimation();
                                                         Dungeon.level.press(finalDropPos, owner);
                                                         doAfterAction();
-                                                        if(enemys.size()>=3 && owner.hasTalent(Talent.FORMATION_BREAKER) || (!enemys.isEmpty() && hero.hasTalent(Talent.FLOWING_WATER))){
-                                                            if(repeattedTime<3) charge++;
+                                                        if( (enemys.size()>=3 && (owner.hasTalent(Talent.FORMATION_BREAKER) )) || (!enemys.isEmpty() && hero.hasTalent(Talent.FLOWING_WATER))){
+                                                            if(repeattedTime<3)
+                                                            {
+                                                                charge++;
+                                                                repeattedTime++;
+                                                            }
                                                             else repeattedTime = 0;
                                                         }
 
