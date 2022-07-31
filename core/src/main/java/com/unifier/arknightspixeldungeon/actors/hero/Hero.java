@@ -174,7 +174,7 @@ public class Hero extends Char {
 	
 	public float awareness;
 	
-	public int lvl = 30;
+	public int lvl = 1;
 	public int exp = 0;
 	
 	public int HTBoost = 0;
@@ -193,8 +193,8 @@ public class Hero extends Char {
 		super();
 		name = Messages.get(this, "name");
 
-//		HP = HT = 20;
-		HP = HT = 2000;
+		HP = HT = 20;
+//		HP = HT = 2000;
 
 		STR = STARTING_STR;
 		
@@ -1674,7 +1674,7 @@ public class Hero extends Char {
                 }
                 Buff.affect(enemy,ComboTracker.class).hit();
                 if (buff(CollectComboTracker.class) != null) {
-                	buff(ComboTracker.class).stack += buff(CollectComboTracker.class).combo;
+                	enemy.buff(ComboTracker.class).stack += buff(CollectComboTracker.class).combo;
 					buff(CollectComboTracker.class).detach();
 				}
 

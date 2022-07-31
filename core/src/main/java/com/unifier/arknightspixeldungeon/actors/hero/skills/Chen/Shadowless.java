@@ -137,8 +137,8 @@ public class Shadowless extends HeroSkill {
 //                Game.scene().add(image);
                 images.add(image);
 
-                mob.damage(1, hero);
-//                mob.damage(skillDamage(mob, false), hero);
+//                mob.damage(1, hero);
+                mob.damage(skillDamage(mob, false), hero);
 
                 if (!mob.isAlive()){
                     GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name)) );
