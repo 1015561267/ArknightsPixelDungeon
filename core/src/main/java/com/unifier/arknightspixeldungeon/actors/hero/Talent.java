@@ -28,7 +28,6 @@ import com.unifier.arknightspixeldungeon.items.food.Food;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.messages.Messages;
-import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -598,7 +597,11 @@ public enum Talent {
         }
 
         if(hero.hasTalent(Talent.BLADE_STORM)){
-            hero.buff(BladeStormTracker.class).refresh();
+            BladeStormTracker bladeStormTracker = hero.buff(BladeStormTracker.class);
+            if (bladeStormTracker != null) {
+                bladeStormTracker.refresh();
+            }
+            else Buff.affect(hero,BladeStormTracker.class);
         }
 
         if (hero.hasTalent(Talent.SHEATHED_STRIKE) && hero.buff(SheathedStrikeTracker1.class) != null) {
