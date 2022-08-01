@@ -36,6 +36,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
+import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.utils.GLog;
@@ -209,6 +210,7 @@ public class MeleeWeapon extends Weapon {
         Char enemy = Actor.findChar(cell);
 
         if (curUser.hasTalent(Talent.WEAPON_THROW) && enemy instanceof Mob && enemy.alignment == Char.Alignment.ENEMY) {
+        	/*
             int damage;
             damage = rawdamageRoll(curUser,enemy,false);
             if (curUser.pointsInTalent(Talent.WEAPON_THROW) == 2 && hasGoodEnchant()) {
@@ -217,6 +219,12 @@ public class MeleeWeapon extends Weapon {
             }
             enemy.damage(damage,curUser);
             Invisibility.dispel();
+
+        	 */
+			KindOfWeapon thisWeapon = curUser.belongings.weapon;
+			curUser.belongings.weapon = this;
+			curUser.attack(enemy);
+			curUser.belongings.weapon = thisWeapon;
         }
 
         super.onThrow(cell);
