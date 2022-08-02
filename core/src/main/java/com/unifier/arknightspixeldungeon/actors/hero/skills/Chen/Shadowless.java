@@ -91,6 +91,7 @@ public class Shadowless extends HeroSkill {
         if (!targets.isEmpty())
         {
             //GLog.i("Start");
+            doAfterAction();
             owner.busy();
             ((HeroSprite)owner.sprite).setSkillCallbackAnimation(
                     new Callback() {
@@ -172,7 +173,7 @@ public class Shadowless extends HeroSkill {
                             }
                             images = new ArrayList<>();
 
-                            doAfterAction();
+//                            doAfterAction();
                             owner.spendAndNext(1f);
                             if (owner.pointsInTalent(Talent.SWORD_RAIN) == 2 && t<10){
                                 cooldown -=  rawCD() * 0.05f * (10 - t);
