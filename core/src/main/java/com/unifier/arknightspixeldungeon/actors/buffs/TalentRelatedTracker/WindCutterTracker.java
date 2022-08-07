@@ -2,9 +2,7 @@ package com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker;
 
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
-import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.messages.Messages;
-import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 
@@ -41,11 +39,11 @@ public class WindCutterTracker extends FlavourBuff {
         target.damage(damage, hero);
         if (!target.isAlive()) {
             GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", target.name)));
-            int exp = hero.lvl <= ((Mob) target).maxLvl ? ((Mob) target).EXP : 0;
-            if (exp > 0) {
-                hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
-                hero.earnExp(exp);
-            }
+            //int exp = hero.lvl <= ((Mob) target).maxLvl ? ((Mob) target).EXP : 0;
+            //if (exp > 0) {
+            //    hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
+            //    hero.earnExp(exp);
+            //}
         }
         super.detach();
     }

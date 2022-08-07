@@ -10,7 +10,6 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WindC
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
-import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.Beam;
 import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.levels.features.Door;
@@ -18,7 +17,6 @@ import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.CellSelector;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
-import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.HeroSprite;
 import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
@@ -224,11 +222,11 @@ public class Unsheath extends HeroSkill {
 
                                             if (!enemy.isAlive()) {
                                                 GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)));
-                                                int exp = owner.lvl <= ((Mob) enemy).maxLvl ? ((Mob) enemy).EXP : 0;
-                                                if (exp > 0) {
-                                                    owner.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
-                                                    owner.earnExp(exp);
-                                                }
+                                                //int exp = owner.lvl <= ((Mob) enemy).maxLvl ? ((Mob) enemy).EXP : 0;
+                                                //if (exp > 0) {
+                                                //    owner.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
+                                                //    owner.earnExp(exp);
+                                                //}
                                             } else if(owner.hasTalent(Talent.WIND_CUTTER)){
                                                 Buff.affect(enemy, WindCutterTracker.class,3f).set((int) (tracker * 0.5f));
                                             }

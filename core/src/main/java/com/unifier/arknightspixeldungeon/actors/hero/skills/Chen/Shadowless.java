@@ -11,23 +11,13 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.ChenSlash;
 import com.unifier.arknightspixeldungeon.effects.Effects;
-import com.unifier.arknightspixeldungeon.effects.Speck;
-import com.unifier.arknightspixeldungeon.effects.Splash;
-import com.unifier.arknightspixeldungeon.effects.particles.BloodParticle;
 import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
-import com.unifier.arknightspixeldungeon.scenes.GameScene;
-import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.HeroSprite;
-import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.utils.GLog;
-import com.watabou.noosa.Game;
-import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Callback;
-import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -143,11 +133,11 @@ public class Shadowless extends HeroSkill {
 
                 if (!mob.isAlive()){
                     GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name)) );
-                    int exp = owner.lvl <= mob.maxLvl ? mob.EXP : 0;
-                    if (exp > 0) {
-                        owner.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
-                        owner.earnExp(exp);
-                    }
+                    //int exp = owner.lvl <= mob.maxLvl ? mob.EXP : 0;
+                    //if (exp > 0) {
+                    //    owner.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
+                    //    owner.earnExp(exp);
+                    //}
                     targets.remove(mob);
                 }else{
                     if(hero.hasTalent(Talent.MORTAL_SKILL)){
