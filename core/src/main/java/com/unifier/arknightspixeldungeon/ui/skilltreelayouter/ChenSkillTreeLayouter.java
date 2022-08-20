@@ -100,7 +100,7 @@ public class ChenSkillTreeLayouter {
         talentsPane.allbuttons.get(2).get(5).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),9 * Vertical_separator + 8 * ButtonHeight() + HUDHeight());//WIND_CUTTER
 
         talentsPane.allbuttons.get(2).get(6).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),10 * Vertical_separator + 9 * ButtonHeight() + HUDHeight());//SKILLFUL_GUARD
-        talentsPane.allbuttons.get(2).get(7).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),12 * Vertical_separator + 11 * ButtonHeight() + HUDHeight());//FAULTLESS_DEFENSE
+        talentsPane.allbuttons.get(2).get(7).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),12 * Vertical_separator + 11 * ButtonHeight() + HUDHeight());//EYE_FOR_EYE
 
         talentsPane.allbuttons.get(2).get(8).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),13 * Vertical_separator + 12 * ButtonHeight() + HUDHeight());//DEADLY_COMBO
         talentsPane.allbuttons.get(2).get(9).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//EVIL_ABHORRENCE
@@ -137,7 +137,7 @@ public class ChenSkillTreeLayouter {
 
         talentsPane.allbuttons.get(4).get(0).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),7 * Vertical_separator + 6 * ButtonHeight() + HUDHeight());//FLOWING_WATER
         talentsPane.allbuttons.get(4).get(1).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),9 * Vertical_separator + 8 * ButtonHeight() + HUDHeight());//SLASH_ECHO
-        talentsPane.allbuttons.get(4).get(2).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),11 * Vertical_separator + 10 * ButtonHeight() + HUDHeight());//LIGHTNING_REFLEXES
+        talentsPane.allbuttons.get(4).get(2).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),11 * Vertical_separator + 10 * ButtonHeight() + HUDHeight());//ENGROSSED
 
         talentsPane.allbuttons.get(4).get(3).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),13 * Vertical_separator + 12 * ButtonHeight() + HUDHeight());//MORTAL_SKILL
         talentsPane.allbuttons.get(4).get(4).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//FURY_RAMPAGE

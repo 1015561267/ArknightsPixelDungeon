@@ -183,11 +183,11 @@ public enum Talent {
         @Override
         public ArrayList<Talent> Mutex() {
             return new ArrayList<Talent>() {{
-                add(FAULTLESS_DEFENSE);
+                add(EYE_FOR_EYE);
             }};
         }
     },
-    FAULTLESS_DEFENSE(39,3) {
+    EYE_FOR_EYE(39,3) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(REFLECT);
@@ -293,7 +293,7 @@ public enum Talent {
             return Dungeon.hero.hasTalent(WIND_CUTTER);
         }
     },
-    LIGHTNING_REFLEXES(66, 1,5) {
+    ENGROSSED(66, 1,5) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(REFLECT);
@@ -511,9 +511,9 @@ public enum Talent {
         {
             case 0:Collections.addAll(tierTalents, SHEATHED_STRIKE,FAST_RECOVERY,PREEMPTIVE_STRIKE,ARM_INTUITION);break;
             case 1:Collections.addAll(tierTalents, SHEATH_THROW,REPRIMAND,PARRY,VIGILANCE,LAST_CHANCE, DRAGON_SCALE,UNSHEATH,FLASH, REFLECT,CONTINUOUS_ASSAULT,RESENTMENT, WEAPON_ADAPT);break;
-            case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE,FORMATION_BREAKER, WIND_CUTTER,SKILLFUL_GUARD, FAULTLESS_DEFENSE,DEADLY_COMBO,EVIL_ABHORRENCE,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
+            case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE,FORMATION_BREAKER, WIND_CUTTER,SKILLFUL_GUARD, EYE_FOR_EYE,DEADLY_COMBO,EVIL_ABHORRENCE,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
             case 3:Collections.addAll(tierTalents, WEAPON_THROW, SEIZE_OPPORTUNITY,CONSISTENT_PRINCIPLE,HEART_STRIKER,BOTHSIDE_ATTACK,CRIMSON_RAGE,SWORD_RAIN,CRIMSON_EXTENSION);break;
-            case 4:Collections.addAll(tierTalents, FLOWING_WATER, SLASH_ECHO, LIGHTNING_REFLEXES,MORTAL_SKILL,FURY_RAMPAGE,MOTION_ACCUMULATION,BLADE_STORM,FULL_SUPPRESSION);break;
+            case 4:Collections.addAll(tierTalents, FLOWING_WATER, SLASH_ECHO, ENGROSSED,MORTAL_SKILL,FURY_RAMPAGE,MOTION_ACCUMULATION,BLADE_STORM,FULL_SUPPRESSION);break;
             default:break;
         }
         //Mostly weapon damage modify can be found at MeleeWeapon.damageRoll
