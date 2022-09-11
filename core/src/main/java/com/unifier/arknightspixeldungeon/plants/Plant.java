@@ -31,6 +31,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Barkskin;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.particles.LeafParticle;
 import com.unifier.arknightspixeldungeon.items.Dewdrop;
@@ -150,6 +151,7 @@ public abstract class Plant implements Bundlable {
 				super.onThrow( cell );
 			} else {
 				Dungeon.level.plant( this, cell );
+				Talent.afterItemUse(curItem);
 			}
 		}
 		
@@ -163,9 +165,9 @@ public abstract class Plant implements Bundlable {
 				hero.spend( TIME_TO_PLANT );
 				hero.busy();
 				((Seed)detach( hero.belongings.backpack )).onThrow( hero.pos );
-				
 				hero.sprite.operate( hero.pos );
-				
+
+				Talent.afterItemUse(curItem);
 			}
 		}
 		

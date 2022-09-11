@@ -28,6 +28,10 @@ import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.artifacts.ChaliceOfBlood;
 import com.unifier.arknightspixeldungeon.items.food.Food;
+import com.unifier.arknightspixeldungeon.items.potions.PotionOfMight;
+import com.unifier.arknightspixeldungeon.items.potions.PotionOfStrength;
+import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicalInfusion;
+import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.messages.Messages;
@@ -777,5 +781,16 @@ public enum Talent {
         }
     }
 
+    public static void afterItemUse(Item item) {
+        if(hero.pointsInTalent(FRUGALITY) == 2){
+            if(item instanceof PotionOfStrength || item instanceof PotionOfMight || item instanceof ScrollOfUpgrade || item instanceof ScrollOfMagicalInfusion){
+                return;
+            }else {
+                if(Random.Int(100)<25){
+                    item.collect();
+                }
+            }
+        }
+    }
 
 }

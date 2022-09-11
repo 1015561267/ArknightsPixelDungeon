@@ -47,7 +47,6 @@ public class Alchemy extends Blob {
 					
 					//for pre-0.6.2 saves
 					while (off[cell] > 0 && Dungeon.level.heaps.get(cell) != null){
-						
 						int n;
 						do {
 							n = cell + PathFinder.NEIGHBOURS8[Random.Int( 8 )];

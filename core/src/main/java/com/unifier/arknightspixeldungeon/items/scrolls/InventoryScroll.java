@@ -23,6 +23,7 @@ package com.unifier.arknightspixeldungeon.items.scrolls;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.actors.buffs.Invisibility;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
@@ -57,6 +58,9 @@ public abstract class InventoryScroll extends Scroll {
 				case 0:
 					curUser.spendAndNext( TIME_TO_READ );
 					identifiedByUse = false;
+
+					Talent.afterItemUse(curItem);
+
 					break;
 				case 1:
 					GameScene.selectItem( itemSelector, mode, inventoryTitle );
@@ -87,6 +91,8 @@ public abstract class InventoryScroll extends Scroll {
 				
 				Sample.INSTANCE.play( Assets.SND_READ );
 				Invisibility.dispel();
+
+				Talent.afterItemUse(curItem);
 				
 			} else if (identifiedByUse && !((Scroll)curItem).ownedByBook) {
 				

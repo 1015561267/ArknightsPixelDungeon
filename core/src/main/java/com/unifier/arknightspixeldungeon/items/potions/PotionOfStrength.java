@@ -34,7 +34,7 @@ public class PotionOfStrength extends Potion {
 	}
 	
 	@Override
-	public void apply( Hero hero ) {
+	public void apply(Hero hero, boolean isBlandFruit) {
 		setKnown();
 		
 		hero.STR++;

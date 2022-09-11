@@ -36,7 +36,7 @@ public class PotionOfInvisibility extends Potion {
 	}
 
 	@Override
-	public void apply( Hero hero ) {
+	public void apply(Hero hero, boolean isBlandFruit) {
 		setKnown();
 		Buff.affect( hero, Invisibility.class, Invisibility.DURATION );
 		GLog.i( Messages.get(this, "invisible") );

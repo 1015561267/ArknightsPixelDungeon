@@ -111,7 +111,7 @@ public class Blandfruit extends Food {
 				GLog.i(Messages.get(this, "para_msg"));
 				Buff.affect(hero, EarthImbue.class, EarthImbue.DURATION);
 			} else {
-				potionAttrib.apply(hero);
+				potionAttrib.apply(hero,true);
 			}
 
 		}

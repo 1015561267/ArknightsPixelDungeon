@@ -21,11 +21,11 @@
 
 package com.unifier.arknightspixeldungeon.items.potions;
 
+import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.Challenges;
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Statistics;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
@@ -34,6 +34,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Burning;
 import com.unifier.arknightspixeldungeon.actors.buffs.Ooze;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.Splash;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -211,10 +212,12 @@ public class Potion extends Item {
 	protected void drink( Hero hero ) {
 		
 		detach( hero.belongings.backpack );
-		
+		Talent.afterItemUse(this);;
+
+
 		hero.spend( TIME_TO_DRINK );
 		hero.busy();
-		apply( hero );
+		apply( hero ,false);
 		
 		Sample.INSTANCE.play( Assets.SND_DRINK );
 		
@@ -224,19 +227,17 @@ public class Potion extends Item {
 	@Override
 	protected void onThrow( int cell ) {
 		if (Dungeon.level.map[cell] == Terrain.WELL || Dungeon.level.pit[cell]) {
-			
 			super.onThrow( cell );
-			
 		} else  {
-
 			Dungeon.level.press( cell, null, true );
 			shatter( cell );
-			
+
+			Talent.afterItemUse(this);;
 		}
 	}
 	
-	public void apply( Hero hero ) {
-		shatter( hero.pos );
+	public void apply(Hero hero, boolean isBlandFruit) {
+	    shatter( hero.pos );
 	}
 	
 	public void shatter( int cell ) {
@@ -366,6 +367,11 @@ public class Potion extends Item {
 			for (Item ingredient : ingredients){
 				ingredient.quantity(ingredient.quantity() - 1);
 			}
+
+			if(curUser.hasTalent(Talent.FRUGALITY)) {
+                Item rolled = Random.element(ingredients);
+                rolled.collect();
+            }
 			
 			Item result;
 			

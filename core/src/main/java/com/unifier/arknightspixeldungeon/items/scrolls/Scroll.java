@@ -24,6 +24,7 @@ package com.unifier.arknightspixeldungeon.items.scrolls;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.ItemStatusHandler;
 import com.unifier.arknightspixeldungeon.items.artifacts.UnstableSpellbook;
@@ -142,11 +143,13 @@ public abstract class Scroll extends Item {
 					&& !(this instanceof ScrollOfRemoveCurse)) {
 				GLog.n( Messages.get(this, "cursed") );
 			} else {
-				curUser = hero;
-				curItem = detach( hero.belongings.backpack );
-				doRead();
-			}
-			
+                curUser = hero;
+                curItem = detach(hero.belongings.backpack);
+                doRead();
+                if (!(curItem instanceof InventoryScroll)) {
+                    Talent.afterItemUse(this);
+                }
+            }
 		}
 	}
 	

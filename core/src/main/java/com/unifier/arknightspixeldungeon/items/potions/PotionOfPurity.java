@@ -97,10 +97,11 @@ public class PotionOfPurity extends Potion {
 	}
 	
 	@Override
-	public void apply( Hero hero ) {
+	public void apply(Hero hero, boolean isBlandFruit) {
 		GLog.w( Messages.get(this, "protected") );
 		Buff.prolong( hero, BlobImmunity.class, BlobImmunity.DURATION );
 		setKnown();
+
 	}
 	
 	@Override
