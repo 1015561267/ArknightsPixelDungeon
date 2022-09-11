@@ -23,6 +23,7 @@ package com.unifier.arknightspixeldungeon.actors.mobs;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.Lightning;
 import com.unifier.arknightspixeldungeon.effects.particles.SparkParticle;
@@ -93,10 +94,10 @@ public class Shaman extends Mob implements Callback {
 
 			if(doMagicAttack(enemy,magicType.Shaman))
             {
-                magicHit(enemy,this);
+                magicHit(enemy,this,true);
             }
 
-			else magicHit(this,enemy);
+			else magicHit(this,enemy,false);
 
 			/*if (hit( this, enemy, true )) {
 				int dmg = Random.NormalIntRange(3, 10);
@@ -130,28 +131,48 @@ public class Shaman extends Mob implements Callback {
 		next();
 	}
 
-    public void magicHit(Char from,Char to){
+    public void magicHit(Char from,Char to,Boolean byReflect){
         if (hit( from, to, true )) {
             int dmg = Random.NormalIntRange(3, 10);
             if (Dungeon.level.water[to.pos] && !to.flying) {
                 dmg *= 1.5f;
             }
-            to.damage( dmg, from );
+
+            int bonus = 0;
+            if(byReflect && from instanceof Hero &&  ((Hero) from).pointsInTalent(Talent.EYE_FOR_EYE) == 2){
+                bonus += (int) (((Hero) enemy).rawdamageRoll(from,false) / (((Hero) enemy).belongings.weapon == null ? 1f : ((Hero) enemy).belongings.weapon.speedFactor(enemy)) * 0.33f);
+            }
+
+            int damage = dmg + bonus;
+
+            to.damage( damage, from );
 
             to.sprite.centerEmitter().burst( SparkParticle.FACTORY, 3 );
             to.sprite.flash();
 
             if (to == Dungeon.hero) {
-
                 Camera.main.shake( 2, 0.3f );
-
                 if (!to.isAlive()) {
                     Dungeon.fail( getClass() );
                     GLog.n( Messages.get(this, "zap_kill") );
                 }
             }
+
+            if (!to.isAlive() && byReflect) {
+                Talent.afterReflectKill();
+            }
+
+
+            if(byReflect) {
+                Talent.doAfterReflect(damage);
+            }
+
         } else {
             to.sprite.showStatus( CharSprite.NEUTRAL,  to.defenseVerb() );
+
+            if(to instanceof Hero){
+                Talent.onDodge();
+            }
         }
     }
 }

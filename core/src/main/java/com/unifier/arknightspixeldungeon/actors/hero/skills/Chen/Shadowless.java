@@ -163,7 +163,7 @@ public class Shadowless extends HeroSkill {
                             }
                             images = new ArrayList<>();
 
-//                            doAfterAction();
+//                          doAfterAction();
                             owner.spendAndNext(1f);
                             if (owner.pointsInTalent(Talent.SWORD_RAIN) == 2 && t<10){
                                 cooldown -=  rawCD() * 0.05f * (10 - t);
@@ -217,6 +217,7 @@ public class Shadowless extends HeroSkill {
 
     @Override
     public void doAfterAction(){
+        super.doAfterAction();
         charge = 0;
         cooldown = rawCD();
     }

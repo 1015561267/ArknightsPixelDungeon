@@ -1122,7 +1122,7 @@ public class Hero extends Char {
 	@Override
 	public int defenseProc( Char enemy, int damage ) {
 
-		if (damage > 0 && hasTalent(Talent.RESENTMENT)) {
+		if (damage > 0 && hasTalent(Talent.RED_RAGE)) {
 			RageTracker rageTracker = Buff.affect(this,RageTracker.class);
 			rageTracker.damage(damage);
 		}

@@ -3,6 +3,7 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
@@ -55,7 +56,7 @@ public abstract class HeroSkill extends Buff {
             }
 
             RageTracker rageTracker = owner.buff(RageTracker.class);
-            if (owner.hasTalent(Talent.EVIL_ABHORRENCE) && rageTracker != null && rageTracker.rage > 0) {
+            if (owner.hasTalent(Talent.SCARLET_MOMENTUM) && rageTracker != null && rageTracker.rage > 0) {
                 factor += rageTracker.rage;
             }
 
@@ -111,6 +112,12 @@ public abstract class HeroSkill extends Buff {
 
     public void doAfterAction(){
         charge--;
+
+        if(owner.pointsInTalent(Talent.SKILLFUL_GUARD)==2){
+            if(owner.buff(ReflectTracker.class)==null) {
+                owner.buff(ReflectTracker.class).gainStack();
+            }
+        }
     }
 
     public boolean attachTo( Char hero ) {

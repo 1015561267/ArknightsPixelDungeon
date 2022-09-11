@@ -7,8 +7,8 @@ import com.watabou.utils.Bundle;
 
 public class ReflectTracker extends Buff {
 
-    protected int stack;
-    protected float time;
+    protected int stack = 0;
+    protected float time = rawCoolDown;
 
     protected static final String STACK	= "stack";
     protected static final String TIME = "time";
@@ -34,7 +34,7 @@ public class ReflectTracker extends Buff {
             spend(TICK);
 
             if(stack < maxStack()){
-                setCoolDown(TICK);
+                getCoolDown(TICK);
             }
 
         } else {
@@ -43,7 +43,7 @@ public class ReflectTracker extends Buff {
         return true;
     }
 
-    public void setCoolDown(float tick) {
+    public void getCoolDown(float tick) {
         time -= tick;
         if(time <= 0f){
             if (gainStack()){
@@ -58,16 +58,14 @@ public class ReflectTracker extends Buff {
             stack --;
             return true;
         }
-        return false;
+        else return false;
     }
 
     public boolean gainStack(){
-
         if(stack<maxStack()){
             stack++;
             return true;
         }
-
         return false;
     }
 

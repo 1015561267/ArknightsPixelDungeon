@@ -26,6 +26,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Light;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.Terror;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
@@ -140,7 +141,7 @@ public class Eye extends Mob {
 
             for (int pos : beam.subPath(1, beam.dist)) {
                 Char ch = Actor.findChar( pos );
-                if (ch instanceof Hero && ((Hero) ch).hasTalent(Talent.REFLECT)) {
+                if (ch instanceof Hero && enemy.buff(ReflectTracker.class)==null && enemy.buff(ReflectTracker.class).spendStack()) {
                     reflectedPos = ch.pos;
                     break;
                 }
@@ -195,12 +196,13 @@ public class Eye extends Mob {
 			}
 
 
-            if (ch instanceof Hero && ((Hero) ch).hasTalent(Talent.REFLECT)){
+            if (ch instanceof Hero && enemy.buff(ReflectTracker.class)==null && enemy.buff(ReflectTracker.class).spendStack()){
+                //FIXME Death gaze involved in sprite handle,I haven't come up with a good way although merge it into other range attck handling is better
                 tracker = true;
                 hero = ch;
                 break;
             }
-            else magicHit(this,ch);
+            else magicHit(this,ch,false);
     }
 
 		if (terrainAffected) {
@@ -225,7 +227,7 @@ public class Eye extends Mob {
                     continue;
                 }
                 if(ch.isAlive()) {
-                    magicHit(reflected, ch);
+                    magicHit(reflected, ch,true);
                 }
             }
 
@@ -234,22 +236,44 @@ public class Eye extends Mob {
         beamTarget = -1;
 	}
 
-    public void magicHit(Char from,Char to){
+    public void magicHit(Char from,Char to,Boolean byReflect){
 
         if (hit( from, to, true )) {
-            to.damage( Random.NormalIntRange( 30, 50 ), this );
+
+            int bonus = 0;
+            if(byReflect && from instanceof Hero && ((Hero) from).pointsInTalent(Talent.EYE_FOR_EYE) == 2){
+                bonus += (int) (((Hero) enemy).rawdamageRoll(from,false) / (((Hero) enemy).belongings.weapon == null ? 1f : ((Hero) enemy).belongings.weapon.speedFactor(enemy)) * 0.33f);
+            }
+
+            int damage = Random.NormalIntRange( 30, 50 ) + bonus;
+
+            to.damage( damage , this );
 
             if (Dungeon.level.heroFOV[pos]) {
                 to.sprite.flash();
                 CellEmitter.center( pos ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
             }
 
-            if (!to.isAlive() && to == Dungeon.hero) {
-                Dungeon.fail( getClass() );
-                GLog.n( Messages.get(this, "deathgaze_kill") );
+            if (!to.isAlive()) {
+                if(to == Dungeon.hero){
+                    Dungeon.fail( getClass() );
+                    GLog.n( Messages.get(this, "deathgaze_kill") );
+                }
+                else if(byReflect){
+                    Talent.afterReflectKill();
+                }
             }
+
+            if(byReflect) {
+                Talent.doAfterReflect(damage);
+            }
+
         } else {
             to.sprite.showStatus( CharSprite.NEUTRAL,  to.defenseVerb() );
+
+            if(to instanceof Hero){
+                Talent.onDodge();
+            }
         }
     }
 

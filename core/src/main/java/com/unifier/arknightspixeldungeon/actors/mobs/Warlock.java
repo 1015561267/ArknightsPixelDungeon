@@ -25,6 +25,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
+import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -99,7 +100,7 @@ public class Warlock extends Mob implements Callback {
 		spend( TIME_TO_ZAP );
 
 		if(!doMagicAttack(enemy,magicType.Warlock)){
-		    magicHit(this,enemy);
+		    magicHit(this,enemy,false);
         }
 	}
 	
@@ -108,21 +109,40 @@ public class Warlock extends Mob implements Callback {
 		next();
 	}
 
-    public void magicHit(Char from,Char to){
+    public void magicHit(Char from,Char to,Boolean byReflect){
         if (hit( from, to, true )) {
             if (to == Dungeon.hero && Random.Int( 2 ) == 0) {
                 Buff.prolong( to, Weakness.class, Weakness.DURATION );
             }
 
-            int dmg = Random.Int( 12, 18 );
-            to.damage( dmg, this );
-
-            if (!to.isAlive() && to == Dungeon.hero) {
-                Dungeon.fail( getClass() );
-                GLog.n( Messages.get(this, "bolt_kill") );
+            int bonus = 0;
+            if(byReflect && from instanceof Hero &&  ((Hero) from).pointsInTalent(Talent.EYE_FOR_EYE) == 2){
+                bonus += (int) (((Hero) enemy).rawdamageRoll(from,false) / (((Hero) enemy).belongings.weapon == null ? 1f : ((Hero) enemy).belongings.weapon.speedFactor(enemy)) * 0.33f);
             }
+
+            int dmg = Random.Int( 12, 18 );
+            to.damage( dmg + bonus, this );
+
+            if (!to.isAlive()) {
+                if(to == Dungeon.hero){
+                    Dungeon.fail( getClass() );
+                    GLog.n( Messages.get(this, "bolt_kill") );
+                }
+                else if(byReflect){
+                    Talent.afterReflectKill();
+                }
+            }
+
+            if(byReflect){
+                Talent.doAfterReflect(dmg+bonus);
+            }
+
         } else {
             to.sprite.showStatus( CharSprite.NEUTRAL,  to.defenseVerb() );
+
+            if(to instanceof Hero){
+                Talent.onDodge();
+            }
         }
     }
 

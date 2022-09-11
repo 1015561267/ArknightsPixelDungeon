@@ -24,8 +24,8 @@ package com.unifier.arknightspixeldungeon.sprites;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
-import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Eye;
 import com.unifier.arknightspixeldungeon.effects.Beam;
 import com.unifier.arknightspixeldungeon.effects.MagicMissile;
@@ -113,7 +113,7 @@ public class EyeSprite extends MobSprite {
 
             for (int pos : beam.subPath(1, beam.dist)) {
                 Char ch = Actor.findChar( pos );
-                if (ch instanceof Hero && ((Hero) ch).hasTalent(Talent.REFLECT)){
+                if (ch instanceof Hero && ch.buff(ReflectTracker.class)==null && ch.buff(ReflectTracker.class).spendStack()){
                     zapPos = ch.pos; // fix the sprite as it appear before logic
                     break;
                 }

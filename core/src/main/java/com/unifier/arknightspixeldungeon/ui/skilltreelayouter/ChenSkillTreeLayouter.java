@@ -82,7 +82,7 @@ public class ChenSkillTreeLayouter {
         talentsPane.allbuttons.get(1).get(8).setPos(3 * Horizontal_Separator + ButtonWidth(),11 * Vertical_separator + 10 * ButtonHeight() + HUDHeight());//REFLECT
 
         talentsPane.allbuttons.get(1).get(9).setPos(3 * Horizontal_Separator + ButtonWidth(),13 * Vertical_separator + 12 * ButtonHeight() + HUDHeight());//CONTINUOUS_ASSAULT
-        talentsPane.allbuttons.get(1).get(10).setPos(3 * Horizontal_Separator + ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//RESENTMENT
+        talentsPane.allbuttons.get(1).get(10).setPos(3 * Horizontal_Separator + ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//RED_RAGE
 
         talentsPane.allbuttons.get(1).get(11).setPos(3 * Horizontal_Separator + ButtonWidth(),19 * Vertical_separator + 18 * ButtonHeight() + HUDHeight());//WEAPON_ADAPT
 
@@ -103,7 +103,7 @@ public class ChenSkillTreeLayouter {
         talentsPane.allbuttons.get(2).get(7).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),12 * Vertical_separator + 11 * ButtonHeight() + HUDHeight());//EYE_FOR_EYE
 
         talentsPane.allbuttons.get(2).get(8).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),13 * Vertical_separator + 12 * ButtonHeight() + HUDHeight());//DEADLY_COMBO
-        talentsPane.allbuttons.get(2).get(9).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//EVIL_ABHORRENCE
+        talentsPane.allbuttons.get(2).get(9).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//SCARLET_MOMENTUM
 
         talentsPane.allbuttons.get(2).get(10).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),16 * Vertical_separator + 15 * ButtonHeight() + HUDHeight());//SHADOWLESS
 
@@ -117,12 +117,12 @@ public class ChenSkillTreeLayouter {
         talentsPane.allbuttons.get(3).get(0).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(), 0.5f * ButtonHeight() + HUDHeight());//WEAPON_THROW
         talentsPane.allbuttons.get(3).get(1).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),Vertical_separator + 1.5f * ButtonHeight() + HUDHeight());//SEIZE_OPPORTUNITY
 
-        talentsPane.allbuttons.get(3).get(2).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),5 * Vertical_separator + 4 * ButtonHeight() + HUDHeight());//CONSISTENT_PRINCIPLE
+        talentsPane.allbuttons.get(3).get(2).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),5 * Vertical_separator + 4 * ButtonHeight() + HUDHeight());//FRUGALITY
 
         talentsPane.allbuttons.get(3).get(3).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),8 * Vertical_separator + 7 * ButtonHeight() + HUDHeight());//HEART_STRIKER
 
         talentsPane.allbuttons.get(3).get(4).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),13 * Vertical_separator + 12 * ButtonHeight() + HUDHeight());//BOTHSIDE_ATTACK
-        talentsPane.allbuttons.get(3).get(5).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//CRIMSON_RAGE
+        talentsPane.allbuttons.get(3).get(5).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//CRIMSON_RAMPAGE
 
         talentsPane.allbuttons.get(3).get(6).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),15 * Vertical_separator + 14 * ButtonHeight() + HUDHeight());//SWORD_RAIN
         talentsPane.allbuttons.get(3).get(7).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),17 * Vertical_separator + 16 * ButtonHeight() + HUDHeight());//CRIMSON_EXTENSION
@@ -140,7 +140,7 @@ public class ChenSkillTreeLayouter {
         talentsPane.allbuttons.get(4).get(2).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),11 * Vertical_separator + 10 * ButtonHeight() + HUDHeight());//ENGROSSED
 
         talentsPane.allbuttons.get(4).get(3).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),13 * Vertical_separator + 12 * ButtonHeight() + HUDHeight());//MORTAL_SKILL
-        talentsPane.allbuttons.get(4).get(4).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//FURY_RAMPAGE
+        talentsPane.allbuttons.get(4).get(4).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//SURPASS_LIMIT
 
         talentsPane.allbuttons.get(4).get(5).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),16 * Vertical_separator + 15 * ButtonHeight() + HUDHeight());//MOTION_ACCUMULATION
 

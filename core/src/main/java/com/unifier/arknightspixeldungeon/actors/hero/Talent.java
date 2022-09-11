@@ -9,15 +9,18 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
 import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Healing;
 import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
+import com.unifier.arknightspixeldungeon.actors.buffs.KineticDamage;
 import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
 import com.unifier.arknightspixeldungeon.actors.buffs.Regeneration;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.DragonScaleTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RallyForceTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.effects.TalentSprite;
@@ -105,16 +108,16 @@ public enum Talent {
             return Dungeon.hero.hasTalent(UNSHEATH);
         }
     },
-     REFLECT(24 , 2),
+    REFLECT(24 , 2),
     CONTINUOUS_ASSAULT(25, 1, 2) {
         @Override
         public ArrayList<Talent> Mutex() {
             return new ArrayList<Talent>() {{
-                add(RESENTMENT);
+                add(RED_RAGE);
             }};
         }
     },
-    RESENTMENT(26, 1,2) {
+    RED_RAGE(26, 1,2) {
         @Override
         public ArrayList<Talent> Mutex() {
             return new ArrayList<Talent>() {{
@@ -206,10 +209,10 @@ public enum Talent {
             return Dungeon.hero.hasTalent(CONTINUOUS_ASSAULT);
         }
     },
-    EVIL_ABHORRENCE(41, 1,3) {
+    SCARLET_MOMENTUM(41, 1,3) {
         @Override
         public boolean PreconditionFulfilled() {
-            return Dungeon.hero.hasTalent(RESENTMENT);
+            return Dungeon.hero.hasTalent(RED_RAGE);
         }
     },
     SHADOWLESS(42,3),
@@ -249,7 +252,7 @@ public enum Talent {
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(SHEATHED_STRIKE);
         }
-    },CONSISTENT_PRINCIPLE(50,4), HEART_STRIKER(51,4) {
+    }, FRUGALITY(50,4), HEART_STRIKER(51,4) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(UNSHEATH);
@@ -261,10 +264,10 @@ public enum Talent {
             return Dungeon.hero.hasTalent(CONTINUOUS_ASSAULT);
         }
     },
-    CRIMSON_RAGE(53,4) {
+    CRIMSON_RAMPAGE(53,4) {
         @Override
         public boolean PreconditionFulfilled() {
-            return Dungeon.hero.hasTalent(RESENTMENT);
+            return Dungeon.hero.hasTalent(RED_RAGE);
         }
     },
     CRIMSON_EXTENSION(54,4) {
@@ -304,10 +307,10 @@ public enum Talent {
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(CONTINUOUS_ASSAULT);
         }
-    }, FURY_RAMPAGE(68, 1,5) {
+    }, SURPASS_LIMIT(68, 1,5) {
         @Override
         public boolean PreconditionFulfilled() {
-            return Dungeon.hero.hasTalent(RESENTMENT);
+            return Dungeon.hero.hasTalent(RED_RAGE);
         }
     }, MOTION_ACCUMULATION(69, 1,5) {
         @Override
@@ -510,10 +513,10 @@ public enum Talent {
         switch (tier)
         {
             case 0:Collections.addAll(tierTalents, SHEATHED_STRIKE,FAST_RECOVERY,PREEMPTIVE_STRIKE,ARM_INTUITION);break;
-            case 1:Collections.addAll(tierTalents, SHEATH_THROW,REPRIMAND,PARRY,VIGILANCE,LAST_CHANCE, DRAGON_SCALE,UNSHEATH,FLASH, REFLECT,CONTINUOUS_ASSAULT,RESENTMENT, WEAPON_ADAPT);break;
-            case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE,FORMATION_BREAKER, WIND_CUTTER,SKILLFUL_GUARD, EYE_FOR_EYE,DEADLY_COMBO,EVIL_ABHORRENCE,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
-            case 3:Collections.addAll(tierTalents, WEAPON_THROW, SEIZE_OPPORTUNITY,CONSISTENT_PRINCIPLE,HEART_STRIKER,BOTHSIDE_ATTACK,CRIMSON_RAGE,SWORD_RAIN,CRIMSON_EXTENSION);break;
-            case 4:Collections.addAll(tierTalents, FLOWING_WATER, SLASH_ECHO, ENGROSSED,MORTAL_SKILL,FURY_RAMPAGE,MOTION_ACCUMULATION,BLADE_STORM,FULL_SUPPRESSION);break;
+            case 1:Collections.addAll(tierTalents, SHEATH_THROW,REPRIMAND,PARRY,VIGILANCE,LAST_CHANCE, DRAGON_SCALE,UNSHEATH,FLASH, REFLECT,CONTINUOUS_ASSAULT, RED_RAGE, WEAPON_ADAPT);break;
+            case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE,FORMATION_BREAKER, WIND_CUTTER,SKILLFUL_GUARD, EYE_FOR_EYE,DEADLY_COMBO, SCARLET_MOMENTUM,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
+            case 3:Collections.addAll(tierTalents, WEAPON_THROW, SEIZE_OPPORTUNITY, FRUGALITY,HEART_STRIKER,BOTHSIDE_ATTACK,CRIMSON_RAMPAGE,SWORD_RAIN,CRIMSON_EXTENSION);break;
+            case 4:Collections.addAll(tierTalents, FLOWING_WATER, SLASH_ECHO, ENGROSSED,MORTAL_SKILL,SURPASS_LIMIT,MOTION_ACCUMULATION,BLADE_STORM,FULL_SUPPRESSION);break;
             default:break;
         }
         //Mostly weapon damage modify can be found at MeleeWeapon.damageRoll
@@ -527,13 +530,18 @@ public enum Talent {
             } else Buff.affect(hero,DragonScaleTracker.class);
         }//see class file in buff for more info
         else if(talent == LAST_CHANCE) { Buff.affect(hero,LastChanceTracker.class); }
+        else if(talent == REFLECT){
+            if(hero.buff(ReflectTracker.class)==null) {
+                Buff.affect(hero, ReflectTracker.class);
+            }
+        }
         else if(talent == RALLY_FORCE)
         {
             if(hero.buff(RallyForceTracker.class)!=null) {
                 hero.buff(RallyForceTracker.class).doubledSpeed = true;
             } else Buff.affect(hero,RallyForceTracker.class);
         }
-//        else if(talent == RESENTMENT){ Buff.affect(hero, RageTracker.class); }
+//        else if(talent == RED_RAGE){ Buff.affect(hero, RageTracker.class); }
     }
 
     public static class LastChanceTracker extends Buff{}
@@ -609,7 +617,7 @@ public enum Talent {
             Buff.affect(enemy,Vertigo.class,3f);
         }
 
-        if (hero.hasTalent(Talent.FURY_RAMPAGE)) {
+        if (hero.hasTalent(Talent.SURPASS_LIMIT)) {
             float factor = Math.max(0,0.75f - (float)(hero.HP / hero.HT));
             dmg *= (1 + factor);
             int heal = (int)(dmg * (factor/2));
@@ -670,13 +678,21 @@ public enum Talent {
             sheathedStrikeTracker.detach();
         }
 
-        if (!enemy.isAlive() && hero.hasTalent(Talent.CRIMSON_RAGE)) {
+        if (!enemy.isAlive() && hero.hasTalent(Talent.CRIMSON_RAMPAGE)) {
             RageTracker rageTracker = Buff.affect(hero,RageTracker.class);
             rageTracker.rage = rageTracker.rage + 0.1f;
-            if (hero.pointsInTalent(Talent.CRIMSON_RAGE) == 1) {
+            if (hero.pointsInTalent(Talent.CRIMSON_RAMPAGE) == 1) {
                 rageTracker.rageLossBuffer = Math.max(rageTracker.rageLossBuffer,5);
             } else {
                 rageTracker.rageLossBuffer = Math.max(rageTracker.rageLossBuffer,10);
+            }
+        }
+    }
+
+    public static void onDodge() {
+        if(hero.pointsInTalent(SKILLFUL_GUARD) == 2){
+            if(hero.buff(ReflectTracker.class)==null) {
+                hero.buff(ReflectTracker.class).getCoolDown(10f);
             }
         }
     }
@@ -698,7 +714,7 @@ public enum Talent {
             damage = hero.buff(DragonScaleTracker.class).affect(damage,source);
         }
 
-        if (hero.pointsInTalent(CRIMSON_RAGE) == 2) {
+        if (hero.pointsInTalent(CRIMSON_RAMPAGE) == 2) {
             if (hero.buff(RageTracker.class) != null && hero.buff(RageTracker.class).rage > 0.8f) {
                 damage = Math.round(damage * (1.8f - hero.buff(RageTracker.class).rage));
             }
@@ -724,4 +740,42 @@ public enum Talent {
 
         return damage;
     }
+
+    public static void afterReflectKill() {
+
+        if(hero.hasTalent(Talent.EYE_FOR_EYE)){
+            if(hero.buff(ReflectTracker.class)==null) {
+                hero.buff(ReflectTracker.class).getCoolDown(25f);
+            }
+        }
+
+        if(hero.hasTalent(Talent.ENGROSSED)){
+
+        }
+    }
+
+    public static void doAfterReflect(int effectiveDamage) {
+
+        if(hero.pointsInTalent(REFLECT) == 2){
+            Buff.affect(hero, KineticDamage.class).setBonus(effectiveDamage/2);
+        }
+
+        if(hero.hasTalent(Talent.SKILLFUL_GUARD)){
+            ArrayList<HeroSkill> pool = new ArrayList<>();
+
+            if(!hero.skill_1.available()){ pool.add(hero.skill_1); }
+            if(!hero.skill_2.available()){ pool.add(hero.skill_2); }
+            if(hero.skill_3.charge < hero.skill_3.getMaxCharge()){ pool.add(hero.skill_3); }
+
+            HeroSkill picked = Random.element(pool);
+
+            if(picked!=null) picked.getCoolDown(picked.rawCD() * 0.2f);
+        }
+
+        if(hero.hasTalent(Talent.ENGROSSED)){
+
+        }
+    }
+
+
 }

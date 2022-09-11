@@ -28,7 +28,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
 import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
-import com.unifier.arknightspixeldungeon.actors.buffs.Invisibility;
+import com.unifier.arknightspixeldungeon.actors.buffs.KineticDamage;
 import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
@@ -39,7 +39,6 @@ import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
-import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -112,10 +111,6 @@ public class MeleeWeapon extends Weapon {
                 }
             }
 
-            if (exStr > 0) {
-                damage += Random.IntRange( 0, exStr );
-            }
-
             int rawDamage = Random.NormalIntRange(min,max);
 
             int agumentDamage = augment.damageFactor(rawDamage);
@@ -130,7 +125,14 @@ public class MeleeWeapon extends Weapon {
 
             damage += agumentDamage;
 
-            return damage;
+            int conservedDamage = 0;
+
+            if (owner.buff(KineticDamage.class) != null) {
+                conservedDamage = owner.buff(KineticDamage.class).damageBonus();
+                owner.buff(KineticDamage.class).detach();
+            }
+
+            return damage + conservedDamage;
         }
 
 		return  augment.damageFactor(Random.NormalIntRange(min,max));
@@ -138,7 +140,7 @@ public class MeleeWeapon extends Weapon {
 
 	@Override
     public int rawdamageRoll( Char owner ,Char enemy ,boolean isMagic) {
-        return augment.damageFactor(Random.NormalIntRange( min(), max() ));
+        return augment.damageFactor(Random.NormalIntRange( min(), max() )) ;
     }
 	
 	@Override

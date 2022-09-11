@@ -52,6 +52,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.Colle
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WellPreparedTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
@@ -320,6 +321,10 @@ public abstract class Char extends Actor {
 			return true;
 			
 		} else {
+
+		    if(enemy instanceof Hero){
+		        Talent.onDodge();
+            }
 			
 			if (visibleFight) {
 				String defense = enemy.defenseVerb();
@@ -348,7 +353,7 @@ public abstract class Char extends Actor {
             return false;
         }
 
-        if(enemy instanceof Hero && type != rangeType.Dismiss && ((Hero) enemy).hasTalent(Talent.REFLECT)){
+        if(enemy instanceof Hero && type != rangeType.Dismiss && enemy.buff(ReflectTracker.class)==null && enemy.buff(ReflectTracker.class).spendStack()){
 
             enemy.sprite.turnTo(enemy.pos,this.pos);
 
@@ -378,6 +383,10 @@ public abstract class Char extends Actor {
                             int dmg = reflected.damageRoll(reflected,false);
                             int dr = reflected.drRoll();
 
+                            if(((Hero) enemy).pointsInTalent(Talent.EYE_FOR_EYE) == 2){
+                                dmg += (int) (((Hero) enemy).rawdamageRoll(reflected,false) / (((Hero) enemy).belongings.weapon == null ? 1f : ((Hero) enemy).belongings.weapon.speedFactor(enemy)) * 0.33f);
+                            }
+
                             int effectiveDamage = reflected.defenseProc( reflected, dmg );
                             effectiveDamage = Math.max( effectiveDamage - dr, 0 );
                             effectiveDamage = attackProc( reflected, effectiveDamage );
@@ -389,10 +398,13 @@ public abstract class Char extends Actor {
                             reflected.damage( effectiveDamage, this );
                             reflected.sprite.bloodBurstA( reflected.sprite.center(), effectiveDamage );
                             reflected.sprite.flash();
-                            if (!reflected.isAlive() && visibleFight) {
-                                GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", name)) );
-                                //Actor.remove(reflected);
+                            if (!reflected.isAlive()) {
+                                if(visibleFight) {
+                                    GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", name)));
+                                }
+                                Talent.afterReflectKill();
                             }
+                            Talent.doAfterReflect(effectiveDamage);
                         }
                     } );
             return false;
@@ -435,7 +447,7 @@ public abstract class Char extends Actor {
 
         Char reflected = this;
 
-        if (enemy instanceof Hero && type != magicType.Dismiss && ((Hero) enemy).hasTalent(Talent.REFLECT)){
+        if (enemy instanceof Hero && type != magicType.Dismiss && enemy.buff(ReflectTracker.class)==null && enemy.buff(ReflectTracker.class).spendStack()){
 
             enemy.sprite.turnTo(enemy.pos,this.pos);
 
@@ -456,7 +468,7 @@ public abstract class Char extends Actor {
                         public void call() {
                             if(reflected!=null && reflected.isAlive())
                             {
-                                magicHit(enemy,reflected);
+                                magicHit(enemy,reflected,true);
                             }
                             next();
                         }
@@ -469,7 +481,7 @@ public abstract class Char extends Actor {
         else return false;
     }
 
-    public void magicHit(Char from,Char to){
+    public void magicHit(Char from,Char to,Boolean byReflect){
         if (hit( from, to, true )) {
 
         } else {
