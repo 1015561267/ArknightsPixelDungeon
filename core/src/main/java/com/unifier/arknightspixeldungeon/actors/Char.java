@@ -447,7 +447,7 @@ public abstract class Char extends Actor {
 
         Char reflected = this;
 
-        if (enemy instanceof Hero && type != magicType.Dismiss && enemy.buff(ReflectTracker.class)==null && enemy.buff(ReflectTracker.class).spendStack()){
+        if (enemy instanceof Hero && type != magicType.Dismiss && enemy.buff(ReflectTracker.class) != null && enemy.buff(ReflectTracker.class).spendStack()){
 
             enemy.sprite.turnTo(enemy.pos,this.pos);
 
