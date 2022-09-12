@@ -142,7 +142,7 @@ public class Hero extends Char {
 	
 	public static final int MAX_LEVEL = 30;
 
-	public static final int STARTING_STR = 20;
+	public static final int STARTING_STR = 10;
 	
 	private static final float TIME_TO_REST		    = 1f;
 	private static final float TIME_TO_SEARCH	    = 2f;
@@ -153,11 +153,11 @@ public class Hero extends Char {
 
     public ArrayList<LinkedHashMap<Talent, Integer>> talents = new ArrayList<>();
 	
-	//private int attackSkill = 10;
-	///private int defenseSkill = 5;
+	private int attackSkill = 10;
+	private int defenseSkill = 5;
 
-    private int attackSkill = 35;
-    private int defenseSkill = 30;
+    //private int attackSkill = 35;
+    //private int defenseSkill = 30;
 
 	public boolean ready = false;
 	private boolean damageInterrupt = true;

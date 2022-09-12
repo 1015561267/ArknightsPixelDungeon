@@ -113,7 +113,7 @@ public class EyeSprite extends MobSprite {
 
             for (int pos : beam.subPath(1, beam.dist)) {
                 Char ch = Actor.findChar( pos );
-                if (ch instanceof Hero && ch.buff(ReflectTracker.class)==null && ch.buff(ReflectTracker.class).spendStack()){
+                if (ch instanceof Hero && ch.buff(ReflectTracker.class)!=null && ch.buff(ReflectTracker.class).canSpendStack()){
                     zapPos = ch.pos; // fix the sprite as it appear before logic
                     break;
                 }

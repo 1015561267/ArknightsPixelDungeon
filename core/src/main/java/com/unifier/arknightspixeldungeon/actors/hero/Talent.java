@@ -695,7 +695,7 @@ public enum Talent {
 
     public static void onDodge() {
         if(hero.pointsInTalent(SKILLFUL_GUARD) == 2){
-            if(hero.buff(ReflectTracker.class)==null) {
+            if(hero.buff(ReflectTracker.class)!=null) {
                 hero.buff(ReflectTracker.class).getCoolDown(10f);
             }
         }
@@ -748,7 +748,7 @@ public enum Talent {
     public static void afterReflectKill() {
 
         if(hero.hasTalent(Talent.EYE_FOR_EYE)){
-            if(hero.buff(ReflectTracker.class)==null) {
+            if(hero.buff(ReflectTracker.class)!=null) {
                 hero.buff(ReflectTracker.class).getCoolDown(25f);
             }
         }

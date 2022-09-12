@@ -33,9 +33,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.LevelTeleporter;
-import com.unifier.arknightspixeldungeon.items.TestItem;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
-import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
 import com.unifier.arknightspixeldungeon.items.bags.PotionBandolier;
@@ -45,26 +43,17 @@ import com.unifier.arknightspixeldungeon.items.food.Food;
 import com.unifier.arknightspixeldungeon.items.food.SmallRation;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfExperience;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfHealing;
-import com.unifier.arknightspixeldungeon.items.potions.PotionOfInvisibility;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfMindVision;
+import com.unifier.arknightspixeldungeon.items.potions.PotionOfStrength;
 import com.unifier.arknightspixeldungeon.items.rings.Ring;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfHaste;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicMapping;
-import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicalInfusion;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMirrorImage;
-import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfRage;
-import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
-import com.unifier.arknightspixeldungeon.items.stones.StoneOfAugmentation;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfMagicMissile;
-import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Dagger;
-import com.unifier.arknightspixeldungeon.items.weapon.melee.Flail;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Knuckles;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MagesStaff;
-import com.unifier.arknightspixeldungeon.items.weapon.melee.Sai;
-import com.unifier.arknightspixeldungeon.items.weapon.melee.Spear;
-import com.unifier.arknightspixeldungeon.items.weapon.melee.Whip;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.WornShortsword;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.Boomerang;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingKnife;
@@ -124,20 +113,20 @@ public enum HeroClass {
 			new SmallRation().collect();
 		}
 
-
         Ring ring= new RingOfHaste();
 		ring.level(6);
 		ring.identify().collect();
 
         for(int j=0;j<10;j++) {
-            new ScrollOfMagicalInfusion().identify().collect();
+            /*new ScrollOfMagicalInfusion().identify().collect();
             new StoneOfAugmentation().collect();
             new ScrollOfUpgrade().identify().collect();
             new ScrollOfMagicMapping().identify().collect();
             new ScrollOfMagicMapping().identify().collect();
             new ScrollOfRage().identify().collect();
             new SmallRation().collect();
-            new ScrollOfRemoveCurse().identify().collect();
+            new ScrollOfRemoveCurse().identify().collect();*/
+            new PotionOfStrength().identify().collect();
         }
 
 		for(int j=0;j<30;j++) {
@@ -147,34 +136,6 @@ public enum HeroClass {
         //new ScrollOfRage().identify().collect();
 
         //new TomeOfMastery().collect();
-
-        WornShortsword sword = new WornShortsword();
-        sword.upgrade();
-        sword.cursed = true;
-        sword.enchant(Weapon.Enchantment.randomCurse());
-        sword.identify().collect();
-
-        ClothArmor armor = new ClothArmor();
-        armor.upgrade();
-        armor.cursed = true;
-        armor.inscribe(Armor.Glyph.randomCurse());
-        armor.identify().collect();
-
-        Weapon weapon = new Flail();
-        weapon.identify();
-        weapon.collect();
-
-        weapon = new Spear();
-        weapon.identify();
-        weapon.collect();
-
-        weapon = new Whip();
-        weapon.identify();
-        weapon.collect();
-
-        weapon = new Sai();
-        weapon.identify();
-        weapon.collect();
 	}
 
 	public Badges.Badge masteryBadge() {

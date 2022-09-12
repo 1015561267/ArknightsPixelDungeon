@@ -53,6 +53,10 @@ public class ReflectTracker extends Buff {
         }
     }
 
+    public boolean canSpendStack(){
+        return stack > 0;
+    }
+
     public boolean spendStack(){
         if(stack > 0){
             stack --;
@@ -60,6 +64,8 @@ public class ReflectTracker extends Buff {
         }
         else return false;
     }
+
+
 
     public boolean gainStack(){
         if(stack<maxStack()){

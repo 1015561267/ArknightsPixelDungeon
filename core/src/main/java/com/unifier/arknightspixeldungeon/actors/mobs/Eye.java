@@ -141,7 +141,7 @@ public class Eye extends Mob {
 
             for (int pos : beam.subPath(1, beam.dist)) {
                 Char ch = Actor.findChar( pos );
-                if (ch instanceof Hero && enemy.buff(ReflectTracker.class)==null && enemy.buff(ReflectTracker.class).spendStack()) {
+                if (ch instanceof Hero && enemy.buff(ReflectTracker.class)!=null && enemy.buff(ReflectTracker.class).spendStack()) {
                     reflectedPos = ch.pos;
                     break;
                 }
@@ -196,7 +196,7 @@ public class Eye extends Mob {
 			}
 
 
-            if (ch instanceof Hero && enemy.buff(ReflectTracker.class)==null && enemy.buff(ReflectTracker.class).spendStack()){
+            if (ch instanceof Hero && enemy.buff(ReflectTracker.class)!=null && enemy.buff(ReflectTracker.class).canSpendStack()){
                 //FIXME Death gaze involved in sprite handle,I haven't come up with a good way although merge it into other range attck handling is better
                 tracker = true;
                 hero = ch;

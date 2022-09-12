@@ -38,6 +38,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Shadows;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.particles.FlowParticle;
 import com.unifier.arknightspixeldungeon.effects.particles.WindParticle;
@@ -696,6 +697,8 @@ public abstract class Level implements Bundlable {
 		plants.put( pos, plant );
 		
 		GameScene.plantSeed( pos );
+
+        Talent.afterItemUse(seed);
 		
 		return plant;
 	}

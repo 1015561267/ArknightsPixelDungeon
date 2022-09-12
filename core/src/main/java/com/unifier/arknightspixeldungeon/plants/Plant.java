@@ -21,17 +21,16 @@
 
 package com.unifier.arknightspixeldungeon.plants;
 
+import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Challenges;
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Barkskin;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
-import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.particles.LeafParticle;
 import com.unifier.arknightspixeldungeon.items.Dewdrop;
@@ -151,7 +150,6 @@ public abstract class Plant implements Bundlable {
 				super.onThrow( cell );
 			} else {
 				Dungeon.level.plant( this, cell );
-				Talent.afterItemUse(curItem);
 			}
 		}
 		
@@ -166,8 +164,6 @@ public abstract class Plant implements Bundlable {
 				hero.busy();
 				((Seed)detach( hero.belongings.backpack )).onThrow( hero.pos );
 				hero.sprite.operate( hero.pos );
-
-				Talent.afterItemUse(curItem);
 			}
 		}
 		

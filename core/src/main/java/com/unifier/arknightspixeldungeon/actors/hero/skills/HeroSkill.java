@@ -114,7 +114,7 @@ public abstract class HeroSkill extends Buff {
         charge--;
 
         if(owner.pointsInTalent(Talent.SKILLFUL_GUARD)==2){
-            if(owner.buff(ReflectTracker.class)==null) {
+            if(owner.buff(ReflectTracker.class)!=null) {
                 owner.buff(ReflectTracker.class).gainStack();
             }
         }

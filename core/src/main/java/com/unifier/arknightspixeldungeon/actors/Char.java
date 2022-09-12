@@ -353,7 +353,7 @@ public abstract class Char extends Actor {
             return false;
         }
 
-        if(enemy instanceof Hero && type != rangeType.Dismiss && enemy.buff(ReflectTracker.class)==null && enemy.buff(ReflectTracker.class).spendStack()){
+        if(enemy instanceof Hero && type != rangeType.Dismiss && enemy.buff(ReflectTracker.class)!=null && enemy.buff(ReflectTracker.class).spendStack()){
 
             enemy.sprite.turnTo(enemy.pos,this.pos);
 
