@@ -54,7 +54,7 @@ public class Unsheath extends HeroSkill {
 
     @Override
     public float rawCD() {
-        return 10f;
+        return 100f;
     }
 
     @Override

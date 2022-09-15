@@ -242,7 +242,12 @@ public class GameScene extends PixelScene {
 		
 		mobs = new Group();
 		add( mobs );
-		
+
+        hero = new HeroSprite();
+        hero.place( Dungeon.hero.pos );
+        hero.updateArmor();
+        mobs.add( hero );
+
 		for (Mob mob : Dungeon.level.mobs) {
 			addMobSprite( mob );
 			if (Statistics.amuletObtained) {
@@ -292,11 +297,6 @@ public class GameScene extends PixelScene {
 		add( new TargetHealthIndicator() );
 		
 		add( emoicons );
-		
-		hero = new HeroSprite();
-		hero.place( Dungeon.hero.pos );
-		hero.updateArmor();
-		mobs.add( hero );
 		
 		add( cellSelector = new CellSelector( tiles ) );
 
@@ -704,9 +704,11 @@ public class GameScene extends PixelScene {
 	
 	private void addMobSprite( Mob mob ) {
 		CharSprite sprite = mob.sprite();
-		sprite.visible = Dungeon.level.heroFOV[mob.pos];
-		mobs.add( sprite );
-		sprite.link( mob );
+		if(sprite!=null){
+            sprite.visible = Dungeon.level.heroFOV[mob.pos];
+            mobs.add( sprite );
+            sprite.link( mob );
+        }
 	}
 	
 	private synchronized void prompt( String text ) {

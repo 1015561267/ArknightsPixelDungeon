@@ -45,7 +45,7 @@ public class Shadowless extends HeroSkill {
 
     @Override
     public float rawCD() {
-        return 20f;
+        return 200f;
     }
 
     @Override

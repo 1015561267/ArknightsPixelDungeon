@@ -23,7 +23,6 @@ import com.watabou.noosa.Image;
 import com.watabou.utils.Callback;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class SheathedStrike extends HeroSkill {
@@ -54,7 +53,7 @@ public class SheathedStrike extends HeroSkill {
 
     @Override
     public float rawCD() {
-        return 5f;
+        return 50f;
     }
 
     @Override
