@@ -17,6 +17,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.Drago
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RallyForceTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.SharpJudgementTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
@@ -649,6 +650,9 @@ public enum Talent {
 
     public static class BoilingKenshinTracker extends Buff{}//check Unsheath.java for more info
 
+    public static class FlowingWaterTracker extends FlavourBuff{}
+    public static class AnotherFlowingWaterTracker extends FlavourBuff{}
+
     public static void doAfterDamage(Hero hero, Char enemy, int effectiveDamage) {
 
         if(hero.pointsInTalent(HEAVY_WEAPON_MASTERY) == 2)
@@ -743,6 +747,11 @@ public enum Talent {
         if(hero.buff(DragonScaleTracker.class)!=null){
             hero.buff(DragonScaleTracker.class).stack(damage,source);
         }
+
+        if(hero.buff(SharpJudgementTracker.class)!=null && source instanceof Mob){
+           Buff.detach(hero,SharpJudgementTracker.class);
+        }
+
 
         return damage;
     }

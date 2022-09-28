@@ -5,7 +5,7 @@ import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
-import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.FormationBreakerTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.SharpJudgementTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
@@ -74,6 +74,11 @@ public class Unsheath extends HeroSkill {
                 Buff.affect(owner,Talent.BoilingKenshinTracker.class);
                 GameScene.selectCell(unsheath_selector);
             }
+
+            else if(owner.buff( Talent.FlowingWaterTracker.class ) != null || owner.buff( Talent.AnotherFlowingWaterTracker.class ) != null){
+                GameScene.selectCell(unsheath_selector);
+            }
+
             else{
                 GLog.h(Messages.get(HeroSkill.class, "unavailable"));
                 return;
@@ -210,6 +215,7 @@ public class Unsheath extends HeroSkill {
                                                         dragged.pos = c;
                                                         Dungeon.observe();
                                                         GameScene.updateFog();
+                                                        enemys.add(dragged);
                                                         break;
                                                     }
                                                 }
@@ -233,6 +239,7 @@ public class Unsheath extends HeroSkill {
                                                 enemys.remove(instantKilled);
                                                 instantKilled.die(Unsheath.class);
                                                 killAny = true;
+                                                TalentSprite.show(owner, Talent.SUN_CROSS,TalentSprite.Phase.FADE_IN);
                                             }
                                         }
 
@@ -242,6 +249,21 @@ public class Unsheath extends HeroSkill {
 
                                         if (owner.buff(Talent.SheathedStrikeTracker2.class) != null && owner.pointsInTalent(Talent.SHEATHED_STRIKE) == 2) {
                                             factor += 0.2f;
+                                        }
+
+                                        if(owner.hasTalent(Talent.SHARP_JUDGEMENT)){
+                                            int size = enemys.size();
+                                            for (int n : PathFinder.NEIGHBOURS9) {
+                                                int c = finalDropPos + n;
+                                                Char ch = Actor.findChar(c);
+                                                if (ch != null && enemys.contains(ch) && ch.alignment == Char.Alignment.ENEMY) {
+                                                    size++;
+                                                }
+                                            }
+                                            if(size>0){
+                                                Buff.affect(owner, SharpJudgementTracker.class).setStack(size);
+                                                TalentSprite.show(owner, Talent.SHARP_JUDGEMENT,TalentSprite.Phase.FADE_IN);
+                                            }
                                         }
 
                                         for(Char enemy : enemys){
@@ -289,26 +311,36 @@ public class Unsheath extends HeroSkill {
                                                     public void call() {
                                                         ((HeroSprite) owner.sprite).setAfterSkillAnimation();
                                                         Dungeon.level.press(finalDropPos, owner);
+                                                        float tempCooldown = cooldown;
                                                         doAfterAction();
 
-                                                        if(owner.pointsInTalent(Talent.SUN_CROSS) == 2 && finalKillAny){
+                                                        if(owner.buff(Talent.BoilingKenshinTracker.class)!=null) {
+                                                            Buff.detach( owner, Talent.BoilingKenshinTracker.class );//TODO Not decided this effect will save previous cd yet
+                                                            cooldown = tempCooldown;
+                                                        }
+
+                                                            if(owner.pointsInTalent(Talent.SUN_CROSS) == 2 && finalKillAny){
                                                             owner.skill_1.getCoolDown(owner.skill_1.rawCD());
                                                         }
 
+
                                                         if( owner.hasTalent(Talent.FLOWING_WATER)){
-                                                            if(repeattedTime<3)
-                                                            {
-                                                                charge++;
-                                                                repeattedTime++;
+                                                            if(owner.buff( Talent.FlowingWaterTracker.class ) != null){
+                                                                Buff.detach( owner, Talent.FlowingWaterTracker.class );
+                                                                Buff.affect(owner, Talent.AnotherFlowingWaterTracker.class , 5f);
+                                                                cooldown = tempCooldown;
+                                                            }else if(owner.buff( Talent.AnotherFlowingWaterTracker.class ) != null){
+                                                                Buff.detach( owner, Talent.AnotherFlowingWaterTracker.class );
+                                                                cooldown = tempCooldown;
                                                             }
-                                                            else repeattedTime = 0;
+                                                            else Buff.affect(owner, Talent.FlowingWaterTracker.class , 5f);
+
+
+
+
                                                         }
 
 
-
-                                                        if(owner.pointsInTalent(Talent.SUN_CROSS) == 2){
-                                                            Buff.affect(owner, FormationBreakerTracker.class).set(enemys.size());
-                                                        }
 
                                                         owner.spendAndNext(1f);
                                                     }

@@ -52,6 +52,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.Combo
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.SharpJudgementTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
@@ -480,6 +481,10 @@ public class Hero extends Char {
 				counterStrikeTracker.detach();
 			}
 		}
+
+		if(buff(SharpJudgementTracker.class)!=null){
+		    dmg *=  1 + 0.2f * buff(SharpJudgementTracker.class).getStack();
+        }
 		
 		Berserk berserk = buff(Berserk.class);
 		if (berserk != null) dmg = berserk.damageFactor(dmg);
