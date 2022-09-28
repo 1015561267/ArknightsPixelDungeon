@@ -518,7 +518,7 @@ public enum Talent {
         {
             case 0:Collections.addAll(tierTalents, SHEATHED_STRIKE,FAST_RECOVERY,PREEMPTIVE_STRIKE,ARM_INTUITION);break;
             case 1:Collections.addAll(tierTalents, SHEATH_THROW,REPRIMAND,PARRY,VIGILANCE,LAST_CHANCE, DRAGON_SCALE,UNSHEATH,FLASH, REFLECT,CONTINUOUS_ASSAULT, RED_RAGE, WEAPON_ADAPT);break;
-            case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE, SUN_CROSS, WIND_CUTTER,SKILLFUL_GUARD, EYE_FOR_EYE,DEADLY_COMBO, SCARLET_MOMENTUM,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
+            case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE, SUN_CROSS, WIND_CUTTER,SKILLFUL_GUARD,EYE_FOR_EYE,DEADLY_COMBO, SCARLET_MOMENTUM,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
             case 3:Collections.addAll(tierTalents, WEAPON_THROW, SEIZE_OPPORTUNITY, FRUGALITY, BOILING_KENSHIN,BOTHSIDE_ATTACK,CRIMSON_RAMPAGE,SWORD_RAIN, SONIC_CUTTING);break;
             case 4:Collections.addAll(tierTalents, FLOWING_WATER, SHARP_JUDGEMENT, DECISIVENESS,MORTAL_SKILL,SURPASS_LIMIT, CLOUD_CRACK,BLADE_STORM,FULL_SUPPRESSION);break;
             default:break;
@@ -647,6 +647,8 @@ public enum Talent {
 
     public static class LightWeaponMasteryTracker extends Buff{}//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
 
+    public static class BoilingKenshinTracker extends Buff{}//check Unsheath.java for more info
+
     public static void doAfterDamage(Hero hero, Char enemy, int effectiveDamage) {
 
         if(hero.pointsInTalent(HEAVY_WEAPON_MASTERY) == 2)
@@ -767,9 +769,9 @@ public enum Talent {
         if(hero.hasTalent(Talent.SKILLFUL_GUARD)){
             ArrayList<HeroSkill> pool = new ArrayList<>();
 
-            if(!hero.skill_1.available()){ pool.add(hero.skill_1); }
-            if(!hero.skill_2.available()){ pool.add(hero.skill_2); }
-            if(hero.skill_3.charge < hero.skill_3.getMaxCharge()){ pool.add(hero.skill_3); }
+            if( hero.skill_1.charge < hero.skill_1.getMaxCharge() ){ pool.add(hero.skill_1); }
+            if( hero.skill_2.charge < hero.skill_2.getMaxCharge() ){ pool.add(hero.skill_2); }
+            if( hero.skill_3.charge < hero.skill_3.getMaxCharge()){ pool.add(hero.skill_3); }
 
             HeroSkill picked = Random.element(pool);
 

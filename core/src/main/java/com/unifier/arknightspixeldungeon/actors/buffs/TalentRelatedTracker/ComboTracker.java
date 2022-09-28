@@ -1,7 +1,7 @@
 package com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker;
 
+import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
-import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.watabou.utils.Bundle;
 
@@ -56,12 +56,13 @@ public class ComboTracker extends Buff {
         fadeTime = DURATION;
         missTracker = false;
 
-        if(target instanceof Hero && ((Hero) target).hasTalent(Talent.DEADLY_COMBO)){
+        if(Dungeon.hero.hasTalent(Talent.DEADLY_COMBO)){
             comboTracker++;
         }
     }
 
     public void miss(){
+        //comboTracker = 0;
         if(!missTracker){
             missTracker = true;
         }

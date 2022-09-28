@@ -4,7 +4,8 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
-import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.SwordRainTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ShadowlessTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.SonicCuttingTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
@@ -133,20 +134,24 @@ public class Shadowless extends HeroSkill {
 
                 if (!mob.isAlive()){
                     GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name)) );
-                    //int exp = owner.lvl <= mob.maxLvl ? mob.EXP : 0;
-                    //if (exp > 0) {
-                    //    owner.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
-                    //    owner.earnExp(exp);
-                    //}
                     targets.remove(mob);
+
+                    if(hero.hasTalent(Talent.SONIC_CUTTING)){
+                        Buff.affect(owner, SonicCuttingTracker.class).stack();
+                    }
+
+                    if(hero.hasTalent(Talent.SWORD_RAIN)){
+                        owner.skill_2.getCoolDown(owner.skill_2.rawCD() * 0.2f);
+                    }
+
                 }else{
                     if(hero.hasTalent(Talent.MORTAL_SKILL)){
                         Buff.affect(mob, ComboTracker.class).stack();
                     }
                 }
 
-                if(hero.hasTalent(Talent.SWORD_RAIN)){
-                    Buff.affect(mob,SwordRainTracker.class).stack();
+                if(hero.pointsInTalent(Talent.SHADOWLESS) == 2){
+                    Buff.affect(mob, ShadowlessTracker.class).stack();
                 }
 
                 if(t>=time()-1 || targets.isEmpty()){
@@ -168,7 +173,7 @@ public class Shadowless extends HeroSkill {
                             if (owner.pointsInTalent(Talent.SWORD_RAIN) == 2 && t<10){
                                 cooldown -=  rawCD() * 0.05f * (10 - t);
                             }
-
+                            owner.buff(SonicCuttingTracker.class).detach();
                         }
                     },HeroSprite.skillAnimationType.shadowless_over);
                 }
@@ -178,18 +183,14 @@ public class Shadowless extends HeroSkill {
     }
 
     public int range(){
-//        return 999;
-        return 3 + 2 * Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING);//3*3 at lvl 0,5*5 at lvl 1,7*7 at lvl 2
+        return 3 + 99 * Dungeon.hero.pointsInTalent(Talent.CLOUD_CRACK);
     }
 
     public int time(){
         int time = 10;
-        if (Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) == 1) {
-            time += 2;
-        }
-        if (Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) == 2) {
-            time += 5;
-        }
+
+        time += owner.buff(SonicCuttingTracker.class).stack;
+
         return time;
 //        return 999;
 //        return 10 + 2 * Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) + Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) == 2 ? 0 : 1;//10 at lvl 0,12 at lvl 1,15 at lvl 2
@@ -200,8 +201,8 @@ public class Shadowless extends HeroSkill {
         int dmg = owner.rawdamageRoll(enemy,isMagic);
         float factor = 1;
 
-        if(enemy.buff(SwordRainTracker.class)!=null){
-            factor += 0.05f * enemy.buff(SwordRainTracker.class).stack;
+        if(enemy.buff(ShadowlessTracker.class)!=null){
+            factor += 0.05f * enemy.buff(ShadowlessTracker.class).stack;
         }
 
         if (owner.buff(Talent.SheathedStrikeTracker2.class) != null && owner.pointsInTalent(Talent.SHEATHED_STRIKE) == 2) {

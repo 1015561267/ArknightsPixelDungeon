@@ -30,6 +30,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
 import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
 import com.unifier.arknightspixeldungeon.actors.buffs.KineticDamage;
 import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WeaponThrowTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
@@ -212,21 +213,17 @@ public class MeleeWeapon extends Weapon {
         Char enemy = Actor.findChar(cell);
 
         if (curUser.hasTalent(Talent.WEAPON_THROW) && enemy instanceof Mob && enemy.alignment == Char.Alignment.ENEMY) {
-        	/*
-            int damage;
-            damage = rawdamageRoll(curUser,enemy,false);
-            if (curUser.pointsInTalent(Talent.WEAPON_THROW) == 2 && hasGoodEnchant()) {
-            	int damage1 = enchantment.proc(this,curUser,enemy,damage);
-            	damage = damage1;
-            }
-            enemy.damage(damage,curUser);
-            Invisibility.dispel();
 
-        	 */
 			KindOfWeapon thisWeapon = curUser.belongings.weapon;
 			curUser.belongings.weapon = this;
-			curUser.attack(enemy);
+			curUser.guaranteedAttack(enemy);
 			curUser.belongings.weapon = thisWeapon;
+
+			if(curUser.buff(WeaponThrowTracker.class)!=null){
+                curUser.buff(WeaponThrowTracker.class).getStack();
+            }
+			else Buff.affect(curUser,WeaponThrowTracker.class);
+
         }
 
         super.onThrow(cell);

@@ -6,11 +6,12 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.FormationBreakerTracker;
-import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WindCutterTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.effects.Beam;
+import com.unifier.arknightspixeldungeon.effects.Pushing;
+import com.unifier.arknightspixeldungeon.effects.TalentSprite;
 import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.levels.features.Door;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
@@ -32,6 +33,7 @@ import java.util.List;
 import static com.unifier.arknightspixeldungeon.Dungeon.hero;
 
 public class Unsheath extends HeroSkill {
+
     @Override
     public boolean activated() { return owner.hasTalent(Talent.UNSHEATH); }
 
@@ -64,9 +66,18 @@ public class Unsheath extends HeroSkill {
 
     @Override
     public void doAction() {
+
+        Buff.detach( owner, Talent.BoilingKenshinTracker.class );
+
         if(!available()){
-            GLog.h(Messages.get(HeroSkill.class, "unavailable"));
-            return;
+            if(owner.hasTalent(Talent.BOILING_KENSHIN) && owner.HP > owner.HT * 0.4f){
+                Buff.affect(owner,Talent.BoilingKenshinTracker.class);
+                GameScene.selectCell(unsheath_selector);
+            }
+            else{
+                GLog.h(Messages.get(HeroSkill.class, "unavailable"));
+                return;
+            }
         }
         GameScene.selectCell(unsheath_selector);
     }
@@ -102,21 +113,21 @@ public class Unsheath extends HeroSkill {
                 Char enemy;
                 List<Integer> availablePath = attack.subPath(1, range());
 
-                GLog.w( "All path:");
-                for (int c : availablePath) {
-                    GLog.w( c + " ");
-                }
+                //GLog.w( "All path:");
+                //for (int c : availablePath) {
+               //     GLog.w( c + " ");
+               // }
 
                 int desired = availablePath.indexOf(cell);
 
                 int maxTracker = Math.min(availablePath.indexOf(cell) < 0 ? availablePath.size() - 1 :availablePath.indexOf(cell) //get the so-called max range possible if pointed place is out of range
                         ,availablePath.size() - 1);
 
-                GLog.w(cell+" "+desired+" "+maxTracker);
+                //GLog.w(cell+" "+desired+" "+maxTracker);
 
                 if(desired != -1) //represent pointed place is in range,otherwise dismiss further search cause we directly use the longest pos as start
                 {
-                    GLog.w( "further:");
+                    //GLog.w( "further:");
                     for (int c : availablePath) {
                         if(availablePath.indexOf(c) >= availablePath.indexOf(cell)){//search front to seek possible further drop place
                              GLog.w(String.valueOf(c));
@@ -126,14 +137,14 @@ public class Unsheath extends HeroSkill {
                                 if(Dungeon.level.map[c] == Terrain.DOOR)
                                 {
                                     result = c;
-                                    GLog.w( "on door:"+result);
+                                    //GLog.w( "on door:"+result);
                                     dropedTracker = true;
                                 }else break;
                             }//We need to consider that former terrain can block further search so for now if there are a solid terrain expect unlocked door,just break and consider futher search as a failure
 
                             if (enemy == null && Dungeon.level.passable[c]) {
                                 result = c;
-                                GLog.w( "further search:"+result);
+                                //GLog.w( "further search:"+result);
                                 dropedTracker = true;
                                 break;
                             }
@@ -143,13 +154,13 @@ public class Unsheath extends HeroSkill {
 
                 if (!dropedTracker) {//then search back
                     //List<Integer> reversePath = attack.subPath(maxTracker,1); Warning,Arraylist.sublist must have start<end,else throw exception,so reserve ergodic has had to take other ways
-                    GLog.w( "narrow:");
+                    //GLog.w( "narrow:");
                     for(int i = maxTracker;i>=0;i--){
                         int c =availablePath.get(i);
                         enemy = Actor.findChar(c);
                         if (enemy == null && Dungeon.level.passable[c]) {
                             result = c;
-                            GLog.w( "narrow search:"+result);
+                            //GLog.w( "narrow search:"+result);
                             dropedTracker = true;
                             break;
                         }
@@ -159,6 +170,12 @@ public class Unsheath extends HeroSkill {
                 if (!dropedTracker || result == owner.pos) {
                     GLog.i("Unable to use");
                     return;
+                }
+
+                if(owner.buff(Talent.BoilingKenshinTracker.class)!=null){
+                    owner.HP -= Math.max(owner.HP * 0.6f , owner.HT * 0.4f);
+                    Buff.detach( owner, Talent.BoilingKenshinTracker.class );
+                    TalentSprite.show(owner, Talent.BOILING_KENSHIN,TalentSprite.Phase.FADE_IN);
                 }
 
                 int dropPos = result;
@@ -175,66 +192,76 @@ public class Unsheath extends HeroSkill {
                             public void call() {
                                 owner.sprite.visible = false;
 
+                                ArrayList<Char> enemys = new ArrayList<>();
+
+                                for(int c : real.subPath(1,real.dist)){
+                                    Char enemy = Actor.findChar(c);
+                                        if(enemy==null){
+                                            if(owner.pointsInTalent(Talent.WIND_CUTTER) == 2){
+                                                for (int i : PathFinder.NEIGHBOURS8)
+                                                {
+                                                    Char dragged =  Actor.findChar(c + i);
+                                                    if(dragged!=null && !enemys.contains(dragged) && dragged.alignment == Char.Alignment.ENEMY  && !dragged.properties().contains(Char.Property.IMMOVABLE)){
+                                                        Actor.add(new Pushing(dragged, dragged.pos, c, new Callback() {
+                                                            public void call() {
+                                                                Dungeon.level.press(c, dragged, true);
+                                                            }
+                                                        }));
+                                                        dragged.pos = c;
+                                                        Dungeon.observe();
+                                                        GameScene.updateFog();
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if (enemy != null && enemy.alignment == Char.Alignment.ENEMY) {
+                                            enemys.add(enemy);
+                                        }
+                                }
+
                                 owner.sprite.parent.add(new Beam.UnSheathRay(owner.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(finalDropPos), new Callback() {
 
                                     public void call() {
 
-                                        ArrayList<Char> enemys = new ArrayList<>();
+                                        boolean killAny = false;
+                                        boolean hitAny = !enemys.isEmpty();
 
-                                        for(int c : real.subPath(1,real.dist)){
-                                            Char enemy = Actor.findChar(c);
-                                            if (enemy != null && enemy.alignment == Char.Alignment.ENEMY) {
-                                                enemys.add(enemy);
+                                        if(enemys.size()==1 && owner.hasTalent(Talent.SUN_CROSS)){
+                                            Char instantKilled = enemys.get(0);
+                                            if(!instantKilled.properties().contains(Char.Property.BOSS)){
+                                                enemys.remove(instantKilled);
+                                                instantKilled.die(Unsheath.class);
+                                                killAny = true;
                                             }
                                         }
 
                                         float factor = 1f;
 
-                                        if(owner.hasTalent(Talent.FLOWING_WATER)){
-                                            if(enemys.size()>=3){ factor += 1f;}
-                                        }else if(owner.hasTalent(Talent.SUN_CROSS)){
-                                            factor += 0.25f;
-                                        }
-
-                                        factor += owner.pointsInTalent(Talent.FLASH) * 0.1f;
                                         factor +=  owner.pointsInTalent(Talent.UNSHEATH) == 2 ? 0.2f : 0f;
 
                                         if (owner.buff(Talent.SheathedStrikeTracker2.class) != null && owner.pointsInTalent(Talent.SHEATHED_STRIKE) == 2) {
                                             factor += 0.2f;
                                         }
 
-                                        int tracker = 0;
-
                                         for(Char enemy : enemys){
-                                            if(owner.hasTalent(Talent.BOILING_KENSHIN) && enemys.indexOf(enemy) == enemys.size() -1 ){
-                                                tracker = (int) (skillDamage(enemy,false) * factor + 0.25f);
-                                            }
-                                            else tracker = (int) (skillDamage(enemy,false) * factor);
-
+                                            int tracker = (int) (skillDamage(enemy,false) * factor);
                                             enemy.damage(tracker,owner);
-
                                             if(owner.hasTalent(Talent.MORTAL_SKILL)){
                                                 ComboTracker comboTracker = enemy.buff(ComboTracker.class);
                                                 if(comboTracker!=null && comboTracker.getStack()>=3 ){
                                                     owner.skill_3.getCoolDown(owner.skill_3.rawCD() * 0.25f);
                                                 }
                                             }
-
                                             if (!enemy.isAlive()) {
                                                 GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)));
-                                                //int exp = owner.lvl <= ((Mob) enemy).maxLvl ? ((Mob) enemy).EXP : 0;
-                                                //if (exp > 0) {
-                                                //    owner.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
-                                                //    owner.earnExp(exp);
-                                                //}
-                                            } else if(owner.hasTalent(Talent.WIND_CUTTER)){
-                                                Buff.affect(enemy, WindCutterTracker.class,3f).set((int) (tracker * 0.5f));
+                                                killAny = true;
                                             }
                                         }
 
-                                        if(owner.pointsInTalent(Talent.BOILING_KENSHIN)==2) {
+                                        if(owner.hasTalent(Talent.WIND_CUTTER)) {
                                             for (int n : PathFinder.NEIGHBOURS9) {
-                                                int c = owner.pos + n;
+                                                int c = finalDropPos + n;
                                                 Char ch = Actor.findChar(c);
                                                 if (ch != null && enemys.contains(ch) && ch.alignment == Char.Alignment.ENEMY) {
                                                     ch.damage((int) (skillDamage(ch,false) * 0.5f),owner);
@@ -254,6 +281,8 @@ public class Unsheath extends HeroSkill {
                                         Dungeon.observe();
                                         GameScene.updateFog();
 
+                                        boolean finalKillAny = killAny;
+
                                         ((HeroSprite) owner.sprite).setSkillCallbackAnimation(
                                                 new Callback() {
                                                     @Override
@@ -261,7 +290,12 @@ public class Unsheath extends HeroSkill {
                                                         ((HeroSprite) owner.sprite).setAfterSkillAnimation();
                                                         Dungeon.level.press(finalDropPos, owner);
                                                         doAfterAction();
-                                                        if( (enemys.size()>=3 && (owner.hasTalent(Talent.SUN_CROSS) )) || (!enemys.isEmpty() && hero.hasTalent(Talent.FLOWING_WATER))){
+
+                                                        if(owner.pointsInTalent(Talent.SUN_CROSS) == 2 && finalKillAny){
+                                                            owner.skill_1.getCoolDown(owner.skill_1.rawCD());
+                                                        }
+
+                                                        if( owner.hasTalent(Talent.FLOWING_WATER)){
                                                             if(repeattedTime<3)
                                                             {
                                                                 charge++;
@@ -269,6 +303,8 @@ public class Unsheath extends HeroSkill {
                                                             }
                                                             else repeattedTime = 0;
                                                         }
+
+
 
                                                         if(owner.pointsInTalent(Talent.SUN_CROSS) == 2){
                                                             Buff.affect(owner, FormationBreakerTracker.class).set(enemys.size());

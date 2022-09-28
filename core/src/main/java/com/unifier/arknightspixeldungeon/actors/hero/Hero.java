@@ -51,6 +51,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.Colle
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ComboTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
@@ -492,6 +493,7 @@ public class Hero extends Char {
 
 				if(enemy.buff(ComboTracker.class).combo()){
 					dmg *= 1.5f;
+                    TalentSprite.show(this, Talent.DEADLY_COMBO,TalentSprite.Phase.FADE_IN);
 				}
 			}
 		}
@@ -1090,8 +1092,18 @@ public class Hero extends Char {
 	
 	public void rest( boolean fullRest ) {
 		spendAndNext( TIME_TO_REST );
+
 		if (!fullRest) {
-			sprite.showStatus( CharSprite.DEFAULT, Messages.get(this, "wait") );
+            if(this.hasTalent(Talent.DECISIVENESS)){
+                if(buff(ReflectTracker.class)!=null){
+                    buff(ReflectTracker.class).getCoolDown(TIME_TO_REST * 9);//well at here we can make it nine times as the buff will cool down one time itself
+                    TalentSprite.show(this, Talent.DECISIVENESS,TalentSprite.Phase.FADE_IN);
+                }
+            }
+
+            if (sprite != null) {
+                sprite.showStatus(CharSprite.DEFAULT, Messages.get(this, "wait"));
+            }
 		}
 		resting = fullRest;
 	}

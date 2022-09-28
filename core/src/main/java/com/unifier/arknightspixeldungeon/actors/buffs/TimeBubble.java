@@ -4,13 +4,11 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.levels.traps.Trap;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
@@ -59,7 +57,7 @@ public class TimeBubble extends FlavourBuff {
                 Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class).detach();
             }
 
-            if (Dungeon.hero.pointsInTalent(Talent.SEIZE_OPPORTUNITY) == 2) {
+            if (Dungeon.hero.hasTalent(Talent.SEIZE_OPPORTUNITY)) {
                 Dungeon.hero.skill_2.getCoolDown(Dungeon.hero.skill_2.rawCD() * 0.25f);
                 Dungeon.hero.skill_3.getCoolDown(Dungeon.hero.skill_3.rawCD() * 0.25f);
             }

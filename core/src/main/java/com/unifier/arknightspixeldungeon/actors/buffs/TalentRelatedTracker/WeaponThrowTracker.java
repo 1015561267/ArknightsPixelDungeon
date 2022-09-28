@@ -4,20 +4,17 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.watabou.utils.Bundle;
 
-public class BladeStormTracker extends Buff {
+public class WeaponThrowTracker extends Buff {//TODO this type is somehow similar in many condition,may merge them later
 
     protected int stack;
     protected float time;
     protected boolean token;
 
-
-    private static final int Max_Stack = 5;
-
+    private static final int Max_Stack = 10;
 
     protected static final String STACK	= "stack";
     protected static final String TIME = "time";
     protected static final String TOKEN = "token";
-
 
     @Override
     public void storeInBundle( Bundle bundle ) {
@@ -25,7 +22,6 @@ public class BladeStormTracker extends Buff {
         bundle.put( STACK, stack );
         bundle.put( TIME , time);
         bundle.put( TOKEN , token);
-
     }
 
     @Override
@@ -33,7 +29,6 @@ public class BladeStormTracker extends Buff {
         super.restoreFromBundle( bundle );
         stack = bundle.getInt( STACK );
         time = bundle.getFloat(TIME);
-        token = bundle.getBoolean(TOKEN);
     }
 
     @Override

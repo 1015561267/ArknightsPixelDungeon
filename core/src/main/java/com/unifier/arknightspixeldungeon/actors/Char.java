@@ -53,6 +53,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.Combo
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CounterStrikeTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WeaponThrowTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WellPreparedTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
@@ -406,11 +407,116 @@ public abstract class Char extends Actor {
                             }
                             Talent.doAfterReflect(effectiveDamage);
                         }
-                    } );
+                    });
             return false;
         }
         else return attack(enemy);
     }
+
+
+    public boolean guaranteedAttack( Char enemy ) {//TODO have to copy the method,maybe make it easier later,and it now only be used to weapon throw talent,need more fix to be used otherwise
+
+        if (enemy == null || !enemy.isAlive()) return false;
+
+        boolean visibleFight = Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[enemy.pos];
+
+        if (enemy.isInvulnerable(getClass())) {
+
+            if (visibleFight) {
+                enemy.sprite.showStatus( CharSprite.POSITIVE, Messages.get(this, "invulnerable") );
+                Sample.INSTANCE.play(Assets.SND_GOLD, 1f, Random.Float(0.96f, 1.05f));
+            }
+            return false;
+        }
+
+        else{
+
+            hit(this,enemy,false);//just pass this to make hit check worked,like time bubble
+
+            int CollectCombo = 0;
+            if (Dungeon.hero.pointsInTalent(Talent.BOTHSIDE_ATTACK) == 2 && enemy.buff(ComboTracker.class) != null) {
+                CollectCombo = Math.min(enemy.buff(ComboTracker.class).getStack() / 2,5);
+            }
+
+            int dmg;
+            Preparation prep = buff(Preparation.class);
+            if (prep != null){
+                dmg = prep.damageRoll(this, enemy);
+            } else {
+                dmg = damageRoll(enemy,false);//There might be other hit check so raw damageroll function need to be improved
+            }
+
+            if(this.buff(WeaponThrowTracker.class)!=null){
+                dmg *= 1.0f + 0.1f * this.buff(WeaponThrowTracker.class).getStack();
+            }
+
+            int dr = enemy.drRoll();
+            if(enemy.buff(Talent.LightWeaponMasteryTracker.class)!=null)
+            {
+                dr /= 2 ;
+                enemy.buff(Talent.LightWeaponMasteryTracker.class).detach();
+            }
+            RageTracker rageTracker = buff(RageTracker.class);
+            if (rageTracker != null) {
+                dmg = rageTracker.damageFactor(dmg);
+            }
+            if (enemy == Dungeon.hero && Dungeon.hero.buff(Talent.ParryTrackerUsing.class) != null) {
+                dmg = 0;
+            }
+
+            int effectiveDamage = enemy.defenseProc( this, dmg );
+            effectiveDamage = Math.max( effectiveDamage - dr, 0 );
+
+            if ( enemy.buff( Vulnerable.class ) != null){
+                effectiveDamage *= 1.33f;
+            }
+
+            effectiveDamage = attackProc( enemy, effectiveDamage );
+
+            if (visibleFight) {
+                Sample.INSTANCE.play( Assets.SND_HIT, 1, 1, Random.Float( 0.8f, 1.25f ) );
+            }
+
+            if (!enemy.isAlive()){
+                return true;
+            }
+
+            float shake = 0f;
+            if (enemy == Dungeon.hero)
+                shake = effectiveDamage / (enemy.HT / 4);
+
+            if (shake > 1f)
+                Camera.main.shake( GameMath.gate( 1, shake, 5), 0.3f );
+
+            enemy.damage( effectiveDamage, this );
+
+            if (buff(FireImbue.class) != null)
+                buff(FireImbue.class).proc(enemy);
+            if (buff(EarthImbue.class) != null)
+                buff(EarthImbue.class).proc(enemy);
+
+
+            enemy.sprite.bloodBurstA( sprite.center(), effectiveDamage );
+            enemy.sprite.flash();
+
+            if (!enemy.isAlive() && CollectCombo != 0 && this == Dungeon.hero) {
+                Buff.affect(Dungeon.hero,CollectComboTracker.class).set(CollectCombo);
+            }
+
+            if (!enemy.isAlive() && visibleFight) {
+                if (this == Dungeon.hero) {
+                    GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)) );
+                }
+            }
+
+            if(this instanceof Hero)
+                Talent.doAfterDamage((Hero) this,enemy,effectiveDamage);
+
+            return true;
+        }
+    }
+
+
 	
 	public static boolean hit( Char attacker, Char defender, boolean magic ) {
 		float acuRoll = Random.Float( attacker.attackSkill( defender ) );
