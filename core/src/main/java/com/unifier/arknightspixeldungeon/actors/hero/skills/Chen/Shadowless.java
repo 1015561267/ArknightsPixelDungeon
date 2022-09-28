@@ -50,7 +50,7 @@ public class Shadowless extends HeroSkill {
 
     @Override
     public int getMaxCharge() {
-        if (owner.hasTalent(Talent.MOTION_ACCUMULATION)) {
+        if (owner.hasTalent(Talent.CLOUD_CRACK)) {
             return 2;
         }
         return 1;
@@ -179,20 +179,20 @@ public class Shadowless extends HeroSkill {
 
     public int range(){
 //        return 999;
-        return 3 + 2 * Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION);//3*3 at lvl 0,5*5 at lvl 1,7*7 at lvl 2
+        return 3 + 2 * Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING);//3*3 at lvl 0,5*5 at lvl 1,7*7 at lvl 2
     }
 
     public int time(){
         int time = 10;
-        if (Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) == 1) {
+        if (Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) == 1) {
             time += 2;
         }
-        if (Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) == 2) {
+        if (Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) == 2) {
             time += 5;
         }
         return time;
 //        return 999;
-//        return 10 + 2 * Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) + Dungeon.hero.pointsInTalent(Talent.CRIMSON_EXTENSION) == 2 ? 0 : 1;//10 at lvl 0,12 at lvl 1,15 at lvl 2
+//        return 10 + 2 * Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) + Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) == 2 ? 0 : 1;//10 at lvl 0,12 at lvl 1,15 at lvl 2
     }
 
     public int skillDamage(Char enemy,boolean isMagic){

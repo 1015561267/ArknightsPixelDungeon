@@ -155,7 +155,7 @@ public enum Talent {
             return Dungeon.hero.hasTalent(VIGILANCE) || Dungeon.hero.hasTalent(DRAGON_SCALE);
         }
     },
-    FORMATION_BREAKER(36, 3) {
+    SUN_CROSS(36, 3) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(UNSHEATH);
@@ -177,7 +177,7 @@ public enum Talent {
         @Override
         public ArrayList<Talent> Mutex() {
             return new ArrayList<Talent>() {{
-                add(FORMATION_BREAKER);
+                add(SUN_CROSS);
             }};
         }
     },
@@ -251,12 +251,12 @@ public enum Talent {
         }
     },
     //Chen Tier4
-    WEAPON_THROW(48,4), SEIZE_OPPORTUNITY(49,4) {
+    WEAPON_THROW(48,1,4), SEIZE_OPPORTUNITY(49,1,4) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(SHEATHED_STRIKE);
         }
-    }, FRUGALITY(50,4), HEART_STRIKER(51,4) {
+    }, FRUGALITY(50,1,4), BOILING_KENSHIN(51,1,4) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(UNSHEATH);
@@ -274,13 +274,13 @@ public enum Talent {
             return Dungeon.hero.hasTalent(RED_RAGE);
         }
     },
-    CRIMSON_EXTENSION(54,4) {
+    SONIC_CUTTING(54,1,4) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(SHADOWLESS);
         }
     },
-    SWORD_RAIN(55,4) {
+    SWORD_RAIN(55,1,4) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(SHADOWLESS);
@@ -291,16 +291,16 @@ public enum Talent {
     FLOWING_WATER(64, 1,5) {
         @Override
         public boolean PreconditionFulfilled() {
-            return Dungeon.hero.hasTalent(FORMATION_BREAKER);
+            return Dungeon.hero.hasTalent(SUN_CROSS);
         }
     },
-    SLASH_ECHO(65, 1,5) {
+    SHARP_JUDGEMENT(65, 1,5) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(WIND_CUTTER);
         }
     },
-    ENGROSSED(66, 1,5) {
+    DECISIVENESS(66, 1,5) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(REFLECT);
@@ -316,7 +316,7 @@ public enum Talent {
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(RED_RAGE);
         }
-    }, MOTION_ACCUMULATION(69, 1,5) {
+    }, CLOUD_CRACK(69, 1,5) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(SHADOWLESS);
@@ -518,9 +518,9 @@ public enum Talent {
         {
             case 0:Collections.addAll(tierTalents, SHEATHED_STRIKE,FAST_RECOVERY,PREEMPTIVE_STRIKE,ARM_INTUITION);break;
             case 1:Collections.addAll(tierTalents, SHEATH_THROW,REPRIMAND,PARRY,VIGILANCE,LAST_CHANCE, DRAGON_SCALE,UNSHEATH,FLASH, REFLECT,CONTINUOUS_ASSAULT, RED_RAGE, WEAPON_ADAPT);break;
-            case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE,FORMATION_BREAKER, WIND_CUTTER,SKILLFUL_GUARD, EYE_FOR_EYE,DEADLY_COMBO, SCARLET_MOMENTUM,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
-            case 3:Collections.addAll(tierTalents, WEAPON_THROW, SEIZE_OPPORTUNITY, FRUGALITY,HEART_STRIKER,BOTHSIDE_ATTACK,CRIMSON_RAMPAGE,SWORD_RAIN,CRIMSON_EXTENSION);break;
-            case 4:Collections.addAll(tierTalents, FLOWING_WATER, SLASH_ECHO, ENGROSSED,MORTAL_SKILL,SURPASS_LIMIT,MOTION_ACCUMULATION,BLADE_STORM,FULL_SUPPRESSION);break;
+            case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE, SUN_CROSS, WIND_CUTTER,SKILLFUL_GUARD, EYE_FOR_EYE,DEADLY_COMBO, SCARLET_MOMENTUM,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
+            case 3:Collections.addAll(tierTalents, WEAPON_THROW, SEIZE_OPPORTUNITY, FRUGALITY, BOILING_KENSHIN,BOTHSIDE_ATTACK,CRIMSON_RAMPAGE,SWORD_RAIN, SONIC_CUTTING);break;
+            case 4:Collections.addAll(tierTalents, FLOWING_WATER, SHARP_JUDGEMENT, DECISIVENESS,MORTAL_SKILL,SURPASS_LIMIT, CLOUD_CRACK,BLADE_STORM,FULL_SUPPRESSION);break;
             default:break;
         }
         //Mostly weapon damage modify can be found at MeleeWeapon.damageRoll
@@ -753,7 +753,7 @@ public enum Talent {
             }
         }
 
-        if(hero.hasTalent(Talent.ENGROSSED)){
+        if(hero.hasTalent(Talent.DECISIVENESS)){
 
         }
     }
@@ -776,7 +776,7 @@ public enum Talent {
             if(picked!=null) picked.getCoolDown(picked.rawCD() * 0.2f);
         }
 
-        if(hero.hasTalent(Talent.ENGROSSED)){
+        if(hero.hasTalent(Talent.DECISIVENESS)){
 
         }
     }

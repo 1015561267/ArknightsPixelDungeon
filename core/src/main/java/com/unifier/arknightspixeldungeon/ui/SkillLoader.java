@@ -103,7 +103,7 @@ public class SkillLoader extends Tag{
         coolDownBlock.size(bg.width(),bg.height() * cooldownRatio);
 
 
-        if (Dungeon.hero.isAlive() && (cooldownRatio ==0 || (Dungeon.hero.hasTalent(Talent.MOTION_ACCUMULATION) && skill.charge > 0))) {
+        if (Dungeon.hero.isAlive() && (cooldownRatio ==0 || (Dungeon.hero.hasTalent(Talent.CLOUD_CRACK) && skill.charge > 0))) {
             enable( Dungeon.hero.ready );
         } else {
             enable( false );

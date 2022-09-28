@@ -96,7 +96,7 @@ public class ChenSkillTreeLayouter {
         talentsPane.allbuttons.get(2).get(3).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),5 * Vertical_separator + 4 * ButtonHeight() + HUDHeight());//RALLY_FORCE
 
 
-        talentsPane.allbuttons.get(2).get(4).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),7 * Vertical_separator + 6 * ButtonHeight() + HUDHeight());//FORMATION_BREAKER
+        talentsPane.allbuttons.get(2).get(4).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),7 * Vertical_separator + 6 * ButtonHeight() + HUDHeight());//SUN_CROSS
         talentsPane.allbuttons.get(2).get(5).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),9 * Vertical_separator + 8 * ButtonHeight() + HUDHeight());//WIND_CUTTER
 
         talentsPane.allbuttons.get(2).get(6).setPos(5 * Horizontal_Separator + 2 * ButtonWidth(),10 * Vertical_separator + 9 * ButtonHeight() + HUDHeight());//SKILLFUL_GUARD
@@ -119,13 +119,13 @@ public class ChenSkillTreeLayouter {
 
         talentsPane.allbuttons.get(3).get(2).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),5 * Vertical_separator + 4 * ButtonHeight() + HUDHeight());//FRUGALITY
 
-        talentsPane.allbuttons.get(3).get(3).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),8 * Vertical_separator + 7 * ButtonHeight() + HUDHeight());//HEART_STRIKER
+        talentsPane.allbuttons.get(3).get(3).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),8 * Vertical_separator + 7 * ButtonHeight() + HUDHeight());//BOILING_KENSHIN
 
         talentsPane.allbuttons.get(3).get(4).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),13 * Vertical_separator + 12 * ButtonHeight() + HUDHeight());//BOTHSIDE_ATTACK
         talentsPane.allbuttons.get(3).get(5).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//CRIMSON_RAMPAGE
 
         talentsPane.allbuttons.get(3).get(6).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),15 * Vertical_separator + 14 * ButtonHeight() + HUDHeight());//SWORD_RAIN
-        talentsPane.allbuttons.get(3).get(7).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),17 * Vertical_separator + 16 * ButtonHeight() + HUDHeight());//CRIMSON_EXTENSION
+        talentsPane.allbuttons.get(3).get(7).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),17 * Vertical_separator + 16 * ButtonHeight() + HUDHeight());//SONIC_CUTTING
 
         //talentsPane.allbuttons.get(3).get(8).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),18f * Vertical_separator + 18 * ButtonHeight() + HUDHeight());//ARMOR_BREAKER
         //talentsPane.allbuttons.get(3).get(9).setPos(7 * Horizontal_Separator + 3 * ButtonWidth(),20f * Vertical_separator + 18 * ButtonHeight() + HUDHeight());//PERFECT_SMASH
@@ -136,13 +136,13 @@ public class ChenSkillTreeLayouter {
         layoutTitle(talentsPane,5);
 
         talentsPane.allbuttons.get(4).get(0).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),7 * Vertical_separator + 6 * ButtonHeight() + HUDHeight());//FLOWING_WATER
-        talentsPane.allbuttons.get(4).get(1).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),9 * Vertical_separator + 8 * ButtonHeight() + HUDHeight());//SLASH_ECHO
-        talentsPane.allbuttons.get(4).get(2).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),11 * Vertical_separator + 10 * ButtonHeight() + HUDHeight());//ENGROSSED
+        talentsPane.allbuttons.get(4).get(1).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),9 * Vertical_separator + 8 * ButtonHeight() + HUDHeight());//SHARP_JUDGEMENT
+        talentsPane.allbuttons.get(4).get(2).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),11 * Vertical_separator + 10 * ButtonHeight() + HUDHeight());//DECISIVENESS
 
         talentsPane.allbuttons.get(4).get(3).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),13 * Vertical_separator + 12 * ButtonHeight() + HUDHeight());//MORTAL_SKILL
         talentsPane.allbuttons.get(4).get(4).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),14 * Vertical_separator + 13 * ButtonHeight() + HUDHeight());//SURPASS_LIMIT
 
-        talentsPane.allbuttons.get(4).get(5).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),16 * Vertical_separator + 15 * ButtonHeight() + HUDHeight());//MOTION_ACCUMULATION
+        talentsPane.allbuttons.get(4).get(5).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),16 * Vertical_separator + 15 * ButtonHeight() + HUDHeight());//CLOUD_CRACK
 
         talentsPane.allbuttons.get(4).get(6).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),18 * Vertical_separator + 17 * ButtonHeight() + HUDHeight());//BLADE_STORM
         talentsPane.allbuttons.get(4).get(7).setPos(9 * Horizontal_Separator + 4 * ButtonWidth(),20 * Vertical_separator + 19 * ButtonHeight() + HUDHeight());//FULL_SUPPRESSION

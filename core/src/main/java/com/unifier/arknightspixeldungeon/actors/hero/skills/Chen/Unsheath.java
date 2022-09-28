@@ -192,7 +192,7 @@ public class Unsheath extends HeroSkill {
 
                                         if(owner.hasTalent(Talent.FLOWING_WATER)){
                                             if(enemys.size()>=3){ factor += 1f;}
-                                        }else if(owner.hasTalent(Talent.FORMATION_BREAKER)){
+                                        }else if(owner.hasTalent(Talent.SUN_CROSS)){
                                             factor += 0.25f;
                                         }
 
@@ -206,7 +206,7 @@ public class Unsheath extends HeroSkill {
                                         int tracker = 0;
 
                                         for(Char enemy : enemys){
-                                            if(owner.hasTalent(Talent.HEART_STRIKER) && enemys.indexOf(enemy) == enemys.size() -1 ){
+                                            if(owner.hasTalent(Talent.BOILING_KENSHIN) && enemys.indexOf(enemy) == enemys.size() -1 ){
                                                 tracker = (int) (skillDamage(enemy,false) * factor + 0.25f);
                                             }
                                             else tracker = (int) (skillDamage(enemy,false) * factor);
@@ -232,7 +232,7 @@ public class Unsheath extends HeroSkill {
                                             }
                                         }
 
-                                        if(owner.pointsInTalent(Talent.HEART_STRIKER)==2) {
+                                        if(owner.pointsInTalent(Talent.BOILING_KENSHIN)==2) {
                                             for (int n : PathFinder.NEIGHBOURS9) {
                                                 int c = owner.pos + n;
                                                 Char ch = Actor.findChar(c);
@@ -261,7 +261,7 @@ public class Unsheath extends HeroSkill {
                                                         ((HeroSprite) owner.sprite).setAfterSkillAnimation();
                                                         Dungeon.level.press(finalDropPos, owner);
                                                         doAfterAction();
-                                                        if( (enemys.size()>=3 && (owner.hasTalent(Talent.FORMATION_BREAKER) )) || (!enemys.isEmpty() && hero.hasTalent(Talent.FLOWING_WATER))){
+                                                        if( (enemys.size()>=3 && (owner.hasTalent(Talent.SUN_CROSS) )) || (!enemys.isEmpty() && hero.hasTalent(Talent.FLOWING_WATER))){
                                                             if(repeattedTime<3)
                                                             {
                                                                 charge++;
@@ -270,7 +270,7 @@ public class Unsheath extends HeroSkill {
                                                             else repeattedTime = 0;
                                                         }
 
-                                                        if(owner.pointsInTalent(Talent.FORMATION_BREAKER) == 2){
+                                                        if(owner.pointsInTalent(Talent.SUN_CROSS) == 2){
                                                             Buff.affect(owner, FormationBreakerTracker.class).set(enemys.size());
                                                         }
 
