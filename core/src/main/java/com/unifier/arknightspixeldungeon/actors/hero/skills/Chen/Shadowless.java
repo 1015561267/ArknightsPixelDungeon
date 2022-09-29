@@ -170,7 +170,7 @@ public class Shadowless extends HeroSkill {
 
                             doAfterAction();
                             owner.spendAndNext(1f);
-                            owner.buff(SonicCuttingTracker.class).detach();
+                            Buff.detach( owner, SonicCuttingTracker.class );
                         }
                     },HeroSprite.skillAnimationType.shadowless_over);
                 }
