@@ -332,9 +332,9 @@ public class Hero extends Char {
         if (lvl < (Talent.tierLevelThresholds[tier] - 1)) {
             return 0;
         }else if(tier == 5){
-	        return (lvl - 26) / 2 - talentPointsSpent(tier);//Check Talent.tierLevelThresholds[]for more info.
+	        return (lvl - 26) / 2 - talentPointsSpent(tier);//Here is a little different,have to notice
         } else if(tier == 4){
-            return (lvl - 20) / 2 - talentPointsSpent(tier);//Check Talent.tierLevelThresholds[]for more info.
+            return ( lvl > 26 ? 6 : (lvl - 20) )/ 2- talentPointsSpent(tier);//Check Talent.tierLevelThresholds[]for more info.
         }else if (lvl >= Talent.tierLevelThresholds[tier+1]){
             return Talent.tierLevelThresholds[tier+1] - Talent.tierLevelThresholds[tier] - talentPointsSpent(tier);
         } else {
@@ -354,7 +354,7 @@ public class Hero extends Char {
            case 1:return 6;
            case 2:return 8;
            case 3:return 6;
-           case 4:return 6;
+           case 4:return 3;
            case 5:return 2;
        }
     }

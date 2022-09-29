@@ -70,7 +70,7 @@ public class Unsheath extends HeroSkill {
         Buff.detach( owner, Talent.BoilingKenshinTracker.class );
 
         if(!available()){
-            if(owner.hasTalent(Talent.BOILING_KENSHIN) && owner.HP > owner.HT * 0.4f){
+            if(owner.hasTalent(Talent.BOILING_KENSHIN) && ( owner.HP > owner.HT * 0.4f ) ){
                 Buff.affect(owner,Talent.BoilingKenshinTracker.class);
                 GameScene.selectCell(unsheath_selector);
             }
@@ -324,7 +324,7 @@ public class Unsheath extends HeroSkill {
                                                         }
 
 
-                                                        if( owner.hasTalent(Talent.FLOWING_WATER)){
+                                                        if( owner.hasTalent(Talent.FLOWING_WATER) && hitAny){
                                                             if(owner.buff( Talent.FlowingWaterTracker.class ) != null){
                                                                 Buff.detach( owner, Talent.FlowingWaterTracker.class );
                                                                 Buff.affect(owner, Talent.AnotherFlowingWaterTracker.class , 5f);
