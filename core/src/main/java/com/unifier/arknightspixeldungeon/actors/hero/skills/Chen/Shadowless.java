@@ -168,11 +168,8 @@ public class Shadowless extends HeroSkill {
                             }
                             images = new ArrayList<>();
 
-//                          doAfterAction();
+                            doAfterAction();
                             owner.spendAndNext(1f);
-                            if (owner.pointsInTalent(Talent.SWORD_RAIN) == 2 && t<10){
-                                cooldown -=  rawCD() * 0.05f * (10 - t);
-                            }
                             owner.buff(SonicCuttingTracker.class).detach();
                         }
                     },HeroSprite.skillAnimationType.shadowless_over);
@@ -189,8 +186,9 @@ public class Shadowless extends HeroSkill {
     public int time(){
         int time = 10;
 
-        time += owner.buff(SonicCuttingTracker.class).stack;
-
+        if(owner.buff(SonicCuttingTracker.class)!=null) {
+            time += owner.buff(SonicCuttingTracker.class).stack;
+        }
         return time;
 //        return 999;
 //        return 10 + 2 * Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) + Dungeon.hero.pointsInTalent(Talent.SONIC_CUTTING) == 2 ? 0 : 1;//10 at lvl 0,12 at lvl 1,15 at lvl 2
