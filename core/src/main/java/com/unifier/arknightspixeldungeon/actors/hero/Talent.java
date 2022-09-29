@@ -263,13 +263,13 @@ public enum Talent {
             return Dungeon.hero.hasTalent(UNSHEATH);
         }
     },
-    BOTHSIDE_ATTACK(52,4) {
+    BOTHSIDE_ATTACK(52,1,4) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(CONTINUOUS_ASSAULT);
         }
     },
-    CRIMSON_RAMPAGE(53,4) {
+    CRIMSON_RAMPAGE(53,1,4) {
         @Override
         public boolean PreconditionFulfilled() {
             return Dungeon.hero.hasTalent(RED_RAGE);
@@ -335,7 +335,8 @@ public enum Talent {
         }
     };
 
-    public static int[] tierLevelThresholds = new int[]{0, 1, 7, 15, 21, 27, 31};//Note that you have one point at level 1,and tier 5 point only gained at level 28 and 30
+    public static int[] tierLevelThresholds = new int[]{0, 1, 7, 15, 21, 27, 31};//Note that you have one point at level 1,
+    // tier 4 point gained at level 22,24 and 26 while tier 5 point gained at level 28 and 30
 
     int icon;
     int maxPoints;
@@ -691,11 +692,7 @@ public enum Talent {
         if (!enemy.isAlive() && hero.hasTalent(Talent.CRIMSON_RAMPAGE)) {
             RageTracker rageTracker = Buff.affect(hero,RageTracker.class);
             rageTracker.rage = rageTracker.rage + 0.1f;
-            if (hero.pointsInTalent(Talent.CRIMSON_RAMPAGE) == 1) {
-                rageTracker.rageLossBuffer = Math.max(rageTracker.rageLossBuffer,5);
-            } else {
-                rageTracker.rageLossBuffer = Math.max(rageTracker.rageLossBuffer,10);
-            }
+            rageTracker.rageLossBuffer = Math.max(rageTracker.rageLossBuffer,5);
         }
     }
 
@@ -724,11 +721,11 @@ public enum Talent {
             damage = hero.buff(DragonScaleTracker.class).affect(damage,source);
         }
 
-        if (hero.pointsInTalent(CRIMSON_RAMPAGE) == 2) {
-            if (hero.buff(RageTracker.class) != null && hero.buff(RageTracker.class).rage > 0.8f) {
-                damage = Math.round(damage * (1.8f - hero.buff(RageTracker.class).rage));
-            }
-        }
+        //if (hero.pointsInTalent(CRIMSON_RAMPAGE) == 2) {
+        //    if (hero.buff(RageTracker.class) != null && hero.buff(RageTracker.class).rage > 0.8f) {
+        //        damage = Math.round(damage * (1.8f - hero.buff(RageTracker.class).rage));
+        //    }
+        //}
 
         return damage;
     }

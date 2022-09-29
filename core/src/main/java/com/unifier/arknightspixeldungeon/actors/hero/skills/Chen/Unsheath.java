@@ -199,14 +199,14 @@ public class Unsheath extends HeroSkill {
 
                                 ArrayList<Char> enemys = new ArrayList<>();
 
-                                for(int c : real.subPath(1,real.dist)){
-                                    Char enemy = Actor.findChar(c);
-                                        if(enemy==null){
-                                            if(owner.pointsInTalent(Talent.WIND_CUTTER) == 2){
-                                                for (int i : PathFinder.NEIGHBOURS8)
-                                                {
-                                                    Char dragged =  Actor.findChar(c + i);
-                                                    if(dragged!=null && !enemys.contains(dragged) && dragged.alignment == Char.Alignment.ENEMY  && !dragged.properties().contains(Char.Property.IMMOVABLE)){
+                                if(real.dist > 1) {
+                                    for (int c : real.subPath(1, real.dist - 1)) {
+                                        Char enemy = Actor.findChar(c);
+                                        if (enemy == null) {
+                                            if (owner.pointsInTalent(Talent.WIND_CUTTER) == 2) {
+                                                for (int i : PathFinder.NEIGHBOURS8) {
+                                                    Char dragged = Actor.findChar(c + i);
+                                                    if (dragged != null && !enemys.contains(dragged) && dragged.alignment == Char.Alignment.ENEMY && !dragged.properties().contains(Char.Property.IMMOVABLE)) {
                                                         Actor.add(new Pushing(dragged, dragged.pos, c, new Callback() {
                                                             public void call() {
                                                                 Dungeon.level.press(c, dragged, true);
@@ -220,10 +220,10 @@ public class Unsheath extends HeroSkill {
                                                     }
                                                 }
                                             }
-                                        }
-                                        else if (enemy != null && enemy.alignment == Char.Alignment.ENEMY) {
+                                        } else if (enemy != null && enemy.alignment == Char.Alignment.ENEMY) {
                                             enemys.add(enemy);
                                         }
+                                    }
                                 }
 
                                 owner.sprite.parent.add(new Beam.UnSheathRay(owner.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(finalDropPos), new Callback() {

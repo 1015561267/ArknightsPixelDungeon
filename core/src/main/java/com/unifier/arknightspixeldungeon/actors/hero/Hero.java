@@ -333,7 +333,9 @@ public class Hero extends Char {
             return 0;
         }else if(tier == 5){
 	        return (lvl - 26) / 2 - talentPointsSpent(tier);//Check Talent.tierLevelThresholds[]for more info.
-        } else if (lvl >= Talent.tierLevelThresholds[tier+1]){
+        } else if(tier == 4){
+            return (lvl - 20) / 2 - talentPointsSpent(tier);//Check Talent.tierLevelThresholds[]for more info.
+        }else if (lvl >= Talent.tierLevelThresholds[tier+1]){
             return Talent.tierLevelThresholds[tier+1] - Talent.tierLevelThresholds[tier] - talentPointsSpent(tier);
         } else {
             return 1 + lvl - Talent.tierLevelThresholds[tier] - talentPointsSpent(tier);
@@ -1701,22 +1703,6 @@ public class Hero extends Char {
             }
         }
 
-        if (hasTalent(Talent.BOTHSIDE_ATTACK) && enemy.buff(ComboTracker.class) != null && hit) {
-        	if (Random.Float() <= (enemy.buff(ComboTracker.class).getStack() * 0.05f)) {
-        		switch (Random.Int(3)) {
-					case 0:
-						skill_1.getCoolDown(skill_1.rawCD() * 0.1f);
-						break;
-					case 1:
-						skill_2.getCoolDown(skill_2.rawCD() * 0.1f);
-						break;
-					case 2:
-						skill_3.getCoolDown(skill_3.rawCD() * 0.1f);
-						break;
-				}
-			}
-		}
-		
 		Invisibility.dispel();
 
 		spend( attackDelay() );

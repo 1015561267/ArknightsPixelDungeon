@@ -207,7 +207,7 @@ public abstract class Char extends Actor {
 		else if (hit( this, enemy, false )) {
 
 			int CollectCombo = 0;
-			if (Dungeon.hero.pointsInTalent(Talent.BOTHSIDE_ATTACK) == 2 && enemy.buff(ComboTracker.class) != null) {
+			if (Dungeon.hero.hasTalent(Talent.BOTHSIDE_ATTACK) && enemy.buff(ComboTracker.class) != null) {
 				CollectCombo = Math.min(enemy.buff(ComboTracker.class).getStack() / 2,5);
 			}
 
@@ -434,7 +434,7 @@ public abstract class Char extends Actor {
             hit(this,enemy,false);//just pass this to make hit check worked,like time bubble
 
             int CollectCombo = 0;
-            if (Dungeon.hero.pointsInTalent(Talent.BOTHSIDE_ATTACK) == 2 && enemy.buff(ComboTracker.class) != null) {
+            if (Dungeon.hero.hasTalent(Talent.BOTHSIDE_ATTACK)  && enemy.buff(ComboTracker.class) != null) {
                 CollectCombo = Math.min(enemy.buff(ComboTracker.class).getStack() / 2,5);
             }
 
