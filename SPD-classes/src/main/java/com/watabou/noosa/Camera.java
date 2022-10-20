@@ -51,6 +51,7 @@ public class Camera extends Gizmo {
 
     public float[] matrix;
 
+    public boolean scrollable = false;
     public PointF scroll;
 
     private float shakeMagX = 10f;

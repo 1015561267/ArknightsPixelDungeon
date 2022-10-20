@@ -21,7 +21,6 @@
 
 package com.unifier.arknightspixeldungeon.plants;
 
-import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
@@ -35,9 +34,7 @@ public class Stormvine extends Plant {
 	}
 
 	@Override
-	public void activate() {
-		Char ch = Actor.findChar(pos);
-
+	public void activate(Char ch) {
 		if (ch != null) {
 			Buff.affect(ch, Vertigo.class, Vertigo.DURATION );
 		}

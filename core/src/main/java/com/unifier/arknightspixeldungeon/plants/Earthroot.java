@@ -22,7 +22,6 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
@@ -43,13 +42,15 @@ public class Earthroot extends Plant {
 	}
 	
 	@Override
-	public void activate() {
-		Char ch = Actor.findChar(pos);
-		
-		if (ch == Dungeon.hero) {
-			Buff.affect( ch, Armor.class ).level(ch.HT);
-		}
-		
+	public void activate(Char ch) {
+
+	    if(ch!=null)
+        {
+            if (ch == Dungeon.hero) {
+                Buff.affect( ch, Armor.class ).level(ch.HT);
+            }
+        }
+
 		if (Dungeon.level.heroFOV[pos]) {
 			CellEmitter.bottom( pos ).start( EarthParticle.FACTORY, 0.05f, 8 );
 			Camera.main.shake( 1, 0.4f );

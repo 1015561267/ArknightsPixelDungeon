@@ -22,9 +22,13 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.blobs.Blob;
+import com.unifier.arknightspixeldungeon.actors.blobs.ToxicGas;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.particles.LeafParticle;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfStrength;
+import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 
 public class Rotberry extends Plant {
@@ -34,8 +38,10 @@ public class Rotberry extends Plant {
 	}
 
 	@Override
-	public void activate() {
-		Dungeon.level.drop( new Seed(), pos ).sprite.drop();
+	public void activate(Char ch) {
+        GameScene.add( Blob.seed( pos, 100, ToxicGas.class ) );
+	    //Dungeon.level.drop( new Seed(), pos ).sprite.drop();
+        //FIXME changed due to SandalsOfNature,but we have no warden,for now...
 	}
 	
 	@Override
@@ -47,6 +53,8 @@ public class Rotberry extends Plant {
 		}
 		
 		//no warden benefit
+        //seed always drops, no lotus benefit
+        Dungeon.level.drop( new Seed(), pos ).sprite.drop();
 	}
 
 	public static class Seed extends Plant.Seed {

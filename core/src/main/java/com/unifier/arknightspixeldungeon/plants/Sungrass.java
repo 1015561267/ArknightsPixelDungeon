@@ -22,7 +22,6 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
@@ -44,9 +43,7 @@ public class Sungrass extends Plant {
 	}
 	
 	@Override
-	public void activate() {
-		Char ch = Actor.findChar(pos);
-		
+	public void activate(Char ch) {
 		if (ch == Dungeon.hero) {
 			Buff.affect( ch, Health.class ).boost(ch.HT);
 		}

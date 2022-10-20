@@ -21,7 +21,6 @@
 
 package com.unifier.arknightspixeldungeon.plants;
 
-import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Bleeding;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
@@ -46,9 +45,7 @@ public class Dreamfoil extends Plant {
 	}
 
 	@Override
-	public void activate() {
-		Char ch = Actor.findChar(pos);
-
+	public void activate(Char ch) {
 		if (ch != null) {
 			if (ch instanceof Mob)
 				Buff.affect(ch, MagicalSleep.class);

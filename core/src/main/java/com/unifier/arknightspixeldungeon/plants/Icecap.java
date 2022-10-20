@@ -22,6 +22,7 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.blobs.Fire;
 import com.unifier.arknightspixeldungeon.actors.blobs.Freezing;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfFrost;
@@ -36,7 +37,7 @@ public class Icecap extends Plant {
 	}
 	
 	@Override
-	public void activate() {
+	public void activate(Char ch) {
 		
 		PathFinder.buildDistanceMap( pos, BArray.not( Dungeon.level.losBlocking, null ), 1 );
 		

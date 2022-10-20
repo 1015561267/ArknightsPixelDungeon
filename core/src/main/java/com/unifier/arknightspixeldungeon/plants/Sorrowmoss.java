@@ -22,7 +22,6 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Poison;
@@ -38,10 +37,8 @@ public class Sorrowmoss extends Plant {
 	}
 	
 	@Override
-	public void activate() {
-		Char ch = Actor.findChar(pos);
-		
-		if (ch != null) {
+	public void activate(Char ch) {
+	    if (ch != null) {
 			Buff.affect( ch, Poison.class ).set( 4 + Dungeon.depth / 2 );
 		}
 		

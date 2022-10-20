@@ -33,17 +33,13 @@ import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.particles.LeafParticle;
-import com.unifier.arknightspixeldungeon.items.Dewdrop;
-import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
-import com.unifier.arknightspixeldungeon.items.artifacts.SandalsOfNature;
 import com.unifier.arknightspixeldungeon.levels.Level;
 import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
@@ -66,10 +62,10 @@ public abstract class Plant implements Bundlable {
 		}
 
 		wither();
-		activate();
+		activate(ch);
 	}
 	
-	public abstract void activate();
+	public abstract void activate(Char ch);
 	
 	public void wither() {
 		Dungeon.level.uproot( pos );
@@ -78,7 +74,7 @@ public abstract class Plant implements Bundlable {
 			CellEmitter.get( pos ).burst( LeafParticle.GENERAL, 6 );
 		}
 		
-		if (Dungeon.hero.subClass == HeroSubClass.WARDEN) {
+		/*if (Dungeon.hero.subClass == HeroSubClass.WARDEN) {
 
 			int naturalismLevel = 0;
 			SandalsOfNature.Naturalism naturalism = Dungeon.hero.buff( SandalsOfNature.Naturalism.class );
@@ -100,7 +96,7 @@ public abstract class Plant implements Bundlable {
 			if (Random.Int( 5 - naturalismLevel ) == 0) {
 				Dungeon.level.drop( new Dewdrop(), pos ).sprite.drop();
 			}
-		}
+		}*///FIXME We have no warden or say "natural related" role for now,so remove this should not cause any trouble for new SandalsOfNature
 	}
 	
 	private static final String POS	= "pos";

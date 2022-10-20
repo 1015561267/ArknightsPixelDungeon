@@ -62,8 +62,8 @@ public class HighGrass {
 		}
 
 		if (naturalismLevel >= 0) {
-			// Seed, scales from 1/16 to 1/4
-			if (Random.Int(16 - ((int) (naturalismLevel * 3))) == 0) {
+            // Seed, scales from 1/25 to 1/9
+            if (Random.Int(25 - (naturalismLevel * 4)) == 0) { //chance lowed by new SandalsOfNature
 				Item seed = Generator.random(Generator.Category.SEED);
 
 				if (seed instanceof BlandfruitBush.Seed) {
@@ -76,7 +76,7 @@ public class HighGrass {
 			}
 
 			// Dew, scales from 1/6 to 1/3
-			if (Random.Int(24 - naturalismLevel*3) <= 3) {
+            if (Random.Int(6 - naturalismLevel/2) == 0) {//chance lowed by new SandalsOfNature
 				level.drop(new Dewdrop(), pos).sprite.drop();
 			}
 		}

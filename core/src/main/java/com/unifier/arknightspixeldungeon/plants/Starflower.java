@@ -22,7 +22,6 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Bless;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
@@ -37,8 +36,7 @@ public class Starflower extends Plant {
 	}
 
 	@Override
-	public void activate() {
-		Char ch = Actor.findChar(pos);
+	public void activate(Char ch) {
 
 		if (ch != null) Buff.prolong(ch, Bless.class, Bless.DURATION);
 

@@ -22,7 +22,6 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
@@ -39,9 +38,8 @@ public class Fadeleaf extends Plant {
 	}
 	
 	@Override
-	public void activate() {
-		Char ch = Actor.findChar(pos);
-		
+	public void activate(Char ch) {
+
 		if (ch instanceof Hero) {
 			
 			ScrollOfTeleportation.teleportHero( (Hero)ch );

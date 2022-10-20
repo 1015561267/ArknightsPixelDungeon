@@ -22,7 +22,6 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
@@ -41,9 +40,8 @@ public class Blindweed extends Plant {
 	}
 	
 	@Override
-	public void activate() {
-		Char ch = Actor.findChar(pos);
-		
+	public void activate(Char ch) {
+
 		if (ch != null) {
 			int len = Random.Int( 5, 10 );
 			Buff.prolong( ch, Blindness.class, len );

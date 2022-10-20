@@ -22,6 +22,7 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.blobs.Blob;
 import com.unifier.arknightspixeldungeon.actors.blobs.Fire;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
@@ -37,7 +38,7 @@ public class Firebloom extends Plant {
 	}
 	
 	@Override
-	public void activate() {
+	public void activate(Char ch) {
 		
 		GameScene.add( Blob.seed( pos, 2, Fire.class ) );
 		

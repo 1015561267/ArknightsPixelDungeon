@@ -22,6 +22,7 @@
 package com.unifier.arknightspixeldungeon.plants;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.items.food.Blandfruit;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 
@@ -32,7 +33,7 @@ public class BlandfruitBush extends Plant {
 	}
 
 	@Override
-	public void activate() {
+	public void activate(Char ch) {
 		Dungeon.level.drop( new Blandfruit(), pos ).sprite.drop();
 	}
 
