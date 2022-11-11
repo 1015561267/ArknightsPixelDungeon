@@ -34,8 +34,6 @@ import com.watabou.noosa.audio.Sample;
 
 public abstract class InventoryScroll extends Scroll {
 
-	protected WndBag.Mode mode = WndBag.Mode.ALL;
-
     private String inventoryTitle(){
         return Messages.get(this, "inv_title");
     }

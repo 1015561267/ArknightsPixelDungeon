@@ -63,7 +63,7 @@ public class PointerArea extends Visual implements Signal.Listener<PointerEvent>
         boolean hit = event != null && target.overlapsScreenPoint((int) event.current.x, (int) event.current.y);
 
         if (!isActive()) {
-            return (hit && blockLevel == ALWAYS_BLOCK);
+            return (hit && blockLevel == ALWAYS_BLOCK );
         }
 
         if (hit) {
@@ -105,9 +105,14 @@ public class PointerArea extends Visual implements Signal.Listener<PointerEvent>
                 onDrag(curEvent);
             }
 
-            else if (curEvent != null && !event.down) {
+            else if (curEvent != null && event.type == PointerEvent.Type.UP) {
                 onPointerUp( event );
                 curEvent = null;
+            }
+
+            else if (event != null && event.type == PointerEvent.Type.HOVER && hovered){
+                hovered = false;
+                onHoverEnd(event);
             }
 
             return false;

@@ -33,13 +33,11 @@ import com.unifier.arknightspixeldungeon.items.wands.Wand;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.utils.GLog;
-import com.unifier.arknightspixeldungeon.windows.WndBag;
 
 public class ScrollOfUpgrade extends InventoryScroll {
 	
 	{
 		initials = 11;
-		mode = WndBag.Mode.UPGRADEABLE;
 	}
 
     @Override

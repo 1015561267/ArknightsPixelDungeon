@@ -2,6 +2,7 @@ package com.unifier.arknightspixeldungeon.ui;
 
 import com.unifier.arknightspixeldungeon.windows.WndDialog;
 import com.watabou.noosa.Image;
+import com.watabou.noosa.PointerArea;
 
 public class SkipIndicator extends Tag {
 
@@ -16,7 +17,7 @@ public class SkipIndicator extends Tag {
 
         visible = true;
 
-        hotArea.blockWhenInactive = true;
+        hotArea.blockLevel = PointerArea.ALWAYS_BLOCK;
     }
 
     @Override

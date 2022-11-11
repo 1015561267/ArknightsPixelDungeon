@@ -30,12 +30,10 @@ import com.unifier.arknightspixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.utils.GLog;
-import com.unifier.arknightspixeldungeon.windows.WndBag;
 
 public class StoneOfEnchantment extends InventoryStone {
 	
 	{
-		mode = WndBag.Mode.ENCHANTABLE;
 		image = ItemSpriteSheet.STONE_TIWAZ;
 	}
 

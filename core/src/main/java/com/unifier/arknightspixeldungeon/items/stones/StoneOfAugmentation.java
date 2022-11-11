@@ -34,12 +34,10 @@ import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.Window;
 import com.unifier.arknightspixeldungeon.windows.IconTitle;
-import com.unifier.arknightspixeldungeon.windows.WndBag;
 
 public class StoneOfAugmentation extends InventoryStone {
 	
 	{
-		mode = WndBag.Mode.ENCHANTABLE;
 		image = ItemSpriteSheet.STONE_YNGVI;
 	}
 

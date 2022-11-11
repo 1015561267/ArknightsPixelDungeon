@@ -93,9 +93,9 @@ public class TomeOfMastery extends Item {
 	}
 	
 	@Override
-	public boolean doPickUp( Hero hero ) {
+	public boolean doPickUp( Hero hero ,int pos ) {
 		Badges.validateMastery();
-		return super.doPickUp( hero );
+		return super.doPickUp( hero ,pos);
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ import com.unifier.arknightspixeldungeon.ui.Window;
 
 import java.util.ArrayList;
 
-public class WndUseItem  extends WndInfoItem {
+public class WndUseItem extends WndInfoItem {
 
     private static final float BUTTON_HEIGHT	= 16;
 
@@ -20,10 +20,26 @@ public class WndUseItem  extends WndInfoItem {
 
         float y = height;
 
+        //GLog.i("opened"+item.name());
+
+        //if(Dungeon.hero.isAlive()){
+        //    GLog.i("alive");
+        //}
+
+        //if(Dungeon.hero.belongings.contains(item)){
+        //    GLog.i("contained");
+       // }
+
+        //for(String action : item.actions(Dungeon.hero)){
+        //    GLog.i(action);
+        //}
+
         if (Dungeon.hero.isAlive() && Dungeon.hero.belongings.contains(item)) {
             y += GAP;
             ArrayList<RedButton> buttons = new ArrayList<>();
             for (final String action : item.actions( Dungeon.hero )) {
+
+                //GLog.i(action);
 
                 RedButton btn = new RedButton( item.actionName(action, Dungeon.hero), 8 ) {
                     @Override

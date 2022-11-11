@@ -60,9 +60,8 @@ public class WndSettings extends WndTabbed {
     private static final int WIDTH_P	    = 122;
     private static final int WIDTH_L	    = 223;
 
-    private static final int SLIDER_HEIGHT	= 24;
-	private static final int BTN_HEIGHT	    = 18;
-
+    private static final int SLIDER_HEIGHT	= 21;
+	private static final int BTN_HEIGHT	    = 16;
     private static final float GAP          = 2;
 
     private static final int GAP_TINY 		= 2;
@@ -146,7 +145,7 @@ public class WndSettings extends WndTabbed {
             protected void select(boolean value) {
                 super.select(value);
                 audio.visible = audio.active = value;
-                if (value) last_index = 2;
+                if (value) last_index = 3;
             }
         });
 
@@ -161,7 +160,7 @@ public class WndSettings extends WndTabbed {
             protected void select(boolean value) {
                 super.select(value);
                 langs.visible = langs.active = value;
-                if (value) last_index = 3;
+                if (value) last_index = 4;
             }
 
             @Override
@@ -184,7 +183,12 @@ public class WndSettings extends WndTabbed {
 
         layoutTabs();
 
-        select(last_index);
+        if (tabs.size() == 5 && last_index >= 3){
+            //input tab isn't visible
+            select(last_index-1);
+        } else {
+            select(last_index);
+        }
 
 	}
 
@@ -293,12 +297,17 @@ public class WndSettings extends WndTabbed {
             }
 
             if (DeviceCompat.isAndroid()) {
-                btnOrientation = new RedButton(PixelScene.landscape() ?
+                Boolean landscape = PDSettings.landscape();
+                if (landscape == null){
+                    landscape = Game.width > Game.height;
+                }
+                Boolean finalLandscape = landscape;
+                btnOrientation = new RedButton(finalLandscape ?
                         Messages.get(this, "portrait")
                         : Messages.get(this, "landscape")) {
                     @Override
                     protected void onClick() {
-                        PDSettings.landscape(!PixelScene.landscape());
+                        PDSettings.landscape(!finalLandscape);
                     }
                 };
                 add(btnOrientation);
@@ -375,23 +384,6 @@ public class WndSettings extends WndTabbed {
            //     bottom = optScale.bottom();
             //}
 
-            /*
-            if (width > 200 && chkSaver != null && btnOrientation != null) {
-                chkSaver.setRect(0, bottom + GAP, width/2-1, BTN_HEIGHT);
-                btnOrientation.setRect(chkSaver.right()+ GAP, bottom + GAP, width/2-1, BTN_HEIGHT);
-                bottom = btnOrientation.bottom();
-            } else {
-                if (chkSaver != null) {
-                    chkSaver.setRect(0, bottom + GAP, width, BTN_HEIGHT);
-                    bottom = chkSaver.bottom();
-                }
-
-                if (btnOrientation != null) {
-                    btnOrientation.setRect(0, bottom + GAP, width, BTN_HEIGHT);
-                    bottom = btnOrientation.bottom();
-                }
-            }*/
-
             sep2.size(width, 1);
             sep2.y = bottom + GAP;
             bottom = sep2.y + 1;
@@ -404,7 +396,9 @@ public class WndSettings extends WndTabbed {
                 optVisGrid.setRect(0, optBrightness.bottom() + GAP, width, SLIDER_HEIGHT);
             }
 
-            height = optVisGrid.bottom();
+            optFollowIntensity.setRect(0, optVisGrid.bottom() + GAP, width, SLIDER_HEIGHT);
+
+            height = optFollowIntensity.bottom();
         }
 
     }
@@ -422,8 +416,8 @@ public class WndSettings extends WndTabbed {
         //RenderedTextBlock barDesc;
         //RedButton btnSplit; RedButton btnGrouped; RedButton btnCentered;
 
-        CheckBox chkFlipToolbar;
-        CheckBox chkFlipTags;
+        //CheckBox chkFlipToolbar;
+        //CheckBox chkFlipTags;
 
         ColorBlock sep2;
 
@@ -487,8 +481,8 @@ public class WndSettings extends WndTabbed {
                             RedButton btnSplit;
                             RedButton btnGrouped;
                             RedButton btnCentered;
-                            CheckBox chkQuickSwapper;
-                            RenderedTextBlock swapperDesc;
+                            //CheckBox chkQuickSwapper;
+                            //RenderedTextBlock swapperDesc;
                             CheckBox chkFlipToolbar;
                             CheckBox chkFlipTags;
 
@@ -553,9 +547,9 @@ public class WndSettings extends WndTabbed {
                                 chkQuickSwapper.checked(PDSettings.quickSwapper());
                                 add(chkQuickSwapper);*/
 
-                                swapperDesc = PixelScene.renderTextBlock(Messages.get(WndSettings.UITab.this, "swapper_desc"), 5);
-                                swapperDesc.hardlight(0x888888);
-                                add(swapperDesc);
+                                //swapperDesc = PixelScene.renderTextBlock(Messages.get(WndSettings.UITab.this, "swapper_desc"), 5);
+                                //swapperDesc.hardlight(0x888888);
+                                //add(swapperDesc);
 
                                 chkFlipToolbar = new CheckBox(Messages.get(WndSettings.UITab.this, "flip_toolbar")) {
                                     @Override
@@ -592,16 +586,16 @@ public class WndSettings extends WndTabbed {
 
                                 //chkQuickSwapper.setRect(0, btnGrouped.bottom() + GAP, width, BTN_HEIGHT);
 
-                                swapperDesc.maxWidth(width);
+                                //swapperDesc.maxWidth(width);
                                 ///swapperDesc.setPos(0, chkQuickSwapper.bottom()+1);
-                                swapperDesc.setPos(0, btnCentered.bottom() + 1);
+                                //swapperDesc.setPos(0, btnCentered.bottom() + 1);
 
                                 if (width > 200) {
-                                    chkFlipToolbar.setRect(0, swapperDesc.bottom() + GAP, width / 2 - 1, BTN_HEIGHT);
+                                    chkFlipToolbar.setRect(0, btnCentered.bottom() + 2*GAP, width / 2 - 1, BTN_HEIGHT);
                                     chkFlipTags.setRect(chkFlipToolbar.right() + GAP, chkFlipToolbar.top(), width / 2 - 1, BTN_HEIGHT);
                                 } else {
-                                    chkFlipToolbar.setRect(0, swapperDesc.bottom() + GAP, width, BTN_HEIGHT);
-                                    chkFlipTags.setRect(0, chkFlipToolbar.bottom() + GAP, width, BTN_HEIGHT);
+                                    chkFlipToolbar.setRect(0, btnCentered.bottom() + 2*GAP, width, BTN_HEIGHT);
+                                    chkFlipTags.setRect(0, chkFlipToolbar.bottom() + 2*GAP, width, BTN_HEIGHT);
                                 }
 
                                 resize(WIDTH_P, (int) chkFlipTags.bottom());
@@ -654,7 +648,7 @@ public class WndSettings extends WndTabbed {
             if (PDSettings.toolbarMode().equals(Toolbar.Mode.CENTER.name())) btnCentered.textColor(TITLE_COLOR);
             add(btnCentered);*/
 
-                chkFlipToolbar = new CheckBox(Messages.get(this, "flip_toolbar")) {
+                /*chkFlipToolbar = new CheckBox(Messages.get(this, "flip_toolbar")) {
                     @Override
                     protected void onClick() {
                         super.onClick();
@@ -674,7 +668,7 @@ public class WndSettings extends WndTabbed {
                     }
                 };
                 chkFlipTags.checked(PDSettings.flipTags());
-                add(chkFlipTags);
+                add(chkFlipTags);*/
 
 
                 sep2 = new ColorBlock(1, 1, 0xFF000000);
@@ -742,8 +736,8 @@ public class WndSettings extends WndTabbed {
                 btnToolbarSettings.setRect(0, height + GAP, width, BTN_HEIGHT);
                 height = btnToolbarSettings.bottom();
             } else {
-                chkFlipTags.setRect(0, height + GAP, width, BTN_HEIGHT);
-                height = chkFlipTags.bottom();
+                //chkFlipTags.setRect(0, height + GAP, width, BTN_HEIGHT);
+                //height = chkFlipTags.bottom();
             }
 
             sep2.size(width, 1);

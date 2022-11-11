@@ -36,14 +36,12 @@ import com.unifier.arknightspixeldungeon.items.wands.Wand;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.utils.GLog;
-import com.unifier.arknightspixeldungeon.windows.WndBag;
 import com.watabou.noosa.audio.Sample;
 
 public class ScrollOfRemoveCurse extends InventoryScroll {
 
 	{
 		initials = 8;
-		mode = WndBag.Mode.UNIDED_OR_CURSED;
 	}
 
     @Override

@@ -117,7 +117,7 @@ public class Pickaxe extends Weapon {
 							GameScene.updateMap( pos );
 							
 							DarkGold gold = new DarkGold();
-							if (gold.doPickUp( Dungeon.hero )) {
+							if (gold.doPickUp( Dungeon.hero , pos)) {
 								GLog.i( Messages.get(Dungeon.hero, "you_now_have", gold.name()) );
 							} else {
 								Dungeon.level.drop( gold, hero.pos ).sprite.drop();

@@ -183,7 +183,7 @@ public class Camera extends Gizmo {
         }
 
 
-        if (panIntensity > 0f) {
+        /*if (panIntensity > 0f) {
             PointF panMove = new PointF();
             panMove.x = panTarget.x - (scroll.x + width / 2f);
             panMove.y = panTarget.y - (scroll.y + height / 2f);
@@ -191,7 +191,7 @@ public class Camera extends Gizmo {
             panMove.scale(Math.min(1f, Game.elapsed * panIntensity));
 
             scroll.offset(panMove);
-        }
+        }*/
 
         if (panIntensity > 0f){
 

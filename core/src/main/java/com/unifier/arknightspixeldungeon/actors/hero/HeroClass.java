@@ -36,8 +36,8 @@ import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.LevelTeleporter;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
+import com.unifier.arknightspixeldungeon.items.artifacts.Artifact;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
-import com.unifier.arknightspixeldungeon.items.artifacts.SandalsOfNature;
 import com.unifier.arknightspixeldungeon.items.bags.PotionBandolier;
 import com.unifier.arknightspixeldungeon.items.bags.ScrollHolder;
 import com.unifier.arknightspixeldungeon.items.bags.VelvetPouch;
@@ -115,6 +115,11 @@ public enum HeroClass {
 			new SmallRation().collect();
 		}
 
+        for(int j=0;j<3;j++) {
+            Artifact artifact = Generator.randomArtifact();
+            artifact.identify().collect();
+        }
+
         Ring ring= new RingOfHaste();
 		ring.level(6);
 		ring.identify().collect();
@@ -129,19 +134,20 @@ public enum HeroClass {
             new SmallRation().collect();
             new ScrollOfRemoveCurse().identify().collect();*/
             new PotionOfStrength().identify().collect();
+            new ScrollOfMagicMapping().identify().collect();
         }
 
 		for(int j=0;j<30;j++) {
 			new PotionOfExperience().identify().collect();
 		}
 
-		SandalsOfNature sandalsOfNature = new SandalsOfNature();
-		sandalsOfNature.identify().collect();
+		//SandalsOfNature sandalsOfNature = new SandalsOfNature();
+		//sandalsOfNature.identify().collect();
 
-        for(int j=0;j<100;j++) {
-            Item seed = Generator.random(Generator.Category.SEED);
-            seed.collect();
-        }
+        //for(int j=0;j<100;j++) {
+       //     Item seed = Generator.random(Generator.Category.SEED);
+      //      seed.collect();
+        //}
 
 
         //new ScrollOfRage().identify().collect();

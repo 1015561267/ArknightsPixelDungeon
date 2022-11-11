@@ -27,7 +27,6 @@ import com.unifier.arknightspixeldungeon.effects.Identification;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.utils.GLog;
-import com.unifier.arknightspixeldungeon.windows.WndBag;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
@@ -37,7 +36,6 @@ public class ScrollOfIdentify extends InventoryScroll {
 
 	{
 		initials = 0;
-		mode = WndBag.Mode.UNIDENTIFED;
 
 		bones = true;
 	}

@@ -226,7 +226,7 @@ public class Belongings implements Iterable<Item> {
         for (Item item : this) {
             if (contains == item) {
                 //if (!lostInvent || item.keptThoughLostInvent) {
-                //    return true;
+                     return true;
                 //}
             }
         }

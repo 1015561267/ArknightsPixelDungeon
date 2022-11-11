@@ -49,7 +49,9 @@ public class CellSelector extends ScrollArea {
 	public boolean enabled;
 	
 	private float dragThreshold;
-	
+
+    private float mouseZoom;
+
 	public CellSelector( DungeonTilemap map ) {
 		super( map );
 		camera = map.camera();
@@ -59,8 +61,6 @@ public class CellSelector extends ScrollArea {
         mouseZoom = camera.zoom;
         KeyEvent.addKeyListener( keyListener );
 	}
-
-    private float mouseZoom;
 
     @Override
     protected void onScroll( ScrollEvent event ) {
@@ -177,8 +177,8 @@ public class CellSelector extends ScrollArea {
 	protected void onPointerDown( PointerEvent event ) {
 
 		if (event != curEvent && another == null) {
-					
-			if (!curEvent.down) {
+
+            if (curEvent.type == PointerEvent.Type.UP) {
                 curEvent = event;
                 onPointerDown( event );
 				return;
@@ -252,7 +252,7 @@ public class CellSelector extends ScrollArea {
     private float heldDelay = 0f;
     private boolean delayingForRelease = false;
 
-    /*private static float initialDelay(){
+    private static float initialDelay(){
         switch (PDSettings.movementHoldSensitivity()){
             case 0:
                 return Float.POSITIVE_INFINITY;
@@ -267,7 +267,7 @@ public class CellSelector extends ScrollArea {
             case 4:
                 return 0.03f;
         }
-    }*/
+    }
 
 	public void cancel() {
 		
@@ -355,8 +355,7 @@ public class CellSelector extends ScrollArea {
                     delayingForRelease = true;
                     //in case more keys are being released
                     //note that this delay can tick down while the hero is moving
-                    heldDelay = Float.POSITIVE_INFINITY;
-                            //initialDelay();
+                    heldDelay = initialDelay();
                 }
 
             } else if (directionFromAction(action) != 0) {
@@ -365,8 +364,7 @@ public class CellSelector extends ScrollArea {
                 lastCellMoved = -1;
                 if (heldAction1 == PDAction.NONE){
                     heldAction1 = action;
-                    heldDelay = Float.POSITIVE_INFINITY;
-                            //initialDelay();
+                    heldDelay = initialDelay();
                     delayingForRelease = false;
                 } else if (heldAction2 == PDAction.NONE){
                     heldAction2 = action;
@@ -399,8 +397,7 @@ public class CellSelector extends ScrollArea {
 
         if (newLeftStick != leftStickAction){
             if (leftStickAction == PDAction.NONE){
-                heldDelay = Float.POSITIVE_INFINITY;
-                //initialDelay();
+                heldDelay = initialDelay();
                 Dungeon.hero.resting = false;
             } else if (newLeftStick == PDAction.NONE && heldDelay > 0f){
                 heldDelay = 0f;
@@ -504,6 +501,12 @@ public class CellSelector extends ScrollArea {
 
     public void resetKeyHold(){
         heldAction1 = heldAction2 = heldAction3 = PDAction.NONE;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        KeyEvent.removeKeyListener( keyListener );
     }
 
 }

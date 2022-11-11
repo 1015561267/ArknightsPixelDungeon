@@ -40,7 +40,7 @@ public class Dewdrop extends Item {
 	}
 	
 	@Override
-	public boolean doPickUp( Hero hero ) {
+	public boolean doPickUp( Hero hero , int pos) {
 		
 		DewVial vial = hero.belongings.getItem( DewVial.class );
 		

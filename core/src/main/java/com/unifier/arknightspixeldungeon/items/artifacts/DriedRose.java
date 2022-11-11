@@ -343,7 +343,7 @@ public class DriedRose extends Artifact {
 		}
 
 		@Override
-		public boolean doPickUp( Hero hero ) {
+		public boolean doPickUp( Hero hero , int pos) {
 			DriedRose rose = hero.belongings.getItem( DriedRose.class );
 
 			if (rose == null){
@@ -831,7 +831,7 @@ public class DriedRose extends Artifact {
 				protected void onClick() {
 					if (rose.weapon != null){
 						item(new WndBag.Placeholder(ItemSpriteSheet.WEAPON_HOLDER));
-						if (!rose.weapon.doPickUp(Dungeon.hero)){
+						if (!rose.weapon.doPickUp(Dungeon.hero,Dungeon.hero.pos)){
 							Dungeon.level.drop( rose.weapon, Dungeon.hero.pos);
 						}
 						rose.weapon = null;
@@ -898,7 +898,7 @@ public class DriedRose extends Artifact {
 				protected void onClick() {
 					if (rose.armor != null){
 						item(new WndBag.Placeholder(ItemSpriteSheet.ARMOR_HOLDER));
-						if (!rose.armor.doPickUp(Dungeon.hero)){
+						if (!rose.armor.doPickUp(Dungeon.hero,Dungeon.hero.pos)){
 							Dungeon.level.drop( rose.armor, Dungeon.hero.pos);
 						}
 						rose.armor = null;

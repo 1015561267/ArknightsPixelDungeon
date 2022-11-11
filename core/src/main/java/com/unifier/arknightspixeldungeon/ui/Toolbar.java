@@ -181,7 +181,6 @@ public class Toolbar extends Component {
                 arrow.y = bottom()-arrow.height-1;
                 arrow.angle = bottom() == camera().height ? 0 : 180;
             }
-			;
 		});
 
 		add(pickedUp = new PickedUpItem());
@@ -301,7 +300,7 @@ public class Toolbar extends Component {
 			btnInventory.enable(true);
 		}
 	}
-	
+
 	public void pickup( Item item, int cell ) {
 		pickedUp.reset( item,
 			cell,

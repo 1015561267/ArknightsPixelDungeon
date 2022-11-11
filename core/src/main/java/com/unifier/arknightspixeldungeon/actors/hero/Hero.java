@@ -868,7 +868,7 @@ public class Hero extends Char {
 			Heap heap = Dungeon.level.heaps.get( pos );
 			if (heap != null) {
 				Item item = heap.peek();
-				if (item.doPickUp( this )) {
+				if (item.doPickUp( this ,pos)) {
 					heap.pickUp();
 
 					if (item instanceof Dewdrop

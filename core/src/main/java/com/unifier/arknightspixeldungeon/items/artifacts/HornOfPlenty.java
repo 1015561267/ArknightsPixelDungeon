@@ -62,8 +62,6 @@ public class HornOfPlenty extends Artifact {
 	public static final String AC_EAT = "EAT";
 	public static final String AC_STORE = "STORE";
 
-	protected WndBag.Mode mode = WndBag.Mode.FOOD;
-
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );

@@ -35,8 +35,6 @@ import java.util.ArrayList;
 
 public abstract class InventoryStone extends Runestone {
 
-	protected WndBag.Mode mode = WndBag.Mode.ALL;
-
 	{
 		defaultAction = AC_USE;
 	}

@@ -33,7 +33,7 @@ import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.unifier.arknightspixeldungeon.windows.WndBag;
-import com.unifier.arknightspixeldungeon.windows.WndItem;
+import com.unifier.arknightspixeldungeon.windows.WndUseItem;
 import com.watabou.noosa.audio.Sample;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class BrokenSeal extends Item {
 			curItem = this;
 			GameScene.selectItem(armorSelector);
 		} else if (action.equals(AC_INFO)) {
-			GameScene.show(new WndItem(null, this));
+			GameScene.show(new WndUseItem(null, this));
 		}
 	}
 

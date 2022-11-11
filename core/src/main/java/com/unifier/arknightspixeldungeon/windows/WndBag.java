@@ -52,27 +52,6 @@ import com.watabou.noosa.Image;
 import com.watabou.utils.PointF;
 
 public class WndBag extends WndTabbed {
-	
-	//FIXME this is getting cumbersome, there should be a better way to manage this
-	public static enum Mode {
-		ALL,
-		UNIDENTIFED,
-		UNIDED_OR_CURSED,
-		UPGRADEABLE,
-		QUICKSLOT,
-		FOR_SALE,
-		WEAPON,
-		ARMOR,
-		ENCHANTABLE,
-		WAND,
-		SEED,
-		FOOD,
-		POTION,
-		SCROLL,
-		UNIDED_POTION_OR_SCROLL,
-		EQUIPMENT,
-		ALCHEMY
-	}
 
     //only one bag window can appear at a time
     public static Window INSTANCE;
@@ -99,8 +78,7 @@ public class WndBag extends WndTabbed {
 	protected int count;
 	protected int col;
 	protected int row;
-	
-	private static Mode lastMode;
+
 	private static Bag lastBag;
 
     public WndBag( Bag bag ) {
@@ -269,7 +247,7 @@ public class WndBag extends WndTabbed {
             count--; //don't count this one, as it's not actually inside of itself
         }
 
-        // Items in the bag
+        // Items in the bag, except other containers (they have tags at the bottom)
         for (Item item : container.items.toArray(new Item[0])) {
             if (!(item instanceof Bag)) {
                 placeItem( item );
@@ -277,9 +255,10 @@ public class WndBag extends WndTabbed {
                 count++;
             }
         }
-		for (Item item : container.items.toArray(new Item[0])) {
-			placeItem( item );
-		}
+
+		//for (Item item : container.items.toArray(new Item[0])) {
+		//	placeItem( item );
+		//}
 
         // Free Space
         while ((count - 5) < container.capacity()) {
@@ -297,17 +276,18 @@ public class WndBag extends WndTabbed {
         InventorySlot slot = new InventorySlot( item ){
             @Override
             protected void onClick() {
+                //GLog.i("onClick");
                 if (lastBag != item && !lastBag.contains(item) && !item.isEquipped(Dungeon.hero)){
 
                     hide();
 
                 } else if (selector != null) {
-
+                    //GLog.i("selector"+selector.textPrompt());
                     hide();
                     selector.onSelect( item );
 
                 } else {
-
+                    ///GLog.i("wnduse");
                     Game.scene().addToFront(new WndUseItem( WndBag.this, item ) );
 
                 }

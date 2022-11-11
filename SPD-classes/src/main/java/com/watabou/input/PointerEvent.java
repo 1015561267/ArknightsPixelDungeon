@@ -53,8 +53,6 @@ public class PointerEvent {
     public int button;
     public boolean handled; //for hover events, to ensure hover always ends even with overlapping elements
 
-    public boolean down;
-
     public PointerEvent( int x, int y, int id, Type type){
         this(x, y, id, type, NONE);
     }

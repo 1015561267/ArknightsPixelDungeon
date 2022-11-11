@@ -150,7 +150,7 @@ public class WndTradeItem extends WndInfoItem {
 							Item item = heap.pickUp();
 							hide();
 
-							if (!item.doPickUp( hero )) {
+							if (!item.doPickUp( hero ,hero.pos)) {
 								Dungeon.level.drop( item, heap.pos ).sprite.drop();
 							}
 						} else {
@@ -232,7 +232,7 @@ public class WndTradeItem extends WndInfoItem {
 		}
 		item.detachAll( hero.belongings.backpack );
 		
-		new Gold( item.price() ).doPickUp( hero );
+		new Gold( item.price() ).doPickUp( hero ,hero.pos);
 		
 		//selling items in the sell interface doesn't spend time
 		hero.spend(-hero.cooldown());
@@ -248,7 +248,7 @@ public class WndTradeItem extends WndInfoItem {
 			
 			item = item.detach( hero.belongings.backpack );
 			
-			new Gold( item.price() ).doPickUp( hero );
+			new Gold( item.price() ).doPickUp( hero ,hero.pos);
 			
 			//selling items in the sell interface doesn't spend time
 			hero.spend(-hero.cooldown());
@@ -268,7 +268,7 @@ public class WndTradeItem extends WndInfoItem {
 		int price = price( item );
 		Dungeon.gold -= price;
 		
-		if (!item.doPickUp( hero )) {
+		if (!item.doPickUp( hero ,hero.pos)) {
 			Dungeon.level.drop( item, heap.pos ).sprite.drop();
 		}
 	}

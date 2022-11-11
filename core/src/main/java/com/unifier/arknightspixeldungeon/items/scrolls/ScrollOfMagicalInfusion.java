@@ -29,13 +29,11 @@ import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.utils.GLog;
-import com.unifier.arknightspixeldungeon.windows.WndBag;
 
 public class ScrollOfMagicalInfusion extends InventoryScroll {
 	
 	{
 		initials = 2;
-		mode = WndBag.Mode.ENCHANTABLE;
 	}
 
     protected boolean usableOnItem( Item item ){

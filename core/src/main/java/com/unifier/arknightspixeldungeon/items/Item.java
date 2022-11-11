@@ -107,10 +107,10 @@ public class Item implements Bundlable {
         return Messages.get(this, "ac_" + action);
     }
 
-    public boolean doPickUp( Hero hero ) {
+    public boolean doPickUp( Hero hero ,int pos ) {
 		if (collect( hero.belongings.backpack )) {
 			
-			GameScene.pickUp( this, hero.pos );
+			GameScene.pickUp( this , pos );
 			Sample.INSTANCE.play( Assets.SND_ITEM );
 			hero.spendAndNext( TIME_TO_PICK_UP );
 			return true;

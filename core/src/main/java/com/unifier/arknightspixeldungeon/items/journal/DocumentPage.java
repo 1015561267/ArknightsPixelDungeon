@@ -50,7 +50,7 @@ public abstract class DocumentPage extends Item {
 	}
 	
 	@Override
-	public final boolean doPickUp(Hero hero) {
+	public final boolean doPickUp(Hero hero , int pos) {
 		GameScene.pickUpJournal(this, hero.pos);
 		GameScene.flashJournal();
 		WndJournal.last_index = 0;

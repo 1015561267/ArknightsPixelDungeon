@@ -670,7 +670,7 @@ public class FrostNovaQuestPlot extends Plot {
                 }
             }
 
-            if (reward.doPickUp( Dungeon.hero )) {
+            if (reward.doPickUp( Dungeon.hero ,Dungeon.hero.pos )) {
                 GLog.i( Messages.get(Dungeon.hero, "you_now_have", reward.name()) );
             } else {
                 Dungeon.level.drop( reward, Quest.ghost.pos).sprite.drop();
@@ -708,7 +708,7 @@ public class FrostNovaQuestPlot extends Plot {
                 }
             }
 
-            if (reward.doPickUp( Dungeon.hero )) {
+            if (reward.doPickUp( Dungeon.hero ,Dungeon.hero.pos)) {
                 GLog.i( Messages.get(Dungeon.hero, "you_now_have", reward.name()) );
             } else {
                 Dungeon.level.drop( reward, Quest.ghost.pos).sprite.drop();

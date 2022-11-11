@@ -43,8 +43,8 @@ import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.unifier.arknightspixeldungeon.windows.WndBag;
-import com.unifier.arknightspixeldungeon.windows.WndItem;
 import com.unifier.arknightspixeldungeon.windows.WndOptions;
+import com.unifier.arknightspixeldungeon.windows.WndUseItem;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
@@ -122,7 +122,7 @@ public class MagesStaff extends MeleeWeapon {
 		} else if (action.equals(AC_ZAP)){
 
 			if (wand == null) {
-				GameScene.show(new WndItem(null, this, true));
+				GameScene.show(new WndUseItem(null, this));
 				return;
 			}
 

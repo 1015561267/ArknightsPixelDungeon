@@ -230,9 +230,9 @@ abstract public class MissileWeapon extends Weapon {
 	}
 	
 	@Override
-	public boolean doPickUp(Hero hero) {
+	public boolean doPickUp(Hero hero , int pos) {
 		parent = null;
-		return super.doPickUp(hero);
+		return super.doPickUp(hero,pos);
 	}
 	
 	@Override

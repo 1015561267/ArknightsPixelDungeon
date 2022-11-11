@@ -26,13 +26,11 @@ import com.unifier.arknightspixeldungeon.items.potions.Potion;
 import com.unifier.arknightspixeldungeon.items.rings.Ring;
 import com.unifier.arknightspixeldungeon.items.scrolls.Scroll;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
-import com.unifier.arknightspixeldungeon.windows.WndBag;
 
 public class StoneOfIntuition extends InventoryStone {
 	
 	
 	{
-		mode = WndBag.Mode.UNIDED_POTION_OR_SCROLL;
 		image = ItemSpriteSheet.STONE_ISAZ;
 	}
 
