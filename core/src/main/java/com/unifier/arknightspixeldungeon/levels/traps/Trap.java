@@ -51,8 +51,6 @@ public abstract class Trap implements Bundlable {
 	public static final int CROSSHAIR   = 5;
 	public static final int LARGE_DOT   = 6;
 
-	public String name = Messages.get(this, "name");
-
 	public int color;
 	public int shape;
 
@@ -119,4 +117,8 @@ public abstract class Trap implements Bundlable {
 	public String desc() {
 		return Messages.get(this, "desc");
 	}
+
+    public String name(){
+        return Messages.get(this, "name");
+    }
 }

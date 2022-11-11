@@ -39,8 +39,10 @@ import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.Toolbar;
 import com.unifier.arknightspixeldungeon.ui.Window;
 import com.unifier.arknightspixeldungeon.ui.WndKeyBindings;
+import com.watabou.input.ControllerHandler;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.DeviceCompat;
@@ -50,15 +52,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static com.unifier.arknightspixeldungeon.windows.WndTitledMessage.WIDTH_L;
-import static com.unifier.arknightspixeldungeon.windows.WndTitledMessage.WIDTH_P;
-
 public class WndSettings extends WndTabbed {
 
 	private static final int WIDTH		    = 112;
 	private static final int HEIGHT         = 138;
 
-	private static final int SLIDER_HEIGHT	= 24;
+    private static final int WIDTH_P	    = 122;
+    private static final int WIDTH_L	    = 223;
+
+    private static final int SLIDER_HEIGHT	= 24;
 	private static final int BTN_HEIGHT	    = 18;
 
     private static final float GAP          = 2;
@@ -69,7 +71,8 @@ public class WndSettings extends WndTabbed {
 
 	private DisplayTab display;
 	private UITab ui;
-	private AudioTab audio;
+    private InputTab  input;
+    private AudioTab audio;
     private LangsTab langs;
     //Moved langs settings into setting interface.By Teller,in 2021.8.9
 
@@ -110,6 +113,28 @@ public class WndSettings extends WndTabbed {
                 if (value) last_index = 1;
             }
         });
+
+        input = new InputTab();
+        input.setSize(width, 0);
+        height = Math.max(height, input.height());
+
+        if (DeviceCompat.hasHardKeyboard() || ControllerHandler.isControllerConnected()) {
+            add(input);
+            Image icon;
+            if (ControllerHandler.controllerActive || !DeviceCompat.hasHardKeyboard()) {
+                icon = Icons.get(Icons.SETTINGS);
+            } else {
+                icon = Icons.get(Icons.SETTINGS);
+            }
+            add(new IconTab(icon) {
+                @Override
+                protected void select(boolean value) {
+                    super.select(value);
+                    input.visible = input.active = value;
+                    if (value) last_index = 2;
+                }
+            });
+        }
 
         audio = new AudioTab();
         audio.setSize(width, 0);
@@ -183,12 +208,17 @@ public class WndSettings extends WndTabbed {
 
         RenderedTextBlock title;
         ColorBlock sep1;
-        OptionSlider optScale;
+
+        CheckBox chkFullscreen;
+
+        //OptionSlider optScale;
         CheckBox chkSaver;
         RedButton btnOrientation;
+
         ColorBlock sep2;
         OptionSlider optBrightness;
         OptionSlider optVisGrid;
+        OptionSlider optFollowIntensity;
 
         @Override
         protected void createChildren() {
@@ -199,7 +229,23 @@ public class WndSettings extends WndTabbed {
             sep1 = new ColorBlock(1, 1, 0xFF000000);
             add(sep1);
 
-            if ((int)Math.ceil(2* Game.density) < PixelScene.maxDefaultZoom) {
+            chkFullscreen = new CheckBox( Messages.get(this, "fullscreen") ) {
+                @Override
+                protected void onClick() {
+                    super.onClick();
+                    PDSettings.fullscreen(checked());
+                }
+            };
+            if (DeviceCompat.supportsFullScreen()){
+                chkFullscreen.checked(PDSettings.fullscreen());
+            } else {
+                chkFullscreen.checked(true);
+                chkFullscreen.enable(false);
+            }
+            add(chkFullscreen);
+
+
+            /*if (int)Math.ceil(2* Game.density) < PixelScene.maxDefaultZoom) {
                 optScale = new OptionSlider(Messages.get(this, "scale"),
                         (int)Math.ceil(2* Game.density)+ "X",
                         PixelScene.maxDefaultZoom + "X",
@@ -215,9 +261,9 @@ public class WndSettings extends WndTabbed {
                 };
                 optScale.setSelectedValue(PixelScene.defaultZoom);
                 add(optScale);
-            }
+            }*/
 
-            if (!DeviceCompat.isDesktop() && PixelScene.maxScreenZoom >= 2) {
+            if (DeviceCompat.isAndroid() && PixelScene.maxScreenZoom >= 2) {
                 chkSaver = new CheckBox(Messages.get(this, "saver")) {
                     @Override
                     protected void onClick() {
@@ -246,7 +292,7 @@ public class WndSettings extends WndTabbed {
                 add( chkSaver );
             }
 
-            if (!DeviceCompat.isDesktop()) {
+            if (DeviceCompat.isAndroid()) {
                 btnOrientation = new RedButton(PixelScene.landscape() ?
                         Messages.get(this, "portrait")
                         : Messages.get(this, "landscape")) {
@@ -281,6 +327,16 @@ public class WndSettings extends WndTabbed {
             optVisGrid.setSelectedValue(PDSettings.visualGrid());
             add(optVisGrid);
 
+            optFollowIntensity = new OptionSlider(Messages.get(this, "camera_follow"),
+                    Messages.get(this, "low"), Messages.get(this, "high"), 1, 4) {
+                @Override
+                protected void onChange() {
+                    PDSettings.cameraFollow(getSelectedValue());
+                }
+            };
+            optFollowIntensity.setSelectedValue(PDSettings.cameraFollow());
+            add(optFollowIntensity);
+
         }
 
         @Override
@@ -294,11 +350,32 @@ public class WndSettings extends WndTabbed {
 
             bottom = sep1.y + 1;
 
-            if (optScale != null){
-                optScale.setRect(0, bottom + GAP, width, SLIDER_HEIGHT);
-                bottom = optScale.bottom();
+            if (width > 200 && chkSaver != null) {
+                chkFullscreen.setRect(0, bottom + GAP, width/2-1, BTN_HEIGHT);
+                chkSaver.setRect(chkFullscreen.right()+ GAP, bottom + GAP, width/2-1, BTN_HEIGHT);
+                bottom = chkFullscreen.bottom();
+            } else {
+                chkFullscreen.setRect(0, bottom + GAP, width, BTN_HEIGHT);
+                bottom = chkFullscreen.bottom();
+
+                if (chkSaver != null) {
+                    chkSaver.setRect(0, bottom + GAP, width, BTN_HEIGHT);
+                    bottom = chkSaver.bottom();
+                }
             }
 
+            if (btnOrientation != null) {
+                btnOrientation.setRect(0, bottom + GAP, width, BTN_HEIGHT);
+                bottom = btnOrientation.bottom();
+            }
+
+
+           // if (optScale != null){
+            //    optScale.setRect(0, bottom + GAP, width, SLIDER_HEIGHT);
+           //     bottom = optScale.bottom();
+            //}
+
+            /*
             if (width > 200 && chkSaver != null && btnOrientation != null) {
                 chkSaver.setRect(0, bottom + GAP, width/2-1, BTN_HEIGHT);
                 btnOrientation.setRect(chkSaver.right()+ GAP, bottom + GAP, width/2-1, BTN_HEIGHT);
@@ -313,7 +390,7 @@ public class WndSettings extends WndTabbed {
                     btnOrientation.setRect(0, bottom + GAP, width, BTN_HEIGHT);
                     bottom = btnOrientation.bottom();
                 }
-            }
+            }*/
 
             sep2.size(width, 1);
             sep2.y = bottom + GAP;
@@ -336,15 +413,21 @@ public class WndSettings extends WndTabbed {
 
         RenderedTextBlock title;
         ColorBlock sep1;
-        RenderedTextBlock barDesc;
-        RedButton btnSplit; RedButton btnGrouped; RedButton btnCentered;
+
+        OptionSlider optUIMode;
+        OptionSlider optUIScale;
+
+        RedButton btnToolbarSettings;
+
+        //RenderedTextBlock barDesc;
+        //RedButton btnSplit; RedButton btnGrouped; RedButton btnCentered;
+
         CheckBox chkFlipToolbar;
         CheckBox chkFlipTags;
+
         ColorBlock sep2;
-        CheckBox chkFullscreen;
+
         CheckBox chkFont;
-        ColorBlock sep3;
-        RedButton btnKeyBindings;
 
         @Override
         protected void createChildren() {
@@ -355,10 +438,184 @@ public class WndSettings extends WndTabbed {
             sep1 = new ColorBlock(1, 1, 0xFF000000);
             add(sep1);
 
-            barDesc = PixelScene.renderTextBlock(Messages.get(this, "mode"), 9);
-            add(barDesc);
+            //add slider for UI size only if device has enough space to support it
+            float wMin = Game.width / PixelScene.MIN_WIDTH_FULL;
+            float hMin = Game.height / PixelScene.MIN_HEIGHT_FULL;
+            if (Math.min(wMin, hMin) >= 2 * Game.density) {
+                optUIMode = new OptionSlider(
+                        Messages.get(this, "ui_mode"),
+                        Messages.get(this, "mobile"),
+                        Messages.get(this, "full"),
+                        0,
+                        2
+                ) {
+                    @Override
+                    protected void onChange() {
+                        PDSettings.interfaceSize(getSelectedValue());
+                        ArknightsPixelDungeon.seamlessResetScene();
+                    }
+                };
+                optUIMode.setSelectedValue(PDSettings.interfaceSize());
+                add(optUIMode);
+            }
 
-            btnSplit = new RedButton(Messages.get(this, "split")){
+            if ((int) Math.ceil(2 * Game.density) < PixelScene.maxDefaultZoom) {
+                optUIScale = new OptionSlider(Messages.get(this, "scale"),
+                        (int) Math.ceil(2 * Game.density) + "X",
+                        PixelScene.maxDefaultZoom + "X",
+                        (int) Math.ceil(2 * Game.density),
+                        PixelScene.maxDefaultZoom) {
+                    @Override
+                    protected void onChange() {
+                        if (getSelectedValue() != PDSettings.scale()) {
+                            PDSettings.scale(getSelectedValue());
+                            ArknightsPixelDungeon.seamlessResetScene();
+                        }
+                    }
+                };
+                optUIScale.setSelectedValue(PixelScene.defaultZoom);
+                add(optUIScale);
+            }
+
+            if (PDSettings.interfaceSize() == 0) {
+                btnToolbarSettings = new RedButton(Messages.get(this, "toolbar_settings"), 9) {
+                    @Override
+                    protected void onClick() {
+                        ArknightsPixelDungeon.scene().addToFront(new Window() {
+
+                            RenderedTextBlock barDesc;
+                            RedButton btnSplit;
+                            RedButton btnGrouped;
+                            RedButton btnCentered;
+                            CheckBox chkQuickSwapper;
+                            RenderedTextBlock swapperDesc;
+                            CheckBox chkFlipToolbar;
+                            CheckBox chkFlipTags;
+
+                            {
+                                barDesc = PixelScene.renderTextBlock(Messages.get(WndSettings.UITab.this, "mode"), 9);
+                                add(barDesc);
+
+                                btnSplit = new RedButton(Messages.get(WndSettings.UITab.this, "split")) {
+                                    @Override
+                                    protected void onClick() {
+                                        textColor(TITLE_COLOR);
+                                        btnGrouped.textColor(WHITE);
+                                        btnCentered.textColor(WHITE);
+                                        PDSettings.toolbarMode(Toolbar.Mode.SPLIT.name());
+                                        Toolbar.updateLayout();
+                                    }
+                                };
+                                if (PDSettings.toolbarMode().equals(Toolbar.Mode.SPLIT.name())) {
+                                    btnSplit.textColor(TITLE_COLOR);
+                                }
+                                add(btnSplit);
+
+                                btnGrouped = new RedButton(Messages.get(WndSettings.UITab.this, "group")) {
+                                    @Override
+                                    protected void onClick() {
+                                        btnSplit.textColor(WHITE);
+                                        textColor(TITLE_COLOR);
+                                        btnCentered.textColor(WHITE);
+                                        PDSettings.toolbarMode(Toolbar.Mode.GROUP.name());
+                                        Toolbar.updateLayout();
+                                    }
+                                };
+                                if (PDSettings.toolbarMode().equals(Toolbar.Mode.GROUP.name())) {
+                                    btnGrouped.textColor(TITLE_COLOR);
+                                }
+                                add(btnGrouped);
+
+                                btnCentered = new RedButton(Messages.get(WndSettings.UITab.this, "center")) {
+                                    @Override
+                                    protected void onClick() {
+                                        btnSplit.textColor(WHITE);
+                                        btnGrouped.textColor(WHITE);
+                                        textColor(TITLE_COLOR);
+                                        PDSettings.toolbarMode(Toolbar.Mode.CENTER.name());
+                                        Toolbar.updateLayout();
+                                    }
+                                };
+                                if (PDSettings.toolbarMode().equals(Toolbar.Mode.CENTER.name())) {
+                                    btnCentered.textColor(TITLE_COLOR);
+                                }
+                                add(btnCentered);
+
+                                /*
+                                chkQuickSwapper = new CheckBox(Messages.get(WndSettings.UITab.this, "quickslot_swapper")) {
+                                    @Override
+                                    protected void onClick() {
+                                        super.onClick();
+                                        PDSettings.quickSwapper(checked());
+                                        Toolbar.updateLayout();
+                                    }
+                                };
+                                chkQuickSwapper.checked(PDSettings.quickSwapper());
+                                add(chkQuickSwapper);*/
+
+                                swapperDesc = PixelScene.renderTextBlock(Messages.get(WndSettings.UITab.this, "swapper_desc"), 5);
+                                swapperDesc.hardlight(0x888888);
+                                add(swapperDesc);
+
+                                chkFlipToolbar = new CheckBox(Messages.get(WndSettings.UITab.this, "flip_toolbar")) {
+                                    @Override
+                                    protected void onClick() {
+                                        super.onClick();
+                                        PDSettings.flipToolbar(checked());
+                                        Toolbar.updateLayout();
+                                    }
+                                };
+                                chkFlipToolbar.checked(PDSettings.flipToolbar());
+                                add(chkFlipToolbar);
+
+                                chkFlipTags = new CheckBox(Messages.get(WndSettings.UITab.this, "flip_indicators")) {
+                                    @Override
+                                    protected void onClick() {
+                                        super.onClick();
+                                        PDSettings.flipTags(checked());
+                                        GameScene.layoutTags();
+                                    }
+                                };
+                                chkFlipTags.checked(PDSettings.flipTags());
+                                add(chkFlipTags);
+
+                                //layout
+                                resize(WIDTH_P, 0);
+
+                                barDesc.setPos((width - barDesc.width()) / 2f, GAP);
+                                PixelScene.align(barDesc);
+
+                                int btnWidth = (int) (width - 2 * GAP) / 3;
+                                btnSplit.setRect(0, barDesc.bottom() + GAP, btnWidth, BTN_HEIGHT - 2);
+                                btnGrouped.setRect(btnSplit.right() + GAP, btnSplit.top(), btnWidth, BTN_HEIGHT - 2);
+                                btnCentered.setRect(btnGrouped.right() + GAP, btnSplit.top(), btnWidth, BTN_HEIGHT - 2);
+
+                                //chkQuickSwapper.setRect(0, btnGrouped.bottom() + GAP, width, BTN_HEIGHT);
+
+                                swapperDesc.maxWidth(width);
+                                ///swapperDesc.setPos(0, chkQuickSwapper.bottom()+1);
+                                swapperDesc.setPos(0, btnCentered.bottom() + 1);
+
+                                if (width > 200) {
+                                    chkFlipToolbar.setRect(0, swapperDesc.bottom() + GAP, width / 2 - 1, BTN_HEIGHT);
+                                    chkFlipTags.setRect(chkFlipToolbar.right() + GAP, chkFlipToolbar.top(), width / 2 - 1, BTN_HEIGHT);
+                                } else {
+                                    chkFlipToolbar.setRect(0, swapperDesc.bottom() + GAP, width, BTN_HEIGHT);
+                                    chkFlipTags.setRect(0, chkFlipToolbar.bottom() + GAP, width, BTN_HEIGHT);
+                                }
+
+                                resize(WIDTH_P, (int) chkFlipTags.bottom());
+
+                            }
+                        });
+                    }
+                };
+                add(btnToolbarSettings);
+
+                //barDesc = PixelScene.renderTextBlock(Messages.get(this, "mode"), 9);
+                //add(barDesc);
+
+            /*btnSplit = new RedButton(Messages.get(this, "split")){
                 @Override
                 protected void onClick() {
                     textColor(TITLE_COLOR);
@@ -395,34 +652,35 @@ public class WndSettings extends WndTabbed {
                 }
             };
             if (PDSettings.toolbarMode().equals(Toolbar.Mode.CENTER.name())) btnCentered.textColor(TITLE_COLOR);
-            add(btnCentered);
+            add(btnCentered);*/
 
-            chkFlipToolbar = new CheckBox(Messages.get(this, "flip_toolbar")){
-                @Override
-                protected void onClick() {
-                    super.onClick();
-                    PDSettings.flipToolbar(checked());
-                    Toolbar.updateLayout();
-                }
-            };
-            chkFlipToolbar.checked(PDSettings.flipToolbar());
-            add(chkFlipToolbar);
+                chkFlipToolbar = new CheckBox(Messages.get(this, "flip_toolbar")) {
+                    @Override
+                    protected void onClick() {
+                        super.onClick();
+                        PDSettings.flipToolbar(checked());
+                        Toolbar.updateLayout();
+                    }
+                };
+                chkFlipToolbar.checked(PDSettings.flipToolbar());
+                add(chkFlipToolbar);
 
-            chkFlipTags = new CheckBox(Messages.get(this, "flip_indicators")){
-                @Override
-                protected void onClick() {
-                    super.onClick();
-                    PDSettings.flipTags(checked());
-                    GameScene.layoutTags();
-                }
-            };
-            chkFlipTags.checked(PDSettings.flipTags());
-            add(chkFlipTags);
+                chkFlipTags = new CheckBox(Messages.get(this, "flip_indicators")) {
+                    @Override
+                    protected void onClick() {
+                        super.onClick();
+                        PDSettings.flipTags(checked());
+                        GameScene.layoutTags();
+                    }
+                };
+                chkFlipTags.checked(PDSettings.flipTags());
+                add(chkFlipTags);
 
-            sep2 = new ColorBlock(1, 1, 0xFF000000);
-            add(sep2);
 
-            chkFullscreen = new CheckBox( Messages.get(this, "fullscreen") ) {
+                sep2 = new ColorBlock(1, 1, 0xFF000000);
+                add(sep2);
+
+            /*chkFullscreen = new CheckBox( Messages.get(this, "fullscreen") ) {
                 @Override
                 protected void onClick() {
                     super.onClick();
@@ -431,42 +689,28 @@ public class WndSettings extends WndTabbed {
             };
             chkFullscreen.checked(PDSettings.fullscreen());
             chkFullscreen.enable(DeviceCompat.supportsFullScreen());
-            add(chkFullscreen);
+            add(chkFullscreen);*/
 
-            chkFont = new CheckBox(Messages.get(this, "system_font")){
-                @Override
-                protected void onClick() {
-                    super.onClick();
-                    ArknightsPixelDungeon.seamlessResetScene(new Game.SceneChangeCallback() {
-                        @Override
-                        public void beforeCreate() {
-                            PDSettings.systemFont(checked());
-                        }
-
-                        @Override
-                        public void afterCreate() {
-                            //do nothing
-                        }
-                    });
-                }
-            };
-            chkFont.checked(PDSettings.systemFont());
-            add(chkFont);
-
-            if (DeviceCompat.hasHardKeyboard()){
-
-                sep3 = new ColorBlock(1, 1, 0xFF000000);
-                add(sep3);
-
-                btnKeyBindings = new RedButton(Messages.get(this, "key_bindings")){
+                chkFont = new CheckBox(Messages.get(this, "system_font")) {
                     @Override
                     protected void onClick() {
                         super.onClick();
-                        ArknightsPixelDungeon.scene().addToFront(new WndKeyBindings());
+                        ArknightsPixelDungeon.seamlessResetScene(new Game.SceneChangeCallback() {
+                            @Override
+                            public void beforeCreate() {
+                                PDSettings.systemFont(checked());
+                            }
+
+                            @Override
+                            public void afterCreate() {
+                                //do nothing
+                            }
+                        });
                     }
                 };
+                chkFont.checked(PDSettings.systemFont());
+                add(chkFont);
 
-                add(btnKeyBindings);
             }
         }
 
@@ -476,40 +720,162 @@ public class WndSettings extends WndTabbed {
             sep1.size(width, 1);
             sep1.y = title.bottom() + 2*GAP;
 
-            barDesc.setPos((width-barDesc.width())/2f, sep1.y + 1 + GAP);
-            PixelScene.align(barDesc);
+            height = sep1.y + 1;
 
-            int btnWidth = (int)(width - 2* GAP)/3;
-            btnSplit.setRect(0, barDesc.bottom() + GAP, btnWidth, 16);
-            btnGrouped.setRect(btnSplit.right()+ GAP, btnSplit.top(), btnWidth, 16);
-            btnCentered.setRect(btnGrouped.right()+ GAP, btnSplit.top(), btnWidth, 16);
-
-            if (width > 200) {
-                chkFlipToolbar.setRect(0, btnGrouped.bottom() + GAP, width/2 - 1, BTN_HEIGHT);
-                chkFlipTags.setRect(chkFlipToolbar.right() + GAP, chkFlipToolbar.top(), width/2 -1, BTN_HEIGHT);
-                sep2.size(width, 1);
-                sep2.y = chkFlipTags.bottom() + 2;
-                chkFullscreen.setRect(0, sep2.y + 1 + GAP, width/2 - 1, BTN_HEIGHT);
-                chkFont.setRect(chkFullscreen.right() + GAP, chkFullscreen.top(), width/2 - 1, BTN_HEIGHT);
+            if (optUIMode != null && optUIScale != null && width > 200){
+                optUIMode.setRect(0, height + GAP, width/2-1, SLIDER_HEIGHT);
+                optUIScale.setRect(width/2+1, height + GAP, width/2-1, SLIDER_HEIGHT);
+                height = optUIScale.bottom();
             } else {
-                chkFlipToolbar.setRect(0, btnGrouped.bottom() + GAP, width, BTN_HEIGHT);
-                chkFlipTags.setRect(0, chkFlipToolbar.bottom() + GAP, width, BTN_HEIGHT);
-                sep2.size(width, 1);
-                sep2.y = chkFlipTags.bottom() + 2;
-                chkFullscreen.setRect(0, sep2.y + 1 + GAP, width, BTN_HEIGHT);
-                chkFont.setRect(0, chkFullscreen.bottom() + GAP, width, BTN_HEIGHT);
+                if (optUIMode != null) {
+                    optUIMode.setRect(0, height + GAP, width, SLIDER_HEIGHT);
+                    height = optUIMode.bottom();
+                }
+
+                if (optUIScale != null) {
+                    optUIScale.setRect(0, height + GAP, width, SLIDER_HEIGHT);
+                    height = optUIScale.bottom();
+                }
             }
 
-            if (btnKeyBindings != null){
-                sep3.size(width, 1);
-                sep3.y = chkFont.bottom() + 2;
-                btnKeyBindings.setRect(0, sep3.y + 1 + GAP, width, BTN_HEIGHT);
-                height = btnKeyBindings.bottom();
+            if (btnToolbarSettings != null) {
+                btnToolbarSettings.setRect(0, height + GAP, width, BTN_HEIGHT);
+                height = btnToolbarSettings.bottom();
             } else {
-                height = chkFont.bottom();
+                chkFlipTags.setRect(0, height + GAP, width, BTN_HEIGHT);
+                height = chkFlipTags.bottom();
             }
+
+            sep2.size(width, 1);
+            sep2.y = height + GAP;
+
+            chkFont.setRect(0, sep2.y + 1 + GAP, width, BTN_HEIGHT);
+            height = chkFont.bottom();
+
         }
 
+    }
+
+    private static class InputTab extends Component{
+
+        RenderedTextBlock title;
+        ColorBlock sep1;
+
+        RedButton btnKeyBindings;
+        RedButton btnControllerBindings;
+
+        ColorBlock sep2;
+
+        OptionSlider optControlSens;
+        OptionSlider optHoldMoveSens;
+
+        @Override
+        protected void createChildren() {
+            title = PixelScene.renderTextBlock(Messages.get(this, "title"), 9);
+            title.hardlight(TITLE_COLOR);
+            add(title);
+
+            sep1 = new ColorBlock(1, 1, 0xFF000000);
+            add(sep1);
+
+            if (DeviceCompat.hasHardKeyboard()){
+
+                btnKeyBindings = new RedButton(Messages.get(this, "key_bindings")){
+                    @Override
+                    protected void onClick() {
+                        super.onClick();
+                        ArknightsPixelDungeon.scene().addToFront(new WndKeyBindings(false));
+                    }
+                };
+
+                add(btnKeyBindings);
+            }
+
+            if (ControllerHandler.isControllerConnected()){
+                btnControllerBindings = new RedButton(Messages.get(this, "controller_bindings")){
+                    @Override
+                    protected void onClick() {
+                        super.onClick();
+                        ArknightsPixelDungeon.scene().addToFront(new WndKeyBindings(true));
+                    }
+                };
+
+                add(btnControllerBindings);
+            }
+
+            sep2 = new ColorBlock(1, 1, 0xFF000000);
+            add(sep2);
+
+
+            optControlSens = new OptionSlider(
+                    Messages.get(this, "controller_sensitivity"),
+                    "1",
+                    "10",
+                    1,
+                    10
+            ) {
+                @Override
+                protected void onChange() {
+                    PDSettings.controllerPointerSensitivity(getSelectedValue());
+                }
+            };
+            optControlSens.setSelectedValue(PDSettings.controllerPointerSensitivity());
+            add(optControlSens);
+
+            optHoldMoveSens = new OptionSlider(
+                    Messages.get(this, "movement_sensitivity"),
+                    Messages.get(this, "off"),
+                    Messages.get(this, "high"),
+                    0,
+                    4
+            ) {
+                @Override
+                protected void onChange() {
+                    PDSettings.movementHoldSensitivity(getSelectedValue());
+                }
+            };
+            optHoldMoveSens.setSelectedValue(PDSettings.movementHoldSensitivity());
+            add(optHoldMoveSens);
+        }
+
+        @Override
+        protected void layout() {
+            title.setPos((width - title.width())/2, y + GAP);
+            sep1.size(width, 1);
+            sep1.y = title.bottom() + 3*GAP;
+
+            height = sep1.y+1;
+
+            if (width > 200 && btnKeyBindings != null && btnControllerBindings != null){
+                btnKeyBindings.setRect(0, height + GAP, width/2-1, BTN_HEIGHT);
+                btnControllerBindings.setRect(width/2+1, height + GAP, width/2-1, BTN_HEIGHT);
+                height = btnControllerBindings.bottom();
+            } else {
+                if (btnKeyBindings != null) {
+                    btnKeyBindings.setRect(0, height + GAP, width, BTN_HEIGHT);
+                    height = btnKeyBindings.bottom();
+                }
+
+                if (btnControllerBindings != null) {
+                    btnControllerBindings.setRect(0, height + GAP, width, BTN_HEIGHT);
+                    height = btnControllerBindings.bottom();
+                }
+            }
+
+            sep2.size(width, 1);
+            sep2.y = height+ GAP;
+
+            if (width > 200){
+                optControlSens.setRect(0, sep2.y + 1 + GAP, width/2-1, SLIDER_HEIGHT);
+                optHoldMoveSens.setRect(width/2 + 1, optControlSens.top(), width/2 -1, SLIDER_HEIGHT);
+            } else {
+                optControlSens.setRect(0, sep2.y + 1 + GAP, width, SLIDER_HEIGHT);
+                optHoldMoveSens.setRect(0, optControlSens.bottom() + GAP, width, SLIDER_HEIGHT);
+            }
+
+            height = optHoldMoveSens.bottom();
+
+        }
     }
 
     private static class AudioTab extends Component {
@@ -582,6 +948,22 @@ public class WndSettings extends WndTabbed {
             };
             chkMuteSFX.checked(!PDSettings.soundFx());
             add( chkMuteSFX );
+
+            /*if (DeviceCompat.isiOS() && Messages.lang() == Languages.ENGLISH){
+
+                sep3 = new ColorBlock(1, 1, 0xFF000000);
+                add(sep3);
+
+                chkIgnoreSilent = new CheckBox( Messages.get(this, "ignore_silent") ){
+                    @Override
+                    protected void onClick() {
+                        super.onClick();
+                        SPDSettings.ignoreSilentMode(checked());
+                    }
+                };
+                chkIgnoreSilent.checked(PDSettings.ignoreSilentMode());
+                add(chkIgnoreSilent);
+            }*/
         }
 
         @Override
@@ -743,7 +1125,7 @@ public class WndSettings extends WndTabbed {
                             }
                         }
 
-                        Window credits = new Window(0, 0, 0, Chrome.get(Chrome.Type.TOAST));
+                        Window credits = new Window(0, 0, Chrome.get(Chrome.Type.TOAST));
 
                         int w = wide ? 125 : 60;
 

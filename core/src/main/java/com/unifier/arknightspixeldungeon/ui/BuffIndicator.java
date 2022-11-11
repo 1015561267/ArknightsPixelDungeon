@@ -32,7 +32,6 @@ import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.tweeners.AlphaTweener;
-import com.watabou.noosa.ui.Button;
 import com.watabou.noosa.ui.Component;
 
 import java.util.ArrayList;

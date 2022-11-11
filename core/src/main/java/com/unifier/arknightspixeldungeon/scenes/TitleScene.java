@@ -43,7 +43,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
-import com.watabou.noosa.ui.Button;
+import com.unifier.arknightspixeldungeon.ui.Button;
 
 public class TitleScene extends PixelScene {
 

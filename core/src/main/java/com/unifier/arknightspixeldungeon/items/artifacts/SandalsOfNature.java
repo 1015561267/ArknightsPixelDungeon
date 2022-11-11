@@ -28,7 +28,10 @@ import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.particles.LeafParticle;
 import com.unifier.arknightspixeldungeon.items.Item;
+import com.unifier.arknightspixeldungeon.items.bags.Bag;
+import com.unifier.arknightspixeldungeon.items.bags.VelvetPouch;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.plants.BlandfruitBush;
 import com.unifier.arknightspixeldungeon.plants.Blindweed;
 import com.unifier.arknightspixeldungeon.plants.Dreamfoil;
 import com.unifier.arknightspixeldungeon.plants.Earthroot;
@@ -64,7 +67,7 @@ public class SandalsOfNature extends Artifact {
 
 		levelCap = 3;
 
-		charge = 0;
+		charge = 100;//FIXME just for test
 		chargeCap = 100;
 
 		defaultAction = AC_ROOT;
@@ -90,9 +93,9 @@ public class SandalsOfNature extends Artifact {
         seedColors.put(Dreamfoil.Seed.class,    0xFF4CD2);
         seedColors.put(Earthroot.Seed.class,    0x67583D);
         seedColors.put(Starflower.Seed.class,   0xCCBB00);//FIXME In old version Starflower have the so-called golden or yellow colour
-        ///seedColors.put(Starflower.Seed.class, 0x404040);
         seedColors.put(Fadeleaf.Seed.class,     0x919999);
         seedColors.put(Blindweed.Seed.class,    0XD9D9D9);
+        seedColors.put(BlandfruitBush.Seed.class, 0x404040);//FIXME New version have no BlandfruitBush anymore,but crash would happen if we don't add this
     }
 
     private static final HashMap<Class<? extends Plant.Seed>, Integer> seedChargeReqs = new HashMap<>();
@@ -109,11 +112,27 @@ public class SandalsOfNature extends Artifact {
         seedChargeReqs.put(Starflower.Seed.class,   50);
         seedChargeReqs.put(Fadeleaf.Seed.class,     15);
         seedChargeReqs.put(Blindweed.Seed.class,    15);
+        seedChargeReqs.put(BlandfruitBush.Seed.class,100);
     }
 
+    private static final HashMap<Class<? extends Plant.Seed>, Class<? extends Plant>> seedName = new HashMap<>();
+    static {
+        seedName.put(Rotberry.Seed.class,     Rotberry.class);
+        seedName.put(Firebloom.Seed.class,    Firebloom.class);
+        //seedChargeReqs.put(Swiftthistle.Seed.class, 25);
+        seedName.put(Sungrass.Seed.class,     Sungrass.class);
+        seedName.put(Icecap.Seed.class,       Icecap.class);
+        seedName.put(Stormvine.Seed.class,    Stormvine.class);
+        seedName.put(Sorrowmoss.Seed.class,   Sorrowmoss.class);
+        seedName.put(Dreamfoil.Seed.class,    Dreamfoil.class);
+        seedName.put(Earthroot.Seed.class,    Earthroot.class);
+        seedName.put(Starflower.Seed.class,   Starflower.class);
+        seedName.put(Fadeleaf.Seed.class,     Fadeleaf.class);
+        seedName.put(Blindweed.Seed.class,    Blindweed.class);
+        seedName.put(BlandfruitBush.Seed.class,BlandfruitBush.class);
+    }
 
-
-	@Override
+    @Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		if (isEquipped( hero ) && !cursed)
@@ -132,9 +151,8 @@ public class SandalsOfNature extends Artifact {
 		super.execute(hero, action);
 
 		if (action.equals(AC_FEED)){
-
-			GameScene.selectItem(itemSelector, mode, Messages.get(this, "prompt"));
-
+            GameScene.selectItem(itemSelector);
+			//GameScene.selectItem(itemSelector, mode, Messages.get(this, "prompt"));
 		} else if (action.equals(AC_ROOT)&& !cursed){
 
             if (!isEquipped( hero ))                                GLog.i( Messages.get(Artifact.class, "need_to_equip") );
@@ -163,12 +181,10 @@ public class SandalsOfNature extends Artifact {
 			else
 				desc += Messages.get(this, "desc_cursed");
 
-			if (level() > 0)
-				desc += "\n\n" + Messages.get(this, "desc_ability");
 		}
 
         if (curSeedEffect != null){
-            desc += "\n\n" + Messages.get(this, "desc_ability", seedChargeReqs.get(curSeedEffect));
+            desc += "\n\n" + Messages.get(this, "desc_ability",  Messages.get(seedName.get(curSeedEffect),"name") , seedChargeReqs.get(curSeedEffect));
         }
 
         if (!seeds.isEmpty()){
@@ -230,9 +246,11 @@ public class SandalsOfNature extends Artifact {
 
 	public class Naturalism extends ArtifactBuff{
 		public void charge() {
-            if (level() > 0 && charge < target.HT) {
-                //gain 1+(1*level)% of the difference between current charge and max HP.
-                if (charge < chargeCap) {
+            if (cursed ) {
+                return;
+            }
+
+            else if (charge < chargeCap) {
                     //0.5 charge per grass at +0, up to 1 at +10
                     float chargeGain = (3f + level()) / 6f;
                     //chargeGain *= amount;
@@ -247,39 +265,53 @@ public class SandalsOfNature extends Artifact {
                         updateQuickslot();
                     }
                 }
-            }
-        }
+		}
 	}
 
-	protected WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
-		public void onSelect( Item item ) {
-			if (item != null && item instanceof Plant.Seed) {
-				if (seeds.contains(item.getClass())){
-					GLog.w( Messages.get(SandalsOfNature.class, "already_fed") );
-				} else {
-					seeds.add(item.getClass());
+    protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
-					Hero hero = Dungeon.hero;
-					hero.sprite.operate( hero.pos );
-					Sample.INSTANCE.play( Assets.SND_PLANT );
-					hero.busy();
-					hero.spend( 2f );
-					if (seeds.size() >= 3+(level()*3)){
-						seeds.clear();
-						upgrade();
-						if (level() >= 1 && level() <= 3) {
-							GLog.p( Messages.get(SandalsOfNature.class, "levelup") );
-						}
+        @Override
+        public String textPrompt() {
+            return Messages.get(SandalsOfNature.class, "prompt");
+        }
 
-					} else {
-						GLog.i( Messages.get(SandalsOfNature.class, "absorb_seed") );
-					}
-					item.detach(hero.belongings.backpack);
-				}
-			}
-		}
-	};
+        @Override
+        public Class<?extends Bag> preferredBag(){
+            return VelvetPouch.class;
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return canUseSeed(item);
+        }
+
+        @Override
+        public void onSelect( Item item ) {
+            if (item != null && item instanceof Plant.Seed) {
+                if (level() < 3) seeds.add(0, item.getClass());
+                curSeedEffect = item.getClass();
+
+                Hero hero = Dungeon.hero;
+                hero.sprite.operate( hero.pos );
+                Sample.INSTANCE.play( Assets.SND_PLANT);
+                hero.busy();
+                hero.spend( Actor.TICK );
+                if (seeds.size() >= 3+(level()*3)){
+                    seeds.clear();
+                    upgrade();
+
+                    if (level() >= 1 && level() <= 3) {
+                        GLog.p( Messages.get(SandalsOfNature.class, "levelup") );
+                    }
+
+                } else {
+                    GLog.i( Messages.get(SandalsOfNature.class, "absorb_seed") );
+                }
+                item.detach(hero.belongings.backpack);
+            }
+        }
+    };
+
 
     protected CellSelector.Listener cellSelector = new CellSelector.Listener(){
 

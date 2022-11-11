@@ -64,9 +64,14 @@ public class RatKing extends NPC {
 	}
 	
 	@Override
-	public boolean interact() {
-		sprite.turnTo( pos, Dungeon.hero.pos );
-		if (state == SLEEPING) {
+	public boolean interact(Char c) {
+        sprite.turnTo( pos, c.pos );
+
+        if (c != Dungeon.hero){
+            return super.interact(c);
+        }
+
+        if (state == SLEEPING) {
 			notice();
 			yell( Messages.get(this, "not_sleeping") );
 			state = WANDERING;

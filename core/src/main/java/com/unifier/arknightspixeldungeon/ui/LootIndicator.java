@@ -22,8 +22,10 @@
 package com.unifier.arknightspixeldungeon.ui;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.PDAction;
 import com.unifier.arknightspixeldungeon.items.Heap;
 import com.unifier.arknightspixeldungeon.items.Item;
+import com.watabou.input.GameAction;
 
 public class LootIndicator extends Tag {
 	
@@ -51,16 +53,35 @@ public class LootIndicator extends Tag {
 				}
 
 			};
+
+            @Override
+            public GameAction keyAction() {
+                return PDAction.TAG_LOOT;
+            }
+
+            @Override
+            public GameAction secondaryTooltipAction() {
+                return PDAction.WAIT_OR_PICKUP;
+            }
+
 		};
-		slot.showParams( true, false, false );
+        slot.showExtraInfo( false );
 		add( slot );
 	}
 	
 	@Override
 	protected void layout() {
 		super.layout();
-		
+
 		slot.setRect( x + 2, y + 3, width - 2, height - 6 );
+
+        /*if (!flipped) {
+            slot.setRect( x, y, SIZE, height );
+            slot.setMargins(2, 2, 0, 2);
+        } else {
+            slot.setRect( x+(width()-SIZE), y, SIZE, height );
+            slot.setMargins(0, 2, 2, 2);
+        }*/
 	}
 	
 	@Override

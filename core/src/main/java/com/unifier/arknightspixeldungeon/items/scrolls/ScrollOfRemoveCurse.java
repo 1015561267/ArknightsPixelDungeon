@@ -22,14 +22,17 @@
 package com.unifier.arknightspixeldungeon.items.scrolls;
 
 import com.unifier.arknightspixeldungeon.Assets;
+import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.buffs.Invisibility;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.effects.Flare;
 import com.unifier.arknightspixeldungeon.effects.particles.ShadowParticle;
+import com.unifier.arknightspixeldungeon.items.EquipableItem;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.bags.Bag;
+import com.unifier.arknightspixeldungeon.items.wands.Wand;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.utils.GLog;
@@ -42,7 +45,28 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 		initials = 8;
 		mode = WndBag.Mode.UNIDED_OR_CURSED;
 	}
-	
+
+    @Override
+    protected boolean usableOnItem(Item item) {
+        return uncursable(item);
+    }
+
+    public static boolean uncursable( Item item ){
+        if (item.isEquipped(Dungeon.hero)
+                //&& Dungeon.hero.buff(Degrade.class) != null
+        ) {
+            return true;
+        } if ((item instanceof EquipableItem || item instanceof Wand) && ((!item.isIdentified() && !item.cursedKnown) || item.cursed)){
+            return true;
+        } else if (item instanceof Weapon){
+            return ((Weapon)item).hasCurseEnchant();
+        } else if (item instanceof Armor){
+            return ((Armor)item).hasCurseGlyph();
+        } else {
+            return false;
+        }
+    }
+
 	@Override
 	public void empoweredRead() {
 		for (Item item : curUser.belongings){

@@ -21,7 +21,6 @@
 
 package com.unifier.arknightspixeldungeon.actors.mobs.npcs;
 
-import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.blobs.CorrosiveGas;
 import com.unifier.arknightspixeldungeon.actors.blobs.ToxicGas;
@@ -96,23 +95,6 @@ public class MirrorImage extends NPC {
 		CharSprite s = super.sprite();
 		((MirrorSprite)s).updateArmor( tier );
 		return s;
-	}
-
-	@Override
-	public boolean interact() {
-		
-		int curPos = pos;
-		
-		moveSprite( pos, Dungeon.hero.pos );
-		move( Dungeon.hero.pos );
-		
-		Dungeon.hero.sprite.move( Dungeon.hero.pos, curPos );
-		Dungeon.hero.move( curPos );
-		
-		Dungeon.hero.spend( 1 / Dungeon.hero.speed() );
-		Dungeon.hero.busy();
-
-		return true;
 	}
 	
 	{

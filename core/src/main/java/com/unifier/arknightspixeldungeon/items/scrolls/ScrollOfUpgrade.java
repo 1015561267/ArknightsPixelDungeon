@@ -41,8 +41,13 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		initials = 11;
 		mode = WndBag.Mode.UPGRADEABLE;
 	}
-	
-	@Override
+
+    @Override
+    protected boolean usableOnItem(Item item) {
+        return item.isUpgradable();
+    }
+
+    @Override
 	protected void onItemSelected( Item item ) {
 
 		upgrade( curUser );

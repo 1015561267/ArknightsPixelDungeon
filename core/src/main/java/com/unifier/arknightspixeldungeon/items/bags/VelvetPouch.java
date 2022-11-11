@@ -30,14 +30,24 @@ public class VelvetPouch extends Bag {
 
 	{
 		image = ItemSpriteSheet.POUCH;
-		
-		size = 20;
+
 	}
-	
-	@Override
-	public boolean grab( Item item ) {
-		return item instanceof Plant.Seed || item instanceof Runestone;
-	}
+
+    @Override
+    public boolean canHold( Item item ) {
+        if (item instanceof Plant.Seed || item instanceof Runestone
+          //      || item instanceof GooBlob || item instanceof MetalShard
+        )
+        {
+            return super.canHold(item);
+        } else {
+            return false;
+        }
+    }
+
+    public int capacity(){
+        return 19;
+    }
 	
 	@Override
 	public int price() {

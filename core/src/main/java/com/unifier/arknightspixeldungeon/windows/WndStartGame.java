@@ -45,7 +45,7 @@ import com.unifier.arknightspixeldungeon.ui.Window;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.ui.Button;
+import com.unifier.arknightspixeldungeon.ui.Button;
 import com.watabou.noosa.ui.Component;
 
 public class WndStartGame extends Window {

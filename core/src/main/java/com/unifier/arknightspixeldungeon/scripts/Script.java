@@ -100,15 +100,17 @@ public class Script {
             case EXUSIAI:
                 row = 3;
                 break;
-            case FROSTNOVA:
-                row = 4;
-                break;
+            //case FROSTNOVA:
+            //    row = 4;
+            //    break;
         }
         Image image = new Image(Assets.PORTRAITS, 0, 35* row, 36, 35);
 
         switch (character)
         {
             case FROSTNOVA:
+                image = new Image(Assets.FROSTNOVA, 0, 35* row, 36, 35);
+
                 AlphaTweener invisible = new AlphaTweener( image, 0.4f, 0.4f );
                 if (image.parent != null){
                     image.parent.add(invisible);

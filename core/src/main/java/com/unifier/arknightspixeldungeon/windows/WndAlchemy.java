@@ -28,9 +28,12 @@ import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.Recipe;
+import com.unifier.arknightspixeldungeon.items.food.Blandfruit;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.darts.Dart;
 import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.plants.BlandfruitBush;
+import com.unifier.arknightspixeldungeon.plants.Plant;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
@@ -99,7 +102,7 @@ public class WndAlchemy extends Window {
 							item = null;
 							slot.item(new WndBag.Placeholder(ItemSpriteSheet.SOMETHING));
 						}
-						GameScene.selectItem(itemSelector, WndBag.Mode.ALCHEMY, Messages.get(WndAlchemy.class, "select"));
+						GameScene.selectItem(itemSelector);
 					}
 				};
 				inputs[i].setRect(10, h, BTN_SIZE, BTN_SIZE);
@@ -209,9 +212,20 @@ public class WndAlchemy extends Window {
 		
 		resize(w, h);
 	}
-	
-	protected WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
+
+    protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+        @Override
+        public String textPrompt() {
+            return Messages.get(WndAlchemy.class, "select");
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return ((item instanceof Plant.Seed && !(item instanceof BlandfruitBush.Seed)) || (item instanceof Blandfruit && ((Blandfruit) item).potionAttrib == null) || (item.getClass() == Dart.class));
+            //This is only adjusted for now as the alchemy is few in 0.6.5(And I don't want to add so damned much alchemy items
+        }
+
+        @Override
 		public void onSelect( Item item ) {
 			synchronized (inputs) {
 				if (item != null && inputs[0] != null) {

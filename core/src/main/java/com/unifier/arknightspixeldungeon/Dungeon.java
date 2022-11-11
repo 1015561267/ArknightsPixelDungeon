@@ -81,7 +81,7 @@ import java.util.HashSet;
 
 public class Dungeon {
 
-	//enum of items which have limited spawns, records how many have spawned
+    //enum of items which have limited spawns, records how many have spawned
 	//could all be their own separate numbers, but this allows iterating, much nicer for bundling/initializing.
 	public static enum LimitedDrops {
 		//limited world drops
@@ -181,6 +181,7 @@ public class Dungeon {
 	
 	public static int depth;
 	public static int gold;
+    public static int energy;//FIXME not used yet,only for bugfix like ui usage
 	
 	public static HashSet<Integer> chapters;
 

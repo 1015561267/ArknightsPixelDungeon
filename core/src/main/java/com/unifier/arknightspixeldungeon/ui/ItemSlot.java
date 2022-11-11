@@ -25,8 +25,6 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
-import com.unifier.arknightspixeldungeon.items.keys.Key;
-import com.unifier.arknightspixeldungeon.items.keys.SkeletonKey;
 import com.unifier.arknightspixeldungeon.items.potions.Potion;
 import com.unifier.arknightspixeldungeon.items.scrolls.Scroll;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
@@ -37,7 +35,7 @@ import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.ui.Button;
+import com.watabou.utils.Rect;
 
 public class ItemSlot extends Button {
 
@@ -45,17 +43,33 @@ public class ItemSlot extends Button {
 	public static final int UPGRADED	= 0x44FF44;
 	public static final int FADED       = 0x999999;
 	public static final int WARNING		= 0xFF8800;
+    public static final int ENHANCED	= 0x3399FF;
+    public static final int MASTERED	= 0xFFFF44;
+    public static final int CURSE_INFUSED	= 0x8800FF;
 	
 	private static final float ENABLED	= 1.0f;
 	private static final float DISABLED	= 0.3f;
-	
-	protected ItemSprite icon;
+
+    private Rect margin = new Rect();
+
+
+    //Evan changed the name of these parameters,well I wonder how he remember which one place where...
+    // bottomRightIcon -> itemIcon
+    // topLeft -> status
+    // topRight -> extra
+    // bottomRight -> level
+
+	protected ItemSprite sprite;
 	protected Item       item;
-	protected BitmapText topLeft;
-	protected BitmapText topRight;
-	protected BitmapText bottomRight;
+    protected BitmapText topLeft;
+    //FIXME it is called extra for now but I thought the old is better and able to support more condition
+	//protected BitmapText topRight;
+    protected BitmapText extra;
+    protected BitmapText bottomRight;
 	protected Image      bottomRightIcon;
 	protected boolean    iconVisible = true;
+
+    //protected BitmapText extra;
 	
 	private static final String TXT_STRENGTH	= ":%d";
 	private static final String TXT_TYPICAL_STR	= "%d?";
@@ -86,7 +100,7 @@ public class ItemSlot extends Button {
 	
 	public ItemSlot() {
 		super();
-		icon.visible(false);
+        sprite.visible(false);
 		enable(false);
 	}
 	
@@ -99,15 +113,15 @@ public class ItemSlot extends Button {
 	protected void createChildren() {
 		
 		super.createChildren();
-		
-		icon = new ItemSprite();
-		add( icon );
+
+        sprite = new ItemSprite();
+		add( sprite );
 		
 		topLeft = new BitmapText( PixelScene.pixelFont);
 		add( topLeft );
 		
-		topRight = new BitmapText( PixelScene.pixelFont);
-		add( topRight );
+		extra = new BitmapText( PixelScene.pixelFont);
+		add(extra);
 		
 		bottomRight = new BitmapText( PixelScene.pixelFont);
 		add( bottomRight );
@@ -116,10 +130,10 @@ public class ItemSlot extends Button {
 	@Override
 	protected void layout() {
 		super.layout();
-		
-		icon.x = x + (width - icon.width) / 2f;
-		icon.y = y + (height - icon.height) / 2f;
-		PixelScene.align(icon);
+
+        sprite.x = x + (width - sprite.width) / 2f;
+        sprite.y = y + (height - sprite.height) / 2f;
+		PixelScene.align(sprite);
 		
 		if (topLeft != null) {
 			topLeft.measure();
@@ -132,12 +146,24 @@ public class ItemSlot extends Button {
 			topLeft.y = y;
 			PixelScene.align(topLeft);
 		}
+
+        if (extra != null) {
+            extra.x = x + (width - extra.width()) - margin.right;
+            extra.y = y + margin.top;
+            PixelScene.align(extra);
+
+            if ((topLeft.width() + extra.width()) > width){
+                extra.visible = false;
+            } else if (item != null) {
+                extra.visible = true;
+            }
+        }
 		
-		if (topRight != null) {
-			topRight.x = x + (width - topRight.width());
-			topRight.y = y;
-			PixelScene.align(topRight);
-		}
+		//if (extra != null) {
+		//	extra.x = x + (width - extra.width());
+		//	extra.y = y;
+		//	PixelScene.align(extra);
+		//}
 		
 		if (bottomRight != null) {
 			bottomRight.x = x + (width - bottomRight.width());
@@ -151,13 +177,29 @@ public class ItemSlot extends Button {
 			PixelScene.align(bottomRightIcon);
 		}
 	}
+
+    public void alpha( float value ){
+        if (!active) value *= 0.3f;
+        if (sprite != null)     sprite.alpha(value);
+        if (topLeft != null)      topLeft.alpha(value);
+        if (extra != null)     extra.alpha(value);
+        if (bottomRight != null)   bottomRight.alpha(value);
+        if (bottomRightIcon != null) bottomRightIcon.alpha(value);
+    }
+
+    public void clear(){
+        item(null);
+        enable(true);
+        sprite.visible(true);
+        sprite.view(ItemSpriteSheet.SOMETHING, null);
+        layout();
+    }
 	
 	public void item( Item item ) {
 		if (this.item == item) {
 			if (item != null) {
-				icon.frame(item.image());
-				icon.glow(item.glowing());
-			}
+                sprite.view( item );
+            }
 			updateText();
 			return;
 		}
@@ -167,16 +209,16 @@ public class ItemSlot extends Button {
 		if (item == null) {
 
 			enable(false);
-			icon.visible(false);
+            sprite.visible(false);
 
 			updateText();
 			
 		} else {
 			
 			enable(true);
-			icon.visible(true);
+            sprite.visible(true);
 
-			icon.view( item );
+            sprite.view( item );
 			updateText();
 		}
 	}
@@ -189,10 +231,10 @@ public class ItemSlot extends Button {
 		}
 
 		if (item == null){
-			topLeft.visible = topRight.visible = bottomRight.visible = false;
+			topLeft.visible = extra.visible = bottomRight.visible = false;
 			return;
 		} else {
-			topLeft.visible = topRight.visible = bottomRight.visible = true;
+			topLeft.visible = extra.visible = bottomRight.visible = true;
 		}
 
 		topLeft.text( item.status() );
@@ -204,30 +246,29 @@ public class ItemSlot extends Button {
 			if (item.levelKnown || (isWeapon && !(item instanceof MeleeWeapon))) {
 
 				int str = isArmor ? ((Armor)item).STRReq() : ((Weapon)item).STRReq();
-				topRight.text( Messages.format( TXT_STRENGTH, str ) );
+				extra.text( Messages.format( TXT_STRENGTH, str ) );
 				if (str > Dungeon.hero.STR()) {
-					topRight.hardlight( DEGRADED );
+					extra.hardlight( DEGRADED );
 				} else {
-					topRight.resetColor();
+					extra.resetColor();
 				}
 
 			} else {
 
-				topRight.text( Messages.format( TXT_TYPICAL_STR, isArmor ?
+				extra.text( Messages.format( TXT_TYPICAL_STR, isArmor ?
 						((Armor)item).STRReq(0) :
 						((Weapon)item).STRReq(0) ) );
-				topRight.hardlight( WARNING );
+				extra.hardlight( WARNING );
 
 			}
-			topRight.measure();
+			extra.measure();
 
-		} else if (item instanceof Key && !(item instanceof SkeletonKey)) {
-			topRight.text(Messages.format(TXT_KEY_DEPTH, ((Key) item).depth));
-			topRight.measure();
-		} else {
-
-			topRight.text( null );
-
+		} //else if (item instanceof Key && !(item instanceof SkeletonKey)) {
+		//	topRight.text(Messages.format(TXT_KEY_DEPTH, ((Key) item).depth));
+		//	topRight.measure();
+		//}
+		else {
+			extra.text( null );
 		}
 
 		int level = item.visiblyUpgraded();
@@ -265,22 +306,35 @@ public class ItemSlot extends Button {
 		active = value;
 		
 		float alpha = value ? ENABLED : DISABLED;
-		icon.alpha( alpha );
+        sprite.alpha( alpha );
 		topLeft.alpha( alpha );
-		topRight.alpha( alpha );
+		extra.alpha( alpha );
 		bottomRight.alpha( alpha );
 		if (bottomRightIcon != null) bottomRightIcon.alpha( alpha );
 	}
 
-	public void showParams( boolean TL, boolean TR, boolean BR ) {
-		if (TL) add( topLeft );
-		else remove( topLeft );
+    public void showExtraInfo( boolean show ){
 
-		if (TR) add( topRight );
-		else remove( topRight );
+        if (show){
+            add(extra);
+        } else {
+            remove(extra);
+        }
 
-		if (BR) add( bottomRight );
-		else remove( bottomRight );
-		iconVisible = BR;
-	}
+    }
+
+    public void setMargins( int left, int top, int right, int bottom){
+        margin.set(left, top, right, bottom);
+        layout();
+    }
+
+    @Override
+    protected String hoverText() {
+        if (item != null && item.name() != null) {
+            return Messages.titleCase(item.name());
+        } else {
+            return super.hoverText();
+        }
+    }
+
 }

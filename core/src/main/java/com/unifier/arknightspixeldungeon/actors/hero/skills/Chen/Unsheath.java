@@ -112,6 +112,12 @@ public class Unsheath extends HeroSkill {
                 //Third,if second step cannot get,roll back to the pointed position,then get closer to check possible pos
                 //Finally,if reach the zero pos,it represent finding failure.
 
+
+                if (attack.dist == owner.pos) {
+                    GLog.i("Unable to use");
+                    return;
+                }
+
                 int result = cell;
                 boolean dropedTracker = false;
 
@@ -144,8 +150,10 @@ public class Unsheath extends HeroSkill {
                                     result = c;
                                     //GLog.w( "on door:"+result);
                                     dropedTracker = true;
-                                }else break;
-                            }//We need to consider that former terrain can block further search so for now if there are a solid terrain expect unlocked door,just break and consider futher search as a failure
+                                }
+                                //else break;
+                                break;
+                            }//We need to consider that former terrain can block further search,so for now if there are a solid terrain expect unlocked door,just break and consider futher search as a failure
 
                             if (enemy == null && Dungeon.level.passable[c]) {
                                 result = c;
@@ -157,13 +165,16 @@ public class Unsheath extends HeroSkill {
                     }
                 }
 
+
+
+
                 if (!dropedTracker) {//then search back
                     //List<Integer> reversePath = attack.subPath(maxTracker,1); Warning,Arraylist.sublist must have start<end,else throw exception,so reserve ergodic has had to take other ways
                     //GLog.w( "narrow:");
                     for(int i = maxTracker;i>=0;i--){
                         int c =availablePath.get(i);
-                        enemy = Actor.findChar(c);
-                        if (enemy == null && Dungeon.level.passable[c]) {
+
+                        if (Actor.findChar(c) == null && Dungeon.level.passable[c]) {
                             result = c;
                             //GLog.w( "narrow search:"+result);
                             dropedTracker = true;

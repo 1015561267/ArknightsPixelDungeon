@@ -131,7 +131,7 @@ public class UnstableSpellbook extends Artifact {
 			}
 
 		} else if (action.equals( AC_ADD )) {
-			GameScene.selectItem(itemSelector, mode, Messages.get(this, "prompt"));
+			GameScene.selectItem(itemSelector);
 		}
 	}
 
@@ -215,8 +215,18 @@ public class UnstableSpellbook extends Artifact {
 		}
 	}
 
-	protected WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
+    private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+        @Override
+        public String textPrompt() {
+            return Messages.get(UnstableSpellbook.class, "prompt");
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return item instanceof Scroll;
+        }
+
+        @Override
 		public void onSelect(Item item) {
 			if (item != null && item instanceof Scroll && item.isIdentified()){
 				Hero hero = Dungeon.hero;

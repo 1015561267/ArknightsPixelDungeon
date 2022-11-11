@@ -21,6 +21,7 @@
 
 package com.unifier.arknightspixeldungeon.items.bags;
 
+import com.unifier.arknightspixeldungeon.items.Bomb;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.wands.Wand;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.MissileWeapon;
@@ -30,36 +31,41 @@ public class MagicalHolster extends Bag {
 
 	{
 		image = ItemSpriteSheet.HOLSTER;
-		
-		size = 20;
 	}
 
 	public static final float HOLSTER_SCALE_FACTOR = 0.85f;
 	public static final float HOLSTER_DURABILITY_FACTOR = 1.2f;
-	
-	@Override
-	public boolean grab( Item item ) {
-		return item instanceof Wand || item instanceof MissileWeapon;
-	}
-	
-	@Override
-	public boolean collect( Bag container ) {
-		if (super.collect( container )) {
-			if (owner != null) {
-				for (Item item : items) {
-					if (item instanceof Wand) {
-						((Wand) item).charge(owner, HOLSTER_SCALE_FACTOR);
-					} else if (item instanceof MissileWeapon){
-						((MissileWeapon) item).holster = true;
-					}
-				}
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
 
+    public int capacity(){
+        return 19;
+    }
+
+    @Override
+    public boolean canHold( Item item ) {
+        if (item instanceof Wand || item instanceof MissileWeapon || item instanceof Bomb){
+            return super.canHold(item);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean collect( Bag container ) {
+        if (super.collect( container )) {
+            if (owner != null) {
+                for (Item item : items) {
+                    if (item instanceof Wand) {
+                        ((Wand) item).charge(owner, HOLSTER_SCALE_FACTOR);
+                    } else if (item instanceof MissileWeapon){
+                        ((MissileWeapon) item).holster = true;
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 	@Override
 	public void onDetach( ) {
 		super.onDetach();

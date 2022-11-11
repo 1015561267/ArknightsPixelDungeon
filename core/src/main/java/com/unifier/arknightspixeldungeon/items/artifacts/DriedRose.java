@@ -30,6 +30,7 @@ import com.unifier.arknightspixeldungeon.actors.blobs.ToxicGas;
 import com.unifier.arknightspixeldungeon.actors.buffs.Burning;
 import com.unifier.arknightspixeldungeon.actors.buffs.Corruption;
 import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
+import com.unifier.arknightspixeldungeon.actors.hero.Belongings;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.Wraith;
@@ -40,10 +41,10 @@ import com.unifier.arknightspixeldungeon.effects.particles.ShaftParticle;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.armor.glyphs.AntiMagic;
+import com.unifier.arknightspixeldungeon.items.bags.Bag;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfElements;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfPsionicBlast;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MeleeWeapon;
-import com.unifier.arknightspixeldungeon.items.weapon.missiles.Boomerang;
 import com.unifier.arknightspixeldungeon.levels.Level;
 import com.unifier.arknightspixeldungeon.messages.Languages;
 import com.unifier.arknightspixeldungeon.messages.Messages;
@@ -592,9 +593,9 @@ public class DriedRose extends Artifact {
 		}
 
 		@Override
-		public boolean interact() {
+		public boolean interact(Char c) {
 			updateRose();
-			if (rose != null && !rose.talkedTo){
+			if (c == Dungeon.hero && rose != null && !rose.talkedTo){
 				rose.talkedTo = true;
                 Game.runOnRenderThread(new Callback() {
                     @Override
@@ -603,22 +604,9 @@ public class DriedRose extends Artifact {
                     }
                 });
 				return false;
-			} else if (Dungeon.level.passable[pos] || Dungeon.hero.flying) {
-				int curPos = pos;
+			} else return super.interact(c);
 
-				moveSprite( pos, Dungeon.hero.pos );
-				move( Dungeon.hero.pos );
-
-				Dungeon.hero.sprite.move( Dungeon.hero.pos, curPos );
-				Dungeon.hero.move( curPos );
-
-				Dungeon.hero.spend( 1 / Dungeon.hero.speed() );
-				Dungeon.hero.busy();
-				return true;
-			} else {
-				return false;
-			}
-		}
+        }
 
 		@Override
 		public void die(Object cause) {
@@ -848,35 +836,52 @@ public class DriedRose extends Artifact {
 						}
 						rose.weapon = null;
 					} else {
-						GameScene.selectItem(new WndBag.Listener() {
-							@Override
-							public void onSelect(Item item) {
-								if (!(item instanceof MeleeWeapon || item instanceof Boomerang)) {
-									//do nothing, should only happen when window is cancelled
-								} else if (item.unique || item instanceof Boomerang) {
-									GLog.w( Messages.get(WndGhostHero.class, "cant_unique"));
-									hide();
-								} else if (!item.isIdentified()) {
-									GLog.w( Messages.get(WndGhostHero.class, "cant_unidentified"));
-									hide();
-								} else if (item.cursed) {
-									GLog.w( Messages.get(WndGhostHero.class, "cant_cursed"));
-									hide();
-								} else if (((MeleeWeapon)item).STRReq() > rose.ghostStrength()) {
-									GLog.w( Messages.get(WndGhostHero.class, "cant_strength"));
-									hide();
-								} else {
-									if (item.isEquipped(Dungeon.hero)){
-										((MeleeWeapon) item).doUnequip(Dungeon.hero, false, false);
-									} else {
-										item.detach(Dungeon.hero.belongings.backpack);
-									}
-									rose.weapon = (MeleeWeapon) item;
-									item(rose.weapon);
-								}
-								
-							}
-						}, WndBag.Mode.WEAPON, Messages.get(WndGhostHero.class, "weapon_prompt"));
+
+                        GameScene.selectItem(new WndBag.ItemSelector() {
+
+                            @Override
+                            public String textPrompt() {
+                                return Messages.get(WndGhostHero.class, "weapon_prompt");
+                            }
+
+                            @Override
+                            public Class<?extends Bag> preferredBag(){
+                                return Belongings.Backpack.class;
+                            }
+
+                            @Override
+                            public boolean itemSelectable(Item item) {
+                                return item instanceof MeleeWeapon;
+                            }
+
+                            @Override
+                            public void onSelect(Item item) {
+                                if (!(item instanceof MeleeWeapon)) {
+                                    //do nothing, should only happen when window is cancelled
+                                } else if (item.unique) {
+                                    GLog.w( Messages.get(WndGhostHero.class, "cant_unique"));
+                                    hide();
+                                } else if (!item.isIdentified()) {
+                                    GLog.w( Messages.get(WndGhostHero.class, "cant_unidentified"));
+                                    hide();
+                                } else if (item.cursed) {
+                                    GLog.w( Messages.get(WndGhostHero.class, "cant_cursed"));
+                                    hide();
+                                } else if (((MeleeWeapon)item).STRReq() > rose.ghostStrength()) {
+                                    GLog.w( Messages.get(WndGhostHero.class, "cant_strength"));
+                                    hide();
+                                } else {
+                                    if (item.isEquipped(Dungeon.hero)){
+                                        ((MeleeWeapon) item).doUnequip(Dungeon.hero, false, false);
+                                    } else {
+                                        item.detach(Dungeon.hero.belongings.backpack);
+                                    }
+                                    rose.weapon = (MeleeWeapon) item;
+                                    item(rose.weapon);
+                                }
+
+                            }
+                        });
 					}
 				}
 			};
@@ -898,35 +903,51 @@ public class DriedRose extends Artifact {
 						}
 						rose.armor = null;
 					} else {
-						GameScene.selectItem(new WndBag.Listener() {
-							@Override
-							public void onSelect(Item item) {
-								if (!(item instanceof Armor)) {
-									//do nothing, should only happen when window is cancelled
-								} else if (item.unique || ((Armor) item).checkSeal() != null) {
-									GLog.w( Messages.get(WndGhostHero.class, "cant_unique"));
-									hide();
-								} else if (!item.isIdentified()) {
-									GLog.w( Messages.get(WndGhostHero.class, "cant_unidentified"));
-									hide();
-								} else if (item.cursed) {
-									GLog.w( Messages.get(WndGhostHero.class, "cant_cursed"));
-									hide();
-								} else if (((Armor)item).STRReq() > rose.ghostStrength()) {
-									GLog.w( Messages.get(WndGhostHero.class, "cant_strength"));
-									hide();
-								} else {
-									if (item.isEquipped(Dungeon.hero)){
-										((Armor) item).doUnequip(Dungeon.hero, false, false);
-									} else {
-										item.detach(Dungeon.hero.belongings.backpack);
-									}
-									rose.armor = (Armor) item;
-									item(rose.armor);
-								}
-								
-							}
-						}, WndBag.Mode.ARMOR, Messages.get(WndGhostHero.class, "armor_prompt"));
+                        GameScene.selectItem(new WndBag.ItemSelector() {
+
+                            @Override
+                            public String textPrompt() {
+                                return Messages.get(WndGhostHero.class, "armor_prompt");
+                            }
+
+                            @Override
+                            public Class<?extends Bag> preferredBag(){
+                                return Belongings.Backpack.class;
+                            }
+
+                            @Override
+                            public boolean itemSelectable(Item item) {
+                                return item instanceof Armor;
+                            }
+
+                            @Override
+                            public void onSelect(Item item) {
+                                if (!(item instanceof Armor)) {
+                                    //do nothing, should only happen when window is cancelled
+                                } else if (item.unique || ((Armor) item).checkSeal() != null) {
+                                    GLog.w( Messages.get(WndGhostHero.class, "cant_unique"));
+                                    hide();
+                                } else if (!item.isIdentified()) {
+                                    GLog.w( Messages.get(WndGhostHero.class, "cant_unidentified"));
+                                    hide();
+                                } else if (item.cursed) {
+                                    GLog.w( Messages.get(WndGhostHero.class, "cant_cursed"));
+                                    hide();
+                                } else if (((Armor)item).STRReq() > rose.ghostStrength()) {
+                                    GLog.w( Messages.get(WndGhostHero.class, "cant_strength"));
+                                    hide();
+                                } else {
+                                    if (item.isEquipped(Dungeon.hero)){
+                                        ((Armor) item).doUnequip(Dungeon.hero, false, false);
+                                    } else {
+                                        item.detach(Dungeon.hero.belongings.backpack);
+                                    }
+                                    rose.armor = (Armor) item;
+                                    item(rose.armor);
+                                }
+
+                            }
+                        });
 					}
 				}
 			};

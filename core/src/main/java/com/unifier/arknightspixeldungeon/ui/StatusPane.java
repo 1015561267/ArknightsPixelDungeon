@@ -42,7 +42,6 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
-import com.watabou.noosa.ui.Button;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.ColorMath;
 
@@ -52,7 +51,9 @@ public class StatusPane extends Component {
 	private Image avatar;
 	private float warning;
 
-	private int lastTier = 0;
+    public static final float FLASH_RATE = (float)(Math.PI*1.5f); //1.5 blinks per second
+
+    private int lastTier = 0;
 
 	private Image rawShielding;
 	private Image shieldedHP;

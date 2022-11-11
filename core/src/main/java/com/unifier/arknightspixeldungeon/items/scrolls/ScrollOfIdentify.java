@@ -41,8 +41,13 @@ public class ScrollOfIdentify extends InventoryScroll {
 
 		bones = true;
 	}
-	
-	@Override
+
+    @Override
+    protected boolean usableOnItem(Item item) {
+        return !item.isIdentified();
+    }
+
+    @Override
 	public void empoweredRead() {
 		ArrayList<Item> unIDed = new ArrayList<>();
 		

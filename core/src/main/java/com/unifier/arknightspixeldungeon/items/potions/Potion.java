@@ -269,13 +269,16 @@ public class Potion extends Item {
 			}
 		}
 	}
-	
-	@Override
-	public Item identify() {
 
-		setKnown();
-		return super.identify();
-	}
+    @Override
+    public Item identify( boolean byHero ) {
+        super.identify(byHero);
+
+        if (!isKnown()) {
+            setKnown();
+        }
+        return this;
+    }
 	
 	@Override
 	public String name() {

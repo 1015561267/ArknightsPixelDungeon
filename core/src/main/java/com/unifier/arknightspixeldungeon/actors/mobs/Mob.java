@@ -62,7 +62,7 @@ import java.util.HashSet;
 public abstract class Mob extends Char {
 
 	{
-		name = Messages.get(this, "name");
+		//name = Messages.get(this, "name");
 		actPriority = MOB_PRIO;
 		
 		alignment = Alignment.ENEMY;

@@ -187,12 +187,14 @@ public class Ring extends KindofMisc {
 	public boolean isIdentified() {
 		return super.isIdentified() && isKnown();
 	}
-	
-	@Override
-	public Item identify() {
-		setKnown();
-		return super.identify();
-	}
+
+
+    @Override
+    public Item identify( boolean byHero ) {
+        setKnown();
+        //levelsToID = 0;
+        return super.identify(byHero);
+    }
 	
 	@Override
 	public Item random() {

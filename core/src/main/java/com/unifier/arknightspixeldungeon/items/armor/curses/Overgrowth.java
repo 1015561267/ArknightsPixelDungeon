@@ -48,7 +48,7 @@ public class Overgrowth extends Armor.Glyph {
 			
 			Plant p = s.couch(defender.pos, null);
 			
-			p.activate();
+			p.activate(defender);
 			CellEmitter.get( defender.pos ).burst( LeafParticle.LEVEL_SPECIFIC, 10 );
 			
 		}

@@ -2,7 +2,6 @@ package com.unifier.arknightspixeldungeon.Exusiai;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Chrome;
-import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
@@ -11,7 +10,6 @@ import com.unifier.arknightspixeldungeon.ui.ItemSlot;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.Window;
 import com.unifier.arknightspixeldungeon.windows.WndBag;
-import com.unifier.arknightspixeldungeon.windows.WndBlacksmith;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.audio.Sample;
@@ -49,7 +47,7 @@ public class WndAdjustGun extends Window {
                     GameScene.show(new WndAdjustGun(i));
                 } else {
                     btnPressed = sight;
-                    GameScene.selectItem(itemSelector,WndBag.Mode.ALL,Messages.get(this,"select"));
+                    GameScene.selectItem(itemSelector);
                 }
             }
         };
@@ -60,7 +58,18 @@ public class WndAdjustGun extends Window {
         resize(60,(int)sight.bottom());
     }
 
-    public WndBag.Listener itemSelector = new WndBag.Listener() {
+    private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+
+        @Override
+        public String textPrompt() {
+            return Messages.get(WndAdjustGun.class,"select");
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return true;//FIXME The whole gun modifier need to be changed later
+        }
+
         @Override
         public void onSelect(Item item) {
             if (item != null) {

@@ -24,8 +24,10 @@ package com.unifier.arknightspixeldungeon.items;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.hero.Belongings;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
+import com.unifier.arknightspixeldungeon.items.bags.Bag;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
@@ -67,7 +69,7 @@ public class BrokenSeal extends Item {
 
 		if (action.equals(AC_AFFIX)){
 			curItem = this;
-			GameScene.selectItem(armorSelector, WndBag.Mode.ARMOR, Messages.get(this, "prompt"));
+			GameScene.selectItem(armorSelector);
 		} else if (action.equals(AC_INFO)) {
 			GameScene.show(new WndItem(null, this));
 		}
@@ -79,25 +81,72 @@ public class BrokenSeal extends Item {
 		return level() == 0;
 	}
 
-	protected static WndBag.Listener armorSelector = new WndBag.Listener() {
-		@Override
-		public void onSelect( Item item ) {
-			if (item != null && item instanceof Armor) {
-				Armor armor = (Armor)item;
-				if (!armor.levelKnown){
-					GLog.w(Messages.get(BrokenSeal.class, "unknown_armor"));
-				} else if (armor.cursed || armor.level() < 0){
-					GLog.w(Messages.get(BrokenSeal.class, "degraded_armor"));
-				} else {
-					GLog.p(Messages.get(BrokenSeal.class, "affix"));
-					Dungeon.hero.sprite.operate(Dungeon.hero.pos);
-					Sample.INSTANCE.play(Assets.SND_UNLOCK);
-					armor.affixSeal((BrokenSeal)curItem);
-					curItem.detach(Dungeon.hero.belongings.backpack);
-				}
-			}
-		}
-	};
+    protected static WndBag.ItemSelector armorSelector = new WndBag.ItemSelector() {
+
+        @Override
+        public String textPrompt() {
+            return  Messages.get(BrokenSeal.class, "prompt");
+        }
+
+        @Override
+        public Class<?extends Bag> preferredBag(){
+            return Belongings.Backpack.class;
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return item instanceof Armor;
+        }
+
+        @Override
+        public void onSelect( Item item ) {
+            BrokenSeal seal = (BrokenSeal) curItem;
+            if (item != null && item instanceof Armor) {
+                Armor armor = (Armor)item;
+                if (!armor.levelKnown){
+                    GLog.w(Messages.get(BrokenSeal.class, "unknown_armor"));
+
+                }
+
+                //else if (armor.cursed && (seal.getGlyph() == null || !seal.getGlyph().curse())){
+                //    GLog.w(Messages.get(BrokenSeal.class, "cursed_armor"));
+
+                //} else if (armor.glyph != null && seal.getGlyph() != null
+                //        && armor.glyph.getClass() != seal.getGlyph().getClass()) {
+                //    GameScene.show(new WndOptions(new ItemSprite(seal),
+                //            Messages.get(BrokenSeal.class, "choose_title"),
+                //           Messages.get(BrokenSeal.class, "choose_desc"),
+                //            armor.glyph.name(),
+                //seal.getGlyph().name()){
+                //      @Override
+                //    protected void onSelect(int index) {
+                //      if (index == 0) seal.setGlyph(null);
+                //if index is 1, then the glyph transfer happens in affixSeal
+
+                //    GLog.p(Messages.get(BrokenSeal.class, "affix"));
+                //  Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+                //Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
+                //   armor.affixSeal(seal);
+                //   seal.detach(Dungeon.hero.belongings.backpack);
+                GLog.p(Messages.get(BrokenSeal.class, "affix"));
+                Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+                Sample.INSTANCE.play(Assets.SND_UNLOCK);
+                armor.affixSeal((BrokenSeal)curItem);
+                curItem.detach(Dungeon.hero.belongings.backpack);
+            }
+            //});
+
+            //       } else {
+
+        }
+    };
+
+
+
+
+
+
+
 
 	public static class WarriorShield extends Buff {
 

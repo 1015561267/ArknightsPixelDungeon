@@ -4,17 +4,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
-        gradlePluginPortal()
-        jcenter()
-        maven {
-            url "​https://maven.aliyun.com/repository/google​"
-        }
-
-        maven {
-            url "​https://maven.aliyun.com/repository/jcenter​"
-        }
-
+        maven { url "https://maven.google.com" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.4'
@@ -32,23 +22,23 @@ allprojects {
         appJavaCompatibility = JavaVersion.VERSION_1_8
 
         appAndroidCompileSDK = 30
-        appAndroidMinSDK = 14
+        appAndroidMinSDK = 16
         appAndroidTargetSDK = 30
 
-        gdxVersion = '1.9.10'
-        var = '1.6.0'
+        gdxVersion = '1.11.0'
+        gdxControllersVersion = '2.2.2'
     }
 
     version = appVersionName
 
     repositories {
-        mavenLocal()
-        mavenCentral()
         google()
-        jcenter()
-        gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
         maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url 'https://github.com/steffenschaefer/gwt-gradle-plugin/raw/maven-repo/' }
     }
 }
 

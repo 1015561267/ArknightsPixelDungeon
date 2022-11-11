@@ -61,7 +61,7 @@ public class WndDialog extends Window {
 
     public WndDialog(Plot plot,Boolean regained) {
 
-            super(0, 0, 0, Chrome.get(Chrome.Type.TOAST_TR));
+            super(0, 0, Chrome.get(Chrome.Type.TOAST_TR));
 
             resize(PixelScene.uiCamera.width ,PixelScene.uiCamera.height );
 

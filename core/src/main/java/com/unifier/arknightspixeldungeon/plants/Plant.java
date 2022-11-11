@@ -44,8 +44,6 @@ import com.watabou.utils.Bundle;
 import java.util.ArrayList;
 
 public abstract class Plant implements Bundlable {
-
-	public String plantName = Messages.get(this, "name");
 	
 	public int image;
 	public int pos;
@@ -114,8 +112,12 @@ public abstract class Plant implements Bundlable {
 	public String desc() {
 		return Messages.get(this, "desc");
 	}
-	
-	public static class Seed extends Item {
+
+    public String name(){
+        return Messages.get(this, "name");
+    }
+
+    public static class Seed extends Item {
 
 		public static final String AC_PLANT	= "PLANT";
 		

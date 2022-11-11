@@ -38,7 +38,9 @@ public class Ark_Demo_Changes {
         changes.addButton(  new ChangeButton(Icons.get(Icons.LIBGDX), "Lib GDX",
                 "_-_ 底层已用SPD _0.7.5_ 版本的libgdx框架重构\n" +
                         "_-_ 这意味着其可支持pc平台，具有更稳定且独立的代码(尽管可能还存在一些bug)\n" +
-                        "\n" +"由Teller于_2021.7.29 - 2021.8.7_完成"));
+                        "\n" +"由Teller于_2021.7.29 - 2021.8.7_完成" +
+                        "_-_ 更多的支持，如迭代的桌面版UI与手柄控制支持已基本实现，并附带其他诸如更多选项以及体验优化等小内容\n" +
+                        "\n" +"由Teller于_2022-11-11_初步完成"));
 
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.ARTIFACT_CHALICE3, null), "贴图更新",
                 "_-_ 本地牢基于IP已更新大量相关贴图\n" +
@@ -56,6 +58,17 @@ public class Ark_Demo_Changes {
                         "_-_ 火铳仍然可以使用强化合成玉，而非像SPD随人物等级升级\n" +
                         "_-_ 火铳仍然触发旧版狙击精通效果\n" +
                         "\n" +"如果您对其有更好的设计想法，欢迎发邮件到邮箱_1015561267@qq.com_"
+        ));
+
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.ARTIFACT_SANDALS, null), "末药的草药包(破碎草鞋)迭代到新版本",
+                "_-_ 截至2022/10/24，末药的草药包(破碎草鞋)已经迭代到破碎1.4.0版本\n" +
+                        "_-_ 包括主动效果改动与被动效果修正，与破碎大体类似但有细微区别，可自行发掘\n" +
+                        "\n" +"由Teller于_2022-11-10_初步完成"
+        ));
+
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.ARTIFACT_HOLDER, null), "第三饰品栏",
+                "_-_ 挺好的，不是吗，原来的两个槽真的有些拥挤\n" +
+                        "_-_ 截至2022/11/8，相关的底层窗口选取迭代成功，这样重复的种子直接不可选取，而非旧版的弹出提示，其他类似情况（如魔典）也相应改动\n"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.WARNING), "剧情对话",

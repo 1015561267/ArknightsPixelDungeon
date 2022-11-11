@@ -70,23 +70,26 @@ public class Bones {
 	private static Item pickItem(Hero hero){
 		Item item = null;
 		if (Random.Int(3) != 0) {
-			switch (Random.Int(6)) {
-				case 0:
-					item = hero.belongings.weapon;
-					break;
-				case 1:
-					item = hero.belongings.armor;
-					break;
-				case 2:
-					item = hero.belongings.misc1;
-					break;
-				case 3:
-					item = hero.belongings.misc2;
-					break;
-				case 4: case 5:
-					item = Dungeon.quickslot.randomNonePlaceholder();
-					break;
-			}
+            switch (Random.Int(7)) {
+                case 0:
+                    item = hero.belongings.weapon;
+                    break;
+                case 1:
+                    item = hero.belongings.armor;
+                    break;
+                case 2:
+                    item = hero.belongings.artifact;
+                    break;
+                case 3:
+                    item = hero.belongings.misc;
+                    break;
+                case 4:
+                    item = hero.belongings.ring;
+                    break;
+                case 5: case 6:
+                    item = Dungeon.quickslot.randomNonePlaceholder();
+                    break;
+            }
 			if (item == null || !item.bones) {
 				return pickItem(hero);
 			}

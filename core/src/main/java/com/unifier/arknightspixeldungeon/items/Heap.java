@@ -29,6 +29,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Frost;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mimic;
 import com.unifier.arknightspixeldungeon.actors.mobs.Wraith;
+import com.unifier.arknightspixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Flare;
 import com.unifier.arknightspixeldungeon.effects.Speck;
@@ -422,6 +423,33 @@ public class Heap implements Bundlable {
 				return peek().info();
 		}
 	}
+
+    public String title(){
+        switch(type){
+            case FOR_SALE:
+                Item i = peek();
+                if (size() == 1) {
+                    return Messages.get(this, "sale", i.toString(), i.price() );
+                    //return Messages.get(this, "for_sale", Shopkeeper.sellPrice(i), i.title());
+                } else {
+                    return i.title();
+                }
+            case CHEST:
+                return Messages.get(this, "chest");
+            case LOCKED_CHEST:
+                return Messages.get(this, "locked_chest");
+            case CRYSTAL_CHEST:
+                return Messages.get(this, "crystal_chest");
+            case TOMB:
+                return Messages.get(this, "tomb");
+            case SKELETON:
+                return Messages.get(this, "skeleton");
+            case REMAINS:
+                return Messages.get(this, "remains");
+            default:
+                return peek().title();
+        }
+    }
 
 	private static final String POS		= "pos";
 	private static final String SEEN	= "seen";

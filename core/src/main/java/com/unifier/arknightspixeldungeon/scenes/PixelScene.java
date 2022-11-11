@@ -56,6 +56,13 @@ public class PixelScene extends Scene {
 	public static final float MIN_WIDTH_L        = 240;
 	public static final float MIN_HEIGHT_L        = 160;
 
+    // Minimum virtual display size for full desktop UI (landscape only)
+    //TODO maybe include another scale for mixed UI? might make it more accessible to mobile devices
+    // mixed UI has similar requirements to mobile landscape tbh... Maybe just merge them?
+    // mixed UI can possible be used on mobile portrait for tablets though.. Does that happen often?
+    public static final float MIN_WIDTH_FULL = 360;
+    public static final float MIN_HEIGHT_FULL = 200;
+
 	public static int defaultZoom = 0;
 	public static int maxDefaultZoom = 0;
 	public static int maxScreenZoom = 0;

@@ -24,7 +24,6 @@ package com.unifier.arknightspixeldungeon.ui;
 import com.unifier.arknightspixeldungeon.Chrome;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.NinePatch;
-import com.watabou.noosa.ui.Button;
 
 public class Tag extends Button {
 

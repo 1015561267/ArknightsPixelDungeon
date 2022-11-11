@@ -36,7 +36,6 @@ import com.watabou.noosa.PointerArea;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
-import com.watabou.noosa.ui.Button;
 import com.watabou.utils.Callback;
 
 import static com.unifier.arknightspixeldungeon.Dungeon.hero;

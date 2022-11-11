@@ -30,15 +30,25 @@ public class ScrollHolder extends Bag {
 	{
 		image = ItemSpriteSheet.HOLDER;
 		
-		size = 20;
 	}
-	
-	@Override
-	public boolean grab( Item item ) {
-		return item instanceof Scroll;
-	}
-	
-	@Override
+
+    @Override
+    public boolean canHold( Item item ) {
+        if (item instanceof Scroll
+               // || item instanceof Spell || item instanceof ArcaneResin
+        ){
+            return super.canHold(item);
+        } else {
+            return false;
+        }
+    }
+
+    public int capacity(){
+        return 19;
+    }
+
+
+    @Override
 	public int price() {
 		return 40;
 	}

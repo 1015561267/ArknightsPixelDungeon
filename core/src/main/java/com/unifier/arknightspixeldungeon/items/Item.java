@@ -21,14 +21,13 @@
 
 package com.unifier.arknightspixeldungeon.items;
 
-import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.actors.buffs.Combo;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.items.bags.Bag;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.Boomerang;
@@ -40,12 +39,12 @@ import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.ui.QuickSlotButton;
-import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
+import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,11 +67,13 @@ public class Item implements Bundlable {
 	
 	protected String name = Messages.get(this, "name");
 	public int image = 0;
-	
-	public boolean stackable = false;
+    //public int icon = -1; //used as an identifier for items with randomized images
+
+    public boolean stackable = false;
 	protected int quantity = 1;
-	
-	private int level = 0;
+    public boolean dropsDownHeap = false;
+
+    private int level = 0;
 
 	public boolean levelKnown = false;
 	
@@ -81,6 +82,9 @@ public class Item implements Bundlable {
 	
 	// Unique items persist through revival
 	public boolean unique = false;
+
+    // These items are preserved even if the hero's inventory is lost via unblessed ankh
+    public boolean keptThoughLostInvent = false;
 
 	// whether an item can be included in heroes remains
 	public boolean bones = false;
@@ -98,8 +102,12 @@ public class Item implements Bundlable {
 		actions.add( AC_THROW );
 		return actions;
 	}
-	
-	public boolean doPickUp( Hero hero ) {
+
+    public String actionName(String action, Hero hero){
+        return Messages.get(this, "ac_" + action);
+    }
+
+    public boolean doPickUp( Hero hero ) {
 		if (collect( hero.belongings.backpack )) {
 			
 			GameScene.pickUp( this, hero.pos );
@@ -114,13 +122,16 @@ public class Item implements Bundlable {
 	
 	public void doDrop( Hero hero ) {
 		hero.spendAndNext( TIME_TO_DROP );
-		Dungeon.level.drop( detachAll( hero.belongings.backpack ), hero.pos ).sprite.drop( hero.pos );
+        int pos = hero.pos;
+        Dungeon.level.drop(detachAll(hero.belongings.backpack), pos).sprite.drop(pos);
 	}
 
 	//resets an item's properties, to ensure consistency between runs
 	public void reset(){
 		//resets the name incase the language has changed.
 		name = Messages.get(this, "name");
+        //resets an item's properties, to ensure consistency between runs
+        //keptThoughLostInvent = false;
 	}
 
 	public void doThrow( Hero hero ) {
@@ -128,21 +139,26 @@ public class Item implements Bundlable {
 	}
 	
 	public void execute( Hero hero, String action ) {
-		
-		curUser = hero;
+
+        GameScene.cancel();
+        curUser = hero;
 		curItem = this;
 
-		Combo combo = hero.buff(Combo.class);
-		if (combo != null) combo.detach();
+		//Combo combo = hero.buff(Combo.class);
+		//if (combo != null) combo.detach();
 		
 		if (action.equals( AC_DROP )) {
-			
-			doDrop( hero );
-			
-		} else if (action.equals( AC_THROW )) {
-			
-			doThrow( hero );
-			
+
+            if (hero.belongings.backpack.contains(this) || isEquipped(hero)) {
+                doDrop(hero);
+            }
+
+        } else if (action.equals( AC_THROW )) {
+
+		    if (hero.belongings.backpack.contains(this) || isEquipped(hero)) {
+                doThrow(hero);
+            }
+
 		}
 	}
 	
@@ -167,47 +183,56 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean collect( Bag container ) {
-		
+
+        if (quantity <= 0){
+            return true;
+        }
+
 		ArrayList<Item> items = container.items;
 		
 		if (items.contains( this )) {
 			return true;
 		}
-		
-		for (Item item:items) {
-			if (item instanceof Bag && ((Bag)item).grab( this )) {
-				return collect( (Bag)item );
-			}
-		}
-		
+
+        for (Item item:items) {
+            if (item instanceof Bag && ((Bag)item).canHold( this )) {
+                if (collect( (Bag)item )){
+                    return true;
+                }
+            }
+        }
+
+        if (!container.canHold(this)){
+            return false;
+        }
+
 		if (stackable) {
 			for (Item item:items) {
 				if (isSimilar( item )) {
 					item.merge( this );
 					item.updateQuickslot();
+                    if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
+                        Badges.validateItemLevelAquired( this );
+                        Talent.onItemCollected(Dungeon.hero, item);
+                        if (isIdentified()) Catalog.setSeen(getClass());
+                    }
 					return true;
 				}
 			}
 		}
-		
-		if (items.size() < container.size) {
-			
-			if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
-				Badges.validateItemLevelAquired( this );
-			}
-			
-			items.add( this );
-			Dungeon.quickslot.replacePlaceholder(this);
-			updateQuickslot();
-			Collections.sort( items, itemComparator );
-			return true;
-			
-		} else {
-			
-			GLog.n( Messages.get(Item.class, "pack_full", name()) );
-			return false;
-			
-		}
+
+        if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
+            Badges.validateItemLevelAquired( this );
+            Talent.onItemCollected( Dungeon.hero, this );
+            if (isIdentified()) Catalog.setSeen(getClass());
+        }
+
+        items.add( this );
+        Dungeon.quickslot.replacePlaceholder(this);
+        Collections.sort( items, itemComparator );
+        updateQuickslot();
+        return true;
+
 	}
 	
 	public boolean collect() {
@@ -219,10 +244,14 @@ public class Item implements Bundlable {
 		if (amount <= 0 || amount >= quantity()) {
 			return null;
 		} else {
-			try {
-				
+
 				//pssh, who needs copy constructors?
-				Item split = getClass().newInstance();
+                Item split = Reflection.newInstance(getClass());//damn the new Reflection class could skip stupid try-catch part
+
+                if (split == null){
+                    return null;
+                }
+
 				Bundle copy = new Bundle();
 				this.storeInBundle(copy);
 				split.restoreFromBundle(copy);
@@ -230,10 +259,7 @@ public class Item implements Bundlable {
 				quantity -= amount;
 				
 				return split;
-			} catch (Exception e){
-				ArknightsPixelDungeon.reportException(e);
-				return null;
-			}
+
 		}
 	}
 	
@@ -253,8 +279,7 @@ public class Item implements Bundlable {
 			return detachAll( container );
 			
 		} else {
-			
-			
+
 			Item detached = split(1);
 			updateQuickslot();
 			if (detached != null) detached.onDetach( );
@@ -265,12 +290,14 @@ public class Item implements Bundlable {
 	
 	public final Item detachAll( Bag container ) {
 		Dungeon.quickslot.clearItem( this );
-		updateQuickslot();
+		//updateQuickslot();
 
 		for (Item item : container.items) {
 			if (item == this) {
 				container.items.remove(this);
 				item.onDetach();
+                container.grabItems(); //try to put more items into the bag as it now has free space
+                updateQuickslot();
 				return this;
 			} else if (item instanceof Bag) {
 				Bag bag = (Bag)item;
@@ -279,19 +306,36 @@ public class Item implements Bundlable {
 				}
 			}
 		}
-		
+
+        updateQuickslot();
 		return this;
 	}
 	
 	public boolean isSimilar( Item item ) {
 		return getClass() == item.getClass();
-	}
+        //return level == item.level && getClass() == item.getClass();
+    }
 
 	protected void onDetach(){}
 
-	public int level(){
+    //returns the true level of the item, ignoring all modifiers aside from upgrades
+    public final int trueLevel(){
+        return level;
+    }
+
+    public int level(){
 		return level;
 	}
+
+    //returns the level of the item, after it may have been modified by temporary boosts/reductions
+    //note that not all item properties should care about buffs/debuffs! (e.g. str requirement)
+    //public int buffedLvl(){
+    //    if (Dungeon.hero.buff( Degrade.class ) != null) {
+     //       return Degrade.reduceLevel(level());
+     //   } else {
+     //       return level();
+     //   }
+    //}
 
 	public void level( int value ){
 		level = value;
@@ -334,8 +378,13 @@ public class Item implements Bundlable {
 	public int visiblyUpgraded() {
 		return levelKnown ? level : 0;
 	}
-	
-	public boolean visiblyCursed() {
+
+    //public int buffedVisiblyUpgraded() {
+    //    return levelKnown ? buffedLvl() : 0;
+    //}
+
+
+    public boolean visiblyCursed() {
 		return cursed && cursedKnown;
 	}
 	
@@ -350,19 +399,29 @@ public class Item implements Bundlable {
 	public boolean isEquipped( Hero hero ) {
 		return false;
 	}
-	
-	public Item identify() {
-		
-		levelKnown = true;
-		cursedKnown = true;
-		
-		if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
-			Catalog.setSeen(getClass());
-		}
-		
-		return this;
-	}
-	
+
+    public final Item identify(){
+        return identify(true);
+    }
+
+    public Item identify( boolean byHero ) {
+
+        if (byHero && Dungeon.hero != null && Dungeon.hero.isAlive()){
+            Catalog.setSeen(getClass());
+            if (!isIdentified()) Talent.onItemIdentified(Dungeon.hero, this);
+        }
+
+        levelKnown = true;
+        cursedKnown = true;
+        Item.updateQuickslot();
+
+        return this;
+    }
+
+    public void onHeroGainExp( float levelPercent, Hero hero ){
+        //do nothing by default
+    }
+
 	public static void evoke( Hero hero ) {
 		hero.sprite.emitter().burst( Speck.factory( Speck.EVOKE ), 5 );
 	}
@@ -407,6 +466,18 @@ public class Item implements Bundlable {
 	public String desc() {
 		return Messages.get(this, "desc");
 	}
+
+    public String title() {
+        String name = name();
+
+        if (visiblyUpgraded() != 0)
+            name = Messages.format( TXT_TO_STRING_LVL, name, visiblyUpgraded()  );
+
+        if (quantity > 1)
+            name = Messages.format( TXT_TO_STRING_X, name, quantity );
+
+        return name;
+    }
 	
 	public int quantity() {
 		return quantity;
@@ -420,18 +491,28 @@ public class Item implements Bundlable {
 	public int price() {
 		return 0;
 	}
-	
-	public static Item virtual( Class<? extends Item> cl ) {
-		try {
-			
-			Item item = (Item)cl.newInstance();
-			item.quantity = 0;
-			return item;
-			
-		} catch (Exception e) {
-			ArknightsPixelDungeon.reportException(e);
-			return null;
-		}
+
+    //item's value in energy crystals,not used,for now
+    public int energyVal() {
+        return 0;
+    }
+
+    public Item virtual(){
+        Item item = Reflection.newInstance(getClass());
+        if (item == null) return null;
+
+        item.quantity = 0;
+        item.level = level;
+        return item;
+    }
+
+    public Item virtual( Class<? extends Item> cl ) {
+        Item item = Reflection.newInstance(getClass());
+        if (item == null) return null;
+
+        item.quantity = 0;
+        item.level = level;
+        return item;
 	}
 	
 	public Item random() {
@@ -441,10 +522,10 @@ public class Item implements Bundlable {
 	public String status() {
 		return quantity != 1 ? Integer.toString( quantity ) : null;
 	}
-	
-	public void updateQuickslot() {
-			QuickSlotButton.refresh();
-	}
+
+    public static void updateQuickslot() {
+        GameScene.updateItemDisplays = true;
+    }
 	
 	private static final String QUANTITY		= "quantity";
 	private static final String LEVEL			= "level";
@@ -452,8 +533,9 @@ public class Item implements Bundlable {
 	private static final String CURSED			= "cursed";
 	private static final String CURSED_KNOWN	= "cursedKnown";
 	private static final String QUICKSLOT		= "quickslotpos";
-	
-	@Override
+    private static final String KEPT_LOST       = "kept_lost";
+
+    @Override
 	public void storeInBundle( Bundle bundle ) {
 		bundle.put( QUANTITY, quantity );
 		bundle.put( LEVEL, level );
@@ -463,7 +545,8 @@ public class Item implements Bundlable {
 		if (Dungeon.quickslot.contains(this)) {
 			bundle.put( QUICKSLOT, Dungeon.quickslot.getSlot(this) );
 		}
-	}
+        bundle.put( KEPT_LOST, keptThoughLostInvent );
+    }
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
@@ -486,19 +569,29 @@ public class Item implements Bundlable {
 				Dungeon.quickslot.setSlot(bundle.getInt(QUICKSLOT), this);
 			}
 		}
-	}
 
-	public int throwPos( Hero user, int dst){
+        keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
+    }
+
+    public int targetingPos( Hero user, int dst ){
+        return throwPos( user, dst );
+    }
+
+    public int throwPos( Hero user, int dst){
 		return new Ballistica( user.pos, dst, Ballistica.PROJECTILE ).collisionPos;
 	}
-	
-	public void cast( final Hero user, final int dst ) {
+
+    public void throwSound(){
+        Sample.INSTANCE.play(Assets.SND_MISS, 0.6f, 0.6f, 1.5f);
+    }
+
+    public void cast( final Hero user, final int dst ) {
 		
 		final int cell = throwPos( user, dst );
 		user.sprite.zap( cell );
 		user.busy();
 
-		Sample.INSTANCE.play( Assets.SND_MISS, 0.6f, 0.6f, 1.5f );
+        throwSound();
 
 		Char enemy = Actor.findChar( cell );
 		QuickSlotButton.target(enemy);
@@ -513,7 +606,10 @@ public class Item implements Bundlable {
 							new Callback() {
 						@Override
 						public void call() {
-							Item.this.detach(user.belongings.backpack).onThrow(cell);
+                            curUser = user;
+                            Item i = Item.this.detach(user.belongings.backpack);
+                            if (i != null) i.onThrow(cell);
+
 							user.spendAndNext(delay);
 						}
 					});
@@ -525,8 +621,10 @@ public class Item implements Bundlable {
 							new Callback() {
 						@Override
 						public void call() {
-							Item.this.detach(user.belongings.backpack).onThrow(cell);
-							user.spendAndNext(delay);
+                            curUser = user;
+                            Item i = Item.this.detach(user.belongings.backpack);
+                            if (i != null) i.onThrow(cell);
+                            user.spendAndNext(delay);
 						}
 					});
 		}

@@ -73,9 +73,9 @@ public class WndAndroidTextInput extends Window {
 
 		//need to offset to give space for the soft keyboard
 		if (PixelScene.landscape()) {
-			offset( multiLine ? -45 : -45 );
+			//offset( multiLine ? -45 : -45 );
 		} else {
-			offset( multiLine ? -60 : -45 );
+			//offset( multiLine ? -60 : -45 );
 		}
 
 		final int width;

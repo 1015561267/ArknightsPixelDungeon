@@ -24,7 +24,7 @@ public class WndSelectAccessory extends WndInfoItem {
         RedButton btnCancel = new RedButton("取消") {
             @Override
             protected void onClick() {
-                GameScene.selectItem(wndAdjustGun.itemSelector, WndBag.Mode.ALL,Messages.get(this,"select"));
+                GameScene.selectItem(itemSelector);
                 hide();
             }
         };
@@ -36,4 +36,23 @@ public class WndSelectAccessory extends WndInfoItem {
 
         resize(super.width,(int)btnCancel.bottom());
     }
+
+    private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+
+        @Override
+        public String textPrompt() {
+            return Messages.get(WndSelectAccessory.class,"select")
+                    ;
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return true;
+        }
+
+        @Override
+        public void onSelect(Item item) {
+
+        }
+    };
 }

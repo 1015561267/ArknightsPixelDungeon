@@ -89,10 +89,14 @@ public class Ghost extends NPC {
 	}
 	
 	@Override
-	public boolean interact() {
-		sprite.turnTo( pos, Dungeon.hero.pos );
-		
-		Sample.INSTANCE.play( Assets.SND_GHOST );
+	public boolean interact(Char c) {
+        sprite.turnTo( pos, c.pos );
+
+        Sample.INSTANCE.play( Assets.SND_GHOST );
+
+        if (c != Dungeon.hero){
+            return super.interact(c);
+        }
 
         FrostNovaQuestPlot plot = new FrostNovaQuestPlot();
 

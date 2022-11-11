@@ -28,7 +28,6 @@ public class Assets {
     private static final String HEROS = ACTORS + "heros/";
 
     public static final String AVATARS	= HEROS + "avatars.png";
-    public static final String PORTRAITS= HEROS + "portraits.png";
     public static final String WARRIOR	= HEROS + "warrior.png";
     public static final String MAGE		= HEROS + "mage.png";
     public static final String ROGUE	= HEROS + "rogue.png";
@@ -37,6 +36,11 @@ public class Assets {
     public static final String SKILLS = HEROS + "skills/";
     public static final String UNSHEATH= SKILLS + "unsheath_sheet.png";
     public static final String SHADOWLESS = SKILLS + "shadowless_sheet.png";
+
+    private static final String PORTRAIT = ACTORS + "portrait/";
+
+    public static final String PORTRAITS= PORTRAIT + "portraits.png";
+    public static final String FROSTNOVA= PORTRAIT + "frostnova.png";
 
     private static final String MOBS = ACTORS + "mobs/";
     public static final String RAT		= MOBS + "rat.png";

@@ -29,16 +29,24 @@ public class PotionBandolier extends Bag {
 
 	{
 		image = ItemSpriteSheet.BANDOLIER;
-
-		size = 20;
 	}
 
-	@Override
-	public boolean grab( Item item ) {
-		return item instanceof Potion;
-	}
+    @Override
+    public boolean canHold( Item item ) {
+        if (item instanceof Potion
+                //|| item instanceof LiquidMetal
+        ){
+            return super.canHold(item);
+        } else {
+            return false;
+        }
+    }
 
-	@Override
+    public int capacity(){
+        return 19;
+    }
+
+    @Override
 	public int price() {
 		return 40;
 	}

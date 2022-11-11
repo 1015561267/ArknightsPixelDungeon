@@ -92,12 +92,14 @@ public class QuickSlot {
 	}
 
 	public void convertToPlaceholder(Item item){
-		Item placeholder = Item.virtual(item.getClass());
+        if (contains(item)) {
+            Item placeholder = item.virtual();
+            if (placeholder == null) return;
 
-		if (placeholder != null && contains(item))
-			for (int i = 0; i < SIZE; i++)
-				if (getItem(i) == item)
-					setSlot( i , placeholder );
+            for (int i = 0; i < SIZE; i++) {
+                if (getItem(i) == item) setSlot(i, placeholder);
+            }
+        }
 	}
 
 	public Item randomNonePlaceholder(){

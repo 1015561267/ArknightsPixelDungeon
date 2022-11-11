@@ -89,7 +89,7 @@ public class AlchemistsToolkit extends Artifact {
 		super.execute(hero, action);
 
 		if (action.equals(AC_BREW)){
-			GameScene.selectItem(itemSelector, mode, inventoryTitle);
+			GameScene.selectItem(itemSelector);
 		}
 	}
 
@@ -255,8 +255,19 @@ public class AlchemistsToolkit extends Artifact {
 
 	}
 
-	protected WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
+    private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+
+        @Override
+        public String textPrompt() {
+            return inventoryTitle;
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return item instanceof Potion;
+        }
+
+        @Override
 		public void onSelect(Item item) {
 			if (item != null && item instanceof Potion && item.isIdentified()){
 				if (!curGuess.contains(convertName(item.getClass().getSimpleName()))) {

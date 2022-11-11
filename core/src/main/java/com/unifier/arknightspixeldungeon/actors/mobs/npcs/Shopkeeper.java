@@ -22,11 +22,13 @@
 package com.unifier.arknightspixeldungeon.actors.mobs.npcs;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.particles.ElmoParticle;
 import com.unifier.arknightspixeldungeon.items.Heap;
 import com.unifier.arknightspixeldungeon.items.Item;
+import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ShopkeeperSprite;
@@ -81,29 +83,56 @@ public class Shopkeeper extends NPC {
 	public boolean reset() {
 		return true;
 	}
-	
-	public static WndBag sell() {
-		return GameScene.selectItem( itemSelector, WndBag.Mode.FOR_SALE, Messages.get(Shopkeeper.class, "sell"));
-	}
-	
-	private static WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
-		public void onSelect( Item item ) {
-			if (item != null) {
-				WndBag parentWnd = sell();
-				GameScene.show( new WndTradeItem( item, parentWnd ) );
-			}
-		}
-	};
 
-	@Override
-	public boolean interact() {
+    //shopkeepers are greedy!
+    public static int sellPrice(Item item){
+        return item.price() * 5 * (Dungeon.depth / 5 + 1);
+    }
+
+    public static WndBag sell() {
+        return GameScene.selectItem( itemSelector );
+    }
+
+    public static boolean canSell(Item item){
+        if (item.price() <= 0)                                              return false;
+        if (item.unique && !item.stackable)                                 return false;
+        if (item instanceof Armor && ((Armor) item).checkSeal() != null)    return false;
+        if (item.isEquipped(Dungeon.hero) && item.cursed)                   return false;
+        return true;
+    }
+
+    private static WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+        @Override
+        public String textPrompt() {
+            return Messages.get(Shopkeeper.class, "sell");
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return Shopkeeper.canSell(item);
+        }
+
+        @Override
+        public void onSelect( Item item ) {
+            if (item != null) {
+                WndBag parentWnd = sell();
+                GameScene.show( new WndTradeItem( item, parentWnd ) );
+            }
+        }
+    };
+
+    @Override
+    public boolean interact(Char c) {
+        if (c != Dungeon.hero) {
+            return true;
+        }
         Game.runOnRenderThread(new Callback() {
             @Override
             public void call() {
                 sell();
             }
         });
-		return false;
-	}
+        return true;
+    }
+
 }

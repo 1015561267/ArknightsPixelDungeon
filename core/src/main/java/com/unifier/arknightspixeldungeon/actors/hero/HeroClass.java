@@ -31,11 +31,13 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Shadowless;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
+import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.LevelTeleporter;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
+import com.unifier.arknightspixeldungeon.items.artifacts.SandalsOfNature;
 import com.unifier.arknightspixeldungeon.items.bags.PotionBandolier;
 import com.unifier.arknightspixeldungeon.items.bags.ScrollHolder;
 import com.unifier.arknightspixeldungeon.items.bags.VelvetPouch;
@@ -133,6 +135,15 @@ public enum HeroClass {
 			new PotionOfExperience().identify().collect();
 		}
 
+		SandalsOfNature sandalsOfNature = new SandalsOfNature();
+		sandalsOfNature.identify().collect();
+
+        for(int j=0;j<100;j++) {
+            Item seed = Generator.random(Generator.Category.SEED);
+            seed.collect();
+        }
+
+
         //new ScrollOfRage().identify().collect();
 
         //new TomeOfMastery().collect();
@@ -198,8 +209,8 @@ public enum HeroClass {
 		(hero.belongings.weapon = new Dagger()).identify();
 
 		CloakOfShadows cloak = new CloakOfShadows();
-		(hero.belongings.misc1 = cloak).identify();
-		hero.belongings.misc1.activate( hero );
+		(hero.belongings.artifact = cloak).identify();
+		hero.belongings.artifact.activate( hero );
 
 		ThrowingKnife knives = new ThrowingKnife();
 		knives.quantity(3).collect();

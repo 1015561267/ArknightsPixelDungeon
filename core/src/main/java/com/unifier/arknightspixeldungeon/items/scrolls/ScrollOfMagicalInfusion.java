@@ -37,8 +37,12 @@ public class ScrollOfMagicalInfusion extends InventoryScroll {
 		initials = 2;
 		mode = WndBag.Mode.ENCHANTABLE;
 	}
-	
-	@Override
+
+    protected boolean usableOnItem( Item item ){
+        return item instanceof Weapon || item instanceof Armor;
+    }
+
+    @Override
 	protected void onItemSelected( Item item ) {
 
 		if (item instanceof Weapon)

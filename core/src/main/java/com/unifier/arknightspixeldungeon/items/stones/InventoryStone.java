@@ -25,6 +25,7 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.actors.buffs.Invisibility;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.items.Item;
+import com.unifier.arknightspixeldungeon.items.bags.Bag;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.windows.WndBag;
@@ -33,17 +34,20 @@ import com.watabou.noosa.audio.Sample;
 import java.util.ArrayList;
 
 public abstract class InventoryStone extends Runestone {
-	
-	protected String inventoryTitle = Messages.get(this, "inv_title");
+
 	protected WndBag.Mode mode = WndBag.Mode.ALL;
-	
+
 	{
 		defaultAction = AC_USE;
 	}
 	
 	public static final String AC_USE	= "USE";
-	
-	@Override
+
+    private String inventoryTitle(){
+        return Messages.get(this, "inv_title");
+    }
+
+    @Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add( AC_USE );
@@ -61,7 +65,7 @@ public abstract class InventoryStone extends Runestone {
 	
 	@Override
 	protected void activate(int cell) {
-		GameScene.selectItem( itemSelector, mode, inventoryTitle );
+		GameScene.selectItem( itemSelector );
 	}
 	
 	protected void useAnimation() {
@@ -72,11 +76,27 @@ public abstract class InventoryStone extends Runestone {
 		Sample.INSTANCE.play( Assets.SND_READ );
 		Invisibility.dispel();
 	}
-	
-	protected abstract void onItemSelected( Item item );
-	
-	protected static WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
+
+    protected Class<?extends Bag> preferredBag = null;
+
+    protected boolean usableOnItem( Item item ){
+        return true;
+    }
+
+    protected abstract void onItemSelected( Item item );
+
+    protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+        @Override
+        public String textPrompt() {
+            return inventoryTitle();
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return usableOnItem(item);
+        }
+
+        @Override
 		public void onSelect( Item item ) {
 			
 			//FIXME this safety check shouldn't be necessary

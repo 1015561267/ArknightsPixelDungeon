@@ -25,6 +25,7 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.actors.buffs.Invisibility;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.Item;
+import com.unifier.arknightspixeldungeon.items.bags.Bag;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.windows.WndBag;
@@ -33,10 +34,19 @@ import com.watabou.noosa.audio.Sample;
 
 public abstract class InventoryScroll extends Scroll {
 
-	protected String inventoryTitle = Messages.get(this, "inv_title");
 	protected WndBag.Mode mode = WndBag.Mode.ALL;
-	
-	@Override
+
+    private String inventoryTitle(){
+        return Messages.get(this, "inv_title");
+    }
+
+    protected boolean usableOnItem( Item item ){
+        return true;
+    }
+
+    protected Class<?extends Bag> preferredBag = null;
+
+    @Override
 	public void doRead() {
 		
 		if (!isKnown()) {
@@ -46,7 +56,7 @@ public abstract class InventoryScroll extends Scroll {
 			identifiedByUse = false;
 		}
 		
-		GameScene.selectItem( itemSelector, mode, inventoryTitle );
+		GameScene.selectItem( itemSelector );
 	}
 	
 	private void confirmCancelation() {
@@ -63,7 +73,7 @@ public abstract class InventoryScroll extends Scroll {
 
 					break;
 				case 1:
-					GameScene.selectItem( itemSelector, mode, inventoryTitle );
+					GameScene.selectItem( itemSelector );
 					break;
 				}
 			}
@@ -72,37 +82,48 @@ public abstract class InventoryScroll extends Scroll {
 	}
 	
 	protected abstract void onItemSelected( Item item );
-	
-	protected static boolean identifiedByUse = false;
-	protected static WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
-		public void onSelect( Item item ) {
-			
-			//FIXME this safety check shouldn't be necessary
-			//it would be better to eliminate the curItem static variable.
-			if (!(curItem instanceof InventoryScroll)){
-				return;
-			}
-			
-			if (item != null) {
-				
-				((InventoryScroll)curItem).onItemSelected( item );
-				((InventoryScroll)curItem).readAnimation();
-				
-				Sample.INSTANCE.play( Assets.SND_READ );
-				Invisibility.dispel();
 
-				Talent.afterItemUse(curItem);
-				
-			} else if (identifiedByUse && !((Scroll)curItem).ownedByBook) {
-				
-				((InventoryScroll)curItem).confirmCancelation();
-				
-			} else if (!((Scroll)curItem).ownedByBook) {
-				
-				curItem.collect( curUser.belongings.backpack );
-				
-			}
+	protected static boolean identifiedByUse = false;
+
+    protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+        @Override
+        public String textPrompt() {
+            return inventoryTitle();
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return usableOnItem(item);
+        }
+
+        @Override
+            public void onSelect( Item item ) {
+
+                //FIXME this safety check shouldn't be necessary
+                //it would be better to eliminate the curItem static variable.
+                if (!(curItem instanceof InventoryScroll)){
+                    return;
+                }
+
+                if (item != null) {
+
+                    ((InventoryScroll)curItem).onItemSelected( item );
+                    ((InventoryScroll)curItem).readAnimation();
+
+                    Sample.INSTANCE.play( Assets.SND_READ );
+                    Invisibility.dispel();
+
+                    Talent.afterItemUse(curItem);
+
+                } else if (identifiedByUse && !((Scroll)curItem).ownedByBook) {
+
+                    ((InventoryScroll)curItem).confirmCancelation();
+
+                } else if (!((Scroll)curItem).ownedByBook) {
+
+                    curItem.collect( curUser.belongings.backpack );
+
+                }
 		}
 	};
 }

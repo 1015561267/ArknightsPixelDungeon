@@ -65,7 +65,7 @@ public class ArmorKit extends Item {
 		if (action == AC_APPLY) {
 
 			curUser = hero;
-			GameScene.selectItem( itemSelector, WndBag.Mode.ARMOR, Messages.get(this, "prompt") );
+			GameScene.selectItem( itemSelector );
 			
 		}
 	}
@@ -107,9 +107,19 @@ public class ArmorKit extends Item {
 		curUser.sprite.operate( curUser.pos );
 		Sample.INSTANCE.play( Assets.SND_EVOKE );
 	}
-	
-	private final WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
+
+    private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+        @Override
+        public String textPrompt() {
+            return Messages.get(ArmorKit.class, "prompt");
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return item instanceof Armor;
+        }
+
+        @Override
 		public void onSelect( Item item ) {
 			if (item != null) {
 				ArmorKit.this.upgrade( (Armor)item );

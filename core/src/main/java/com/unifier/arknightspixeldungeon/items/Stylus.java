@@ -22,10 +22,12 @@
 package com.unifier.arknightspixeldungeon.items;
 
 import com.unifier.arknightspixeldungeon.Assets;
+import com.unifier.arknightspixeldungeon.actors.hero.Belongings;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.effects.Enchanting;
 import com.unifier.arknightspixeldungeon.effects.particles.PurpleParticle;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
+import com.unifier.arknightspixeldungeon.items.bags.Bag;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
@@ -64,7 +66,7 @@ public class Stylus extends Item {
 		if (action.equals(AC_INSCRIBE)) {
 
 			curUser = hero;
-			GameScene.selectItem( itemSelector, WndBag.Mode.ARMOR, Messages.get(this, "prompt") );
+			GameScene.selectItem( itemSelector);
 			
 		}
 	}
@@ -109,8 +111,23 @@ public class Stylus extends Item {
 		return 30 * quantity;
 	}
 
-	private final WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
+    private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+        @Override
+        public String textPrompt() {
+            return Messages.get(Stylus.class, "prompt");
+        }
+
+        @Override
+        public Class<?extends Bag> preferredBag(){
+            return Belongings.Backpack.class;
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return item instanceof Armor;
+        }
+
+        @Override
 		public void onSelect( Item item ) {
 			if (item != null) {
 				Stylus.this.inscribe( (Armor)item );

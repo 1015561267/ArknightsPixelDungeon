@@ -69,7 +69,7 @@ public class WndBlacksmith extends Window {
 			@Override
 			protected void onClick() {
 				btnPressed = btnItem1;
-				GameScene.selectItem( itemSelector, WndBag.Mode.UPGRADEABLE, Messages.get(WndBlacksmith.class, "select") );
+				GameScene.selectItem( itemSelector );
 			}
 		};
 		btnItem1.setRect( (WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.top() + message.height() + BTN_GAP, BTN_SIZE, BTN_SIZE );
@@ -79,7 +79,7 @@ public class WndBlacksmith extends Window {
 			@Override
 			protected void onClick() {
 				btnPressed = btnItem2;
-				GameScene.selectItem( itemSelector, WndBag.Mode.UPGRADEABLE, Messages.get(WndBlacksmith.class, "select") );
+				GameScene.selectItem( itemSelector );
 			}
 		};
 		btnItem2.setRect( btnItem1.right() + BTN_GAP, btnItem1.top(), BTN_SIZE, BTN_SIZE );
@@ -99,9 +99,19 @@ public class WndBlacksmith extends Window {
 		
 		resize( WIDTH, (int)btnReforge.bottom() );
 	}
-	
-	protected WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
+
+    private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+        @Override
+        public String textPrompt() {
+            return Messages.get(WndBlacksmith.class, "select");
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return item.isUpgradable();
+        }
+
+        @Override
 		public void onSelect( Item item ) {
 			if (item != null) {
 				btnPressed.item( item );

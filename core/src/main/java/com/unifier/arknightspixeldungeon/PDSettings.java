@@ -24,8 +24,10 @@ package com.unifier.arknightspixeldungeon;
 import com.unifier.arknightspixeldungeon.messages.Languages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
+import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameSettings;
 import com.watabou.utils.Point;
 
@@ -50,12 +52,12 @@ public class PDSettings extends GameSettings {
 	public static final String KEY_FULLSCREEN	= "fullscreen";
 	public static final String KEY_LANDSCAPE	= "landscape";
 	public static final String KEY_POWER_SAVER 	= "power_saver";
-	public static final String KEY_SCALE		= "scale";
 	public static final String KEY_ZOOM			= "zoom";
 	public static final String KEY_BRIGHTNESS	= "brightness";
 	public static final String KEY_GRID 	    = "visual_grid";
-	
-	public static void fullscreen( boolean value ) {
+    public static final String KEY_CAMERA_FOLLOW= "camera_follow";
+
+    public static void fullscreen( boolean value ) {
 		put( KEY_FULLSCREEN, value );
 
         ArknightsPixelDungeon.updateSystemUI();
@@ -88,15 +90,7 @@ public class PDSettings extends GameSettings {
 	public static boolean powerSaver(){
 		return getBoolean( KEY_POWER_SAVER, false );
 	}
-	
-	public static void scale( int value ) {
-		put( KEY_SCALE, value );
-	}
-	
-	public static int scale() {
-		return getInt( KEY_SCALE, 0 );
-	}
-	
+
 	public static void zoom( int value ) {
 		put( KEY_ZOOM, value );
 	}
@@ -122,15 +116,52 @@ public class PDSettings extends GameSettings {
 	public static int visualGrid() {
 		return getInt( KEY_GRID, -1, -1, 3 );
 	}
-	
-	//Interface
-	
+
+    public static void cameraFollow( int value ){
+        put( KEY_CAMERA_FOLLOW, value );
+        GameScene.updateMap();
+    }
+
+    public static int cameraFollow() {
+        return getInt( KEY_CAMERA_FOLLOW, 4, 1, 4 );
+    }
+
+    //Interface
+
+    public static final String KEY_UI_SIZE 	    = "full_ui";
+    public static final String KEY_SCALE		= "scale";
 	public static final String KEY_QUICKSLOTS	= "quickslots";
 	public static final String KEY_FLIPTOOLBAR	= "flipped_ui";
 	public static final String KEY_FLIPTAGS 	= "flip_tags";
 	public static final String KEY_BARMODE		= "toolbar_mode";
-	
-	public static void quickSlots( int value ){ put( KEY_QUICKSLOTS, value ); }
+
+    //0 = mobile, 1 = mixed (large without inventory in main UI), 2 = large
+    public static void interfaceSize( int value ){
+        put( KEY_UI_SIZE, value );
+    }
+
+    public static int interfaceSize(){
+        int size = getInt( KEY_UI_SIZE, DeviceCompat.isDesktop() ? 2 : 0 );
+        if (size > 0){
+            //force mobile UI if there is not enough space for full UI
+            float wMin = Game.width / PixelScene.MIN_WIDTH_FULL;
+            float hMin = Game.height / PixelScene.MIN_HEIGHT_FULL;
+            if (Math.min(wMin, hMin) < 2*Game.density){
+                size = 0;
+            }
+        }
+        return size;
+    }
+
+    public static void scale( int value ) {
+        put( KEY_SCALE, value );
+    }
+
+    public static int scale() {
+        return getInt( KEY_SCALE, 0 );
+    }
+
+    public static void quickSlots( int value ){ put( KEY_QUICKSLOTS, value ); }
 	
 	public static int quickSlots(){ return getInt( KEY_QUICKSLOTS, 4, 0, 4); }
 	
@@ -158,8 +189,12 @@ public class PDSettings extends GameSettings {
 	
 	public static final String KEY_LAST_CLASS	= "last_class";
 	public static final String KEY_CHALLENGES	= "challenges";
-	public static final String KEY_INTRO		= "intro";
-	
+    public static final String KEY_CUSTOM_SEED	= "custom_seed";
+    public static final String KEY_LAST_DAILY	= "last_daily";//not implemented yet
+    public static final String KEY_INTRO		= "intro";
+
+    public static final String KEY_SUPPORT_NAGGED= "support_nagged";
+
 	public static void intro( boolean value ) {
 		put( KEY_INTRO, value );
 	}
@@ -184,33 +219,26 @@ public class PDSettings extends GameSettings {
 		return getInt( KEY_CHALLENGES, 0, 0, Challenges.MAX_VALUE );
 	}
 
+    //Input
 
-    //Window management (desktop only atm)
+    public static final String KEY_CONTROLLER_SENS  = "controller_sens";
+    public static final String KEY_MOVE_SENS        = "move_sens";
 
-    public static final String KEY_WINDOW_WIDTH     = "window_width";
-    public static final String KEY_WINDOW_HEIGHT    = "window_height";
-    public static final String KEY_WINDOW_MAXIMIZED = "window_maximized";
-
-    public static void windowResolution( Point p ){
-        put(KEY_WINDOW_WIDTH, p.x);
-        put(KEY_WINDOW_HEIGHT, p.y);
+    public static void controllerPointerSensitivity( int value ){
+        put( KEY_CONTROLLER_SENS, value );
     }
 
-    public static Point windowResolution(){
-        return new Point(
-                getInt( KEY_WINDOW_WIDTH, 960, 480, Integer.MAX_VALUE ),
-                getInt( KEY_WINDOW_HEIGHT, 640, 320, Integer.MAX_VALUE )
-        );
+    public static int controllerPointerSensitivity(){
+        return getInt(KEY_CONTROLLER_SENS, 5, 1, 10);
     }
 
-    public static void windowMaximized( boolean value ){
-        put( KEY_WINDOW_MAXIMIZED, value );
+    public static void movementHoldSensitivity( int value ){
+        put( KEY_MOVE_SENS, value );
     }
 
-    public static boolean windowMaximized(){
-        return getBoolean( KEY_WINDOW_MAXIMIZED, false );
+    public static int movementHoldSensitivity(){
+        return getInt(KEY_MOVE_SENS, 3, 0, 4);
     }
-
 
     //Audio
 	
@@ -218,6 +246,7 @@ public class PDSettings extends GameSettings {
 	public static final String KEY_MUSIC_VOL    = "music_vol";
 	public static final String KEY_SOUND_FX		= "soundfx";
 	public static final String KEY_SFX_VOL      = "sfx_vol";
+    public static final String KEY_IGNORE_SILENT= "ignore_silent";
 
 	public static void music( boolean value ) {
 		Music.INSTANCE.enable( value );
@@ -254,8 +283,17 @@ public class PDSettings extends GameSettings {
 	public static int SFXVol() {
 		return getInt( KEY_SFX_VOL, 10, 0, 10 );
 	}
-	
-	//Languages and Font
+
+    public static void ignoreSilentMode( boolean value ){
+        put( KEY_IGNORE_SILENT, value);
+        Game.platform.setHonorSilentSwitch(!value);
+    }
+
+    public static boolean ignoreSilentMode(){
+        return getBoolean( KEY_IGNORE_SILENT, false);
+    }
+
+    //Languages and Font
 	
 	public static final String KEY_LANG         = "language";
 	public static final String KEY_SYSTEMFONT	= "system_font";
@@ -282,5 +320,30 @@ public class PDSettings extends GameSettings {
 				(//language() == Languages.KOREAN ||
                  language() == Languages.CHINESE));
 	}
-	
+
+    //Window management (desktop only atm)
+
+    public static final String KEY_WINDOW_WIDTH     = "window_width";
+    public static final String KEY_WINDOW_HEIGHT    = "window_height";
+    public static final String KEY_WINDOW_MAXIMIZED = "window_maximized";
+
+    public static void windowResolution( Point p ){
+        put(KEY_WINDOW_WIDTH, p.x);
+        put(KEY_WINDOW_HEIGHT, p.y);
+    }
+
+    public static Point windowResolution(){
+        return new Point(
+                getInt( KEY_WINDOW_WIDTH, 800, 720, Integer.MAX_VALUE ),
+                getInt( KEY_WINDOW_HEIGHT, 600, 400, Integer.MAX_VALUE )
+        );
+    }
+
+    public static void windowMaximized( boolean value ){
+        put( KEY_WINDOW_MAXIMIZED, value );
+    }
+
+    public static boolean windowMaximized(){
+        return getBoolean( KEY_WINDOW_MAXIMIZED, false );
+    }
 }

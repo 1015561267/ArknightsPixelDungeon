@@ -26,6 +26,7 @@ import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
+import com.unifier.arknightspixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.utils.GLog;
@@ -37,7 +38,14 @@ public class StoneOfEnchantment extends InventoryStone {
 		mode = WndBag.Mode.ENCHANTABLE;
 		image = ItemSpriteSheet.STONE_TIWAZ;
 	}
-	
+
+    @Override
+    protected boolean usableOnItem(Item item) {
+        return (item instanceof MeleeWeapon ||
+                //item instanceof SpiritBow
+                item instanceof Armor);
+    }
+
 	@Override
 	protected void onItemSelected(Item item) {
 		

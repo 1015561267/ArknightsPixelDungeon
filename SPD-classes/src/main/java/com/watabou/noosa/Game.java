@@ -35,6 +35,7 @@ import com.watabou.input.PointerEvent;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PlatformSupport;
 import com.watabou.utils.Reflection;
 
@@ -52,6 +53,9 @@ public class Game implements ApplicationListener {
     // Size of the EGL surface view
     public static int width;
     public static int height;
+
+    //number of pixels from bottom of view before rendering starts
+    public static int bottomInset;
 
     // Density: mdpi=1, hdpi=1.5, xhdpi=2...
     public static float density = 1;
@@ -75,7 +79,7 @@ public class Game implements ApplicationListener {
     public static float timeTotal = 0f;
     public static long realTime = 0;
 
-    protected static InputHandler inputHandler;
+    public static InputHandler inputHandler;
 
     public static PlatformSupport platform;
 
@@ -91,17 +95,12 @@ public class Game implements ApplicationListener {
     //ultimately once the cause is found it should be fixed and this should no longer be needed
     private boolean justResumed = true;
 
-    private boolean paused;
-
-    public boolean isPaused() {
-        return paused;
-    }
-
-    private GLVersion versionContextRef;
-
     @Override
     public void create() {
         density = Gdx.graphics.getDensity();
+        if (density == Float.POSITIVE_INFINITY){
+            density = 100f / 160f; //assume 100PPI if density can't be found
+        }
         dispHeight = Gdx.graphics.getDisplayMode().height;
         dispWidth = Gdx.graphics.getDisplayMode().width;
 
@@ -111,8 +110,10 @@ public class Game implements ApplicationListener {
         versionContextRef = Gdx.graphics.getGLVersion();
         Blending.useDefault();
         TextureCache.reload();
-        Vertexbuffer.refreshAllBuffers();
+        Vertexbuffer.reload();
     }
+
+    private GLVersion versionContextRef;
 
     @Override
     public void resize(int width, int height) {
@@ -126,9 +127,10 @@ public class Game implements ApplicationListener {
             versionContextRef = Gdx.graphics.getGLVersion();
             Blending.useDefault();
             TextureCache.reload();
-            Vertexbuffer.refreshAllBuffers();
+            Vertexbuffer.reload();
         }
 
+        height -= bottomInset;
         if (height != Game.height || width != Game.width) {
 
             Game.width = width;
@@ -153,9 +155,8 @@ public class Game implements ApplicationListener {
         }
 
         if (justResumed){
-            Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
             justResumed = false;
-            return;
+            if (DeviceCompat.isAndroid()) return;
         }
 
         NoosaScript.get().resetCamera();
@@ -250,6 +251,7 @@ public class Game implements ApplicationListener {
         if (scene != null) {
             scene.destroy();
         }
+        Vertexbuffer.clear();
         scene = requestedScene;
         if (onChange != null) onChange.beforeCreate();
         scene.create();

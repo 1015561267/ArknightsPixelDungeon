@@ -23,6 +23,7 @@ package com.unifier.arknightspixeldungeon.ui;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.PDAction;
 import com.unifier.arknightspixeldungeon.PDSettings;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.messages.Messages;
@@ -31,12 +32,12 @@ import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.unifier.arknightspixeldungeon.tiles.DungeonTerrainTilemap;
 import com.unifier.arknightspixeldungeon.windows.WndBag;
-import com.unifier.arknightspixeldungeon.windows.WndJournal;
+import com.unifier.arknightspixeldungeon.windows.WndQuickBag;
+import com.watabou.input.GameAction;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.ui.Button;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
@@ -118,35 +119,68 @@ public class Toolbar extends Component {
 		add(btnQuick[0] = new QuickslotTool(64, 0, 22, 24, 0));
 		
 		add(btnInventory = new Tool(0, 0, 24, 26) {
-			private GoldIndicator gold;
+			//private GoldIndicator gold;
 
-			@Override
-			protected void onClick() {
-				GameScene.show(new WndBag(Dungeon.hero.belongings.backpack, null, WndBag.Mode.ALL, null));
-			}
-			
-			@Override
-			protected boolean onLongClick() {
-				WndJournal.last_index = 2; //catalog page
-				GameScene.show(new WndJournal());
-				return true;
-			}
+            private CurrencyIndicator ind;
 
-			@Override
-			protected void createChildren() {
-				super.createChildren();
-				gold = new GoldIndicator();
-				add(gold);
-			}
+            private Image arrow;
 
-			;
+            @Override
+            protected void onClick() {
+                if (Dungeon.hero.ready || !Dungeon.hero.isAlive()) {
+                    if (PDSettings.interfaceSize() == 2) {
+                        GameScene.toggleInvPane();
+                    } else {
+                        if (!GameScene.cancel()) {
+                            GameScene.show(new WndBag(Dungeon.hero.belongings.backpack));
+                        }
+                    }
+                }
+            }
 
-			@Override
-			protected void layout() {
-				super.layout();
-				gold.fill(this);
-			}
+            @Override
+            public GameAction keyAction() {
+                return PDAction.INVENTORY;
+            }
 
+            @Override
+            public GameAction secondaryTooltipAction() {
+                return PDAction.INVENTORY_SELECTOR;
+            }
+
+            @Override
+            protected String hoverText() {
+                return Messages.titleCase(Messages.get(WndKeyBindings.class, "inventory"));
+            }
+
+            @Override
+            protected boolean onLongClick() {
+                GameScene.show(new WndQuickBag(null));
+                return true;
+            }
+
+            @Override
+            protected void createChildren() {
+                super.createChildren();
+                arrow = Icons.get(Icons.COMPASS);
+                arrow.originToCenter();
+                arrow.visible = PDSettings.interfaceSize() == 2;
+                arrow.tint(0x3D2E18, 1f);
+                add(arrow);
+
+                ind = new CurrencyIndicator();
+                add(ind);
+            }
+
+            @Override
+            protected void layout() {
+                super.layout();
+                ind.fill(this);
+
+                arrow.x = left() + (width - arrow.width())/2;
+                arrow.y = bottom()-arrow.height-1;
+                arrow.angle = bottom() == camera().height ? 0 : 180;
+            }
 			;
 		});
 

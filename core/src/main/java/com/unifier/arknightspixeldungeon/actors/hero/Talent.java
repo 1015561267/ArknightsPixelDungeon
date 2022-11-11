@@ -356,6 +356,12 @@ public enum Talent {
         this.tier = tier;
     }
 
+    public static void onItemCollected(Hero hero, Item item) {
+    }
+
+    public static void onItemIdentified(Hero hero, Item item) {
+    }
+
     public int tier()
     {
         return tier;

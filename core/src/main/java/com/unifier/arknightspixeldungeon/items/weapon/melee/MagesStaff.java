@@ -30,6 +30,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
 import com.unifier.arknightspixeldungeon.effects.particles.ElmoParticle;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.bags.Bag;
+import com.unifier.arknightspixeldungeon.items.bags.MagicalHolster;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.unifier.arknightspixeldungeon.items.wands.Wand;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfCorrosion;
@@ -38,6 +39,7 @@ import com.unifier.arknightspixeldungeon.items.wands.WandOfDisintegration;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfRegrowth;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.unifier.arknightspixeldungeon.windows.WndBag;
@@ -115,7 +117,7 @@ public class MagesStaff extends MeleeWeapon {
 		if (action.equals(AC_IMBUE)) {
 
 			curUser = hero;
-			GameScene.selectItem(itemSelector, WndBag.Mode.WAND, Messages.get(this, "prompt"));
+            GameScene.selectItem(itemSelector);
 
 		} else if (action.equals(AC_ZAP)){
 
@@ -306,60 +308,94 @@ public class MagesStaff extends MeleeWeapon {
 		return 0;
 	}
 
-	private final WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
-		public void onSelect( final Item item ) {
-			if (item != null) {
+    private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
-				if (!item.isIdentified()) {
-					GLog.w(Messages.get(MagesStaff.class, "id_first"));
-					return;
-				} else if (item.cursed){
-					GLog.w(Messages.get(MagesStaff.class, "cursed"));
-					return;
-				}
+        @Override
+        public String textPrompt() {
+            return Messages.get(MagesStaff.class, "prompt");
+        }
 
-				if (wand == null){
-					applyWand((Wand)item);
-				} else {
-					final int newLevel =
-							item.level() >= level() ?
-									level() > 0 ?
-										item.level() + 1
-										: item.level()
-									: level();
-					GameScene.show(
-							new WndOptions("",
-									Messages.get(MagesStaff.class, "warning", newLevel),
-									Messages.get(MagesStaff.class, "yes"),
-									Messages.get(MagesStaff.class, "no")) {
-								@Override
-								protected void onSelect(int index) {
-									if (index == 0) {
-										applyWand((Wand)item);
-									}
-								}
-							}
-					);
-				}
-			}
-		}
+        @Override
+        public Class<?extends Bag> preferredBag(){
+            return MagicalHolster.class;
+        }
 
-		private void applyWand(Wand wand){
-			Sample.INSTANCE.play(Assets.SND_BURNING);
-			curUser.sprite.emitter().burst( ElmoParticle.FACTORY, 12 );
-			evoke(curUser);
+        @Override
+        public boolean itemSelectable(Item item) {
+            return item instanceof Wand;
+        }
 
-			Dungeon.quickslot.clearItem(wand);
+        @Override
+        public void onSelect( final Item item ) {
+            if (item != null) {
 
-			wand.detach(curUser.belongings.backpack);
+                if (!item.isIdentified()) {
+                    GLog.w(Messages.get(MagesStaff.class, "id_first"));
+                    return;
+                } else if (item.cursed){
+                    GLog.w(Messages.get(MagesStaff.class, "cursed"));
+                    return;
+                }
 
-			GLog.p( Messages.get(MagesStaff.class, "imbue", wand.name()));
-			imbueWand( wand, curUser );
+                if (wand == null){
+                    applyWand((Wand)item);
+                } else {
+                    int newLevel;
+                    int itemLevel = item.trueLevel();
+                    if (itemLevel >= trueLevel()){
+                        if (trueLevel() > 0)    newLevel = itemLevel + 1;
+                        else                    newLevel = itemLevel;
+                    } else {
+                        newLevel = trueLevel();
+                    }
 
-			updateQuickslot();
-		}
-	};
+                    String bodyText = Messages.get(MagesStaff.class, "imbue_desc", newLevel);
+
+                    //int preservesLeft = Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION) ? 5 : 0;
+
+                    //if (Dungeon.hero.buff(Talent.WandPreservationCounter.class) != null){
+                    //    preservesLeft -= Dungeon.hero.buff(Talent.WandPreservationCounter.class).count();
+                    //}
+                    //if (Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)){
+                    //    int preserveChance = Dungeon.hero.pointsInTalent(Talent.WAND_PRESERVATION) == 1 ? 67 : 100;
+                     //   bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_talent", preserveChance, preservesLeft);
+                    //} else {
+                    //    bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_lost");
+                    //}
+
+                    GameScene.show(
+                            new WndOptions(new ItemSprite(item),
+                                    Messages.titleCase(item.name()),
+                                    bodyText,
+                                    Messages.get(MagesStaff.class, "yes"),
+                                    Messages.get(MagesStaff.class, "no")) {
+                                @Override
+                                protected void onSelect(int index) {
+                                    if (index == 0) {
+                                        applyWand((Wand)item);
+                                    }
+                                }
+                            }
+                    );
+                }
+            }
+        }
+
+        private void applyWand(Wand wand){
+            Sample.INSTANCE.play(Assets.SND_BURNING);
+            curUser.sprite.emitter().burst( ElmoParticle.FACTORY, 12 );
+            evoke(curUser);
+
+            Dungeon.quickslot.clearItem(wand);
+
+            wand.detach(curUser.belongings.backpack);
+
+            GLog.p( Messages.get(MagesStaff.class, "imbue", wand.name()));
+            imbueWand( wand, curUser );
+
+            updateQuickslot();
+        }
+    };
 
 	private final Emitter.Factory StaffParticleFactory = new Emitter.Factory() {
 		@Override

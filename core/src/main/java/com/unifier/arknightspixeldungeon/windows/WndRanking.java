@@ -43,7 +43,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.ui.Button;
+import com.unifier.arknightspixeldungeon.ui.Button;
 
 import java.util.Locale;
 
@@ -226,11 +226,16 @@ public class WndRanking extends WndTabbed {
 			if (stuff.armor != null) {
 				addItem( stuff.armor );
 			}
-			if (stuff.misc1 != null) {
-				addItem( stuff.misc1);
+
+            if (stuff.artifact != null) {
+                addItem( stuff.artifact );
+            }
+
+			if (stuff.misc != null) {
+				addItem( stuff.misc);
 			}
-			if (stuff.misc2 != null) {
-				addItem( stuff.misc2);
+			if (stuff.ring != null) {
+				addItem( stuff.ring);
 			}
 
 			pos = 0;

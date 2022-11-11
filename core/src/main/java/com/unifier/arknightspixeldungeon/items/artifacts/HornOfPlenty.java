@@ -115,7 +115,7 @@ public class HornOfPlenty extends Artifact {
 
 		} else if (action.equals(AC_STORE)){
 
-			GameScene.selectItem(itemSelector, mode, Messages.get(this, "prompt"));
+			GameScene.selectItem(itemSelector);
 
 		}
 	}
@@ -234,8 +234,18 @@ public class HornOfPlenty extends Artifact {
 
 	}
 
-	protected static WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
+    private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+        @Override
+        public String textPrompt() {
+            return Messages.get(HornOfPlenty.class, "prompt");
+        }
+
+        @Override
+        public boolean itemSelectable(Item item) {
+            return item instanceof Food;
+        }
+
+        @Override
 		public void onSelect( Item item ) {
 			if (item != null && item instanceof Food) {
 				if (item instanceof Blandfruit && ((Blandfruit) item).potionAttrib == null){

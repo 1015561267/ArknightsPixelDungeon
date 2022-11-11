@@ -790,7 +790,7 @@ public class Hero extends Char {
 			
 			ready();
 			sprite.turnTo( pos, npc.pos );
-			return npc.interact();
+			return npc.interact(this);
 			
 		} else {
 			

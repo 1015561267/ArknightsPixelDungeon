@@ -146,9 +146,11 @@ public enum Rankings {
 		Scroll.saveSelectively(handler, belongings.backpack.items);
 		Potion.saveSelectively(handler, belongings.backpack.items);
 		//include worn rings
-		if (belongings.misc1 != null) belongings.backpack.items.add(belongings.misc1);
-		if (belongings.misc2 != null) belongings.backpack.items.add(belongings.misc2);
-		Ring.saveSelectively(handler, belongings.backpack.items);
+		if (belongings.artifact != null) belongings.backpack.items.add(belongings.artifact);
+		if (belongings.misc != null) belongings.backpack.items.add(belongings.misc);
+        if (belongings.ring != null) belongings.backpack.items.add(belongings.ring);
+
+        Ring.saveSelectively(handler, belongings.backpack.items);
 		rec.gameData.put( HANDLERS, handler);
 
 		//restore items now that we're done saving

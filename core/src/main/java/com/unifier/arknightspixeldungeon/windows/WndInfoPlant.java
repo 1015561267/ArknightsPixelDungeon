@@ -30,7 +30,7 @@ public class WndInfoPlant extends WndTitledMessage {
 	public WndInfoPlant( Plant plant ) {
 		
 		super(TerrainFeaturesTilemap.tile( plant.pos, Dungeon.level.map[plant.pos]),
-				plant.plantName, plant.desc());
+				plant.name(), plant.desc());
 
 
 

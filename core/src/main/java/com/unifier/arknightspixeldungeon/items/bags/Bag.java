@@ -27,7 +27,7 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
-import com.unifier.arknightspixeldungeon.windows.WndBag;
+import com.unifier.arknightspixeldungeon.windows.WndQuickBag;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
@@ -49,17 +49,19 @@ public class Bag extends Item implements Iterable<Item> {
 	public Char owner;
 	
 	public ArrayList<Item> items = new ArrayList<Item>();
-	
-	public int size = 1;
-	
-	@Override
+
+    public int capacity(){
+        return 20; // default container size
+    }
+
+    @Override
 	public void execute( Hero hero, String action ) {
 
 		super.execute( hero, action );
 
-		if (action.equals( AC_OPEN )) {
-			
-			GameScene.show( new WndBag( this, null, WndBag.Mode.ALL, null ) );
+		if (action.equals( AC_OPEN ) && !items.isEmpty()) {
+
+            GameScene.show( new WndQuickBag( this ) );
 			
 		}
 	}
@@ -67,27 +69,17 @@ public class Bag extends Item implements Iterable<Item> {
 	@Override
 	public boolean collect( Bag container ) {
 
-		for (Item item : container.items.toArray( new Item[0] )) {
-			if (grab( item )) {
-				int slot = Dungeon.quickslot.getSlot(item);
-				item.detachAll(container);
-				if (!item.collect(this)) {
-					item.collect(container);
-				}
-				if (slot != -1) {
-					Dungeon.quickslot.setSlot(slot, item);
-				}
-			}
-		}
+        grabItems(container);
 
-		if (super.collect( container )) {
-			
-			owner = container.owner;
-			
-			Badges.validateAllBagsBought( this );
-			
-			return true;
-		} else {
+        if (super.collect( container )) {
+
+            owner = container.owner;
+
+            Badges.validateAllBagsBought( this );
+
+            return true;
+        }
+		else {
 			return false;
 		}
 	}
@@ -99,6 +91,27 @@ public class Bag extends Item implements Iterable<Item> {
 			Dungeon.quickslot.clearItem(item);
 		updateQuickslot();
 	}
+
+    public void grabItems(){
+        if (owner != null && owner instanceof Hero && this != ((Hero) owner).belongings.backpack) {
+            grabItems(((Hero) owner).belongings.backpack);
+        }
+    }
+
+    public void grabItems( Bag container ){
+        for (Item item : container.items.toArray( new Item[0] )) {
+            if (canHold( item )) {
+                int slot = Dungeon.quickslot.getSlot(item);
+                item.detachAll(container);
+                if (!item.collect(this)) {
+                    item.collect(container);
+                }
+                if (slot != -1) {
+                    Dungeon.quickslot.setSlot(slot, item);
+                }
+            }
+        }
+    }
 
 	@Override
 	public boolean isUpgradable() {
@@ -121,8 +134,11 @@ public class Bag extends Item implements Iterable<Item> {
 	}
 	
 	private static final String ITEMS	= "inventory";
-	
-	@Override
+
+    //temp variable so that bags can load contents even with lost inventory debuff
+    private boolean loading;
+
+    @Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		bundle.put( ITEMS, items );
@@ -131,9 +147,11 @@ public class Bag extends Item implements Iterable<Item> {
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
+        loading = true;
 		for (Bundlable item : bundle.getCollection( ITEMS )) {
 			if (item != null) ((Item)item).collect( this );
 		};
+        loading = false;
 	}
 	
 	public boolean contains( Item item ) {
@@ -146,10 +164,24 @@ public class Bag extends Item implements Iterable<Item> {
 		}
 		return false;
 	}
-	
-	public boolean grab( Item item ) {
-		return false;
-	}
+    public boolean canHold( Item item ){
+
+        //if (!loading && owner != null && owner.buff(LostInventory.class) != null
+        //        && !item.keptThoughLostInvent){
+        //    return false;
+        //}
+
+        if (items.contains(item) || item instanceof Bag || items.size() < capacity()){
+            return true;
+        } else if (item.stackable) {
+            for (Item i : items) {
+                if (item.isSimilar( i )) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 	@Override
 	public Iterator<Item> iterator() {

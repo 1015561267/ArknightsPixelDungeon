@@ -82,9 +82,13 @@ public class Wandmaker extends NPC {
 	}
 	
 	@Override
-	public boolean interact() {
-		
-		sprite.turnTo( pos, Dungeon.hero.pos );
+	public boolean interact(Char c) {
+        sprite.turnTo( pos, Dungeon.hero.pos );
+
+        if (c != Dungeon.hero){
+            return true;
+        }
+
 		if (Quest.given) {
 			
 			Item item;

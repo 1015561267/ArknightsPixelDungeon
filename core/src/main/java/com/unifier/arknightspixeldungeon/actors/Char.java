@@ -140,7 +140,11 @@ public abstract class Char extends Actor {
         return fieldOfView[target.pos];
     }
 
-	@Override
+    public String name(){
+        return Messages.get(this, "name");
+    }
+
+    @Override
 	protected boolean act() {
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];
@@ -952,4 +956,83 @@ public abstract class Char extends Actor {
 			return new HashSet<>(immunities);
 		}
 	}
+
+    public boolean canInteract(Char c){
+        if (Dungeon.level.adjacent( pos, c.pos )){
+            return true;
+        } else if (c instanceof Hero
+                && alignment == Alignment.ALLY
+                //&& Dungeon.level.distance(pos, c.pos) <= 2*Dungeon.hero.pointsInTalent(Talent.ALLY_WARP)
+        ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //swaps places by default
+    public boolean interact(Char c){
+
+        //don't allow char to swap onto hazard unless they're flying
+        //you can swap onto a hazard though, as you're not the one instigating the swap
+        if (!Dungeon.level.passable[pos] && !c.flying){
+            return true;
+        }
+
+        //can't swap into a space without room
+        //if (properties().contains(Property.LARGE) && !Dungeon.level.openSpace[c.pos]
+        //        || c.properties().contains(Property.LARGE) && !Dungeon.level.openSpace[pos]){
+        //    return true;
+        //}
+
+        int curPos = pos;
+
+        //warp instantly with allies in this case
+        /*if (c == Dungeon.hero && Dungeon.hero.hasTalent(Talent.ALLY_WARP)){
+            PathFinder.buildDistanceMap(c.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
+            if (PathFinder.distance[pos] == Integer.MAX_VALUE){
+                return true;
+            }
+            ScrollOfTeleportation.appear(this, c.pos);
+            ScrollOfTeleportation.appear(c, curPos);
+            Dungeon.observe();
+            GameScene.updateFog();
+            return true;
+        }*/
+
+        //can't swap places if one char has restricted movement
+        if (rooted || c.rooted || buff(Vertigo.class) != null || c.buff(Vertigo.class) != null){
+            return true;
+        }
+
+        moveSprite( pos, c.pos );
+        move( c.pos );
+
+        c.sprite.move( c.pos, curPos );
+        c.move( curPos );
+
+        c.spend( 1 / c.speed() );
+
+        if (c == Dungeon.hero){
+            //if (Dungeon.hero.subClass == HeroSubClass.FREERUNNER){
+            ////    Buff.affect(Dungeon.hero, Momentum.class).gainStack();
+            //}
+
+            Dungeon.hero.busy();
+        }
+
+        return true;
+    }
+
+    protected boolean moveSprite( int from, int to ) {
+
+        if (sprite.isVisible() && (Dungeon.level.heroFOV[from] || Dungeon.level.heroFOV[to])) {
+            sprite.move( from, to );
+            return true;
+        } else {
+            sprite.turnTo(from, to);
+            sprite.place( to );
+            return true;
+        }
+    }
 }
