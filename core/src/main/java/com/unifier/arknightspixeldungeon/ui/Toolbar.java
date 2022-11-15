@@ -25,22 +25,33 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.PDAction;
 import com.unifier.arknightspixeldungeon.PDSettings;
+import com.unifier.arknightspixeldungeon.actors.hero.Belongings;
 import com.unifier.arknightspixeldungeon.items.Item;
+import com.unifier.arknightspixeldungeon.items.bags.Bag;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.CellSelector;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
+import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.tiles.DungeonTerrainTilemap;
 import com.unifier.arknightspixeldungeon.windows.WndBag;
+import com.unifier.arknightspixeldungeon.windows.WndKeyBindings;
+import com.unifier.arknightspixeldungeon.windows.WndMessage;
 import com.unifier.arknightspixeldungeon.windows.WndQuickBag;
+import com.unifier.arknightspixeldungeon.windows.WndUseItem;
+import com.watabou.input.ControllerHandler;
 import com.watabou.input.GameAction;
+import com.watabou.input.KeyBindings;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Image;
+import com.watabou.noosa.PointerArea;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
+
+import java.util.ArrayList;
 
 public class Toolbar extends Component {
 
@@ -56,7 +67,7 @@ public class Toolbar extends Component {
 
 	private static Toolbar instance;
 
-	public enum Mode {
+    public enum Mode {
 		SPLIT,
 		GROUP,
 		CENTER
@@ -69,20 +80,46 @@ public class Toolbar extends Component {
 
 		height = btnInventory.height();
 	}
-	
-	@Override
+
+    @Override
+    public synchronized void destroy() {
+        super.destroy();
+        if (instance == this) instance = null;
+    }
+
+    @Override
 	protected void createChildren() {
 		
 		add(btnWait = new Tool(24, 0, 20, 26) {
 			@Override
 			protected void onClick() {
-				examining = false;
-				Dungeon.hero.rest(false);
+                if (Dungeon.hero.ready && !GameScene.cancel()) {
+                    examining = false;
+                    Dungeon.hero.rest(false);
+                }
 			}
 
-			protected boolean onLongClick() {
-				examining = false;
-				Dungeon.hero.rest(true);
+            @Override
+            public GameAction keyAction() {
+                return PDAction.WAIT;
+            }
+
+            @Override
+            public GameAction secondaryTooltipAction() {
+                return PDAction.WAIT_OR_PICKUP;
+            }
+
+            @Override
+            protected String hoverText() {
+                return Messages.titleCase(Messages.get(WndKeyBindings.class, "wait"));
+            }
+
+            @Override
+            protected boolean onLongClick() {
+                if (Dungeon.hero.ready && !GameScene.cancel()) {
+                    examining = false;
+                    Dungeon.hero.rest(true);
+                }
 				return true;
 			}
 
@@ -92,16 +129,28 @@ public class Toolbar extends Component {
 		add(btnSearch = new Tool(44, 0, 20, 26) {
 			@Override
 			protected void onClick() {
-				if (!examining) {
-					GameScene.selectCell(informer);
-					examining = true;
-				} else {
-					informer.onSelect(null);
-					Dungeon.hero.search(true);
-				}
+                if (Dungeon.hero.ready) {
+                    if (!examining && !GameScene.cancel()) {
+                        GameScene.selectCell(informer);
+                        examining = true;
+                    } else {
+                        informer.onSelect(null);
+                        Dungeon.hero.search(true);
+                    }
+                }
 			}
 
-			@Override
+            @Override
+            public GameAction keyAction() {
+                return PDAction.EXAMINE;
+            }
+
+            @Override
+            protected String hoverText() {
+                return Messages.titleCase(Messages.get(WndKeyBindings.class, "examine"));
+            }
+
+            @Override
 			protected boolean onLongClick() {
 				Dungeon.hero.search(true);
 				return true;
@@ -183,13 +232,259 @@ public class Toolbar extends Component {
             }
 		});
 
-		add(pickedUp = new PickedUpItem());
-	}
+		//hidden buttons
+
+        //hidden button for quickslot selector keybind
+        add(new Button(){
+            @Override
+            protected void onClick() {
+                if (QuickSlotButton.targetingSlot != -1){
+                    int cell = QuickSlotButton.autoAim(QuickSlotButton.lastTarget, Dungeon.quickslot.getItem(QuickSlotButton.targetingSlot));
+
+                    if (cell != -1){
+                        GameScene.handleCell(cell);
+                    } else {
+                        //couldn't auto-aim, just target the position and hope for the best.
+                        GameScene.handleCell( QuickSlotButton.lastTarget.pos );
+                    }
+                    return;
+                }
+
+                if (Dungeon.hero.ready && !GameScene.cancel()) {
+
+                    String[] slotNames = new String[6];
+                    Image[] slotIcons = new Image[6];
+                    for (int i = 0; i < 6; i++){
+                        Item item = Dungeon.quickslot.getItem(i);
+
+                        if (item != null && !Dungeon.quickslot.isPlaceholder(i) &&
+                                //(Dungeon.hero.buff(LostInventory.class) == null || item.keptThoughLostInvent)){
+                                //(Dungeon.hero.buff(LostInventory.class) == null ||
+                                        item.keptThoughLostInvent){
+                            slotNames[i] = Messages.titleCase(item.name());
+                            slotIcons[i] = new ItemSprite(item);
+                        } else {
+                            slotNames[i] = Messages.get(Toolbar.class, "quickslot_assign");
+                            slotIcons[i] = new ItemSprite(ItemSpriteSheet.SOMETHING);
+                        }
+                    }
+
+                    String info = "";
+                    if (ControllerHandler.controllerActive){
+                        info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.LEFT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "quickslot_select") + "\n";
+                        info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.RIGHT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "quickslot_assign") + "\n";
+                        info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, true)) + ": " + Messages.get(Toolbar.class, "quickslot_cancel");
+                    } else {
+                        info += Messages.get(WndKeyBindings.class, PDAction.LEFT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "quickslot_select") + "\n";
+                        info += Messages.get(WndKeyBindings.class, PDAction.RIGHT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "quickslot_assign") + "\n";
+                        info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "quickslot_cancel");
+                    }
+
+                    Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "quickslot_prompt"), info, slotNames, slotIcons) {
+                        @Override
+                        public void onSelect(int idx, boolean alt) {
+                            Item item = Dungeon.quickslot.getItem(idx);
+
+                            if (item == null || Dungeon.quickslot.isPlaceholder(idx)
+                                    //|| (Dungeon.hero.buff(LostInventory.class) != null && !item.keptThoughLostInvent)
+                                    || !item.keptThoughLostInvent
+                                    || alt){
+                                //TODO would be nice to use a radial menu for this too
+                                // Also a bunch of code could be moved out of here into subclasses of RadialMenu
+                                GameScene.selectItem(new WndBag.ItemSelector() {
+                                    @Override
+                                    public String textPrompt() {
+                                        return Messages.get(QuickSlotButton.class, "select_item");
+                                    }
+
+                                    @Override
+                                    public boolean itemSelectable(Item item) {
+                                        return item.defaultAction != null;
+                                    }
+
+                                    @Override
+                                    public void onSelect(Item item) {
+                                        if (item != null) {
+                                            Dungeon.quickslot.setSlot( idx , item );
+                                            QuickSlotButton.refresh();
+                                        }
+                                    }
+                                });
+                            } else {
+
+                                item.execute(Dungeon.hero);
+                                if (item.usesTargeting) {
+                                    QuickSlotButton.useTargeting(idx);
+                                }
+                            }
+                            super.onSelect(idx, alt);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public GameAction keyAction() {
+                if (btnWait.active) return PDAction.QUICKSLOT_SELECTOR;
+                else				return null;
+            }
+        });
+
+
+        //hidden button for rest keybind
+        add(new Button(){
+            @Override
+            protected void onClick() {
+                if (Dungeon.hero.ready && !GameScene.cancel()) {
+                    examining = false;
+                    Dungeon.hero.rest(true);
+                }
+            }
+
+            @Override
+            public GameAction keyAction() {
+                if (btnWait.active) return PDAction.REST;
+                else				return null;
+            }
+        });
+
+        //hidden button for wait / pickup keybind
+        add(new Button(){
+            @Override
+            protected void onClick() {
+                if (Dungeon.hero.ready && !GameScene.cancel()) {
+                    //Dungeon.hero.waitOrPickup = true;
+                    if ((Dungeon.level.heaps.get(Dungeon.hero.pos) != null //|| Dungeon.hero.isStandingOnTrampleableGrass())
+                            && Dungeon.hero.handle(Dungeon.hero.pos))){
+                        //trigger hold fast here, even if the hero didn't specifically wait
+                        //if (Dungeon.hero.hasTalent(Talent.HOLD_FAST)){
+                        //    Buff.affect(Dungeon.hero, HoldFast.class);
+                        //}
+                        Dungeon.hero.next();
+                    } else {
+                        examining = false;
+                        Dungeon.hero.rest(false);
+                    }
+                }
+            }
+
+            protected boolean onLongClick() {
+                if (Dungeon.hero.ready && !GameScene.cancel()) {
+                    examining = false;
+                    Dungeon.hero.rest(true);
+                }
+                return true;
+            }
+
+            @Override
+            public GameAction keyAction() {
+                if (btnWait.active) return PDAction.WAIT_OR_PICKUP;
+                else				return null;
+            }
+        });
+
+        //hidden button for inventory selector keybind
+        add(new Button(){
+            @Override
+            protected void onClick() {
+                if (Dungeon.hero.ready && !GameScene.cancel()) {
+                    ArrayList<Bag> bags = Dungeon.hero.belongings.getBags();
+                    String[] names = new String[bags.size()];
+                    Image[] images = new Image[bags.size()];
+                    for (int i = 0; i < bags.size(); i++){
+                        names[i] = Messages.titleCase(bags.get(i).name());
+                        images[i] = new ItemSprite(bags.get(i));
+                    }
+                    String info = "";
+                    if (ControllerHandler.controllerActive){
+                        info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.LEFT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "container_select") + "\n";
+                        info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, true)) + ": " + Messages.get(Toolbar.class, "container_cancel");
+                    } else {
+                        info += Messages.get(WndKeyBindings.class, PDAction.LEFT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "container_select") + "\n";
+                        info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "container_cancel");
+                    }
+
+                    Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "container_prompt"), info, names, images){
+                        @Override
+                        public void onSelect(int idx, boolean alt) {
+                            super.onSelect(idx, alt);
+                            Bag bag = bags.get(idx);
+                            ArrayList<Item> items = (ArrayList<Item>) bag.items.clone();
+
+                            for(Item i : bag.items){
+                                if (i instanceof Bag) items.remove(i);
+                                if (//Dungeon.hero.buff(LostInventory.class) != null &&
+                                        !i.keptThoughLostInvent) items.remove(i);
+                            }
+
+                            if (idx == 0){
+                                Belongings b = Dungeon.hero.belongings;
+                                if (b.ring() != null) items.add(0, b.ring());
+                                if (b.misc() != null) items.add(0, b.misc());
+                                if (b.artifact() != null) items.add(0, b.artifact());
+                                if (b.armor() != null) items.add(0, b.armor());
+                                if (b.weapon() != null) items.add(0, b.weapon());
+                            }
+
+                            if (items.size() == 0){
+                                GameScene.show(new WndMessage(Messages.get(Toolbar.class, "container_empty")));
+                                return;
+                            }
+
+                            String[] itemNames = new String[items.size()];
+                            Image[] itemIcons = new Image[items.size()];
+                            for (int i = 0; i < items.size(); i++){
+                                itemNames[i] = Messages.titleCase(items.get(i).name());
+                                itemIcons[i] = new ItemSprite(items.get(i));
+                            }
+
+                            String info = "";
+                            if (ControllerHandler.controllerActive){
+                                info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.LEFT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "item_select") + "\n";
+                                info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.RIGHT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "item_use") + "\n";
+                                info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, true)) + ": " + Messages.get(Toolbar.class, "item_cancel");
+                            } else {
+                                info += Messages.get(WndKeyBindings.class, PDAction.LEFT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "item_select") + "\n";
+                                info += Messages.get(WndKeyBindings.class, PDAction.RIGHT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "item_use") + "\n";
+                                info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "item_cancel");
+                            }
+
+                            Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "item_prompt"), info, itemNames, itemIcons){
+                                @Override
+                                public void onSelect(int idx, boolean alt) {
+                                    super.onSelect(idx, alt);
+                                    Item item = items.get(idx);
+                                    if (alt && item.defaultAction != null) {
+                                        item.execute(Dungeon.hero);
+                                    } else {
+                                        Game.scene().addToFront(new WndUseItem(null, item));
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public GameAction keyAction() {
+                if (btnWait.active) return PDAction.INVENTORY_SELECTOR;
+                else				return null;
+            }
+        });
+
+        add(pickedUp = new PickedUpItem());
+
+    }
 	
 	@Override
 	protected void layout() {
 
-		int[] visible = new int[4];
+        float right = width;
+
+        int quickslotsToShow = 4;
+
+        int[] visible = new int[4];
 		int slots = PDSettings.quickSlots();
 
 		for(int i = 0; i <= 3; i++)
@@ -229,7 +524,37 @@ public class Toolbar extends Component {
 
 		}
 
-		float right = width;
+        if (PDSettings.interfaceSize() > 0){
+            btnInventory.setPos(right - btnInventory.width(), y);
+            btnWait.setPos(btnInventory.left() - btnWait.width(), y);
+            btnSearch.setPos(btnWait.left() - btnSearch.width(), y);
+
+
+            right = btnSearch.left();
+  //          for(int i = endingSlot; i >= startingSlot; i--) {
+//                if (i == endingSlot){
+                for(int i = 3; i >= 0; i--) {
+                if (i == 0){
+                btnQuick[i].border(0, 2);
+                    btnQuick[i].frame(106, 0, 19, 24);
+                } else if (i == 0){
+                    btnQuick[i].border(2, 1);
+                    btnQuick[i].frame(86, 0, 20, 24);
+                } else {
+                    btnQuick[i].border(0, 1);
+                    btnQuick[i].frame(88, 0, 18, 24);
+                }
+                btnQuick[i].setPos(right-btnQuick[i].width(), y+2);
+                right = btnQuick[i].left();
+            }
+
+            //swap button never appears on larger interface sizes
+
+            return;
+        }
+
+        float shift = 0;
+        //Dote:Damn evan place the judgement of Android and Desktop into PixelScene.landscape() and involve in PDSettings.interfaceSize()
 		switch(Mode.valueOf(PDSettings.toolbarMode())){
 			case SPLIT:
 				btnWait.setPos(x, y);
@@ -276,7 +601,7 @@ public class Toolbar extends Component {
 
 		}
 
-	}
+    }
 
 	public static void updateLayout(){
 		if (instance != null) instance.layout();
@@ -301,7 +626,23 @@ public class Toolbar extends Component {
 		}
 	}
 
-	public void pickup( Item item, int cell ) {
+    public void setOnlyBagPos(float left, float v) {//We just change inventoryPane itself instead,as  remains
+
+    }
+
+
+    //void alpha( float value ){
+    //    btnWait.alpha( value );
+    //    btnSearch.alpha( value );
+    //    btnInventory.alpha( value );
+     //   for (QuickslotTool tool : btnQuick){
+     //       tool.alpha(value);
+     //   }
+     //   btnSwap.alpha( value );
+    //}
+
+
+    public void pickup( Item item, int cell ) {
 		pickedUp.reset( item,
 			cell,
 			btnInventory.centerX(),
@@ -311,9 +652,11 @@ public class Toolbar extends Component {
 	private static CellSelector.Listener informer = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer cell ) {
-			instance.examining = false;
-			GameScene.examineCell( cell );
-		}
+            if (instance != null) {
+                instance.examining = false;
+                GameScene.examineCell(cell);
+            }
+        }
 		@Override
 		public String prompt() {
 			return Messages.get(Toolbar.class, "examine_prompt");
@@ -328,9 +671,9 @@ public class Toolbar extends Component {
 		
 		public Tool( int x, int y, int width, int height ) {
 			super();
-
-			hotArea.blockWhenInactive = true;
-			frame(x, y, width, height);
+			//hotArea.blockWhenInactive = true;
+            hotArea.blockLevel = PointerArea.ALWAYS_BLOCK;
+            frame(x, y, width, height);
 		}
 
 		public void frame( int x, int y, int width, int height) {
@@ -355,8 +698,12 @@ public class Toolbar extends Component {
 			base.x = x;
 			base.y = y;
 		}
-		
-		@Override
+
+        public void alpha( float value ){
+            base.alpha(value);
+        }
+
+        @Override
 		protected void onPointerDown() {
 			base.brightness( 1.4f );
 		}
@@ -405,9 +752,17 @@ public class Toolbar extends Component {
 		protected void layout() {
 			super.layout();
 			slot.setRect( x + borderLeft, y + 2, width - borderLeft-borderRight, height - 4 );
-		}
-		
-		@Override
+			//slot.setRect( x, y, width, height );
+            //slot.slotMargins(borderLeft, 2, borderRight, 2);
+        }
+
+        @Override
+        public void alpha(float value) {
+            super.alpha(value);
+            slot.alpha(value);
+        }
+
+        @Override
 		public void enable( boolean value ) {
 			super.enable( value );
 			slot.enable( value );

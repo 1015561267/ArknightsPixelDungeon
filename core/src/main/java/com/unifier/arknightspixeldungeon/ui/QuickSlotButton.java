@@ -32,6 +32,7 @@ import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.utils.BArray;
 import com.unifier.arknightspixeldungeon.windows.WndBag;
+import com.unifier.arknightspixeldungeon.windows.WndKeyBindings;
 import com.watabou.input.GameAction;
 import com.watabou.noosa.Image;
 import com.watabou.utils.PathFinder;

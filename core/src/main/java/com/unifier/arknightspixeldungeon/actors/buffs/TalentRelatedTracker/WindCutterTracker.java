@@ -38,7 +38,7 @@ public class WindCutterTracker extends FlavourBuff {
     public void detach() {
         target.damage(damage, hero);
         if (!target.isAlive()) {
-            GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", target.name)));
+            GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", target.name())));
             //int exp = hero.lvl <= ((Mob) target).maxLvl ? ((Mob) target).EXP : 0;
             //if (exp > 0) {
             //    hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));

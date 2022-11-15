@@ -12,6 +12,7 @@ import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.windows.WndChallenges;
 import com.unifier.arknightspixeldungeon.windows.WndGame;
 import com.unifier.arknightspixeldungeon.windows.WndJournal;
+import com.unifier.arknightspixeldungeon.windows.WndKeyBindings;
 import com.watabou.input.GameAction;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Game;

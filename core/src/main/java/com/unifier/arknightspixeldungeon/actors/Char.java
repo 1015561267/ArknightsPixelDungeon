@@ -105,7 +105,7 @@ public abstract class Char extends Actor {
 	
 	public CharSprite sprite;
 	
-	public String name = "mob";
+	//public String name = "mob";
 	
 	public int HT;
 	public int HP;
@@ -313,10 +313,10 @@ public abstract class Char extends Actor {
 				if (enemy == Dungeon.hero) {
 
 					Dungeon.fail( getClass() );
-					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name)) );
+					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
 
 				} else if (this == Dungeon.hero) {
-					GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)) );
+					GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())) );
 				}
 			}
 
@@ -405,7 +405,7 @@ public abstract class Char extends Actor {
                             reflected.sprite.flash();
                             if (!reflected.isAlive()) {
                                 if(visibleFight) {
-                                    GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", name)));
+                                    GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", name())));
                                 }
                                 Talent.afterReflectKill();
                             }
@@ -509,7 +509,7 @@ public abstract class Char extends Actor {
 
             if (!enemy.isAlive() && visibleFight) {
                 if (this == Dungeon.hero) {
-                    GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)) );
+                    GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())) );
                 }
             }
 

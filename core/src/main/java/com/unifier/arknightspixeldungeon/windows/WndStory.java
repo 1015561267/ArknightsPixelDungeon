@@ -71,11 +71,20 @@ public class WndStory extends Window {
 		tf.setPos(MARGIN, 0);
 		add( tf );
 		
-		add( new PointerArea( chrome ) {
+		//add( new PointerArea( chrome ) {
+        //    protected void onClick( PointerEvent event ) {
+        //        hide();
+        //    }
+		//} );
+
+        PointerArea blocker = new PointerArea( 0, 0, PixelScene.uiCamera.width, PixelScene.uiCamera.height ) {
+            @Override
             protected void onClick( PointerEvent event ) {
-                hide();
+                onBackPressed();
             }
-		} );
+        };
+        blocker.camera = PixelScene.uiCamera;
+        add(blocker);
 		
 		resize( (int)(tf.width() + MARGIN * 2), (int)Math.min( tf.height(), 180 ) );
 	}

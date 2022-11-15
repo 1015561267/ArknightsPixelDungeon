@@ -19,15 +19,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon;;
+package com.unifier.arknightspixeldungeon;
 
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
+import com.unifier.arknightspixeldungeon.scenes.TitleScene;
 import com.unifier.arknightspixeldungeon.scenes.WelcomeScene;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PlatformSupport;
+
+;
 
 public class ArknightsPixelDungeon extends Game {
 	
@@ -181,7 +185,18 @@ public class ArknightsPixelDungeon extends Game {
 				Assets.SND_MIMIC );
 	}
 
-	public static void switchNoFade(Class<? extends PixelScene> c){
+    @Override
+    public void finish() {
+        if (!DeviceCompat.isiOS()) {
+            super.finish();
+        } else {
+            //can't exit on iOS (Apple guidelines), so just go to title screen
+            switchScene(TitleScene.class);
+        }
+    }
+
+
+    public static void switchNoFade(Class<? extends PixelScene> c){
 		switchNoFade(c, null);
 	}
 

@@ -32,7 +32,7 @@ import com.watabou.noosa.NoosaScriptNoLighting;
 import com.watabou.noosa.SkinnedBlock;
 import com.watabou.noosa.ui.Component;
 
-import static com.watabou.noosa.Scene.landscape;
+import static com.unifier.arknightspixeldungeon.scenes.PixelScene.landscape;
 
 public class Archs extends Component {
 

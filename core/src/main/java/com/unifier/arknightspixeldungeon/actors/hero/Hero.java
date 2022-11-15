@@ -193,7 +193,6 @@ public class Hero extends Char {
 	
 	public Hero() {
 		super();
-		name = Messages.get(this, "name");
 
 		HP = HT = 20;
 //		HP = HT = 2000;
@@ -359,6 +358,10 @@ public class Hero extends Char {
        }
     }
 
+    @Override
+    public String name(){
+        return className();
+    }
 
     public String className() {
 		return subClass == null || subClass == HeroSubClass.NONE ? heroClass.title() : subClass.title();
@@ -370,9 +373,9 @@ public class Hero extends Char {
     }
 
 	public String givenName(){
-	    return name.equals(Messages.get(this, "name")) ? className() : name;
+	    return name().equals(Messages.get(this, "name")) ? className() : name();
 	}
-	
+
 	public void live() {
 		Buff.affect( this, Regeneration.class );
 		Buff.affect( this, Hunger.class );

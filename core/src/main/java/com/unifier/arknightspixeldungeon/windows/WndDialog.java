@@ -1,6 +1,7 @@
 package com.unifier.arknightspixeldungeon.windows;
 
 import com.unifier.arknightspixeldungeon.Chrome;
+import com.unifier.arknightspixeldungeon.PDAction;
 import com.unifier.arknightspixeldungeon.PDSettings;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
@@ -11,6 +12,7 @@ import com.unifier.arknightspixeldungeon.ui.ChoiceButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.SkipIndicator;
 import com.unifier.arknightspixeldungeon.ui.Window;
+import com.watabou.input.GameAction;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
@@ -167,7 +169,7 @@ public class WndDialog extends Window {
     }
 
     public PointerArea makeArea() {
-        PointerArea pointerArea = new PointerArea(0,0, PixelScene.uiCamera.width, PixelScene.uiCamera.height) //we wants to make you click anywhere to result in processing plot
+        PointerArea pointerArea = new PointerArea(0,0, PixelScene.uiCamera.width, PixelScene.uiCamera.height,true) //we wants to make you click anywhere to result in processing plot
         {
             @Override
             protected void onClick(PointerEvent event) {
@@ -182,6 +184,26 @@ public class WndDialog extends Window {
                     }
                 }
                 else skipWait();
+            }
+
+            @Override
+            public GameAction keyAction(){
+                return PDAction.WAIT_OR_PICKUP;
+            }
+
+            @Override
+            protected void onClick() {
+                if(readed) {
+                    if (settedPlot.end()) {
+                        hide();
+                    } else {
+                        timeLeft = 0.02f;
+                        times = 0;
+                        readed = false;
+                        settedPlot.process();
+                    }
+                }
+                else skipWait();//Due to evan's code base didn't support pointArea nor multiple hotkey,have to done this stupid thing now
             }
         };
         return pointerArea;
@@ -297,30 +319,12 @@ public class WndDialog extends Window {
 
     public void changeText(String txt) {
         script = txt;
-        //this.text.text(txt);
         resetBlock();
     }
 
     public void resetBlock()
     {
-        /*nowAt = 0;
-        readed = false;
 
-        boolean landscape = false;
-        if(PDSettings.landscape()!=null)
-        {
-            landscape = PDSettings.landscape();//yeah it sounds stupid but without it when entering game first time without minding this would cause crash.And mostly android device don't use landscape as default
-        }
-
-        int textSize = landscape ? 10 : 8;
-
-        for(ColorBlock b:blocks)
-        {
-            if(b != null) {
-                b.x = text.left();
-                b.size(text.width(), textSize + 2f);
-            }
-        }*/
     }
 
     public void showBackground(String txt) {

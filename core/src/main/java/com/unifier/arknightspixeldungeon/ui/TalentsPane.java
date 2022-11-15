@@ -22,6 +22,7 @@
 package com.unifier.arknightspixeldungeon.ui;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.PDSettings;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.ui.skilltreelayouter.ChenSkillTreeLayouter;
@@ -31,8 +32,6 @@ import com.watabou.noosa.ui.Component;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import static com.unifier.arknightspixeldungeon.PDSettings.landscape;
 
 public class TalentsPane extends ScrollPane {
 
@@ -144,7 +143,8 @@ public class TalentsPane extends ScrollPane {
     @Override
     public float ySensitivity()
     {
-        if(landscape())
+        if(PDSettings.landscape()!=null && PDSettings.landscape())
+        //if(landscape())
         {
             return 10000f;
         }

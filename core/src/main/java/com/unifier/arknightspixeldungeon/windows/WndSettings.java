@@ -38,7 +38,6 @@ import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.Toolbar;
 import com.unifier.arknightspixeldungeon.ui.Window;
-import com.unifier.arknightspixeldungeon.ui.WndKeyBindings;
 import com.watabou.input.ControllerHandler;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
@@ -406,8 +405,8 @@ public class WndSettings extends WndTabbed {
     private static class UITab extends Component {
 
         RenderedTextBlock title;
-        ColorBlock sep1;
 
+        ColorBlock sep1;
         OptionSlider optUIMode;
         OptionSlider optUIScale;
 
@@ -606,73 +605,7 @@ public class WndSettings extends WndTabbed {
                 };
                 add(btnToolbarSettings);
 
-                //barDesc = PixelScene.renderTextBlock(Messages.get(this, "mode"), 9);
-                //add(barDesc);
 
-            /*btnSplit = new RedButton(Messages.get(this, "split")){
-                @Override
-                protected void onClick() {
-                    textColor(TITLE_COLOR);
-                    btnGrouped.textColor(WHITE);
-                    btnCentered.textColor(WHITE);
-                    PDSettings.toolbarMode(Toolbar.Mode.SPLIT.name());
-                    Toolbar.updateLayout();
-                }
-            };
-            if (PDSettings.toolbarMode().equals(Toolbar.Mode.SPLIT.name())) btnSplit.textColor(TITLE_COLOR);
-            add(btnSplit);
-
-            btnGrouped = new RedButton(Messages.get(this, "group")){
-                @Override
-                protected void onClick() {
-                    btnSplit.textColor(WHITE);
-                    textColor(TITLE_COLOR);
-                    btnCentered.textColor(WHITE);
-                    PDSettings.toolbarMode(Toolbar.Mode.GROUP.name());
-                    Toolbar.updateLayout();
-                }
-            };
-            if (PDSettings.toolbarMode().equals(Toolbar.Mode.GROUP.name())) btnGrouped.textColor(TITLE_COLOR);
-            add(btnGrouped);
-
-            btnCentered = new RedButton(Messages.get(this, "center")){
-                @Override
-                protected void onClick() {
-                    btnSplit.textColor(WHITE);
-                    btnGrouped.textColor(WHITE);
-                    textColor(TITLE_COLOR);
-                    PDSettings.toolbarMode(Toolbar.Mode.CENTER.name());
-                    Toolbar.updateLayout();
-                }
-            };
-            if (PDSettings.toolbarMode().equals(Toolbar.Mode.CENTER.name())) btnCentered.textColor(TITLE_COLOR);
-            add(btnCentered);*/
-
-                /*chkFlipToolbar = new CheckBox(Messages.get(this, "flip_toolbar")) {
-                    @Override
-                    protected void onClick() {
-                        super.onClick();
-                        PDSettings.flipToolbar(checked());
-                        Toolbar.updateLayout();
-                    }
-                };
-                chkFlipToolbar.checked(PDSettings.flipToolbar());
-                add(chkFlipToolbar);
-
-                chkFlipTags = new CheckBox(Messages.get(this, "flip_indicators")) {
-                    @Override
-                    protected void onClick() {
-                        super.onClick();
-                        PDSettings.flipTags(checked());
-                        GameScene.layoutTags();
-                    }
-                };
-                chkFlipTags.checked(PDSettings.flipTags());
-                add(chkFlipTags);*/
-
-
-                sep2 = new ColorBlock(1, 1, 0xFF000000);
-                add(sep2);
 
             /*chkFullscreen = new CheckBox( Messages.get(this, "fullscreen") ) {
                 @Override
@@ -685,27 +618,43 @@ public class WndSettings extends WndTabbed {
             chkFullscreen.enable(DeviceCompat.supportsFullScreen());
             add(chkFullscreen);*/
 
-                chkFont = new CheckBox(Messages.get(this, "system_font")) {
-                    @Override
-                    protected void onClick() {
-                        super.onClick();
-                        ArknightsPixelDungeon.seamlessResetScene(new Game.SceneChangeCallback() {
-                            @Override
-                            public void beforeCreate() {
-                                PDSettings.systemFont(checked());
-                            }
+            }else {
 
-                            @Override
-                            public void afterCreate() {
-                                //do nothing
-                            }
-                        });
-                    }
-                };
-                chkFont.checked(PDSettings.systemFont());
-                add(chkFont);
+                ///chkFlipTags = new CheckBox(Messages.get(this, "flip_indicators")) {
+                //    @Override
+                //    protected void onClick() {
+                //        super.onClick();
+                 //       SPDSettings.flipTags(checked());
+                //        GameScene.layoutTags();
+                //    }
+                //};
+                //chkFlipTags.checked(SPDSettings.flipTags());
+                //add(chkFlipTags);
 
             }
+
+            sep2 = new ColorBlock(1, 1, 0xFF000000);
+            add(sep2);
+
+            chkFont = new CheckBox(Messages.get(this, "system_font")){
+                @Override
+                protected void onClick() {
+                    super.onClick();
+                    ArknightsPixelDungeon.seamlessResetScene(new Game.SceneChangeCallback() {
+                        @Override
+                        public void beforeCreate() {
+                            PDSettings.systemFont(checked());
+                        }
+
+                        @Override
+                        public void afterCreate() {
+                            //do nothing
+                        }
+                    });
+                }
+            };
+            chkFont.checked(PDSettings.systemFont());
+            add(chkFont);
         }
 
         @Override

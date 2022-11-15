@@ -135,6 +135,9 @@ public class Assets {
     public static final String BUFFS_SMALL	= BUFFS + "buffs.png";
     public static final String BUFFS_LARGE	= BUFFS + "large_buffs.png";
 
+    public static final String RADIAL_MENU = MISCS + "radial_menu.png";
+
+
     private static final String CREATORS= MISCS + "creators/";
 
     public static final String HONEYPOT	  = CREATORS + "Honeypot.png";

@@ -21,6 +21,9 @@
 
 package com.watabou.noosa;
 
+import com.watabou.input.GameAction;
+import com.watabou.input.KeyBindings;
+import com.watabou.input.KeyEvent;
 import com.watabou.input.PointerEvent;
 import com.watabou.utils.Signal;
 
@@ -37,9 +40,11 @@ public class PointerArea extends Visual implements Signal.Listener<PointerEvent>
     public static final int BLOCK_WHEN_ACTIVE = 1;  //Only block when active (default)
     public static final int NEVER_BLOCK = 2;        //Never block (handy for buttons in scroll areas)
 
+    private Signal.Listener<KeyEvent> keyListener;
 
-    //if true, this PointerArea will always block input, even when it is inactive
-    public boolean blockWhenInactive = false;
+    public GameAction keyAction(){
+        return null;
+    }
 
     public PointerArea(Visual target) {
         super(0, 0, 0, 0);
@@ -55,6 +60,39 @@ public class PointerArea extends Visual implements Signal.Listener<PointerEvent>
         visible = false;
 
         PointerEvent.addPointerListener(this);
+    }
+
+    public PointerArea(float x, float y, float width, float height,Boolean gameAction) {
+        super(x, y, width, height);
+        this.target = this;
+        visible = false;
+
+        PointerEvent.addPointerListener(this);
+
+        if(gameAction) {
+            PointerArea pointerArea = this;
+
+            KeyEvent.addKeyListener(keyListener = new Signal.Listener<KeyEvent>() {
+                @Override
+                public boolean onSignal(KeyEvent event) {
+                    if (active && KeyBindings.getActionForKey(event) == keyAction()) {
+                        if (event.pressed) {
+                            //pressed = true;
+                            //pressTime = 0;
+                            //processed = false;
+                            //Button.this.onPointerDown();
+                        } else {
+                            //Button.this.onPointerUp();
+                            //if (pressed && !processed)
+                            onClick();
+                            //pressed = false;
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
@@ -128,6 +166,8 @@ public class PointerArea extends Visual implements Signal.Listener<PointerEvent>
 
     protected void onClick(PointerEvent event) {
     }
+
+    protected void onClick() {} //left click, default key type
 
     protected void onDrag(PointerEvent event) {
     }

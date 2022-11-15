@@ -21,7 +21,6 @@
 
 package com.watabou.noosa;
 
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
@@ -66,7 +65,8 @@ public class Group extends Gizmo {
             if (g != null && g.exists && g.active
                     //functionality for the freezing of emitters(particle effects), effects are given a second
                     //from load to get started so they aren't frozen before anything is generated.
-                    && !(freezeEmitters && Game.timeTotal > 1f && g instanceof Emitter)) {
+            //        && !(freezeEmitters && Game.timeTotal > 1f && g instanceof Emitter)
+            ) {
                 g.update();
             }
         }
@@ -166,7 +166,7 @@ public class Group extends Gizmo {
             g.parent.remove(g);
         }
 
-        if (members.get(0) == null) {
+        if (!members.isEmpty() && members.get(0) == null) {//NOTE otherwise somewhere like keyBinging in desktop config window will crash
             members.set(0, g);
             g.parent = this;
             return g;

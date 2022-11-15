@@ -287,7 +287,7 @@ public class Unsheath extends HeroSkill {
                                                 }
                                             }
                                             if (!enemy.isAlive()) {
-                                                GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name)));
+                                                GLog.i(Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())));
                                                 killAny = true;
                                             }
                                         }

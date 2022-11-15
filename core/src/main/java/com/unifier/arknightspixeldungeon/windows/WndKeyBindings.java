@@ -1,11 +1,14 @@
-package com.unifier.arknightspixeldungeon.ui;
+package com.unifier.arknightspixeldungeon.windows;
 
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.PDAction;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
-import com.unifier.arknightspixeldungeon.windows.WndMessage;
+import com.unifier.arknightspixeldungeon.ui.RedButton;
+import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
+import com.unifier.arknightspixeldungeon.ui.ScrollPane;
+import com.unifier.arknightspixeldungeon.ui.Window;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.GameAction;
 import com.watabou.input.KeyBindings;
@@ -18,7 +21,7 @@ import com.watabou.utils.PointF;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class WndKeyBindings  extends Window {
+public class WndKeyBindings extends Window {
 
     private static final int WIDTH = 135;
 

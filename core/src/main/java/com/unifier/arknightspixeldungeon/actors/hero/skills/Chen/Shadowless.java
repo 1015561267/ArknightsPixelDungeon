@@ -133,7 +133,7 @@ public class Shadowless extends HeroSkill {
                 mob.damage(skillDamage(mob, false), hero);
 
                 if (!mob.isAlive()){
-                    GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name)) );
+                    GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name())) );
                     targets.remove(mob);
 
                     if(hero.hasTalent(Talent.SONIC_CUTTING)){

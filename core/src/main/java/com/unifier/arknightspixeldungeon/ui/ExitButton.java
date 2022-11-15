@@ -22,13 +22,12 @@
 package com.unifier.arknightspixeldungeon.ui;
 
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
-import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.scenes.TitleScene;
+import com.watabou.input.GameAction;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.audio.Sample;
 
-public class ExitButton extends Button {
+public class ExitButton extends IconButton {
 
 	protected Image image;
 
@@ -56,17 +55,6 @@ public class ExitButton extends Button {
 	}
 
 	@Override
-	protected void onPointerDown() {
-		image.brightness( 1.5f );
-		Sample.INSTANCE.play( Assets.SND_CLICK );
-	}
-
-	@Override
-	protected void onPointerUp() {
-		image.resetColor();
-	}
-
-	@Override
 	protected void onClick() {
 		if (Game.scene() instanceof TitleScene) {
 			Game.instance.finish();
@@ -74,4 +62,9 @@ public class ExitButton extends Button {
 			ArknightsPixelDungeon.switchNoFade( TitleScene.class );
 		}
 	}
+
+    @Override
+    public GameAction keyAction() {
+        return GameAction.BACK;
+    }
 }

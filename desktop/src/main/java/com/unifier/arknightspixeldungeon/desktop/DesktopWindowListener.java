@@ -21,7 +21,6 @@
 
 package com.unifier.arknightspixeldungeon.desktop;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowListener;
 import com.unifier.arknightspixeldungeon.PDSettings;
@@ -29,26 +28,17 @@ import com.unifier.arknightspixeldungeon.PDSettings;
 
 
 public class DesktopWindowListener implements Lwjgl3WindowListener {
-	
-	@Override
-	public void created ( Lwjgl3Window lwjgl3Window ) {
-		if (PDSettings.fullscreen()){
-			lwjgl3Window.postRunnable( new Runnable() {
-				@Override
-				public void run () {
-					Gdx.graphics.setFullscreenMode( Gdx.graphics.getDisplayMode() );
-				}
-			} );
-		}
-		if (PDSettings.windowMaximized()) {
-			lwjgl3Window.maximizeWindow();
-		}
-	}
-	
-	@Override
-	public void maximized ( boolean b ) {
+
+    @Override
+    public void created ( Lwjgl3Window lwjgl3Window ) { }
+
+    @Override
+    public void maximized ( boolean b ) {
         PDSettings.windowMaximized( b );
-	}
+        if (b){
+            PDSettings.windowResolution(DesktopPlatformSupport.previousSizes[1]);
+        }
+    }
 	
 	@Override
 	public void iconified ( boolean b ) { }

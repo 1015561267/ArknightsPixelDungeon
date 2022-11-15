@@ -182,7 +182,7 @@ public class PDSettings extends GameSettings {
 	}
 	
 	public static String toolbarMode() {
-		return getString(KEY_BARMODE, !PixelScene.landscape() ? "SPLIT" : "GROUP");
+		return getString(KEY_BARMODE, PixelScene.landscape() ? "GROUP" : "SPLIT");
 	}
 	
 	//Game State

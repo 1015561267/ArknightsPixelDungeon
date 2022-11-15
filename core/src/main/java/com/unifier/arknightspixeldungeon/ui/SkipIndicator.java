@@ -1,6 +1,8 @@
 package com.unifier.arknightspixeldungeon.ui;
 
+import com.unifier.arknightspixeldungeon.PDAction;
 import com.unifier.arknightspixeldungeon.windows.WndDialog;
+import com.watabou.input.GameAction;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.PointerArea;
 
@@ -43,4 +45,10 @@ public class SkipIndicator extends Tag {
             ((WndDialog) this.parent).skipText();
         }
     }
+
+    @Override
+    public GameAction keyAction(){
+        return PDAction.BACK;
+    }
+
 }

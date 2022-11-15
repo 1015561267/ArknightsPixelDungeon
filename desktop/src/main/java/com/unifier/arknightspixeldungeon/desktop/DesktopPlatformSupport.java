@@ -99,7 +99,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
         if (systemfont) {
             basicFontGenerator = asianFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/droid_sans.ttf"));
         } else {
-            basicFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pixel_font.ttf"));
+            basicFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("pixel_font.ttf"));
             asianFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/droid_sans.ttf"));
         }
 

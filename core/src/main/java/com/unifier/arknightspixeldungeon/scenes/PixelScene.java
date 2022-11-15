@@ -188,6 +188,10 @@ public class PixelScene extends Scene {
         PointerEvent.clearListeners();
     }
 
+    public static boolean landscape(){
+        return PDSettings.interfaceSize() > 0 || Game.width > Game.height;
+    }
+
     public static RenderedTextBlock renderTextBlock(int size ){
         return renderTextBlock("", size);
     }

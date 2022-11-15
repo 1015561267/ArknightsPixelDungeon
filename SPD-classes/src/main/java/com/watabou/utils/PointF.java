@@ -139,6 +139,10 @@ public class PointF {
         return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
+    public static float angle( float x, float y ) {
+        return (float)Math.atan2( y, x );
+    }
+
     public static float angle(PointF start, PointF end) {
         return (float) Math.atan2(end.y - start.y, end.x - start.x);
     }

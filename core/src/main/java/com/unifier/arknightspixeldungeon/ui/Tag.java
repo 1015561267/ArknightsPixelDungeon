@@ -31,8 +31,10 @@ public class Tag extends Button {
 	private float g;
 	private float b;
 	protected NinePatch bg;
-	
-	protected float lightness = 0;
+
+    public static int SIZE = 24;
+
+    protected float lightness = 0;
 	
 	public Tag( int color ) {
 		super();

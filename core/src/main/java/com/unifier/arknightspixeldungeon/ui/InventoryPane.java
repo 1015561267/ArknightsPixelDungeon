@@ -52,8 +52,8 @@ public class InventoryPane extends Component {
 
     private Image gold;
     private BitmapText goldTxt;
-    private Image energy;
-    private BitmapText energyTxt;
+    //private Image energy;
+    //private BitmapText energyTxt;
     private RenderedTextBlock promptTxt;
 
     private ArrayList<BagButton> bags;
@@ -214,12 +214,12 @@ public class InventoryPane extends Component {
         gold.x = goldTxt.x + goldTxt.width() + 1;
         gold.y = goldTxt.y;
 
-        energyTxt.x = gold.x + gold.width() + 2;
-        energyTxt.y = y + 5.5f;
-        PixelScene.align(energyTxt);
+        //energyTxt.x = gold.x + gold.width() + 2;
+        //energyTxt.y = y + 5.5f;
+        //PixelScene.align(energyTxt);
 
-        energy.x = energyTxt.x + energyTxt.width() + 1;
-        energy.y = energyTxt.y;
+        //energy.x = energyTxt.x + energyTxt.width() + 1;
+        //energy.y = energyTxt.y;
 
         for (BagButton b : bags) {
             b.setRect(left, y + 14, SLOT_WIDTH, 14);
@@ -253,8 +253,8 @@ public class InventoryPane extends Component {
 
         gold.alpha(value);
         goldTxt.alpha(value);
-        energy.alpha(value);
-        energyTxt.alpha(value);
+        //energy.alpha(value);
+        //energyTxt.alpha(value);
 
         for (BagButton bag : bags) {
             bag.alpha(value);
@@ -321,7 +321,7 @@ public class InventoryPane extends Component {
             promptTxt.visible = true;
 
             goldTxt.visible = gold.visible = false;
-            energyTxt.visible = energy.visible = false;
+            //energyTxt.visible = energy.visible = false;
         }
 
         ArrayList<Bag> inventBags = stuff.getBags();
@@ -333,8 +333,11 @@ public class InventoryPane extends Component {
             }
         }
 
-        /*
-        boolean lostInvent = Dungeon.hero.buff(LostInventory.class) != null;
+
+        //boolean lostInvent = Dungeon.hero.buff(LostInventory.class) != null;
+        //FIXME for now just take it false
+        boolean lostInvent = false;
+
         for (InventorySlot b : equipped) {
             b.enable(lastEnabled
                     && !(b.item() instanceof WndBag.Placeholder)
@@ -346,7 +349,7 @@ public class InventoryPane extends Component {
                     && b.item() != null
                     && (selector == null || selector.itemSelectable(b.item()))
                     && (!lostInvent || b.item().keptThoughLostInvent));
-        }*/
+        }
 
         for (BagButton b : bags) {
             b.enable(lastEnabled);
@@ -354,8 +357,8 @@ public class InventoryPane extends Component {
 
         goldTxt.alpha(lastEnabled ? 1f : 0.3f);
         gold.alpha(lastEnabled ? 1f : 0.3f);
-        energyTxt.alpha(lastEnabled ? 1f : 0.3f);
-        energy.alpha(lastEnabled ? 1f : 0.3f);
+        //energyTxt.alpha(lastEnabled ? 1f : 0.3f);
+        //energy.alpha(lastEnabled ? 1f : 0.3f);
 
         layout();
     }
@@ -418,8 +421,9 @@ public class InventoryPane extends Component {
         if (lastEnabled != (Dungeon.hero.ready || !Dungeon.hero.isAlive())) {
             lastEnabled = (Dungeon.hero.ready || !Dungeon.hero.isAlive());
 
-            /*
-            boolean lostInvent = Dungeon.hero.buff(LostInventory.class) != null;
+
+            boolean lostInvent = false; //Dungeon.hero.buff(LostInventory.class) != null;
+
             for (InventorySlot b : equipped) {
                 b.enable(lastEnabled
                         && !(b.item() instanceof WndBag.Placeholder)
@@ -431,7 +435,7 @@ public class InventoryPane extends Component {
                         && b.item() != null
                         && (selector == null || selector.itemSelectable(b.item()))
                         && (!lostInvent || b.item().keptThoughLostInvent));
-            }*/
+            }
 
             for (BagButton b : bags) {
                 b.enable(lastEnabled);
@@ -439,8 +443,8 @@ public class InventoryPane extends Component {
 
             goldTxt.alpha(lastEnabled ? 1f : 0.3f);
             gold.alpha(lastEnabled ? 1f : 0.3f);
-            energyTxt.alpha(lastEnabled ? 1f : 0.3f);
-            energy.alpha(lastEnabled ? 1f : 0.3f);
+            //energyTxt.alpha(lastEnabled ? 1f : 0.3f);
+            //energy.alpha(lastEnabled ? 1f : 0.3f);
         }
 
     }
