@@ -188,6 +188,7 @@ public class PointerArea extends Visual implements Signal.Listener<PointerEvent>
 
     @Override
     public void destroy() {
+        KeyEvent.removeKeyListener( keyListener );
         PointerEvent.removePointerListener(this);
         super.destroy();
     }

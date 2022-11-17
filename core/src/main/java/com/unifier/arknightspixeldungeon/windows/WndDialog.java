@@ -194,13 +194,15 @@ public class WndDialog extends Window {
             @Override
             protected void onClick() {
                 if(readed) {
-                    if (settedPlot.end()) {
-                        hide();
-                    } else {
-                        timeLeft = 0.02f;
-                        times = 0;
-                        readed = false;
-                        settedPlot.process();
+                    if(settedPlot!=null) {
+                        if (settedPlot.end()) {
+                            hide();
+                        } else {
+                            timeLeft = 0.02f;
+                            times = 0;
+                            readed = false;
+                            settedPlot.process();
+                        }
                     }
                 }
                 else skipWait();//Due to evan's code base didn't support pointArea nor multiple hotkey,have to done this stupid thing now
