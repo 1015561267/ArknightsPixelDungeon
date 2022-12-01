@@ -52,7 +52,7 @@ public abstract class DocumentPage extends Item {
 	@Override
 	public final boolean doPickUp(Hero hero , int pos) {
 		GameScene.pickUpJournal(this, hero.pos);
-		GameScene.flashJournal();
+		GameScene.flashJournal(document(), page());
 		WndJournal.last_index = 0;
 		document().addPage(page);
 		Sample.INSTANCE.play( Assets.SND_ITEM );

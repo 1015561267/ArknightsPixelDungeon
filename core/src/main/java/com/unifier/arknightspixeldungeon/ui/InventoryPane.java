@@ -140,7 +140,7 @@ public class InventoryPane extends Component {
             add(btn);
         }
 
-        gold = Icons.get(Icons.SKULL);//FIXME icons later
+        gold = Icons.get(Icons.SMALL_GOLD);
         add(gold);
         goldTxt = new BitmapText(PixelScene.pixelFont);
         goldTxt.hardlight(Window.TITLE_COLOR);

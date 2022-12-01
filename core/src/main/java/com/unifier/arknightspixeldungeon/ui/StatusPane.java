@@ -27,20 +27,16 @@ import com.unifier.arknightspixeldungeon.PDAction;
 import com.unifier.arknightspixeldungeon.Statistics;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.effects.Speck;
-import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.sprites.HeroSprite;
-import com.unifier.arknightspixeldungeon.windows.WndGame;
 import com.unifier.arknightspixeldungeon.windows.WndHero;
-import com.unifier.arknightspixeldungeon.windows.WndJournal;
 import com.watabou.input.GameAction;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.ColorMath;
@@ -65,18 +61,18 @@ public class StatusPane extends Component {
 	private int lastLvl = -1;
 
 	private BitmapText level;
-	private BitmapText depth;
+	//private BitmapText depth;
 
 	private DangerIndicator danger;
 	private BuffIndicator buffs;
 	private Compass compass;
 
-	private JournalButton btnJournal;
-	private MenuButton btnMenu;
+	//private JournalButton btnJournal;
+	//private MenuButton btnMenu;
 
 	private Toolbar.PickedUpItem pickedUp;
 
-    private BitmapText version;
+    //private BitmapText version;
 
     private SkillLoader loader1;
     private SkillLoader loader2;
@@ -101,11 +97,11 @@ public class StatusPane extends Component {
             }
         }.setRect( 0, 1, 30, 30 ));
 
-		btnJournal = new JournalButton();
-		add( btnJournal );
+		//btnJournal = new JournalButton();
+		//add( btnJournal );
 
-		btnMenu = new MenuButton();
-		add( btnMenu );
+		//btnMenu = new MenuButton();
+		//add( btnMenu );
 
 		avatar = HeroSprite.Portrait(Dungeon.hero.heroClass, lastTier);
 		add( avatar );
@@ -133,10 +129,10 @@ public class StatusPane extends Component {
 		level.hardlight( 0xFFEBA4 );
 		add( level );
 
-		depth = new BitmapText( Integer.toString( Dungeon.depth ), PixelScene.pixelFont);
-		depth.hardlight( 0xCACFC2 );
-		depth.measure();
-		add( depth );
+		//depth = new BitmapText( Integer.toString( Dungeon.depth ), PixelScene.pixelFont);
+		//depth.hardlight( 0xCACFC2 );
+		//depth.measure();
+		//add( depth );
 
 		danger = new DangerIndicator();
 		add( danger );
@@ -146,9 +142,9 @@ public class StatusPane extends Component {
 
 		add( pickedUp = new Toolbar.PickedUpItem());
 
-        version = new BitmapText(  Game.version, PixelScene.pixelFont);
-        version.alpha( 0.5f );
-        add(version);
+        //version = new BitmapText(  Game.version, PixelScene.pixelFont);
+        //version.alpha( 0.5f );
+        //add(version);
 
         loader1 = new SkillLoader(Dungeon.hero.skill_1 != null ? Dungeon.hero.skill_1 : null);
         add(loader1);
@@ -180,24 +176,23 @@ public class StatusPane extends Component {
 
 		bossHP.setPos( 6 + (width - bossHP.width())/2, 20);
 
-		depth.x = width - 35.5f - depth.width() / 2f;
-		depth.y = 8f - depth.baseLine() / 2f;
-		PixelScene.align(depth);
+		//depth.x = width - 35.5f - depth.width() / 2f;
+		//depth.y = 8f - depth.baseLine() / 2f;
+		//PixelScene.align(depth);
 
 		danger.setPos( width - danger.width(), 20 );
 
 		buffs.setPos( 31, 9 );
 
-		btnJournal.setPos( width - 42, 1 );
+		//btnJournal.setPos( width - 42, 1 );
 
-		btnMenu.setPos( width - btnMenu.width(), 1 );
+		//btnMenu.setPos( width - btnMenu.width(), 1 );
 
-        version.scale.set(PixelScene.align(0.5f));
-        version.measure();
-        version.x = width - version.width();
-        version.y = btnMenu.bottom() + (4 - version.baseLine());
-        PixelScene.align(version);
-
+        //version.scale.set(PixelScene.align(0.5f));
+        //version.measure();
+        //version.x = width - version.width();
+        //version.y = btnMenu.bottom() + (4 - version.baseLine());
+        //PixelScene.align(version);
 
         loader1.setPos(avatar.x,avatar.y + avatar.height() + loader1.height() / 4);
         loader2.setPos(avatar.x,avatar.y + avatar.height() + loader1.height() / 4 + loader1.height() + loader1.height() / 4);
@@ -252,164 +247,6 @@ public class StatusPane extends Component {
 			lastTier = tier;
 			avatar.copy(HeroSprite.Portrait(Dungeon.hero.heroClass, lastTier));
 			//avatar.copy( HeroSprite.avatar( Dungeon.hero.heroClass, tier ) );
-		}
-	}
-
-	public void pickup( Item item, int cell) {
-		pickedUp.reset( item,
-			cell,
-			btnJournal.journalIcon.x + btnJournal.journalIcon.width()/2f,
-			btnJournal.journalIcon.y + btnJournal.journalIcon.height()/2f);
-	}
-	
-	public void flash(){
-		btnJournal.flashing = true;
-	}
-	
-	public void updateKeys(){
-		btnJournal.updateKeyDisplay();
-	}
-
-	private static class JournalButton extends Button {
-
-		private Image bg;
-		private Image journalIcon;
-		private KeyDisplay keyIcon;
-		
-		private boolean flashing;
-
-		public JournalButton() {
-			super();
-
-			width = bg.width + 13; //includes the depth display to the left
-			height = bg.height + 4;
-		}
-
-		@Override
-		protected void createChildren() {
-			super.createChildren();
-
-			bg = new Image( Assets.MENU, 2, 2, 13, 11 );
-			add( bg );
-			
-			journalIcon = new Image( Assets.MENU, 31, 0, 11, 7);
-			add( journalIcon );
-			
-			keyIcon = new KeyDisplay();
-			add(keyIcon);
-			updateKeyDisplay();
-		}
-
-		@Override
-		protected void layout() {
-			super.layout();
-
-			bg.x = x + 13;
-			bg.y = y + 2;
-			
-			journalIcon.x = bg.x + (bg.width() - journalIcon.width())/2f;
-			journalIcon.y = bg.y + (bg.height() - journalIcon.height())/2f;
-			PixelScene.align(journalIcon);
-			
-			keyIcon.x = bg.x + 1;
-			keyIcon.y = bg.y + 1;
-			keyIcon.width = bg.width - 2;
-			keyIcon.height = bg.height - 2;
-			PixelScene.align(keyIcon);
-		}
-
-		private float time;
-		
-		@Override
-		public void update() {
-			super.update();
-			
-			if (flashing){
-				journalIcon.am = (float)Math.abs(Math.cos( 3 * (time += Game.elapsed) ));
-				keyIcon.am = journalIcon.am;
-				if (time >= 0.333f*Math.PI) {
-					time = 0;
-				}
-			}
-		}
-
-		public void updateKeyDisplay() {
-			keyIcon.updateKeys();
-			keyIcon.visible = keyIcon.keyCount() > 0;
-			journalIcon.visible = !keyIcon.visible;
-			if (keyIcon.keyCount() > 0) {
-				bg.brightness(.8f - (Math.min(6, keyIcon.keyCount()) / 20f));
-			} else {
-				bg.resetColor();
-			}
-		}
-
-		@Override
-		protected void onPointerDown() {
-			bg.brightness( 1.5f );
-			Sample.INSTANCE.play( Assets.SND_CLICK );
-		}
-
-		@Override
-		protected void onPointerUp() {
-			if (keyIcon.keyCount() > 0) {
-				bg.brightness(.8f - (Math.min(6, keyIcon.keyCount()) / 20f));
-			} else {
-				bg.resetColor();
-			}
-		}
-
-		@Override
-		protected void onClick() {
-			flashing = false;
-			time = 0;
-			keyIcon.am = journalIcon.am = 1;
-			GameScene.show( new WndJournal() );
-		}
-
-	}
-
-	private static class MenuButton extends Button {
-
-		private Image image;
-
-		public MenuButton() {
-			super();
-
-			width = image.width + 4;
-			height = image.height + 4;
-		}
-
-		@Override
-		protected void createChildren() {
-			super.createChildren();
-
-			image = new Image( Assets.MENU, 17, 2, 12, 11 );
-			add( image );
-		}
-
-		@Override
-		protected void layout() {
-			super.layout();
-
-			image.x = x + 2;
-			image.y = y + 2;
-		}
-
-        @Override
-        protected void onPointerDown() {
-            image.brightness( 1.5f );
-            Sample.INSTANCE.play( Assets.SND_CLICK );
-        }
-
-        @Override
-        protected void onPointerUp() {
-            image.resetColor();
-        }
-
-		@Override
-		protected void onClick() {
-			GameScene.show( new WndGame() );
 		}
 	}
 

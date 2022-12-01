@@ -4,6 +4,7 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Challenges;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.PDAction;
+import com.unifier.arknightspixeldungeon.PDSettings;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.journal.Document;
 import com.unifier.arknightspixeldungeon.messages.Messages;
@@ -24,7 +25,7 @@ public class MenuPane extends Component {
 
     private Image bg;
 
-    //private Image depthIcon;
+    private Image depthIcon;
     private BitmapText depthText;
     private Button depthButton;
 
@@ -47,11 +48,11 @@ public class MenuPane extends Component {
     protected void createChildren() {
         super.createChildren();
 
-        bg = new Image(Assets.MENU);
+        bg = new Image(Assets.MENU_PANE);
         add(bg);
 
-        //depthIcon = Icons.get(Dungeon.level.feeling);
-        //add(depthIcon);
+        depthIcon = Icons.get(Dungeon.level.feeling);
+        add(depthIcon);
 
         depthText = new BitmapText( Integer.toString( Dungeon.depth ), PixelScene.pixelFont);
         depthText.hardlight( 0xCACFC2 );
@@ -84,7 +85,15 @@ public class MenuPane extends Component {
 
         if (Challenges.activeChallenges() > 0){
             //challengeIcon = Icons.get(Icons.CHAL_COUNT);
-            challengeIcon = Icons.get(Icons.CHALLENGE_FULL);//FIXME lace challenge icon now
+
+            switch (Challenges.activeChallenges()){
+                case 1:
+                case 2:challengeIcon = Icons.get(Icons.SMALL_CHALLENGE_ON);break;
+                case 7:challengeIcon = Icons.get(Icons.SMALL_CHALLENGE_FULL);break;
+                default:challengeIcon = Icons.get(Icons.SMALL_CHALLENGE_MORE);break;
+            }
+
+            //challengeIcon = Icons.get(Icons.CHALLENGE_FULL);
             add(challengeIcon);
 
             challengeText = new BitmapText( Integer.toString( Challenges.activeChallenges() ), PixelScene.pixelFont);
@@ -133,22 +142,25 @@ public class MenuPane extends Component {
 
         btnJournal.setPos( btnMenu.left() - btnJournal.width() + 2, y );
 
-        //depthIcon.x = btnJournal.left() - 7 + (7 - depthIcon.width())/2f - 0.1f;
+        depthIcon.x = btnJournal.left() - 7 + (7 - depthIcon.width())/2f - 0.1f;
         //depthIcon.y = y + 1;
-        //if (SPDSettings.interfaceSize() == 0) depthIcon.y++;
-        //PixelScene.align(depthIcon);
+        depthIcon.y = btnJournal.bottom() - depthIcon.height() - 0.4f*depthText.height();//FIXME quite messy,as our challenge icon are a little different
+        if (PDSettings.interfaceSize() == 0) depthIcon.y++;
+        PixelScene.align(depthIcon);
 
-        //depthText.scale.set(PixelScene.align(0.67f));
-        //depthText.x = depthIcon.x + (depthIcon.width() - depthText.width())/2f;
-       // depthText.y = depthIcon.y + depthIcon.height();
-        //PixelScene.align(depthText);
+        depthText.scale.set(PixelScene.align(0.67f));
+        depthText.x = depthIcon.x + (depthIcon.width() - depthText.width())/2f;
+        depthText.y = depthIcon.y + depthIcon.height();
+        PixelScene.align(depthText);
 
-        //depthButton.setRect(depthIcon.x, depthIcon.y, depthIcon.width(), depthIcon.height() + depthText.height());
+        depthButton.setRect(depthIcon.x, depthIcon.y, depthIcon.width(), depthIcon.height() + depthText.height());
 
         if (challengeIcon != null){
-            challengeIcon.x = btnJournal.left() - 14 + (7 - challengeIcon.width())/2f - 0.1f;
-            challengeIcon.y = y + 1;
-            //if (PDSettings.interfaceSize() == 0) challengeIcon.y++;
+            challengeIcon.x = btnJournal.left() - 14 + (7 - challengeIcon.width())/2f - 0.1f - 4 ;
+            //challengeIcon.y = y + 1;
+            challengeIcon.y = btnJournal.bottom() - challengeIcon.height() - 0.4f*challengeText.height();
+
+            if (PDSettings.interfaceSize() == 0) challengeIcon.y++;
             PixelScene.align(challengeIcon);
 
             challengeText.scale.set(PixelScene.align(0.67f));

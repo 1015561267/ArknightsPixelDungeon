@@ -23,6 +23,7 @@ package com.unifier.arknightspixeldungeon.ui;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
+import com.unifier.arknightspixeldungeon.levels.Level;
 import com.watabou.noosa.Image;
 
 public enum Icons {
@@ -41,7 +42,7 @@ public enum Icons {
 	ROGUE,
 	HUNTRESS,
 	CLOSE,
-	DEPTH,
+    STAIRS,
 	SLEEP,
 	ALERT,
 	LOST,
@@ -60,12 +61,25 @@ public enum Icons {
     CHALLENGE_MORE,
     CHALLENGE_FULL,
 
+    SMALL_CHALLENGE_OFF,
+    SMALL_CHALLENGE_ON,
+    SMALL_CHALLENGE_MORE,
+    SMALL_CHALLENGE_FULL,
+
+    SMALL_GOLD,
 	RESUME,
 
+    CONTROLLER,
+    INPUT,
     DISPLAY,
-    SETTINGS,
+    NETWORK,
     AUDIO,
+    SETTINGS,
     LANGUAGE,
+
+    SKIP,
+
+
     LIBGDX,
     TALENT,
 
@@ -78,7 +92,16 @@ public enum Icons {
     BLACKWARRIOR,
     BLACKMAGE,
     BLACKROGUE,
-    BLACKHUNTRESS;
+    BLACKHUNTRESS,
+
+    DEPTH,      //depth icons have two variants, for regular and seeded runs
+    DEPTH_CHASM,
+    DEPTH_WATER,
+    DEPTH_GRASS,
+    DEPTH_DARK,
+    DEPTH_LARGE,
+    DEPTH_TRAPS,
+    DEPTH_SECRETS,;
 
 
 
@@ -101,9 +124,7 @@ public enum Icons {
             case TARGET:
                 icon.frame( icon.texture.uvRect( 48, 0, 65, 16 ) );
                 break;
-            case SETTINGS:
-                icon.frame( icon.texture.uvRect( 64, 0, 78, 14 ) );
-                break;
+
     		case INFO:
 	    		icon.frame( icon.texture.uvRect( 80, 0, 94, 14 ) );
 		    	break;
@@ -111,7 +132,7 @@ public enum Icons {
                 icon.frame( icon.texture.uvRect( 96, 0, 110, 14 ) );
                 break;
             case WATA:
-                icon.frame( icon.texture.uvRect( 112, 0, 127, 10 ) );
+                icon.frame( icon.texture.uvRect( 64, 0, 78, 14 ) );
                 break;
 
 
@@ -119,16 +140,16 @@ public enum Icons {
                 icon.frame( icon.texture.uvRect( 0, 16, 10, 26 ) );
                 break;
             case SCROLL_HOLDER:
-                icon.frame( icon.texture.uvRect( 16, 16, 26, 26 ) );
+                icon.frame( icon.texture.uvRect( 16, 17, 25, 26 ) );
                 break;
             case SEED_POUCH:
-                icon.frame( icon.texture.uvRect( 32, 16, 42, 26 ) );
+                icon.frame( icon.texture.uvRect( 32, 17, 43, 26 ) );
                 break;
             case WAND_HOLSTER:
-                icon.frame( icon.texture.uvRect( 48, 16, 58, 26 ) );
+                icon.frame( icon.texture.uvRect( 48, 17, 58, 26 ) );
                 break;
             case POTION_BANDOLIER:
-                icon.frame( icon.texture.uvRect( 64, 16, 74, 26 ) );
+                icon.frame( icon.texture.uvRect( 64, 16, 73, 24 ) );
                 break;
             case EXIT:
                 icon.frame( icon.texture.uvRect( 80, 16, 95, 27 ) );
@@ -156,9 +177,7 @@ public enum Icons {
             case NOTES:
                 icon.frame( icon.texture.uvRect( 96, 32, 106, 43 ) );
                 break;
-            case LANGUAGE:
-                icon.frame( icon.texture.uvRect( 112, 32, 126, 43 ) );
-                break;
+
 
 
             case SLEEP:
@@ -170,7 +189,7 @@ public enum Icons {
             case LOST:
                 icon.frame( icon.texture.uvRect( 32, 48, 40, 56 ) );
                 break;
-            case DEPTH:
+            case STAIRS:
                 icon.frame( icon.texture.uvRect( 48, 48, 61, 64 ) );
                 break;
             case CLOSE:
@@ -183,17 +202,36 @@ public enum Icons {
             //    icon.frame( icon.texture.uvRect( 96, 48, 110, 60 ) );
             //    break;
 
-            case CHANGES:
-                icon.frame( icon.texture.uvRect( 112, 48, 127, 63 ) );
-                break;
 
+            case CONTROLLER:
+                icon.frame( icon.texture.uvRect( 128, 0, 144, 12 ) );
+                break;
+            case INPUT:
+                icon.frame( icon.texture.uvRect( 144, 0, 159, 12 ) );
+                break;
             case DISPLAY:
-                icon.frame( icon.texture.uvRect( 0, 64, 13, 80 ) );
-                break;
-            case AUDIO:
-                icon.frame( icon.texture.uvRect( 32, 64, 46, 79 ) );
+                icon.frame( icon.texture.uvRect( 160, 0, 173, 16 ) );
                 break;
 
+            case NETWORK:
+                icon.frame( icon.texture.uvRect( 176, 0, 191, 15 ) );
+                break;
+
+            case AUDIO:
+                icon.frame( icon.texture.uvRect( 192, 0, 206, 14 ) );
+                break;
+
+            case SETTINGS:
+                icon.frame( icon.texture.uvRect( 208, 0, 222, 14 ) );
+                break;
+
+            case LANGUAGE:
+                icon.frame( icon.texture.uvRect( 224, 0, 238, 11 ) );
+                break;
+
+            case SKIP:
+                icon.frame( icon.texture.uvRect( 0, 64, 22, 76 ) );
+                break;
             case LIBGDX:
                 icon.frame( icon.texture.uvRect( 48, 64, 64, 77 ) );
                 break;
@@ -208,13 +246,20 @@ public enum Icons {
                 icon.frame( icon.texture.uvRect( 96, 64, 112, 80 ) );
                 break;
             case ABOUT:
-                icon.frame( icon.texture.uvRect( 112, 64, 128, 80 ) );
+                icon.frame( icon.texture.uvRect( 96, 80, 110, 94 ) );
+                break;
+
+            case CHANGES:
+                icon.frame( icon.texture.uvRect( 80, 80, 93, 94 ) );
                 break;
 
             case RANKINGS:
                 icon.frame( icon.texture.uvRect( 0, 80, 17, 96 ) );
                 break;
 
+            case SMALL_GOLD:
+                icon.frame( icon.texture.uvRect( 48, 84, 61, 92 ) );
+                break;
             case RESUME:
                 icon.frame( icon.texture.uvRect( 64, 80, 75, 91 ) );
                 break;
@@ -232,7 +277,6 @@ public enum Icons {
             case BLACKHUNTRESS:
                 icon.frame( icon.texture.uvRect( 48, 96, 64, 112 ) );
                 break;
-
 
 
             case CHECKED:
@@ -254,7 +298,46 @@ public enum Icons {
                 icon.frame( icon.texture.uvRect( 94, 112, 112, 128 ) );
                 break;
 
-		}
+            case SMALL_CHALLENGE_OFF:
+                icon.frame( icon.texture.uvRect( 64, 96, 73, 105 ) );
+                break;
+            case SMALL_CHALLENGE_ON:
+                icon.frame( icon.texture.uvRect( 80, 96, 89, 105 ) );
+                break;
+            case SMALL_CHALLENGE_MORE:
+                icon.frame( icon.texture.uvRect( 96, 96, 105, 105 ) );
+                break;
+            case SMALL_CHALLENGE_FULL:
+                icon.frame( icon.texture.uvRect( 112, 96, 121, 105 ) );
+                break;
+
+            case DEPTH:
+                icon.frame( icon.texture.uvRectBySize( 128, 98 , 6, 7 ) );
+                //icon.frame( icon.texture.uvRect( 128, 98 , 134, 104 ) );
+                break;
+            case DEPTH_CHASM:
+                icon.frame( icon.texture.uvRectBySize( 136, 97 , 7, 7 ) );
+                break;
+            case DEPTH_WATER:
+                icon.frame( icon.texture.uvRectBySize( 144, 97 , 7, 7 ) );
+                break;
+            case DEPTH_GRASS:
+                icon.frame( icon.texture.uvRectBySize( 152, 97 , 7, 7 ) );
+                break;
+            case DEPTH_DARK:
+                icon.frame( icon.texture.uvRectBySize( 160, 97 , 7, 7 ) );
+                break;
+            case DEPTH_LARGE:
+                icon.frame( icon.texture.uvRectBySize( 168, 97 , 7, 7 ) );
+                break;
+            case DEPTH_TRAPS:
+                icon.frame( icon.texture.uvRectBySize( 176, 97 , 7, 7 ) );
+                break;
+            case DEPTH_SECRETS:
+                icon.frame( icon.texture.uvRectBySize( 184, 97 , 7, 7 ) );
+                break;
+
+        }
 		return icon;
 	}
 	
@@ -286,6 +369,27 @@ public enum Icons {
                 return get( BLACKHUNTRESS );
             default:
                 return null;
+        }
+    }
+
+    public static Image get(Level.Feeling feeling){
+        switch (feeling){
+            case NONE: default:
+                return get(DEPTH);
+            case CHASM:
+                return get(DEPTH_CHASM);
+            case WATER:
+                return get(DEPTH_WATER);
+            case GRASS:
+                return get(DEPTH_GRASS);
+            case DARK:
+                return get(DEPTH_DARK);
+            //case LARGE:
+            //    return get(DEPTH_LARGE);
+            //case TRAPS:
+            //    return get(DEPTH_TRAPS);
+            //case SECRETS:
+            ///    return get(DEPTH_SECRETS);
         }
     }
 }

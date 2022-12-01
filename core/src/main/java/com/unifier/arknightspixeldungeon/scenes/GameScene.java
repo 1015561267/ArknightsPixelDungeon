@@ -47,6 +47,7 @@ import com.unifier.arknightspixeldungeon.items.Honeypot;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.potions.Potion;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.unifier.arknightspixeldungeon.journal.Document;
 import com.unifier.arknightspixeldungeon.journal.Journal;
 import com.unifier.arknightspixeldungeon.levels.RegularLevel;
 import com.unifier.arknightspixeldungeon.levels.traps.Trap;
@@ -959,15 +960,15 @@ public class GameScene extends PixelScene {
 	}
 
 	public static void pickUpJournal( Item item, int pos ) {
-		if (scene != null) scene.pane.pickup( item, pos );
+		if (scene != null) scene.menu.pickup( item, pos );
 	}
 
-	public static void flashJournal(){
-		if (scene != null) scene.pane.flash();
+	public static void flashJournal(Document doc, String page){
+		if (scene != null) scene.menu.flashForPage(doc, page);
 	}
 
 	public static void updateKeyDisplay(){
-		if (scene != null) scene.pane.updateKeys();
+		if (scene != null) scene.menu.updateKeys();
 	}
 
 	public static void resetMap() {

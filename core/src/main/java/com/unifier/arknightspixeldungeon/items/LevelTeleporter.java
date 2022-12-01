@@ -1,6 +1,5 @@
 package com.unifier.arknightspixeldungeon.items;
 
-import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Chrome;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.Statistics;
@@ -31,7 +30,6 @@ import com.unifier.arknightspixeldungeon.ui.Window;
 import com.unifier.arknightspixeldungeon.utils.BArray;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.PathFinder;
@@ -184,7 +182,7 @@ public class LevelTeleporter extends TestItem {
                 }
             };
             add(icb);
-            icb.icon(Icons.get(Icons.DEPTH));
+            icb.icon(Icons.get(Icons.STAIRS));
             icb.setRect(0, sp.bottom() + GAP * 2, WIDTH, BTN_SIZE);
             setSelectedLevel(0);
 

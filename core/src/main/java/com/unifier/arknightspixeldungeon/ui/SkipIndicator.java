@@ -26,16 +26,15 @@ public class SkipIndicator extends Tag {
     protected void createChildren() {
         super.createChildren();
 
-        icon = Icons.EXIT.get();
+        icon = Icons.SKIP.get();
         add( icon );
     }
 
     @Override
     protected void layout() {
         super.layout();
-
-        icon.x = right() - 10;
-        icon.y = y + (height - icon.height) / 2;
+        icon.x = x;
+        icon.y = y;
     }
 
     @Override

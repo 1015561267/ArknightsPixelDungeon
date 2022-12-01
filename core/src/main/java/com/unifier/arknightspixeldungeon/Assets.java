@@ -180,6 +180,9 @@ public class Assets {
 	public static final String CHROME	= MISCS + "chrome.png";
 	public static final String STATUS	= MISCS + "status_pane.png";
 	public static final String MENU		= MISCS + "menu_button.png";
+
+    public static final String MENU_PANE = MISCS + "menu_pane.png";
+
 	public static final String TOOLBAR	= MISCS + "toolbar.png";
 	public static final String SHADOW   = MISCS + "shadow.png";
 	public static final String SURFACE	= MISCS + "surface.png";

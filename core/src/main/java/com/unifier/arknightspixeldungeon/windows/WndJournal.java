@@ -316,7 +316,7 @@ public class WndJournal extends WndTabbed {
 				pos += Math.max(ITEM_HEIGHT, title.height());
 			}
 			for(Notes.Record rec : keys){
-				ListItem item = new ListItem( Icons.get(Icons.DEPTH),
+				ListItem item = new ListItem( Icons.get(Icons.STAIRS),
 						Messages.titleCase(rec.desc()), rec.depth() );
 				item.setRect( 0, pos, width(), ITEM_HEIGHT );
 				content.add( item );
@@ -341,7 +341,7 @@ public class WndJournal extends WndTabbed {
 				pos += Math.max(ITEM_HEIGHT, title.height());
 			}
 			for (Notes.Record rec : landmarks) {
-				ListItem item = new ListItem( Icons.get(Icons.DEPTH),
+				ListItem item = new ListItem( Icons.get(Icons.STAIRS),
 						Messages.titleCase(rec.desc()), rec.depth() );
 				item.setRect( 0, pos, width(), ITEM_HEIGHT );
 				content.add( item );
