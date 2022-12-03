@@ -132,7 +132,7 @@ public enum Icons {
                 icon.frame( icon.texture.uvRect( 96, 0, 110, 14 ) );
                 break;
             case WATA:
-                icon.frame( icon.texture.uvRect( 64, 0, 78, 14 ) );
+                icon.frame( icon.texture.uvRect( 112, 0, 127, 10 ) );
                 break;
 
 
@@ -158,7 +158,7 @@ public enum Icons {
                 icon.frame( icon.texture.uvRect( 96, 16, 110, 30 ) );
                 break;
             case SHPX:
-                icon.frame( icon.texture.uvRect( 112, 16, 126, 30 ) );
+                icon.frame( icon.texture.uvRect( 64, 0, 78, 14 ) );
                 break;
 
 
