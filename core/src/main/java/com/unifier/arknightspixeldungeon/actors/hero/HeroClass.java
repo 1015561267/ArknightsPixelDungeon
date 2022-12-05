@@ -25,11 +25,12 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.Challenges;
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.Exusiai.AdjustTool;
-import com.unifier.arknightspixeldungeon.Exusiai.skills.Exusiai.ExusiaiSkill_1;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Shadowless;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Revolver;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.skills.Exusiai.AdjustTool;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -245,7 +246,9 @@ public enum HeroClass {
 
 		new AdjustTool().collect();
 
-		hero.skill_1 = new ExusiaiSkill_1();
+		hero.skill_1 = new Revolver();
+        ((Revolver) hero.skill_1).setGUN_SIGHT(Attachment.RED_DOT_SIGHT);
+        ((Revolver) hero.skill_1).setBULLET(Attachment.BLACKJACK_SOLITAIRE);
 		hero.skill_1.attachTo(hero);
 
 		hero.skill_2 = new Unsheath();

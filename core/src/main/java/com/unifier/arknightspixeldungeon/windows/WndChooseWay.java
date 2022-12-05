@@ -51,9 +51,6 @@ public class WndChooseWay extends Window {
 		hl.setPos( titlebar.left(), titlebar.bottom() + GAP );
 		add( hl );
 
-		
-
-
 		RedButton btnWay1 = new RedButton( way1.title().toUpperCase() ) {
 			@Override
 			protected void onClick() {

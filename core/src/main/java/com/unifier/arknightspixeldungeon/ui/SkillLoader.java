@@ -3,10 +3,12 @@ package com.unifier.arknightspixeldungeon.ui;
 import com.unifier.arknightspixeldungeon.Chrome;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.ExusiaiSkill;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
+import com.unifier.arknightspixeldungeon.windows.WndExusiaiSkill;
 import com.unifier.arknightspixeldungeon.windows.WndHeroSkill;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Image;
@@ -129,6 +131,10 @@ public class SkillLoader extends Tag{
 
         if(skill!=null)
         {
+            if(skill instanceof ExusiaiSkill){
+                GameScene.show(new WndExusiaiSkill((ExusiaiSkill) skill));
+                //FIXME Well,considering it involve in too much relative work,it should be wise to make a independent ui to handle them,or merge others together later?
+            }else
             GameScene.show(new WndHeroSkill(skill));
             return true;
         }

@@ -34,8 +34,22 @@ public class Assets {
     public static final String HUNTRESS	= HEROS + "huntress.png";
 
     public static final String SKILLS = HEROS + "skills/";
+    public static final String GUNS = HEROS + "guns/";
+    public static final String GUN_BLUEPRINTS = GUNS + "gun_blueprints/";
+
     public static final String UNSHEATH= SKILLS + "unsheath_sheet.png";
     public static final String SHADOWLESS = SKILLS + "shadowless_sheet.png";
+
+    public static final String GUN_ATTACHMENTS = GUNS + "gun_attachments/gunattachment_spritesheet.png";
+
+    public static final String ASSAULT_RIFLE = GUN_BLUEPRINTS + "assault_rifle.png";
+    public static final String GRENADE_LAUNCHER = GUN_BLUEPRINTS + "grenade_launcher.png";
+    public static final String HEAVY_MACHINE_GUN = GUN_BLUEPRINTS + "heavy_machine_gun.png";
+    public static final String PLASMA_CANNON = GUN_BLUEPRINTS + "plasma_cannon.png";
+    public static final String REVOLVER = GUN_BLUEPRINTS + "revolver.png";
+    public static final String SHOTGUN = GUN_BLUEPRINTS + "shotgun.png";
+    public static final String SNIPER_RIFLE = GUN_BLUEPRINTS + "sniper_rifle.png";
+    public static final String VECTOR = GUN_BLUEPRINTS + "vector.png";
 
     private static final String PORTRAIT = ACTORS + "portrait/";
 

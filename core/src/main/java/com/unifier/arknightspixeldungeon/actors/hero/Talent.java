@@ -535,6 +535,20 @@ public enum Talent {
         //WEAPON_ADAPT have hit chance modify at MeleeWeapon.accuracyFactor
     }
 
+    private static void initExusiaiTalents(  ArrayList<Talent> tierTalents , int tier){
+        switch (tier)
+        {
+            case 0:Collections.addAll(tierTalents, SHEATHED_STRIKE,FAST_RECOVERY,PREEMPTIVE_STRIKE,ARM_INTUITION);break;
+            case 1:Collections.addAll(tierTalents, SHEATH_THROW,REPRIMAND,PARRY,VIGILANCE,LAST_CHANCE, DRAGON_SCALE,UNSHEATH,FLASH, REFLECT,CONTINUOUS_ASSAULT, RED_RAGE, WEAPON_ADAPT);break;
+            case 2:Collections.addAll(tierTalents, SHEATH_BOUNCE,WELL_PREPARED,COUNTER_STRIKE,RALLY_FORCE, SUN_CROSS, WIND_CUTTER,SKILLFUL_GUARD,EYE_FOR_EYE,DEADLY_COMBO, SCARLET_MOMENTUM,SHADOWLESS,LIGHT_WEAPON_MASTERY,SWORD_WEAPON_MASTERY,HEAVY_WEAPON_MASTERY);break;
+            case 3:Collections.addAll(tierTalents, WEAPON_THROW, SEIZE_OPPORTUNITY, FRUGALITY, BOILING_KENSHIN,BOTHSIDE_ATTACK,CRIMSON_RAMPAGE,SWORD_RAIN, SONIC_CUTTING);break;
+            case 4:Collections.addAll(tierTalents, FLOWING_WATER, SHARP_JUDGEMENT, DECISIVENESS,MORTAL_SKILL,SURPASS_LIMIT, CLOUD_CRACK,BLADE_STORM,FULL_SUPPRESSION);break;
+            default:break;
+        }
+        //Mostly weapon damage modify can be found at MeleeWeapon.damageRoll
+        //WEAPON_ADAPT have hit chance modify at MeleeWeapon.accuracyFactor
+    }
+
     public static void onTalentUpgraded(Hero hero, Talent talent) {
         if(talent == DRAGON_SCALE) {
             if(hero.buff(DragonScaleTracker.class)!=null) {

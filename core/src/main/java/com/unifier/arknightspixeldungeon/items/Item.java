@@ -649,4 +649,6 @@ public class Item implements Bundlable {
 			return Messages.get(Item.class, "prompt");
 		}
 	};
+
+	public boolean isBulletForEffect(){return false;}//FIXME Have no choice but to add a mark here to handle missileSprite,at least better than declaring everything unneeded just for ANGULAR_SPEEDS
 }

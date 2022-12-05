@@ -171,6 +171,9 @@ public class Boomerang extends Weapon {
         }
 
         @Override
+        public boolean isBulletForEffect(){return true;}
+
+        @Override
         public int min(int lvl) {
             return Boomerang.this.min(lvl);
         }

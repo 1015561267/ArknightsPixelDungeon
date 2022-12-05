@@ -1,4 +1,4 @@
-package com.unifier.arknightspixeldungeon.Exusiai;
+package com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.skills.Exusiai;
 
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.messages.Messages;

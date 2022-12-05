@@ -32,7 +32,7 @@ import java.util.List;
 
 import static com.unifier.arknightspixeldungeon.Dungeon.hero;
 
-public class Unsheath extends HeroSkill {
+public class Unsheath extends ChenSkill {
 
     @Override
     public boolean activated() { return owner.hasTalent(Talent.UNSHEATH); }
@@ -164,9 +164,6 @@ public class Unsheath extends HeroSkill {
                         }
                     }
                 }
-
-
-
 
                 if (!dropedTracker) {//then search back
                     //List<Integer> reversePath = attack.subPath(maxTracker,1); Warning,Arraylist.sublist must have start<end,else throw exception,so reserve ergodic has had to take other ways

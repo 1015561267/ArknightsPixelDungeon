@@ -1886,4 +1886,9 @@ public class Hero extends Char {
 	public static interface Doom {
 		public void onDeath();
 	}
+
+	public int getAttackSkill(){return attackSkill;}
+
+    public int getDefenseSkill(){return defenseSkill;}
+
 }

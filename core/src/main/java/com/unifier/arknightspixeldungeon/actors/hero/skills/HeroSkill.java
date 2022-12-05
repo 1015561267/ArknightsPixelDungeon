@@ -2,13 +2,8 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills;
 
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
-import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageTracker;
-import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
-import com.unifier.arknightspixeldungeon.actors.hero.Talent;
-import com.unifier.arknightspixeldungeon.items.KindOfWeapon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
-import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 
@@ -38,53 +33,26 @@ public abstract class HeroSkill extends Buff {
 
     public abstract int getMaxCharge();
 
+    @Override
+    public abstract boolean act();
+
+    public abstract void doAction();
+
+    public abstract void doAfterAction();
+
+    public abstract void getCoolDown(float amount);
+
     public float cooldownRatio() {//For now it means to handle cooldown for multi charge skill have problem when there are only one charge
         if(charge == getMaxCharge())
             return 0;
+        else if(charge >= 0 ){
+            return charge / getMaxCharge();
+        }
         else
         return cooldown / rawCD();
     }
 
-    @Override
-     public boolean act() {
-        spend(TICK);
-
-        float factor = 1;
-        if(activated()) {
-            if (owner.hasTalent(Talent.SWORD_WEAPON_MASTERY) && owner.belongings.weapon != null && owner.belongings.weapon.weaponType().contains(KindOfWeapon.type.SWORD)) {
-                factor += 0.2;
-            }
-
-            RageTracker rageTracker = owner.buff(RageTracker.class);
-            if (owner.hasTalent(Talent.SCARLET_MOMENTUM) && rageTracker != null && rageTracker.rage > 0) {
-                factor += rageTracker.rage;
-            }
-
-            getCoolDown(TICK * factor);
-        }
-        return true;
-    }
-
-    public boolean available(){ return charge > 0; }
-
-    public void resetCD(Hero hero){ this.cooldown = CD(hero);}
-
-    public void getCoolDown(float amount)
-    {
-        if (charge < getMaxCharge())
-        {
-            cooldown -= amount;
-            if(cooldown <= 0)
-            {
-                charge ++;
-                if(charge < getMaxCharge())
-                {
-                    cooldown = CD( this.owner) - (cooldown);
-                }
-                else cooldown = CD( this.owner);
-            }
-        }
-    }
+    public abstract boolean available();
 
     public String name() { return Messages.get(this, "name"); };
 
@@ -101,24 +69,6 @@ public abstract class HeroSkill extends Buff {
     public enum buffType {ACTIVE,PASSIVE};
 
     public buffType type = buffType.ACTIVE;
-
-    public void doAction()
-    {
-        if(!available()){
-            GLog.h(Messages.get(this, "unavailable"));
-            return;
-        }
-    };
-
-    public void doAfterAction(){
-        charge--;
-
-        if(owner.pointsInTalent(Talent.SKILLFUL_GUARD)==2){
-            if(owner.buff(ReflectTracker.class)!=null) {
-                owner.buff(ReflectTracker.class).gainStack();
-            }
-        }
-    }
 
     public boolean attachTo( Char hero ) {
         this.owner = (Hero)hero;

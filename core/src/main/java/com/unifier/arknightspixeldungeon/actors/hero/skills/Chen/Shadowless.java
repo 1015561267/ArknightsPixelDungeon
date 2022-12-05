@@ -23,7 +23,7 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class Shadowless extends HeroSkill {
+public class Shadowless extends ChenSkill {
 
     private ArrayList<Image> images = new ArrayList<>();
 
