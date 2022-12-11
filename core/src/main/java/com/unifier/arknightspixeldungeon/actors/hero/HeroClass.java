@@ -251,10 +251,14 @@ public enum HeroClass {
         ((Revolver) hero.skill_1).setBULLET(Attachment.BLACKJACK_SOLITAIRE);
 		hero.skill_1.attachTo(hero);
 
-		hero.skill_2 = new Unsheath();
+		hero.skill_2 = new Revolver();
+        ((Revolver) hero.skill_2).setGUN_SIGHT(Attachment.MEDIUM_RANGE_SIGHT);
+        ((Revolver) hero.skill_2).setBULLET(Attachment.ARMOR_PIERCING_BULLET);
 		hero.skill_2.attachTo(hero);
 
-		hero.skill_3 = new Shadowless();
+		hero.skill_3  = new Revolver();
+        ((Revolver) hero.skill_3).setGUN_SIGHT(Attachment.CLOSE_COMBAT_OPTICAL_SIGHT);
+        ((Revolver) hero.skill_3).setBULLET(Attachment.HOLLOW_POINT_BULLET);
 		hero.skill_3.attachTo(hero);
 	}
 	

@@ -2,17 +2,20 @@ package com.unifier.arknightspixeldungeon.windows;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Chrome;
+import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.ExusiaiSkill;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Revolver;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.ui.Button;
+import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.Window;
-import com.unifier.arknightspixeldungeon.utils.GLog;
+import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.audio.Sample;
@@ -21,7 +24,9 @@ import java.util.ArrayList;
 
 public class WndExusiaiSkill extends Window {
 
-    private ArrayList<AttachmentButton> attachmentButton;
+    private ArrayList<AttachmentSlot> attachmentSlot;
+
+    public ExusiaiSkill.GunType gunType;
 
     private static final int WIDTH    = 135;
     private static final int HEIGHT   = 150;
@@ -30,6 +35,7 @@ public class WndExusiaiSkill extends Window {
 
     public WndExusiaiSkill(ExusiaiSkill skill) {
 
+        this.gunType = skill.getType();
         RenderedTextBlock title = PixelScene.renderTextBlock(Messages.get(skill, "title"), 12 );
         title.hardlight(Window.TITLE_COLOR);
         title.setPos((WIDTH - title.width())/2f, 2);
@@ -41,32 +47,32 @@ public class WndExusiaiSkill extends Window {
         PixelScene.align(bluePrint);
         add(bluePrint);
 
-        attachmentButton = new ArrayList<>();
-        AttachmentButton button;
+        attachmentSlot = new ArrayList<>();
+        AttachmentSlot button;
 
         if(skill instanceof Revolver){
 
-            button = new AttachmentButton(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT());
+            button = new AttachmentSlot(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT(), skill);
             button.setPos( (bluePrint.width * 27 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 62 / 64) );
-            attachmentButton.add(button);
+            attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
-            button = new AttachmentButton(Attachment.AttachType.BULLET , skill.getBULLET());
+            button = new AttachmentSlot(Attachment.AttachType.BULLET , skill.getBULLET(), skill);
             button.setPos( (bluePrint.width * 102 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 62 / 64) );
-            attachmentButton.add(button);
+            attachmentSlot.add(button);
             addToFront(button);
             add(button);
         }
 
-        //for (AttachmentButton button:attachmentButton) {
+        //for (AttachmentSlot button:attachmentSlot) {
         //    add(button);
         //}
 
         String message = skill.desc();
         RenderedTextBlock text = PixelScene.renderTextBlock( 6 );
         text.text( message, WIDTH - 2 * GAP );
-        text.setPos( GAP, attachmentButton.get(attachmentButton.size() - 1).bottom() + GAP );
+        text.setPos( GAP, attachmentSlot.get(attachmentSlot.size() - 1).bottom() + GAP );
         add( text );
 
         int height = layOutNecessaryButton(skill,text.bottom());
@@ -86,34 +92,34 @@ public class WndExusiaiSkill extends Window {
     }
 
     private void arrangeRevolverButton(Image bluePrint) {
-        //attachmentButton.get(0).setPos( bluePrint.x * (27/128) - attachmentButton.get(0).width() / 2 , bluePrint.y);
-        //attachmentButton.get(1).setPos( bluePrint.x * (102/128) - attachmentButton.get(0).width() / 2 , bluePrint.y);
+        //attachmentSlot.get(0).setPos( bluePrint.x * (27/128) - attachmentSlot.get(0).width() / 2 , bluePrint.y);
+        //attachmentSlot.get(1).setPos( bluePrint.x * (102/128) - attachmentSlot.get(0).width() / 2 , bluePrint.y);
     }
 
-    protected class AttachmentButton extends Button{
+    protected class AttachmentSlot extends Button{
         protected NinePatch bg;
         public Attachment.AttachType attachType;
         public Attachment attachment;
+        public ExusiaiSkill skill;
         private Image icon;
 
-        AttachmentButton(Attachment.AttachType attachType,Attachment attachment)
+        AttachmentSlot(Attachment.AttachType attachType, Attachment attachment, ExusiaiSkill skill)
         {
             super();
 
-            width = 32;
-            height = 32;
+            width = 16;
+            height = 16;
             this.attachType = attachType;
             this.attachment = attachment;
+            this.skill = skill;
 
             bg = Chrome.get( Chrome.Type.RED_BUTTON );
             addToBack( bg );
             bg.size( width, height );
 
             if(attachment!=null) {
-                int n = attachment.icon() - 1;
-                int row = n / 5;
-                int col = n % 5;
-                icon = new Image(Assets.GUN_ATTACHMENTS, 32 * col , 32 * row, 32, 32);
+                icon = attachment.icon();
+
             }
             else {
                 switch (attachType){
@@ -128,7 +134,6 @@ public class WndExusiaiSkill extends Window {
 
             add(icon);
 
-            //update();
         }
 
         @Override
@@ -144,7 +149,7 @@ public class WndExusiaiSkill extends Window {
         @Override
         protected void onClick() {
             super.onClick();
-            GLog.w(attachment!=null? attachment.title():attachType.name());
+            GameScene.show(new AttachmentListWindow(attachType,attachment,skill));
         }
 
         @Override
@@ -162,10 +167,7 @@ public class WndExusiaiSkill extends Window {
         public void update(){
 
             if(attachment!=null) {
-                int n = attachment.icon() - 1;
-                int row = n / 5;
-                int col = n % 5;
-                icon = new Image(Assets.GUN_ATTACHMENTS, 32 * col , 32 * row, 32, 32);
+                icon = attachment.icon();
             }
             else {
                 switch (attachType){
@@ -179,8 +181,158 @@ public class WndExusiaiSkill extends Window {
             }
 
             layout();
-            ///PixelScene.align(icon);
-            //addToFront(icon);
+        }
+    }
+
+    private class AttachmentListWindow extends Window {
+
+        private static final int WIDTH = 120;
+        private static final int HEIGHT = 130;
+        private static final int GAP = 2;
+
+        private int index = 0;
+
+        public RedButton lhs;
+        public RedButton rhs;
+
+        public ArrayList<Attachment> attachmentArrayList;
+        public RedButton listedUsing;
+
+        public ArrayList<Attachment> listedAttachments;
+        public ArrayList<RedButton> listedButton;
+
+        public AttachmentListWindow(Attachment.AttachType attachType, Attachment attachment, ExusiaiSkill skill) {
+
+            super();
+
+            resize(WIDTH, HEIGHT);
+
+            index = 0;
+
+            attachmentArrayList = Attachment.getAttachmentList(attachType);
+
+            layOutAttachMentList(attachment,index,skill);
+
+            lhs = new RedButton("<<<", 8){//idea from red dragon(),thanks!
+                @Override
+                public void onClick(){
+                    index = Math.max(index-1 , 0);
+                    layOutAttachMentList(attachment,index,skill);
+                }
+            };
+            lhs.setRect(GAP, HEIGHT - 18, 24, 18);
+            add(lhs);
+
+            rhs = new RedButton(">>>", 8){
+                @Override
+                public void onClick(){
+                    index = Math.min(index+1 , attachmentArrayList.size() / 4);
+                    layOutAttachMentList(attachment,index,skill);
+                }
+            };
+            rhs.setRect(WIDTH - 24 - GAP, HEIGHT - 18 , 24, 18);
+            add(rhs);
+
+            update();
+        }
+
+        @Override
+        public void update(){
+            super.update();
+
+            if(lhs!=null) {
+                lhs.enable(index > 0);
+            }
+
+            if(rhs!=null) {
+                rhs.enable(index < attachmentArrayList.size() / 4);
+            }
+        }
+
+        private void layOutAttachMentList(Attachment attachment, int index , ExusiaiSkill skill) {
+
+            if(listedUsing!=null) {listedUsing.killAndErase();listedUsing.destroy();}
+            if(listedButton!=null){for(RedButton button:listedButton){ button.killAndErase(); button.destroy();} listedButton=null;}
+
+                listedUsing = new RedButton(attachment != null ?attachment.desc() : "当前未装备",6){
+                    @Override
+                    protected void onClick() {
+                        super.onClick();
+                        if(attachment!=null) {
+                            GameScene.show(new AttachmentDetailWindow(attachment, attachment.condition(Dungeon.hero, skill)));
+                        }
+                    }
+                };
+
+                listedUsing.multiline = true;
+
+                if(attachment!=null){
+                    Image usingIcon = attachment.icon();
+                    listedUsing.icon(usingIcon);
+                    listedUsing.enable(attachment.condition(Dungeon.hero,skill)== Attachment.Status.available || attachment.condition(Dungeon.hero,skill)== Attachment.Status.using);
+                    listedUsing.leftJustify = true;
+                }else {
+                    listedUsing.enable(false);
+                    listedUsing.alpha(0.3f);
+                }
+
+                listedUsing.setSize(WIDTH,20);
+                listedUsing.setRect(0, 0 , WIDTH, 20);
+
+                add(listedUsing);
+
+                ColorBlock separator = new ColorBlock(1, 1, 0xFF222222);
+                separator.size(WIDTH, 1);
+                separator.x = 0;
+                separator.y = listedUsing.bottom() + GAP;
+                add(separator);
+
+                listedButton = new ArrayList<>();
+
+                if(attachmentArrayList!=null && !attachmentArrayList.isEmpty() && attachment!=null){
+                    attachmentArrayList.remove(attachment);
+                }
+
+                for(int i= index * 4,t = 0; i< ( index + 1 ) * 4; i++,t++){
+
+                    if(i<0 || i >= attachmentArrayList.size()){
+                        break;
+                    }
+
+                    Attachment temp = attachmentArrayList.get(i);
+                    RedButton button = new RedButton(temp.desc() ,6){
+                        @Override
+                        protected void onClick() {
+                            super.onClick();
+                            GameScene.show(new AttachmentDetailWindow(temp,temp.condition(Dungeon.hero,skill)));
+                        }
+                    };
+
+                    Image usingIcon = temp.icon();
+                    button.icon(usingIcon);
+
+                    button.alpha(temp.condition(Dungeon.hero,skill)== Attachment.Status.available || temp.condition(Dungeon.hero,skill)== Attachment.Status.using ? 1f : 0.3f);
+
+                    //button.enable(temp.condition(Dungeon.hero,skill)== Attachment.Status.available || temp.condition(Dungeon.hero,skill)== Attachment.Status.using);
+                    //button.enable(false);
+
+                    button.leftJustify = true;
+                    button.multiline = true;
+
+                    button.setSize(width,20);
+                    button.setRect(0, separator.y + separator.height() + GAP + t * ( 20 + GAP ), width, 20);
+
+                    add(button);
+                    listedButton.add(button);
+                }
+
+                update();
+        }
+
+        private class AttachmentDetailWindow extends WndTitledMessage {
+            public AttachmentDetailWindow(Attachment attachment, Attachment.Status condition) {
+                super(attachment.icon(),attachment.name(),attachment.desc());
+            }
         }
     }
 }

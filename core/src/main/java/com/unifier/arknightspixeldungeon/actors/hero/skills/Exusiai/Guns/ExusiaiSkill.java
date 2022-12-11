@@ -331,6 +331,15 @@ public abstract class ExusiaiSkill extends HeroSkill {
     private static final String OVERHEAT = "overHeat";
     private static final String EXTRAAMMO = "extraAmmo";
 
+    private static final String ATTACHMENT_GUN_SIGHT ="attachment_gun_sight";
+    private static final String ATTACHMENT_FRONT_HANG ="attachment_front_hang";
+    private static final String ATTACHMENT_BELOW_HANG ="attachment_below_hang";
+    private static final String ATTACHMENT_BACK_HANG ="attachment_back_hang";
+    private static final String ATTACHMENT_AMMO_BOX ="attachment_ammo_box";
+    private static final String ATTACHMENT_BULLET ="attachment_bullet";
+
+
+
     @Override
     public void storeInBundle( Bundle bundle ) {
         super.storeInBundle( bundle );
@@ -338,15 +347,28 @@ public abstract class ExusiaiSkill extends HeroSkill {
         bundle.put( OVERHEAT, overHeat );
         bundle.put( EXTRAAMMO, extraAmmo );
 
+        bundle.put(ATTACHMENT_GUN_SIGHT, GUN_SIGHT);
+        bundle.put(ATTACHMENT_FRONT_HANG, FRONT_HANG);
+        bundle.put(ATTACHMENT_BELOW_HANG,BELOW_HANG);
+        bundle.put(ATTACHMENT_BACK_HANG,BACK_HANG);
+        bundle.put(ATTACHMENT_AMMO_BOX,AMMO_BOX);
+        bundle.put(ATTACHMENT_BULLET, BULLET);
     }
 
     @Override
     public void restoreFromBundle( Bundle bundle ) {
         super.restoreFromBundle(bundle);
+
         heat = bundle.getInt( HEAT );
         overHeat = bundle.getBoolean(OVERHEAT);
         extraAmmo = bundle.getBoolean(EXTRAAMMO);
 
+        GUN_SIGHT =  bundle.getEnum(ATTACHMENT_GUN_SIGHT,Attachment.class);
+        FRONT_HANG = bundle.getEnum(ATTACHMENT_FRONT_HANG,Attachment.class);
+        BELOW_HANG = bundle.getEnum(ATTACHMENT_BELOW_HANG,Attachment.class);
+        BACK_HANG = bundle.getEnum(ATTACHMENT_BACK_HANG,Attachment.class);
+        AMMO_BOX = bundle.getEnum(ATTACHMENT_AMMO_BOX,Attachment.class);
+        BULLET = bundle.getEnum(ATTACHMENT_BULLET,Attachment.class);
     }
 
     public abstract Image bluePrintPicture();
@@ -378,13 +400,19 @@ public abstract class ExusiaiSkill extends HeroSkill {
         switch (attachment.attachType()){
             case GUN_SIGHT: GUN_SIGHT = attachment;break;
             case FRONT_HANG:FRONT_HANG = attachment;break;
-            case BELOW_HANG:replaced = attachment;break;
-            case BACK_HANG:replaced = attachment;break;
-            case AMMO_BOX:replaced = attachment;break;
-            case BULLET:replaced = attachment;break;
+            case BELOW_HANG:BELOW_HANG = attachment;break;
+            case BACK_HANG:BACK_HANG = attachment;break;
+            case AMMO_BOX:AMMO_BOX = attachment;break;
+            case BULLET:BULLET = attachment;break;
         }
         attachment.doAttach(this);
     }
 
     protected abstract boolean checkAttachmentType(Attachment attachment);
+
+    public enum GunType{
+        ASSAULT_RIFLE,GRENADE_LAUNCHER,HEAVY_MACHINE_GUN,PLASMA_CANNON,REVOLVER,SHOTGUN,SNIPER_RIFLE,VECTOR
+    }//looks stupid,but it could be more stupid if I use if-instanceof-elseif in attachment judgement
+
+    public abstract GunType getType();
 }

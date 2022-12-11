@@ -16,7 +16,7 @@ public class Revolver extends ExusiaiSkill {
 
     @Override
     public boolean activated() {
-        return false;
+        return true;
     }
 
     @Override
@@ -59,4 +59,7 @@ public class Revolver extends ExusiaiSkill {
         if(attachment.attachType() == Attachment.AttachType.GUN_SIGHT || attachment.attachType() == Attachment.AttachType.BULLET ) return true;
         return false;
     }
+
+    @Override
+    public GunType getType() { return GunType.REVOLVER; }
 }
