@@ -14,11 +14,11 @@ public enum Attachment {
     RED_DOT_SIGHT(1,AttachType.GUN_SIGHT){
         @Override
         public Status condition(Hero hero, ExusiaiSkill skill){
-
             if(skill.getType() == ExusiaiSkill.GunType.REVOLVER || skill.getType() == ExusiaiSkill.GunType.VECTOR || skill.getType() == ExusiaiSkill.GunType.SNIPER_RIFLE){
 
             }
-            return super.condition(hero,skill);}
+            return super.condition(hero,skill);
+        }
     },
     CLOSE_COMBAT_OPTICAL_SIGHT(2,AttachType.GUN_SIGHT),
     THERMAL_IMAGING_SIGHT(3,AttachType.GUN_SIGHT),

@@ -150,8 +150,39 @@ public class Yog extends Mob {
 
 		return super.defenseProc(enemy, damage);
 	}
-	
-	@Override
+
+    @Override
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+
+	    if(damage.isEmpty())  return super.multipleDefenseProc(enemy, damage);
+
+        ArrayList<Integer> spawnPoints = new ArrayList<>();
+
+        for (int i=0; i < PathFinder.NEIGHBOURS8.length; i++) {
+            int p = pos + PathFinder.NEIGHBOURS8[i];
+            if (Actor.findChar( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+                spawnPoints.add( p );
+            }
+        }
+
+        if (spawnPoints.size() > 0) {
+            Larva larva = new Larva();
+            larva.pos = Random.element( spawnPoints );
+
+            GameScene.add( larva );
+            Actor.addDelayed( new Pushing( larva, pos, larva.pos ), -1 );
+        }
+
+        for (Mob mob : Dungeon.level.mobs) {
+            if (mob instanceof BurningFist || mob instanceof RottingFist || mob instanceof Larva) {
+                mob.aggro( enemy );
+            }
+        }
+
+        return super.multipleDefenseProc(enemy, damage);
+    }
+
+        @Override
 	public void beckon( int cell ) {
 	}
 	

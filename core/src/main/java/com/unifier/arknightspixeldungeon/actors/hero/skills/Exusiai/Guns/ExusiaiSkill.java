@@ -1,5 +1,7 @@
 package com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns;
 
+import com.unifier.arknightspixeldungeon.Assets;
+import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Bless;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
@@ -10,15 +12,18 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
+import com.unifier.arknightspixeldungeon.effects.Splash;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.CellSelector;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
@@ -162,6 +167,8 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
         @Override
         public void onSelect(Integer cell) {
+            if (cell == null) return;
+
             if(doCheckCell(cell,owner)){
                 doShoot(owner,cell);
             }
@@ -173,13 +180,13 @@ public abstract class ExusiaiSkill extends HeroSkill {
         }
     };
 
-    protected boolean doCheckCell(Integer cell, Hero owner) {
+    protected boolean doCheckCell(int cell, Hero owner) {
 
         Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.PROJECTILE);
         int result = ballistica.collisionPos;
 
         if(result == owner.pos){
-            GLog.i(Messages.get(this, "self_targeting"));
+            GLog.i(Messages.get(ExusiaiSkill.class, "self_targeting"));
             return false;
         }
 
@@ -187,16 +194,18 @@ public abstract class ExusiaiSkill extends HeroSkill {
     }
 
     protected void doShoot(Hero owner,Integer cell){
-
         int from = owner.pos;
         int to = cell;
-        ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(from, to, ammoSprite() , new Callback() {
+
+        Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.PROJECTILE);
+        int result = ballistica.collisionPos;
+
+        ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(from, result, ammoSprite() , new Callback() {
             @Override
             public void call() {
-                doEnemyCheck(from,to);
+                doEnemyCheck(from,result);
             }
         });
-
     }
 
 
@@ -213,17 +222,32 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
     protected void doEnemyCheck(int from, int to){
         Char enemy = Char.findChar(to);
+        boolean visibleFight = Dungeon.level.heroFOV[to];
+
         if(enemy != null && enemy.alignment == Char.Alignment.ENEMY){
             if(doHitCheck(from,to,enemy)){
                 doDamageCalculation(from,to,enemy);
+            }else {
+                if (visibleFight) {
+                    Splash.at( to, 0xCCFFC800, 1 );
+                    String defense = enemy.defenseVerb();
+                    enemy.sprite.showStatus( CharSprite.NEUTRAL, defense );
+                    Sample.INSTANCE.play(Assets.SND_MISS);
+                }
+                doCheckAfterShooting(1,false);
             }
+        }else {
+            if (visibleFight) {
+                Splash.at(to, 0xCCFFC800, 1);
+            }
+            doCheckAfterShooting(1,false);
         }
     }
 
-    protected float gunAccuracyModifier(int from, int to, Char enemy){return 1f;};//basiclly there are no accuracy change,details are written in extended class
+    protected float gunAccuracyModifier(int from, int to, Char enemy){return 0f;};//basiclly there are no accuracy change,details are written in extended class
 
     protected float attachmentAccuracyModifier(int from, int to, Char enemy){
-        float result = 1f;
+        float result = 0f;
         return result;};//FIXME most accuracy modifier attachment will take affect at here,but the most important thing is get the whole process done first.
 
     protected boolean doHitCheck(int from, int to,Char enemy){
@@ -234,7 +258,7 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
         float attachmentAccuracyModifier = this.attachmentAccuracyModifier(from,to,enemy);
 
-        basicAccuracy += (gunAccuracyModifier * basicAccuracy) + (attachmentAccuracyModifier * basicAccuracy);
+        basicAccuracy = (int) (basicAccuracy + (gunAccuracyModifier * basicAccuracy) + (attachmentAccuracyModifier * basicAccuracy));
 
         float acuRoll = Random.Float( basicAccuracy );
         float defRoll = Random.Float( enemy.defenseSkill( owner ) );
@@ -244,6 +268,8 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
         if (enemy.buff(Bless.class) != null) defRoll *= 1.25f;
         if (enemy.buff(Hex.class) != null) defRoll *= 0.8f;
+
+        //GLog.i(owner.getAttackSkill()+" "+basicAccuracy+" "+acuRoll+" "+defRoll);
 
        return acuRoll >= defRoll;
     }

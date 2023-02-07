@@ -96,6 +96,7 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -631,8 +632,13 @@ public abstract class Char extends Actor {
 	public int defenseProc( Char enemy, int damage ) {
 		return damage;
 	}
-	
-	public float speed() {
+
+    //use for damage with multiple attacks.to decrease unnecessary calculation repeated again and again,improve performance,and avoid some stupid things like many fly,or drop gold one by one
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+        return damage;
+    }
+
+    public float speed() {
 		return buff( Cripple.class ) == null ? baseSpeed : baseSpeed * 0.5f;
 	}
 	

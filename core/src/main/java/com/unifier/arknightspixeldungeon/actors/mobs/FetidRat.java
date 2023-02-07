@@ -31,6 +31,8 @@ import com.unifier.arknightspixeldungeon.scripts.NPCPlot.FrostNovaQuestPlot;
 import com.unifier.arknightspixeldungeon.sprites.FetidRatSprite;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class FetidRat extends Rat {
 
 	{
@@ -74,6 +76,16 @@ public class FetidRat extends Rat {
 
 		return super.defenseProc(enemy, damage);
 	}
+
+    @Override
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+
+	    if(damage.size()>0) {
+            GameScene.add(Blob.seed(pos, 20 * Random.Int(1, damage.size()), StenchGas.class));
+        }//release random gas amount for now
+        return super.multipleDefenseProc(enemy, damage);
+
+    }
 
 	@Override
 	public void die( Object cause ) {

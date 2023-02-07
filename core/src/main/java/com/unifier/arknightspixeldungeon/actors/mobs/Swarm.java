@@ -115,6 +115,46 @@ public class Swarm extends Mob {
 		
 		return super.defenseProc(enemy, damage);
 	}
+
+    @Override
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+
+	    Integer total = 0;
+	    for(Integer record : damage){
+	        total += record;
+        }
+
+        if (HP >= total + 2 && !damage.isEmpty()) {
+            ArrayList<Integer> candidates = new ArrayList<>();
+            boolean[] solid = Dungeon.level.solid;
+
+            int[] neighbours = {pos + 1, pos - 1, pos + Dungeon.level.width(), pos - Dungeon.level.width()};
+            for (int n : neighbours) {
+                if (!solid[n] && Actor.findChar( n ) == null) {
+                    candidates.add( n );
+                }
+            }
+
+            if (candidates.size() > 0) {
+
+                Swarm clone = split();
+                clone.HP = (HP - total) / 2;
+                clone.pos = Random.element( candidates );
+                clone.state = clone.HUNTING;
+
+                if (Dungeon.level.map[clone.pos] == Terrain.DOOR) {
+                    Door.enter( clone.pos );
+                }
+
+                GameScene.add( clone, SPLIT_DELAY );
+                Actor.addDelayed( new Pushing( clone, pos, clone.pos ), -1 );
+
+                HP -= clone.HP;
+            }
+        }
+
+        return super.multipleDefenseProc(enemy, damage);
+    }
 	
 	@Override
 	public int attackSkill( Char target ) {

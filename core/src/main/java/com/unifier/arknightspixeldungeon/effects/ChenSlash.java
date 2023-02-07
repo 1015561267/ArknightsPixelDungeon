@@ -2,11 +2,8 @@ package com.unifier.arknightspixeldungeon.effects;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.effects.particles.BloodParticle;
-import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Callback;
 
 public class ChenSlash extends Wound {
@@ -22,7 +19,7 @@ public class ChenSlash extends Wound {
 //        super( Effects.get( Effects.Type.WOUND ),callback);
 //    }
 //
-    protected static float fadeTime(){ return 0.8f; }
+    protected static float fadeTime(){ return 0.2f; }
 //
 //    public static void hit( Char ch ) {
 //        hit( ch, 0 );

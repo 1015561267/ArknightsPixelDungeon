@@ -505,7 +505,18 @@ public abstract class Mob extends Char {
 		return damage;
 	}
 
-	public boolean surprisedBy( Char enemy ){
+    @Override
+    public ArrayList<Integer> multipleDefenseProc( Char enemy, ArrayList<Integer> damage) {
+        if ( (this.enemy == null || (enemy != this.enemy && (Dungeon.level.distance(pos, enemy.pos) < Dungeon.level.distance(pos, this.enemy.pos))))
+                && enemy != this) {
+            aggro(enemy);
+            target = enemy.pos;
+        }
+
+        return damage;
+    }
+
+    public boolean surprisedBy( Char enemy ){
 		return !enemySeen && enemy == Dungeon.hero;
 	}
 

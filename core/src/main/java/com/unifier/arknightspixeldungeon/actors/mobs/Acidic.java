@@ -23,10 +23,11 @@ package com.unifier.arknightspixeldungeon.actors.mobs;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.Ooze;
 import com.unifier.arknightspixeldungeon.sprites.AcidicSprite;
-import com.unifier.arknightspixeldungeon.utils.GLog;
-import com.watabou.utils.Random;
+
+import java.util.ArrayList;
 
 public class Acidic extends Scorpio {
 
@@ -38,17 +39,29 @@ public class Acidic extends Scorpio {
 	
 	@Override
 	public int defenseProc( Char enemy, int damage ) {
-		
-		int dmg = Random.IntRange( 0, damage );
+
+        if (Dungeon.level.adjacent(pos, enemy.pos)){
+            Buff.affect(enemy, Ooze.class).set( Ooze.DURATION );
+        }
+
+		/*int dmg = Random.IntRange( 0, damage );
 		if (dmg > 0) {
 			enemy.damage( dmg, this );
 			if (!enemy.isAlive() && enemy == Dungeon.hero) {
 				Dungeon.fail(getClass());
 				GLog.n(Messages.capitalize(Messages.get(Char.class, "kill", name())));
 			}
-		}
-		
+		}*/
 		return super.defenseProc( enemy, damage );
 	}
-	
+
+    @Override
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+	    //Update to newest SPD,Teller,2023-2-1
+        if (Dungeon.level.adjacent(pos, enemy.pos)){
+            Buff.affect(enemy, Ooze.class).set( Ooze.DURATION );
+        }
+
+        return super.multipleDefenseProc(enemy, damage);
+    }
 }

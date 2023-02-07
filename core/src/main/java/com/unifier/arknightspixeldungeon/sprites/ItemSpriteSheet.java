@@ -269,7 +269,12 @@ public class ItemSpriteSheet {
 	public static final int SLEEP_DART      = TIPPED_DARTS+8;
 	public static final int PARALYTIC_DART  = TIPPED_DARTS+9;
 	public static final int DISPLACING_DART = TIPPED_DARTS+10;
-	static {
+
+    public static final int ONE_BURST = TIPPED_DARTS+11;
+    public static final int TWO_BURST = TIPPED_DARTS+12;
+    public static final int THREE_BURST = TIPPED_DARTS+13;
+
+    static {
 		for (int i = TIPPED_DARTS; i < TIPPED_DARTS+16; i++)
 			assignItemRect(i, 12, 12);
 	}

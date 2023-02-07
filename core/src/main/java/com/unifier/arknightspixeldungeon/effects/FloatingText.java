@@ -145,9 +145,10 @@ public class FloatingText extends RenderedTextBlock {
 				int aboveIndex = stack.size() - 1;
 				while (aboveIndex >= 0) {
 					FloatingText above = stack.get(aboveIndex);
-					if (above.y + above.height() > below.y) {
-						above.y = below.y - above.height();
-						
+					//if (above.y + above.height() > below.y) {
+					//	above.y = below.y - above.height();
+                    if (above.bottom() + 4 > below.top()) {
+                        above.setPos(above.left(), below.top() - above.height() - 4);
 						below = above;
 						aboveIndex--;
 					} else {

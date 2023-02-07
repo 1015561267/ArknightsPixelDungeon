@@ -36,6 +36,8 @@ import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.RotHeartSprite;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class RotHeart extends Mob {
 
 	{
@@ -70,7 +72,16 @@ public class RotHeart extends Mob {
 		return super.defenseProc(enemy, damage);
 	}
 
-	@Override
+    @Override
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+        if(damage.size()>0) {
+            GameScene.add(Blob.seed(pos, 20 * Random.Int(1, damage.size()), ToxicGas.class));
+        }//release random gas amount for now
+
+        return super.multipleDefenseProc(enemy, damage);
+    }
+
+    @Override
 	public void beckon(int cell) {
 		//do nothing
 	}

@@ -39,6 +39,8 @@ import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class Thief extends Mob {
 	
 	public Item item;
@@ -141,6 +143,18 @@ public class Thief extends Mob {
 
 		return super.defenseProc(enemy, damage);
 	}
+
+    @Override
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+
+        if (state == FLEEING && !damage.isEmpty()) {
+            Dungeon.level.drop( new Gold(damage.size()), pos ).sprite.drop();
+        }
+
+        return super.multipleDefenseProc(enemy, damage);
+    }
+
+
 
 	protected boolean steal( Hero hero ) {
 

@@ -25,11 +25,14 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
 import com.unifier.arknightspixeldungeon.utils.GLog;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 public class Ooze extends Buff {
 
-	{
+    public static final float DURATION = 20f;
+
+    {
 		type = buffType.NEGATIVE;
 	}
 	
@@ -50,25 +53,65 @@ public class Ooze extends Buff {
 
 	@Override
 	public String desc() {
-		return Messages.get(this, "desc");
+        return Messages.get(this, "desc", dispTurns(left));
 	}
 
 	@Override
 	public boolean act() {
-		if (target.isAlive()) {
-			if (Dungeon.depth > 4)
-				target.damage( Dungeon.depth/5, this );
-			else if (Random.Int(2) == 0)
-				target.damage( 1, this );
-			if (!target.isAlive() && target == Dungeon.hero) {
-				Dungeon.fail( getClass() );
-				GLog.n( Messages.get(this, "ondeath") );
-			}
-			spend( TICK );
-		}
-		if (Dungeon.level.water[target.pos]) {
-			detach();
-		}
-		return true;
-	}
+        if (target.isAlive()) {
+            if (Dungeon.depth > 5)
+                target.damage(1 + Dungeon.depth / 5, this);
+            else if (Dungeon.depth == 5)
+                target.damage(1, this);
+            else if (Random.Int(2) == 0) {
+                target.damage(1, this); //0.5 dmg per turn in sewers
+            }
+
+            if (!target.isAlive() && target == Dungeon.hero) {
+                Dungeon.fail(getClass());
+                GLog.n(Messages.get(this, "ondeath"));
+            }
+            spend(TICK);
+            left -= TICK;
+            if (left <= 0) {
+                detach();
+            }
+        }
+        else detach();
+
+        if (Dungeon.level.water[target.pos]) {
+            detach();
+        }
+        return true;
+        //FIXME not totally updated to newest version
+    }
+
+    private float left;
+    private static final String LEFT	= "left";
+
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle( bundle );
+        bundle.put( LEFT, left );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle(bundle);
+        left = bundle.getFloat(LEFT);
+    }
+
+    /*@Override
+    public float iconFadePercent() {
+        return Math.max(0, (DURATION - left) / DURATION);
+    }
+
+    @Override
+    public String iconTextDisplay() {
+        return Integer.toString((int)left);
+    }*/
+
+    public void set(float left){
+        this.left = left;
+    }
 }
