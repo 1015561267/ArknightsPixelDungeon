@@ -4,12 +4,12 @@ Warning：This project is not created for packing and playing but online collabo
 
 # About this project
 
-Yeah this is an mod of SPD with Arknights IP,like sprite and something else.Somehow like korean project but we have almost none sprite(even fewer on work now)Believe it or not,we have created it in 2020-1,but it was only a sprite modifier first.
+Yeah this is an mod of SPD with Arknights IP,like sprite and something else.Somehow like korean project but we have almost none spriter(even fewer on work now)Believe it or not,we have created it in 2020-1,but it was a sprite—only modifier at first.
 
-This project is based on SPD 0.6.5,but with libgdx import,improved change interface,updated badage system and other polish in later version,and I think it could be more highlight changes in SPD be merged into this project.
+This project is based on SPD 0.6.5,but after I added libgdx import,improved change interface,updated badage system and other polish in later version,it has had and will keep in track of highlight changes in SPD.
 
 # Contact:
-Again in lack of almost everything,from pictures to data and design,even time to code.So if you want to take part in its creation can contact me by e-mail,in English or Chinese.
+Again,be in lack of almost everything,from pictures,data,design,even time to code.So if you want to take part in its creation,you can contact me by e-mail,in English or Chinese.
 
 # Shattered Pixel Dungeon
 
