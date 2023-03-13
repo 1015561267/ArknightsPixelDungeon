@@ -17,9 +17,11 @@ import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.Window;
 import com.watabou.noosa.ColorBlock;
+import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.ui.Component;
 
 import java.util.ArrayList;
 
@@ -37,7 +39,7 @@ public class WndExusiaiSkill extends Window {
     public WndExusiaiSkill(ExusiaiSkill skill) {
 
         this.gunType = skill.getType();
-        RenderedTextBlock title = PixelScene.renderTextBlock(Messages.get(skill, "title"), 12 );
+        RenderedTextBlock title = PixelScene.renderTextBlock(Messages.get(skill, "name"), 12 );
         title.hardlight(Window.TITLE_COLOR);
         title.setPos((WIDTH - title.width())/2f, 2);
         add(title);
@@ -110,11 +112,9 @@ public class WndExusiaiSkill extends Window {
     }
 
     private int layOutNecessaryButton(ExusiaiSkill skill, float bottom) {
-
         if(skill.available()){
 
         }
-
         return (int) bottom;
     }
 
@@ -130,8 +130,14 @@ public class WndExusiaiSkill extends Window {
         public ExusiaiSkill skill;
         private Image icon;
 
-        AttachmentSlot(Attachment.AttachType attachType, Attachment attachment, ExusiaiSkill skill)
-        {
+        private WndExusiaiSkill basement;
+
+        private ItemSprite.Glowing glowing;
+        private boolean glowUp;
+
+        private float phase;
+
+        AttachmentSlot(Attachment.AttachType attachType, Attachment attachment, ExusiaiSkill skill, WndExusiaiSkill wndExusiaiSkill) {
             super();
 
             width = 16;
@@ -158,9 +164,10 @@ public class WndExusiaiSkill extends Window {
                     case BULLET:icon = new ItemSprite(ItemSpriteSheet.ARTIFACT_HOLDER, null);break;
                 }
             }
-
             add(icon);
 
+            this.glowing = new ItemSprite.Glowing( 0xFFFFFF );
+            this.glowUp  = true;
         }
 
         @Override
@@ -208,6 +215,36 @@ public class WndExusiaiSkill extends Window {
             }
 
             layout();
+        }
+
+        public void update(){
+            super.update();
+            if (visible && glowing != null) {
+
+                //if (glowUp && (phase += Game.elapsed) > glowing.period) {
+                //    glowUp = false;
+                //    phase = glowing.period;
+                // }
+
+                ///else
+
+                if (!glowUp && (phase -= 1.5f * Game.elapsed) < 0) {//a little bit faster at here
+                    glowUp = true;//stop
+                    phase = 0;
+                }
+
+                float value = phase / glowing.period * 0.6f;
+
+                icon.rm =  icon.gm =  icon.bm = 1 - value;
+                icon.ra = glowing.red * value;
+                icon.ga = glowing.green * value;
+                icon.ba = glowing.blue * value;
+            }
+        }
+
+        public synchronized void glow( ItemSprite.Glowing glowing ){
+            this.glowing = glowing;
+            if (glowing == null) icon.resetColor();
         }
     }
 
@@ -274,6 +311,7 @@ public class WndExusiaiSkill extends Window {
             if(rhs!=null) {
                 rhs.enable(index < attachmentArrayList.size() / 4);
             }
+            
         }
 
         private void layOutAttachMentList(Attachment attachment, int index , ExusiaiSkill skill) {
@@ -327,19 +365,35 @@ public class WndExusiaiSkill extends Window {
                     }
 
                     Attachment temp = attachmentArrayList.get(i);
+                    Attachment.Status condition = temp.condition(Dungeon.hero,skill);
+
                     RedButton button = new RedButton(temp.desc() ,6){
                         @Override
                         protected void onClick() {
                             super.onClick();
-                            GameScene.show(new AttachmentDetailWindow(temp,temp.condition(Dungeon.hero,skill)));
+                            GameScene.show(new AttachmentDetailWindow(temp,condition,skill, basement, pointer,slot));
+                        }
+
+                        @Override
+                        protected void onPointerDown() {
+                            if(condition == Attachment.Status.available) {
+                                bg.brightness(1.2f);
+                            }
+                            Sample.INSTANCE.play( Assets.SND_CLICK );
+                        }
+
+                        @Override
+                        protected void onPointerUp() {
+                            if(condition == Attachment.Status.available) {
+                                bg.resetColor();
+                            }
                         }
                     };
 
                     Image usingIcon = temp.icon();
                     button.icon(usingIcon);
 
-                    button.alpha(temp.condition(Dungeon.hero,skill)== Attachment.Status.available || temp.condition(Dungeon.hero,skill)== Attachment.Status.using ? 1f : 0.3f);
-
+                    button.alpha((condition == Attachment.Status.available ? 1f :(condition == Attachment.Status.locked_by_using ? 0.6f:0.3f)));
                     //button.enable(temp.condition(Dungeon.hero,skill)== Attachment.Status.available || temp.condition(Dungeon.hero,skill)== Attachment.Status.using);
                     //button.enable(false);
 
@@ -362,4 +416,5 @@ public class WndExusiaiSkill extends Window {
             }
         }
     }
+
 }

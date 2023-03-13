@@ -69,11 +69,11 @@ public class ItemSprite extends MovieClip {
 	protected float shadowWidth     = 1f;
 	protected float shadowHeight    = 0.25f;
 	protected float shadowOffset    = 0.5f;
-	
+
 	public ItemSprite() {
 		this( ItemSpriteSheet.SOMETHING, null );
 	}
-	
+
 	public ItemSprite( Item item ) {
 		super(Assets.ITEMS);
 		view (item);
