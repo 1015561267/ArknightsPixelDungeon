@@ -49,6 +49,8 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class Tengu extends Mob {
 	
 	{
@@ -120,6 +122,43 @@ public class Tengu extends Mob {
 			jump();
 		}
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+
+        int beforeHitHP = HP;
+        super.multipleDamage(burstArray,damageArray,src,hittedTime);
+        int totaldmg = beforeHitHP - HP;
+
+        LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+        if (lock != null) {
+            int multiple = beforeHitHP > HT/2 ? 1 : 4;
+            lock.addTime(totaldmg*multiple);
+        }
+
+        //phase 2 of the fight is over
+        if (HP == 0 && beforeHitHP <= HT/2) {
+            ((PrisonBossLevel)Dungeon.level).progress();
+            return;
+        }
+
+        int hpBracket = beforeHitHP > HT/2 ? 12 : 20;
+
+        //phase 1 of the fight is over
+        if (beforeHitHP > HT/2 && HP <= HT/2){
+            HP = (HT/2)-1;
+            yell(Messages.get(this, "interesting"));
+            ((PrisonBossLevel)Dungeon.level).progress();
+            BossHealthBar.bleed(true);
+
+            //if tengu has lost a certain amount of hp, jump
+        } else if (beforeHitHP / hpBracket != HP / hpBracket) {
+            jump();
+        }
+
+	}
+
+
 
 	@Override
 	public boolean isAlive() {

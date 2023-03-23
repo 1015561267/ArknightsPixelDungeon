@@ -12,15 +12,17 @@ processResources {
     from new File(project(':desktop').projectDir,"/src/main/assets")
 }
 
-sourceSets {
-    debug
-    release
-}
-
 def osName = System.getProperty('os.name').toLowerCase(Locale.ROOT)
 
+//sourceSets {
+//    debug
+///    release
+//}
+
+
 task debug(type: JavaExec) {
-    classpath = sourceSets.debug.runtimeClasspath + sourceSets.main.runtimeClasspath
+    classpath = //sourceSets.debug.runtimeClasspath +
+            sourceSets.main.runtimeClasspath
     ignoreExitValue = true
 
     main = appMainClass
@@ -36,7 +38,8 @@ task debug(type: JavaExec) {
 
 //need a separate task to compile dependencies first, seeing as we're setting them up in an odd way
 task compileForRelease(dependsOn: classes, type: JavaCompile){
-    classpath = sourceSets.release.runtimeClasspath + sourceSets.main.runtimeClasspath
+   classpath = //sourceSets.release.runtimeClasspath +
+           sourceSets.main.runtimeClasspath
 }
 
 task release(type: Jar) {
@@ -54,10 +57,26 @@ task release(type: Jar) {
         attributes 'Implementation-Version': appVersionCode
     }
 }
-
 installDist.dependsOn release
 startScripts.dependsOn release
 jpackageImage.dependsOn release
+
+task debugJar(type: Jar) {
+    //FIXME this is now needed as of gradle 7.0, due to our weird sourceSets setup. Should see if there's a better way to do this
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    from sourceSets.main.output
+    dependsOn configurations.runtimeClasspath
+    from { configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) } }
+    archiveName appName + appVersionName + "-INDEV.jar"
+
+    manifest {
+        attributes 'Main-Class': appMainClass
+        attributes 'Specification-Title': appName
+        attributes 'Implementation-Title': appPackageName
+        attributes 'Specification-Version': appVersionName + "-INDEV"
+        attributes 'Implementation-Version': appVersionCode
+    }
+}
 
 runtime {
     modules = ['java.base',
@@ -89,9 +108,9 @@ runtime {
                 imageOptions = ["--icon", file("./src/main/assets/icons/windows.ico"),
                                 "--java-options", "-XX:+IgnoreUnrecognizedVMOptions"]
 
-                installerType = "msi"
-                installerName = appName
-                installerOptions = ["--win-dir-chooser", "--win-menu"]
+                //installerType = "msi"
+                //installerName = appName
+                //installerOptions = ["--win-dir-chooser", "--win-menu"]
             }
         }
     } else if (osName.contains('linux')) {
@@ -103,9 +122,9 @@ runtime {
                 imageOptions = ["--icon", file("./src/main/assets/icons/icon_256.png"),
                                 "--java-options", "-XX:+IgnoreUnrecognizedVMOptions"]
                 //assumes ubuntu linux, changes needed to generate .rpm files
-                installerType = "deb"
-                installerName = appName
-                installerOptions = ["--linux-shortcut"]
+                //installerType = "deb"
+                //installerName = appName
+                //installerOptions = ["--linux-shortcut"]
             }
         }
     } else if (osName.contains('mac')) {
@@ -121,8 +140,8 @@ runtime {
                                 "--mac-package-identifier", appPackageName + ".apple",
                                 "--mac-package-name", "ShattererdPD"]
 
-                installerType = "dmg"
-                installerName = appName
+                //installerType = "dmg"
+                //installerName = appName
             }
         }
     }

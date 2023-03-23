@@ -29,6 +29,8 @@ import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.SheepSprite;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class Sheep extends NPC {
 
 	private static final String[] LINE_KEYS = {"Baa!", "Baa?", "Baa.", "Baa..."};
@@ -59,6 +61,10 @@ public class Sheep extends NPC {
 	@Override
 	public void damage( int dmg, Object src ) {
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+    }
 
 	@Override
 	public void add( Buff buff ) {

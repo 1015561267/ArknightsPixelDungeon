@@ -27,6 +27,8 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.RatKingSprite;
 
+import java.util.ArrayList;
+
 public class RatKing extends NPC {
 
 	{
@@ -53,6 +55,10 @@ public class RatKing extends NPC {
 	@Override
 	public void damage( int dmg, Object src ) {
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+    }
 	
 	@Override
 	public void add( Buff buff ) {

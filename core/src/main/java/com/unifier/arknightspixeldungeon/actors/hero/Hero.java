@@ -45,6 +45,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.MindVision;
 import com.unifier.arknightspixeldungeon.actors.buffs.Momentum;
 import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
 import com.unifier.arknightspixeldungeon.actors.buffs.Regeneration;
+import com.unifier.arknightspixeldungeon.actors.buffs.SniperSight;
 import com.unifier.arknightspixeldungeon.actors.buffs.SnipersMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CollectComboTracker;
@@ -115,6 +116,7 @@ import com.unifier.arknightspixeldungeon.sprites.HeroSprite;
 import com.unifier.arknightspixeldungeon.ui.AttackIndicator;
 import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
 import com.unifier.arknightspixeldungeon.ui.QuickSlotButton;
+import com.unifier.arknightspixeldungeon.ui.SkillLoader;
 import com.unifier.arknightspixeldungeon.utils.BArray;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.unifier.arknightspixeldungeon.windows.WndAlchemy;
@@ -541,6 +543,11 @@ public class Hero extends Char {
 			((HeroSprite)sprite).sprint( 1f + 0.05f*momentum.stacks());
 			speed *= momentum.speedMultiplier();
 		}
+
+		if(buff(SniperSight.class)!=null)
+        {
+            speed *= 0.5f;
+        }
 		
 		return speed;
 		
@@ -1200,6 +1207,10 @@ public class Hero extends Char {
 
 		super.damage( dmg, src );
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+    }//FIXME for now this should not happen,but multipleDamage process it should be able to use soon
 	
 	public void checkVisibleMobs() {
 		ArrayList<Mob> visible = new ArrayList<>();
@@ -1228,6 +1239,7 @@ public class Hero extends Char {
 							!QuickSlotButton.lastTarget.isAlive() ||
 							!fieldOfView[QuickSlotButton.lastTarget.pos])){
 			QuickSlotButton.target(target);
+            SkillLoader.target(target);
 		}
 		
 		if (newMob) {
@@ -1626,7 +1638,14 @@ public class Hero extends Char {
 			items.remove( item );
 		}
 
-		GameScene.gameOver();
+
+        Game.runOnRenderThread(new Callback() {
+            @Override
+            public void call() {
+                GameScene.gameOver();
+                Sample.INSTANCE.play( Assets.SND_DEATH );
+            }
+        });
 		
 		if (cause instanceof Hero.Doom) {
 			((Hero.Doom)cause).onDeath();

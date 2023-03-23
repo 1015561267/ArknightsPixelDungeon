@@ -39,6 +39,7 @@ import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.ui.QuickSlotButton;
+import com.unifier.arknightspixeldungeon.ui.SkillLoader;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundlable;
@@ -595,6 +596,7 @@ public class Item implements Bundlable {
 
 		Char enemy = Actor.findChar( cell );
 		QuickSlotButton.target(enemy);
+        SkillLoader.target(enemy);
 		
 		final float delay = castDelay(user, dst);
 

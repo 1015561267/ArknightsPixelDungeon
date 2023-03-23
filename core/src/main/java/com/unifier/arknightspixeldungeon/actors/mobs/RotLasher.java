@@ -31,6 +31,8 @@ import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.sprites.RotLasherSprite;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class RotLasher extends Mob {
 
 	{
@@ -68,6 +70,17 @@ public class RotLasher extends Mob {
 			super.damage(dmg, src);
 		}
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
+        //TODO: when effect properties are done, change this to FIRE
+        if (src instanceof Burning) {
+            destroy();
+            sprite.die();
+        } else {
+            super.multipleDamage(burstArray,damageArray,src,hittedTime);
+        }
+    }
 
 	@Override
 	public int attackProc(Char enemy, int damage) {

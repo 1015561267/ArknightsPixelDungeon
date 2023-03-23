@@ -43,6 +43,8 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class Imp extends NPC {
 
 	{
@@ -78,6 +80,10 @@ public class Imp extends NPC {
 	@Override
 	public void damage( int dmg, Object src ) {
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+    }
 	
 	@Override
 	public void add( Buff buff ) {

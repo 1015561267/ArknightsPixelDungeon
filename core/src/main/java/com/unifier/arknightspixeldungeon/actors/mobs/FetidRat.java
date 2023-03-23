@@ -63,7 +63,7 @@ public class FetidRat extends Rat {
 	public int attackProc( Char enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (Random.Int(3) == 0) {
-			Buff.affect(enemy, Ooze.class);
+			Buff.affect(enemy, Ooze.class).set( Ooze.DURATION );
 		}
 
 		return damage;
@@ -78,12 +78,12 @@ public class FetidRat extends Rat {
 	}
 
     @Override
-    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage, ArrayList<Boolean> burstArray, int hittedTime) {
 
 	    if(damage.size()>0) {
-            GameScene.add(Blob.seed(pos, 20 * Random.Int(1, damage.size()), StenchGas.class));
+            GameScene.add(Blob.seed(pos, 20 * Random.Int(1, hittedTime), StenchGas.class));
         }//release random gas amount for now
-        return super.multipleDefenseProc(enemy, damage);
+        return super.multipleDefenseProc(enemy, damage, burstArray, hittedTime);
 
     }
 

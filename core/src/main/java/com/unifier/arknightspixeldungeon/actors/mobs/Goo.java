@@ -48,6 +48,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class Goo extends Mob {
 
 	{
@@ -126,7 +128,7 @@ public class Goo extends Mob {
 	public int attackProc( Char enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (Random.Int( 3 ) == 0) {
-			Buff.affect( enemy, Ooze.class );
+			Buff.affect( enemy, Ooze.class ).set( Ooze.DURATION );
 			enemy.sprite.burst( 0x000000, 5 );
 		}
 
@@ -225,6 +227,29 @@ public class Goo extends Mob {
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (lock != null) lock.addTime(dmg*2);
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+        boolean bleeding = (HP*2 <= HT);
+        int beforeHitHP = HP;
+        super.multipleDamage(burstArray,damageArray,src,hittedTime);
+        int totaldmg = beforeHitHP - HP;
+
+        if ((HP*2 <= HT) && !bleeding){
+            BossHealthBar.bleed(true);
+            sprite.showStatus(CharSprite.NEGATIVE, Messages.get(this, "enraged"));
+            ((GooSprite)sprite).spray(true);
+            yell(Messages.get(this, "gluuurp"));
+        }
+
+        LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+        if (lock != null && !isImmune(src.getClass())) {
+                lock.addTime(totaldmg*2f);
+        }
+    }
+
+
+
 
 	@Override
 	public void die( Object cause ) {

@@ -37,6 +37,8 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 
+import java.util.ArrayList;
+
 public class Ghost extends NPC {
 
 	{
@@ -78,8 +80,12 @@ public class Ghost extends NPC {
 	@Override
 	public void damage( int dmg, Object src ) {
 	}
-	
-	@Override
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+    }
+
+    @Override
 	public void add( Buff buff ) {
 	}
 	

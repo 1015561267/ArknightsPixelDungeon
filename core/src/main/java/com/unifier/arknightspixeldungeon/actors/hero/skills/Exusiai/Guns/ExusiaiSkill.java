@@ -10,6 +10,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.effects.Splash;
@@ -21,21 +22,26 @@ import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
+import com.unifier.arknightspixeldungeon.ui.QuickSlotButton;
+import com.unifier.arknightspixeldungeon.ui.SkillLoader;
 import com.unifier.arknightspixeldungeon.utils.GLog;
+import com.unifier.arknightspixeldungeon.windows.WndExusiaiSkill;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public abstract class ExusiaiSkill extends HeroSkill {
 
-    Attachment GUN_SIGHT;
-    Attachment FRONT_HANG;
-    Attachment BELOW_HANG;
-    Attachment BACK_HANG;
-    Attachment AMMO_BOX;
-    Attachment BULLET;
+    Attachment GUN_SIGHT = Attachment.NULL_ATTACHMENT;
+    Attachment FRONT_HANG= Attachment.NULL_ATTACHMENT;
+    Attachment BELOW_HANG= Attachment.NULL_ATTACHMENT;
+    Attachment BACK_HANG = Attachment.NULL_ATTACHMENT;
+    Attachment AMMO_BOX  = Attachment.NULL_ATTACHMENT;
+    Attachment BULLET    = Attachment.NULL_ATTACHMENT;
 
     public void setGUN_SIGHT(Attachment GUN_SIGHT) {
         this.GUN_SIGHT = GUN_SIGHT;
@@ -68,6 +74,9 @@ public abstract class ExusiaiSkill extends HeroSkill {
     public Attachment getAMMO_BOX(){ return AMMO_BOX; }
     public Attachment getBULLET(){ return BULLET; }
 
+    public static Char lastTarget = null;
+    //just like quickSlotButton,make it
+
     public float heat;
     public boolean overHeat;
     public boolean extraAmmo;
@@ -75,6 +84,12 @@ public abstract class ExusiaiSkill extends HeroSkill {
     {
         heat = 0;
         extraAmmo = false;
+    }
+
+    public boolean useTargetting(){return true;}
+
+    public void handleLongClick() {
+        GameScene.show(new WndExusiaiSkill(this));
     }
 
     public boolean useHeat(){
@@ -148,6 +163,8 @@ public abstract class ExusiaiSkill extends HeroSkill {
             return;
         }
         if(doCheckBeforeAiming()){
+            SkillLoader.targetting = true;
+            SkillLoader.useTargeting();
             GameScene.selectCell(aimer);
         }
     }
@@ -218,7 +235,7 @@ public abstract class ExusiaiSkill extends HeroSkill {
             @Override
             public boolean isBulletForEffect(){return true;}
         };
-    };
+    }
 
     protected void doEnemyCheck(int from, int to){
         Char enemy = Char.findChar(to);
@@ -244,11 +261,11 @@ public abstract class ExusiaiSkill extends HeroSkill {
         }
     }
 
-    protected float gunAccuracyModifier(int from, int to, Char enemy){return 0f;};//basiclly there are no accuracy change,details are written in extended class
+    protected float gunAccuracyModifier(int from, int to, Char enemy){return 0f;}//basiclly there are no accuracy change,details are written in extended class
 
     protected float attachmentAccuracyModifier(int from, int to, Char enemy){
         float result = 0f;
-        return result;};//FIXME most accuracy modifier attachment will take affect at here,but the most important thing is get the whole process done first.
+        return result;}//FIXME most accuracy modifier attachment will take affect at here,but the most important thing is get the whole process done first.
 
     protected boolean doHitCheck(int from, int to,Char enemy){
 
@@ -301,6 +318,9 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
         if (!enemy.isAlive()) {
             GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())) );
+        }else {
+            QuickSlotButton.lastTarget = enemy;
+            SkillLoader.lastTarget = enemy;
         }
 
         doCheckAfterShooting(1,false);
@@ -342,11 +362,11 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
     protected float getReloadTime(){
         return rawCD();
-    };
+    }
 
     protected void doTimeSpend(){
         owner.spendAndNext(1f);
-    };
+    }
 
     public float heatThreshold(){
         return 100;
@@ -363,8 +383,6 @@ public abstract class ExusiaiSkill extends HeroSkill {
     private static final String ATTACHMENT_BACK_HANG ="attachment_back_hang";
     private static final String ATTACHMENT_AMMO_BOX ="attachment_ammo_box";
     private static final String ATTACHMENT_BULLET ="attachment_bullet";
-
-
 
     @Override
     public void storeInBundle( Bundle bundle ) {
@@ -395,7 +413,7 @@ public abstract class ExusiaiSkill extends HeroSkill {
         BACK_HANG = bundle.getEnum(ATTACHMENT_BACK_HANG,Attachment.class);
         AMMO_BOX = bundle.getEnum(ATTACHMENT_AMMO_BOX,Attachment.class);
         BULLET = bundle.getEnum(ATTACHMENT_BULLET,Attachment.class);
-    }
+}
 
     public abstract Image bluePrintPicture();
 
@@ -404,25 +422,52 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
     public abstract int shootDamageMax();
 
-    public void switchAttachment(Attachment attachment){
+    public void switchAttachment(Attachment attachment, Attachment.Status condition){
 
         if(!checkAttachmentType(attachment)){
             return;
         }
-        Attachment replaced = null;
+
+        else if(condition == Attachment.Status.using)
+        {
+            doDetach(attachment);
+        }
+
+        else {
+            if(condition == Attachment.Status.locked_by_using){
+                allDetach(attachment);
+            }
+
+            Attachment replaced = Attachment.NULL_ATTACHMENT;
+            switch (attachment.attachType()){
+                case GUN_SIGHT:replaced = getGUN_SIGHT();break;
+                case FRONT_HANG:replaced = getFRONT_HANG();break;
+                case BELOW_HANG:replaced = getBELOW_HANG();break;
+                case BACK_HANG:replaced = getBACK_HANG();break;
+                case AMMO_BOX:replaced = getAMMO_BOX();break;
+                case BULLET:replaced = getBULLET();break;
+            }
+
+            if(replaced != Attachment.NULL_ATTACHMENT){
+                doDetach(replaced);
+            }
+
+            doAttach(attachment);
+        }
+    }
+
+    public void doDetach(Attachment attachment) {
         switch (attachment.attachType()){
-            case GUN_SIGHT:replaced = getGUN_SIGHT();break;
-            case FRONT_HANG:replaced = getFRONT_HANG();break;
-            case BELOW_HANG:replaced = getBELOW_HANG();break;
-            case BACK_HANG:replaced = getBACK_HANG();break;
-            case AMMO_BOX:replaced = getAMMO_BOX();break;
-            case BULLET:replaced = getBULLET();break;
+            case GUN_SIGHT: GUN_SIGHT = Attachment.NULL_ATTACHMENT;break;
+            case FRONT_HANG:FRONT_HANG = Attachment.NULL_ATTACHMENT;break;
+            case BELOW_HANG:BELOW_HANG = Attachment.NULL_ATTACHMENT;break;
+            case BACK_HANG:BACK_HANG = Attachment.NULL_ATTACHMENT;break;
+            case AMMO_BOX:AMMO_BOX = Attachment.NULL_ATTACHMENT;break;
+            case BULLET:BULLET = Attachment.NULL_ATTACHMENT;break;
         }
+    }
 
-        if(replaced!=null){
-            replaced.doDetach(this);
-        }
-
+    public void doAttach(Attachment attachment) {
         switch (attachment.attachType()){
             case GUN_SIGHT: GUN_SIGHT = attachment;break;
             case FRONT_HANG:FRONT_HANG = attachment;break;
@@ -431,14 +476,59 @@ public abstract class ExusiaiSkill extends HeroSkill {
             case AMMO_BOX:AMMO_BOX = attachment;break;
             case BULLET:BULLET = attachment;break;
         }
-        attachment.doAttach(this);
+    }
+
+    private static void allDetach(Attachment replaced) {
+        for(ExusiaiSkill temp:getSkillList()){
+            if (temp.equippingAttachment(replaced)){
+                temp.doDetach(replaced);
+            }
+        }
     }
 
     protected abstract boolean checkAttachmentType(Attachment attachment);
+
+    public ExusiaiSkill getOccupied(Attachment attachment) {
+
+        for(ExusiaiSkill temp:getSkillList()){
+            //GLog.i(temp.name());
+            if(this != temp && temp.equippingAttachment(attachment)){
+                return temp;
+            }
+        }
+
+        return null;
+    }
+
+    public abstract boolean equippingAttachment(Attachment attachment);
+
+    public boolean canUse(Attachment attachment) {
+        return true;
+    }
 
     public enum GunType{
         ASSAULT_RIFLE,GRENADE_LAUNCHER,HEAVY_MACHINE_GUN,PLASMA_CANNON,REVOLVER,SHOTGUN,SNIPER_RIFLE,VECTOR
     }//looks stupid,but it could be more stupid if I use if-instanceof-elseif in attachment judgement
 
     public abstract GunType getType();
+
+    public static ArrayList<ExusiaiSkill> getSkillList(){
+
+        ArrayList<ExusiaiSkill> arrayList = new ArrayList<>();
+
+        if(Dungeon.hero.heroClass == HeroClass.HUNTRESS){
+            if(Dungeon.hero.skill_1!=null){
+                arrayList.add((ExusiaiSkill) Dungeon.hero.skill_1);
+            }
+            if(Dungeon.hero.skill_2!=null){
+                arrayList.add((ExusiaiSkill) Dungeon.hero.skill_2);
+            }
+            if(Dungeon.hero.skill_3!=null){
+                arrayList.add((ExusiaiSkill) Dungeon.hero.skill_3);
+            }
+        }
+
+        return arrayList;
+    }
+
 }

@@ -74,23 +74,6 @@ public class Food extends Item {
 			(hero.buff( Hunger.class )).satisfy( energy );
 			GLog.i( message );
 			
-			/*switch (hero.heroClass) {
-			case WARRIOR:
-				if (hero.HP < hero.HT) {
-					hero.HP = Math.min( hero.HP + 5, hero.HT );
-					hero.sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
-				}
-				break;
-			case MAGE:
-				//1 charge
-				Buff.affect( hero, Recharging.class, 4f );
-				ScrollOfRecharging.charge( hero );
-				break;
-			case ROGUE:
-			case HUNTRESS:
-				break;
-			}*/
-			
 			hero.sprite.operate( hero.pos );
 			hero.busy();
 			SpellSprite.show( hero, SpellSprite.FOOD );

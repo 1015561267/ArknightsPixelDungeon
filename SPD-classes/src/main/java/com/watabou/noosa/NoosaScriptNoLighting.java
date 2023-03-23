@@ -60,6 +60,7 @@ public class NoosaScriptNoLighting extends NoosaScript {
                     //this symbol separates the vertex and fragment shaders (see Script.compile)
                     "//\n" +
 
+                    /*
                     //fragment shader
                     //preprocessor directives let us define precision on GLES platforms, and ignore it elsewhere
                     "#ifdef GL_ES\n" +
@@ -71,6 +72,16 @@ public class NoosaScriptNoLighting extends NoosaScript {
                     "#endif\n" +
                     "varying MED vec2 vUV;\n" +
                     "uniform LOW sampler2D uTex;\n" +
+                    "void main() {\n" +
+                    "  gl_FragColor = texture2D( uTex, vUV );\n" +
+                    "}\n";*/
+                    //fragment shader
+                    //preprocessor directives let us define precision on GLES platforms, and ignore it elsewhere
+                    "#ifdef GL_ES\n" +
+                    "  precision mediump float;\n" +
+                    "#endif\n" +
+                    "varying vec2 vUV;\n" +
+                    "uniform sampler2D uTex;\n" +
                     "void main() {\n" +
                     "  gl_FragColor = texture2D( uTex, vUV );\n" +
                     "}\n";

@@ -117,7 +117,7 @@ public class Swarm extends Mob {
 	}
 
     @Override
-    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage, ArrayList<Boolean> burstArray, int hittedTime) {
 
 	    Integer total = 0;
 	    for(Integer record : damage){
@@ -153,7 +153,7 @@ public class Swarm extends Mob {
             }
         }
 
-        return super.multipleDefenseProc(enemy, damage);
+        return super.multipleDefenseProc(enemy, damage, burstArray, hittedTime);
     }
 	
 	@Override

@@ -24,7 +24,7 @@ package com.unifier.arknightspixeldungeon.levels;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.Wandmaker;
-import com.unifier.arknightspixeldungeon.effects.Halo;
+import com.watabou.noosa.Halo;
 import com.unifier.arknightspixeldungeon.effects.particles.FlameParticle;
 import com.unifier.arknightspixeldungeon.levels.painters.Painter;
 import com.unifier.arknightspixeldungeon.levels.painters.PrisonPainter;

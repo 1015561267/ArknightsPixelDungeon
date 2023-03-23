@@ -265,6 +265,7 @@ public class Visual extends Gizmo {
         Camera c = camera();
 
         if (c == null) return false;
+        if (!c.hitTest(x, y)) return false;
 
         PointF p = c.screenToCamera(x, y);
         return overlapsPoint(p.x, p.y);
@@ -275,6 +276,9 @@ public class Visual extends Gizmo {
         Camera c = camera();
 
         if (c == null || !visible) return false;
+
+        //FIXME, the below calculations ignore angle, so assume visible if angle != 0
+        if (angle != 0) return true;
 
         //x coord
         if (x > c.scroll.x + c.width)

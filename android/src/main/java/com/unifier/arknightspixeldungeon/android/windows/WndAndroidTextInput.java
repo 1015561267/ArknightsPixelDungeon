@@ -38,10 +38,9 @@ import android.widget.TextView;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidGraphics;
-
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.PDSettings;
-import com.unifier.arknightspixeldungeon.android.AndroidGame;
+import com.unifier.arknightspixeldungeon.android.AndroidLauncher;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
@@ -121,7 +120,7 @@ public class WndAndroidTextInput extends Window {
 				textInput = new EditText((AndroidApplication)Gdx.app);
 				textInput.setText( initialValue );
 				if (!PDSettings.systemFont()){
-					textInput.setTypeface( Typeface.createFromAsset(AndroidGame.instance.getAssets(), "pixel_font.ttf") );
+					textInput.setTypeface( Typeface.createFromAsset(AndroidLauncher.instance.getAssets(), "pixel_font.ttf") );
 				}
 				textInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
 				textInput.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES );

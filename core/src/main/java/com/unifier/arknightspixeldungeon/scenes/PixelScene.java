@@ -28,8 +28,11 @@ import com.unifier.arknightspixeldungeon.effects.BadgeBanner;
 import com.unifier.arknightspixeldungeon.messages.Languages;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
+import com.unifier.arknightspixeldungeon.ui.Tooltip;
 import com.unifier.arknightspixeldungeon.ui.Window;
+import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Blending;
+import com.watabou.input.ControllerHandler;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.BitmapText.Font;
@@ -37,11 +40,14 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Gizmo;
+import com.watabou.noosa.Image;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.ui.Component;
-import com.watabou.utils.BitmapCache;
+import com.watabou.noosa.ui.Cursor;
+import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
+import com.watabou.utils.PointF;
 import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
@@ -75,12 +81,22 @@ public class PixelScene extends Scene {
 	public static BitmapText.Font pixelFont;
 	//These represent various mipmaps of the same font
 
+    protected boolean inGameScene = false;
+
+    ///private Signal.Listener<KeyEvent> fullscreenListener;
+
 	@Override
 	public void create() {
 
 		super.create();
 
 		GameScene.scene = null;
+
+        //flush the texture cache whenever moving from ingame to menu, helps reduce memory load
+        if (!inGameScene && InterlevelScene.lastRegion != -1){
+            InterlevelScene.lastRegion = -1;
+            TextureCache.clear();
+        }
 
 		float minWidth, minHeight;
 		if (landscape()) {
@@ -90,6 +106,21 @@ public class PixelScene extends Scene {
 			minWidth = MIN_WIDTH_P;
 			minHeight = MIN_HEIGHT_P;
 		}
+
+		/*, scaleFactor;
+        if (SPDSettings.interfaceSize() > 0){
+            minWidth = MIN_WIDTH_FULL;
+            minHeight = MIN_HEIGHT_FULL;
+            scaleFactor = 3.75f;
+        } else if (landscape()) {
+            minWidth = MIN_WIDTH_L;
+            minHeight = MIN_HEIGHT_L;
+            scaleFactor = 2.5f;
+        } else {
+            minWidth = MIN_WIDTH_P;
+            minHeight = MIN_HEIGHT_P;
+            scaleFactor = 2.5f;
+        }*/
 
 		maxDefaultZoom = (int)Math.min(Game.width/minWidth, Game.height/minHeight);
 		maxScreenZoom = (int)Math.min(Game.dispWidth/minWidth, Game.dispHeight/minHeight);
@@ -108,11 +139,9 @@ public class PixelScene extends Scene {
 		uiCamera = Camera.createFullscreen( uiZoom );
 		Camera.add( uiCamera );
 
-		if (pixelFont == null) {
-
 			// 3x5 (6)
 			pixelFont = Font.colorMarked(
-				BitmapCache.get( Assets.PIXELFONT), 0x00000000, BitmapText.Font.LATIN_FULL );
+                    TextureCache.get( Assets.PIXELFONT), 0x00000000, BitmapText.Font.LATIN_FULL );
 			pixelFont.baseLine = 6;
 			pixelFont.tracking = -1;
 
@@ -132,8 +161,8 @@ public class PixelScene extends Scene {
 			font2x.baseLine = 38;
 			font2x.tracking = -4;
 			font2x.texture.filter(Texture.LINEAR, Texture.NEAREST);*/
-		}
 
+        //set up the texture size which rendered text will use for any new glyphs.
         int renderedTextPageSize;
         if (defaultZoom <= 3){
             renderedTextPageSize = 256;
@@ -151,7 +180,112 @@ public class PixelScene extends Scene {
         }
         Game.platform.setupFontGenerators(renderedTextPageSize, PDSettings.systemFont());
 
-	}
+        Tooltip.resetLastUsedTime();
+
+        Cursor.setCustomCursor(Cursor.Type.DEFAULT, defaultZoom);
+
+    }
+
+    @Override
+    public void update() {
+        //we create this here so that it is last in the scene
+        /*if (DeviceCompat.isDesktop() && fullscreenListener == null){
+            KeyEvent.addKeyListener(fullscreenListener = new Signal.Listener<KeyEvent>() {
+
+                private boolean alt;
+                private boolean enter;
+
+                @Override
+                public boolean onSignal(KeyEvent keyEvent) {
+
+                    //we don't use keybindings for these as we want the user to be able to
+                    // bind these keys to other actions when pressed individually
+                    if (keyEvent.code == Input.Keys.ALT_RIGHT){
+                        alt = keyEvent.pressed;
+                    } else if (keyEvent.code == Input.Keys.ENTER){
+                        enter = keyEvent.pressed;
+                    }
+
+                    if (alt && enter){
+                        PDSettings.fullscreen(!PDSettings.fullscreen());
+                        return true;
+                    }
+
+                    return false;
+                }
+            });
+        }*/
+
+        super.update();
+        //20% deadzone
+        if (!Cursor.isCursorCaptured()) {
+            if (Math.abs(ControllerHandler.rightStickPosition.x) >= 0.2f
+                    || Math.abs(ControllerHandler.rightStickPosition.y) >= 0.2f) {
+                if (!ControllerHandler.controllerPointerActive()) {
+                    ControllerHandler.setControllerPointer(true);
+                }
+
+                int sensitivity = PDSettings.controllerPointerSensitivity() * 100;
+
+                //cursor moves 100xsens scaled pixels per second at full speed
+                //35x at 50% movement, ~9x at 20% deadzone threshold
+                float xMove = (float) Math.pow(Math.abs(ControllerHandler.rightStickPosition.x), 1.5);
+                if (ControllerHandler.rightStickPosition.x < 0) xMove = -xMove;
+
+                float yMove = (float) Math.pow(Math.abs(ControllerHandler.rightStickPosition.y), 1.5);
+                if (ControllerHandler.rightStickPosition.y < 0) yMove = -yMove;
+
+                PointF virtualCursorPos = ControllerHandler.getControllerPointerPos();
+                virtualCursorPos.x += defaultZoom * sensitivity * Game.elapsed * xMove;
+                virtualCursorPos.y += defaultZoom * sensitivity * Game.elapsed * yMove;
+
+                PointF cameraShift = new PointF();
+
+                if (virtualCursorPos.x < 0){
+                    cameraShift.x = virtualCursorPos.x;
+                    virtualCursorPos.x = 0;
+                } else if (virtualCursorPos.x > Camera.main.screenWidth()){
+                    cameraShift.x = (virtualCursorPos.x - Camera.main.screenWidth());
+                    virtualCursorPos.x = Camera.main.screenWidth();
+                }
+
+                if (virtualCursorPos.y < 0){
+                    cameraShift.y = virtualCursorPos.y;
+                    virtualCursorPos.y = 0;
+                } else if (virtualCursorPos.y > Camera.main.screenHeight()){
+                    cameraShift.y = (virtualCursorPos.y - Camera.main.screenHeight());
+                    virtualCursorPos.y = Camera.main.screenHeight();
+                }
+
+                cameraShift.invScale(Camera.main.zoom);
+                if (cameraShift.length() > 0 && Camera.main.scrollable){
+                    Camera.main.shift(cameraShift);
+                }
+                ControllerHandler.updateControllerPointer(virtualCursorPos, true);
+            }
+        }
+    }
+
+    private Image cursor = null;
+
+    @Override
+    public synchronized void draw() {
+        super.draw();
+
+        //cursor is separate from the rest of the scene, always appears above
+        if (ControllerHandler.controllerPointerActive()){
+            if (cursor == null){
+                cursor = new Image(Cursor.Type.CONTROLLER.file);
+            }
+
+            PointF virtualCursorPos = ControllerHandler.getControllerPointerPos();
+            cursor.x = (virtualCursorPos.x / defaultZoom) - cursor.width()/2f;
+            cursor.y = (virtualCursorPos.y / defaultZoom) - cursor.height()/2f;
+            cursor.camera = uiCamera;
+            align(cursor);
+            cursor.draw();
+        }
+    }
 
     //FIXME this system currently only works for a subset of windows
     private static ArrayList<Class<?extends Window>> savedWindows = new ArrayList<>();
@@ -186,6 +320,12 @@ public class PixelScene extends Scene {
 	public void destroy() {
 		super.destroy();
         PointerEvent.clearListeners();
+        //if (fullscreenListener != null){
+        //    KeyEvent.removeKeyListener(fullscreenListener);
+        //}
+        if (cursor != null){
+            cursor.destroy();
+        }
     }
 
     public static boolean landscape(){
@@ -238,12 +378,34 @@ public class PixelScene extends Scene {
 	}
 	
 	public static void showBadge( Badges.Badge badge ) {
-		BadgeBanner banner = BadgeBanner.show( badge.image );
+		/*BadgeBanner banner = BadgeBanner.show( badge.image );
 		banner.camera = uiCamera;
 		banner.x = align( banner.camera, (banner.camera.width - banner.width) / 2 );
 		banner.y = align( banner.camera, (banner.camera.height - banner.height) / 3 );
         Scene s = Game.scene();
-        if (s != null) s.add( banner );
+        if (s != null) s.add( banner );*/
+        Game.runOnRenderThread(new Callback() {
+            @Override
+            public void call() {
+                Scene s = Game.scene();
+                if (s != null) {
+                    BadgeBanner banner = BadgeBanner.show(badge.image);
+                    s.add(banner);
+                    float offset = Camera.main.centerOffset.y;
+
+                    int left = uiCamera.width/2 - BadgeBanner.SIZE/2;
+                    left -= (BadgeBanner.SIZE * BadgeBanner.DEFAULT_SCALE * (BadgeBanner.showing.size()-1))/2;
+                    for (int i = 0; i < BadgeBanner.showing.size(); i++){
+                        banner = BadgeBanner.showing.get(i);
+                        banner.camera = uiCamera;
+                        banner.x = align(banner.camera, left);
+                        banner.y = align(uiCamera, (uiCamera.height - banner.height) / 2 - banner.height / 2 - 16 - offset);
+                        left += BadgeBanner.SIZE * BadgeBanner.DEFAULT_SCALE;
+                    }
+
+                }
+            }
+        });
 	}
 	
 	protected static class Fader extends ColorBlock {
@@ -253,6 +415,8 @@ public class PixelScene extends Scene {
 		private boolean light;
 		
 		private float time;
+
+        private static Fader INSTANCE;
 		
 		public Fader( int color, boolean light ) {
 			super( uiCamera.width, uiCamera.height, color );
@@ -263,6 +427,11 @@ public class PixelScene extends Scene {
 			
 			alpha( 1f );
 			time = FADE_TIME;
+
+            if (INSTANCE != null){
+                INSTANCE.killAndErase();
+            }
+            INSTANCE = this;
 		}
 		
 		@Override
@@ -273,6 +442,10 @@ public class PixelScene extends Scene {
 			if ((time -= Game.elapsed) <= 0) {
 				alpha( 0f );
 				parent.remove( this );
+                destroy();
+                if (INSTANCE == this) {
+                    INSTANCE = null;
+                }
 			} else {
 				alpha( time / FADE_TIME );
 			}

@@ -50,6 +50,8 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class DM300 extends Mob {
 	
 	{
@@ -138,6 +140,19 @@ public class DM300 extends Mob {
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass())) lock.addTime(dmg*1.5f);
 	}
+
+    @Override
+        public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+
+            int beforeHitHP = HP;
+            super.multipleDamage(burstArray,damageArray,src,hittedTime);
+            int totaldmg = beforeHitHP - HP;
+
+            LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+            if (lock != null && !isImmune(src.getClass())) {
+                    lock.addTime(totaldmg*1.5f);
+            }
+    }
 
 	@Override
 	public void die( Object cause ) {

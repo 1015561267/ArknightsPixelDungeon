@@ -25,8 +25,11 @@ import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Amok;
 import com.unifier.arknightspixeldungeon.actors.buffs.Awareness;
+import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.buffs.Light;
+import com.unifier.arknightspixeldungeon.actors.buffs.MagicalSight;
 import com.unifier.arknightspixeldungeon.actors.buffs.MindVision;
+import com.unifier.arknightspixeldungeon.actors.buffs.SniperSight;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.Blacksmith;
@@ -365,7 +368,7 @@ public class Dungeon {
 		return depth == 5 || depth == 10 || depth == 15 || depth == 20 || depth == 25;
 	}
 	
-	@SuppressWarnings("deprecation")
+	///@SuppressWarnings("deprecation")
 	public static void switchLevel( final Level level, int pos ) {
 		
 		if (pos < 0 || pos >= level.length()){
@@ -710,60 +713,125 @@ public class Dungeon {
 		Rankings.INSTANCE.submit( true, cause );
 	}
 
-	public static void observe(){
-		observe( hero.viewDistance+1 );
-	}
-	
-	public static void observe( int dist ) {
+    public static void observe(){
+        int dist = Math.max(Dungeon.hero.viewDistance, 8);
+        //dist *= 1f + 0.25f*Dungeon.hero.pointsInTalent(Talent.FARSIGHT);
 
-		if (level == null) {
-			return;
-		}
-		
-		level.updateFieldOfView(hero, level.heroFOV);
+        if (Dungeon.hero.buff(MagicalSight.class) != null){
+            dist = Math.max( dist, MagicalSight.DISTANCE );
+        }
 
-		int x = hero.pos % level.width();
-		int y = hero.pos / level.width();
-	
-		//left, right, top, bottom
-		int l = Math.max( 0, x - dist );
-		int r = Math.min( x + dist, level.width() - 1 );
-		int t = Math.max( 0, y - dist );
-		int b = Math.min( y + dist, level.height() - 1 );
-	
-		int width = r - l + 1;
-		int height = b - t + 1;
-		
-		int pos = l + t * level.width();
-	
-		for (int i = t; i <= b; i++) {
-			BArray.or( level.visited, level.heroFOV, pos, width, level.visited );
-			pos+=level.width();
-		}
-	
-		GameScene.updateFog(l, t, width, height);
-		
-		if (hero.buff(MindVision.class) != null){
-			for (Mob m : level.mobs.toArray(new Mob[0])){
-				BArray.or( level.visited, level.heroFOV, m.pos - 1 - level.width(), 3, level.visited );
-				BArray.or( level.visited, level.heroFOV, m.pos, 3, level.visited );
-				BArray.or( level.visited, level.heroFOV, m.pos - 1 + level.width(), 3, level.visited );
-				//updates adjacent cells too
-				GameScene.updateFog(m.pos, 2);
-			}
-		}
-		
-		if (hero.buff(Awareness.class) != null){
-			for (Heap h : level.heaps.values()){
-				BArray.or( level.visited, level.heroFOV, h.pos - 1 - level.width(), 3, level.visited );
-				BArray.or( level.visited, level.heroFOV, h.pos - 1, 3, level.visited );
-				BArray.or( level.visited, level.heroFOV, h.pos - 1 + level.width(), 3, level.visited );
-				GameScene.updateFog(h.pos, 2);
-			}
-		}
+        observe( dist+1 );
+    }
 
-		GameScene.afterObserve();
-	}
+    public static void observe( int dist ) {
+
+        if (level == null) {
+            return;
+        }
+
+        level.updateFieldOfView(hero, level.heroFOV);
+
+        int x = hero.pos % level.width();
+        int y = hero.pos / level.width();
+
+        //left, right, top, bottom
+        int l = Math.max( 0, x - dist );
+        int r = Math.min( x + dist, level.width() - 1 );
+        int t = Math.max( 0, y - dist );
+        int b = Math.min( y + dist, level.height() - 1 );
+
+        int width = r - l + 1;
+        int height = b - t + 1;
+
+        int pos = l + t * level.width();
+
+        for (int i = t; i <= b; i++) {
+            BArray.or( level.visited, level.heroFOV, pos, width, level.visited );
+            pos+=level.width();
+        }
+
+        GameScene.updateFog(l, t, width, height);
+
+        if (hero.buff(MindVision.class) != null){
+            for (Mob m : level.mobs.toArray(new Mob[0])){
+                BArray.or( level.visited, level.heroFOV, m.pos - 1 - level.width(), 3, level.visited );
+                BArray.or( level.visited, level.heroFOV, m.pos - 1, 3, level.visited );
+                BArray.or( level.visited, level.heroFOV, m.pos - 1 + level.width(), 3, level.visited );
+                //updates adjacent cells too
+                GameScene.updateFog(m.pos, 2);
+            }
+        }
+
+        if (hero.buff(Awareness.class) != null){
+            for (Heap h : level.heaps.valueList()){
+                BArray.or( level.visited, level.heroFOV, h.pos - 1 - level.width(), 3, level.visited );
+                BArray.or( level.visited, level.heroFOV, h.pos - 1, 3, level.visited );
+                BArray.or( level.visited, level.heroFOV, h.pos - 1 + level.width(), 3, level.visited );
+                GameScene.updateFog(h.pos, 2);
+            }
+        }
+
+        //we have to update gunSight at here,before fog of war as this is not a completion like MindVision or so,it can be narrowed and changed,and performs better as it contains a considerable amount of cells
+        if(hero.buff(SniperSight.class)!= null && hero.buff(Blindness.class)== null)
+        {
+            GameScene.updateFog();
+        }
+
+        /*for (TalismanOfForesight.CharAwareness c : hero.buffs(TalismanOfForesight.CharAwareness.class)){
+            Char ch = (Char) Actor.findById(c.charID);
+            if (ch == null || !ch.isAlive()) continue;
+            BArray.or( level.visited, level.heroFOV, ch.pos - 1 - level.width(), 3, level.visited );
+            BArray.or( level.visited, level.heroFOV, ch.pos - 1, 3, level.visited );
+            BArray.or( level.visited, level.heroFOV, ch.pos - 1 + level.width(), 3, level.visited );
+            GameScene.updateFog(ch.pos, 2);
+        }*/
+
+        /*for (TalismanOfForesight.HeapAwareness h : hero.buffs(TalismanOfForesight.HeapAwareness.class)){
+            if (Dungeon.depth != h.depth) continue;
+            BArray.or( level.visited, level.heroFOV, h.pos - 1 - level.width(), 3, level.visited );
+            BArray.or( level.visited, level.heroFOV, h.pos - 1, 3, level.visited );
+            BArray.or( level.visited, level.heroFOV, h.pos - 1 + level.width(), 3, level.visited );
+            GameScene.updateFog(h.pos, 2);
+        }*/
+
+        /*for (RevealedArea a : hero.buffs(RevealedArea.class)){
+            if (Dungeon.depth != a.depth) continue;
+            BArray.or( level.visited, level.heroFOV, a.pos - 1 - level.width(), 3, level.visited );
+            BArray.or( level.visited, level.heroFOV, a.pos - 1, 3, level.visited );
+            BArray.or( level.visited, level.heroFOV, a.pos - 1 + level.width(), 3, level.visited );
+            GameScene.updateFog(a.pos, 2);
+        }*/
+
+        /*for (Char ch : Actor.chars()){
+            if (ch instanceof WandOfWarding.Ward
+                    || ch instanceof WandOfRegrowth.Lotus
+                    || ch instanceof SpiritHawk.HawkAlly){
+                x = ch.pos % level.width();
+                y = ch.pos / level.width();
+
+                //left, right, top, bottom
+                dist = ch.viewDistance+1;
+                l = Math.max( 0, x - dist );
+                r = Math.min( x + dist, level.width() - 1 );
+                t = Math.max( 0, y - dist );
+                b = Math.min( y + dist, level.height() - 1 );
+
+                width = r - l + 1;
+                height = b - t + 1;
+
+                pos = l + t * level.width();
+
+                for (int i = t; i <= b; i++) {
+                    BArray.or( level.visited, level.heroFOV, pos, width, level.visited );
+                    pos+=level.width();
+                }
+                GameScene.updateFog(ch.pos, dist);
+            }
+        }*/
+
+        GameScene.afterObserve();
+    }
 
 	//we store this to avoid having to re-allocate the array with each pathfind
 	private static boolean[] passable;

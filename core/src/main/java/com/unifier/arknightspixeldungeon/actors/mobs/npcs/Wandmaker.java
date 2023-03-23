@@ -71,7 +71,11 @@ public class Wandmaker extends NPC {
 	@Override
 	public void damage( int dmg, Object src ) {
 	}
-	
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+    }
+
 	@Override
 	public void add( Buff buff ) {
 	}

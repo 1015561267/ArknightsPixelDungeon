@@ -23,6 +23,10 @@ public class TalentScene extends PixelScene {
     float top = 20;
     int scale = 6;
 
+    {
+        inGameScene = true;
+    }
+
     @Override
     public void create() {
         scale = PDSettings.scale();//here I'd like a smaller scale to make it display better

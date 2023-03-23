@@ -78,6 +78,8 @@ public class Script extends Program {
 
     }
 
-    public void unuse() {
+    public synchronized static void unuse(){
+        curScript = null;
+        curScriptClass = null;
     }
 }

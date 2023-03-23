@@ -4,6 +4,8 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.windows.WndHeroSkill;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 
@@ -64,7 +66,13 @@ public abstract class HeroSkill extends Buff {
         }
     }
 
-    public String desc() { return Messages.get(this, "desc");};
+    public String desc() { return Messages.get(this, "desc");}
+
+    public boolean useTargetting(){return false;}
+
+    public void handleLongClick() {
+        GameScene.show(new WndHeroSkill(this));
+    }
 
     public enum buffType {ACTIVE,PASSIVE};
 

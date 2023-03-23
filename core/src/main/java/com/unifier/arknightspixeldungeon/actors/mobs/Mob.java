@@ -506,7 +506,7 @@ public abstract class Mob extends Char {
 	}
 
     @Override
-    public ArrayList<Integer> multipleDefenseProc( Char enemy, ArrayList<Integer> damage) {
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage, ArrayList<Boolean> burstArray, int hittedTime) {
         if ( (this.enemy == null || (enemy != this.enemy && (Dungeon.level.distance(pos, enemy.pos) < Dungeon.level.distance(pos, this.enemy.pos))))
                 && enemy != this) {
             aggro(enemy);
@@ -541,9 +541,22 @@ public abstract class Mob extends Char {
 		
 		super.damage( dmg, src );
 	}
-	
-	
-	@Override
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
+        Terror.recover( this );
+
+        if (state == SLEEPING) {
+            state = WANDERING;
+        }
+        if (state != HUNTING) {
+            alerted = true;
+        }
+
+        super.multipleDamage(burstArray,damageArray,src,hittedTime);
+    }
+
+        @Override
 	public void destroy() {
 		
 		super.destroy();

@@ -4,24 +4,19 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
-import com.unifier.arknightspixeldungeon.actors.buffs.Doom;
 import com.unifier.arknightspixeldungeon.actors.buffs.Frost;
 import com.unifier.arknightspixeldungeon.actors.buffs.MagicalSleep;
-import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
-import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.effects.Splash;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
-import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
-import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
@@ -56,6 +51,14 @@ public class Vector extends ExusiaiSkill {
                 || attachment.attachType() == Attachment.AttachType.FRONT_HANG
                 || attachment.attachType() == Attachment.AttachType.BELOW_HANG
                 || attachment.attachType() == Attachment.AttachType.AMMO_BOX ){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean equippingAttachment(Attachment attachment) {
+        if(attachment == this.getGUN_SIGHT() || attachment == this.getAMMO_BOX() || attachment == this.getFRONT_HANG() || attachment== this.getBELOW_HANG()){
             return true;
         }
         return false;
@@ -104,7 +107,7 @@ public class Vector extends ExusiaiSkill {
             @Override
             public boolean isBulletForEffect(){return true;}
         };
-    };
+    }
 
     protected void doShoot(Hero owner,Integer cell){
         int from = owner.pos;
@@ -182,10 +185,9 @@ public class Vector extends ExusiaiSkill {
 
         ArrayList<Integer> damageArray = new ArrayList<>();
 
-        //String verbArray = "";
-
         int i=0;
 
+        int hittedTime = 0;
         for(Boolean record : burstArray){
 
             if(record){
@@ -204,103 +206,22 @@ public class Vector extends ExusiaiSkill {
                 }
 
                 damageArray.add(effectiveDamage);
+                hittedTime++;
             }
             else {
-                damageArray.add(Integer.MIN_VALUE);
+                damageArray.add(0);
             }
         }
 
-        damageArray = enemy.multipleDefenseProc(owner,damageArray);
+        damageArray = enemy.multipleDefenseProc(owner,damageArray,burstArray,hittedTime);
 
         Integer totalDamage = 0;
 
         boolean visibleFight = Dungeon.level.heroFOV[owner.pos] || Dungeon.level.heroFOV[enemy.pos];
 
-        for(Integer record : damageArray){
-            i++;
-            //GLog.i(record.toString());
-            if (!enemy.isAlive()){
-                break;
-            }else {
-                if(record == Integer.MIN_VALUE){
-                    if (visibleFight) {
-                        //verbArray += enemy.defenseVerb();
-                        String defense = enemy.defenseVerb();
-                        enemy.sprite.showStatus(CharSprite.NEUTRAL, defense);
-                    }
-                }else {
-                    if (record < 0) {
-                        continue;
-                    }
+        //GLog.i(damageArray.size()+ " " + hittedTime);
 
-                    if(enemy.isInvulnerable(this.getClass())){
-                        enemy.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
-                        break;
-                    }
-
-                    if (enemy.buff(Doom.class) != null){
-                        record *= 2;
-                    }
-
-                    Class<?> srcClass = enemy.getClass();
-                    if (enemy.isImmune( srcClass )) {
-                        record = 0;
-                    } else {
-                        record = Math.round( record * enemy.resist( srcClass ));
-                    }
-
-                    if (enemy.buff( Paralysis.class ) != null) {
-                        enemy.buff( Paralysis.class ).processDamage(record);
-                    }
-                    if (enemy.SHLD == 0){
-                        enemy.HP -= record;
-                    }
-                    if (enemy.SHLD >= record){
-                        enemy.SHLD -= record;
-                    } else if (enemy.SHLD > 0) {
-                        enemy.HP -= (record - enemy.SHLD);
-                        enemy.SHLD = 0;
-                    }
-
-                    if(enemy instanceof Hero) {
-                        Talent.onHealthLose((Hero) enemy, this, Math.min(record, enemy.HP));
-                    }
-
-                    if (enemy.HP < 0) enemy.HP = 0;
-                }
-
-                //in order to simplify the process of doing multiple times damage,this is only a demo.should be move to char.java instead of vector special usage
-
-                if (visibleFight) {
-                    enemy.sprite.showStatus(enemy.HP > enemy.HT / 2 ? CharSprite.WARNING : CharSprite.NEGATIVE,record.toString());
-                }
-            }
-        }
-
-        if(totalDamage>0) {
-            enemy.sprite.bloodBurstA(enemy.sprite.center(), totalDamage);
-            enemy.sprite.flash();
-        }
-
-        if (!enemy.isAlive()) {
-            enemy.die( this );
-            GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())) );
-
-            if (visibleFight) {
-                while (i < damageArray.size()) {
-                    if (damageArray.get(i) == Integer.MIN_VALUE) {
-                        if (visibleFight) {
-                            //verbArray += enemy.defenseVerb();
-                            String defense = enemy.defenseVerb();
-                            enemy.sprite.showStatus(CharSprite.NEUTRAL, defense);
-                        }
-                    } else {
-                        enemy.sprite.showStatus(enemy.HP > enemy.HT / 2 ? CharSprite.WARNING : CharSprite.NEGATIVE, damageArray.get(i).toString());
-                    }
-                    i++;
-                }
-            }
-        }
+        enemy.multipleDamage(burstArray,damageArray,this,hittedTime);
 
         doCheckAfterShooting(burstArray.size(),false);
     }

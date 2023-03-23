@@ -27,13 +27,20 @@ import com.watabou.noosa.TextureFilm;
 public class ItemSpriteSheet {
 
 	private static final int WIDTH = 16;
+    public static final int SIZE = 16;
 
-	public static TextureFilm film = new TextureFilm( Assets.ITEMS, 16, 16 );
+	public static TextureFilm film = new TextureFilm( Assets.ITEMS, SIZE, SIZE );
 
 	private static int xy(int x, int y){
 		x -= 1; y -= 1;
 		return x + WIDTH*y;
 	}
+
+    private static void assignItemRect( int item, int width, int height){
+        int x = (item % WIDTH) * WIDTH;
+        int y = (item / WIDTH) * WIDTH;
+        film.add( item, x, y, x+width, y+height);
+    }
 
 	private static final int PLACEHOLDERS   =                               xy(1, 1);   //16 slots
 	//null warning occupies space 0, should only show up if there's a bug.
@@ -538,19 +545,4 @@ public class ItemSpriteSheet {
 	}
 
 	                                                                                    //64 free slots
-
-
-	private static void assignItemRect( int item, int width, int height){
-		int x = (item % WIDTH) * WIDTH;
-		int y = (item / WIDTH) * WIDTH;
-		film.add( item, x, y, x+width, y+height);
-	}
-
-    private static void assignItemRect( int item, int x1,int y1,int width, int height){
-        int x = (item % WIDTH) * WIDTH;
-        int y = (item / WIDTH) * WIDTH;
-        x+=x1;
-        y+=y1;
-        film.add( item, x, y, x+width, y+height);
-    }
 }

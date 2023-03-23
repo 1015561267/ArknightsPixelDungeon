@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.unifier.arknightspixeldungeon.android"
-	android:installLocation="auto"
-	android:targetSandboxVersion="2"
-	xmlns:dist="http://schemas.android.com/apk/distribution">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.unifier.arknightspixeldungeon.android"
+    android:installLocation="auto"
+    android:targetSandboxVersion="2"
+    xmlns:dist="http://schemas.android.com/apk/distribution">
 
 	<dist:module dist:instant="true" />
 	<uses-feature android:glEsVersion="0x00020000"/>
@@ -12,8 +13,11 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-	<!-- Note that the game doesn't truly support small screen resolutions,
-		it instead forces downscaling to work on these displays.-->
+    <!-- We perform a runtime check to ensure controllers are disabled on API 14 & 15 -->
+    <uses-sdk tools:overrideLibrary="com.badlogicgames.gdx.controllers" />
+
+    <!-- Note that the game doesn't truly support small screen resolutions,
+        it instead forces downscaling to work on these displays.-->
 	<supports-screens
 		android:smallScreens="true"
 		android:normalScreens="true"
@@ -30,17 +34,17 @@
 		android:backupAgent=".AndroidBackupHandler">
 		<activity
 			android:label="${appName}"
-			android:name=".AndroidLauncher">
+			android:name=".AndroidLauncher"
+            android:screenOrientation="nosensor"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize"
+            android:exported="true">
 			<intent-filter >
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 		<activity
-			android:label="${appName}"
-			android:name=".AndroidGame"
-			android:screenOrientation="nosensor"
-			android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize">
+            android:name=".AndroidMissingNativesHandler">
 		</activity>
 
 	</application>

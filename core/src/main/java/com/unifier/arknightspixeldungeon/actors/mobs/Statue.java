@@ -34,6 +34,8 @@ import com.unifier.arknightspixeldungeon.sprites.StatueSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class Statue extends Mob {
 	
 	{
@@ -116,6 +118,16 @@ public class Statue extends Mob {
 		
 		super.damage( dmg, src );
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+
+        if (state == PASSIVE) {
+            state = HUNTING;
+        }
+
+        super.multipleDamage(burstArray,damageArray,src,hittedTime);
+    }
 	
 	@Override
 	public int attackProc( Char enemy, int damage ) {

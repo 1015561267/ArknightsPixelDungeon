@@ -546,8 +546,20 @@ public class DriedRose extends Artifact {
 			
 			super.damage( dmg, src );
 		}
-		
-		@Override
+
+        @Override
+        public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+
+            if (rose != null && rose.armor != null && rose.armor.hasGlyph(AntiMagic.class)
+                    && RingOfElements.RESISTS.contains(src.getClass())){
+                for(Integer dmg : damageArray){
+                    dmg -= Random.NormalIntRange(rose.armor.DRMin(), rose.armor.DRMax())/3;
+                }
+            }
+            super.multipleDamage(burstArray,damageArray,src,hittedTime);
+        }
+
+        @Override
 		public float speed() {
 			float speed = super.speed();
 			

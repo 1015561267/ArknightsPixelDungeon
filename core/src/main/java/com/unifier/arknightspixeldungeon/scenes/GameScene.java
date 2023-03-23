@@ -21,7 +21,6 @@
 
 package com.unifier.arknightspixeldungeon.scenes;
 
-import com.badlogic.gdx.Gdx;
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
@@ -168,6 +167,7 @@ public class GameScene extends PixelScene {
 	private Group talents;
 	private Group statuses;
 	private Group emoicons;
+    private Group overFogEffects;
 	private Group healthIndicators;
 
     private InventoryPane inventory;
@@ -181,7 +181,10 @@ public class GameScene extends PixelScene {
 	private ActionIndicator action;
 	private ResumeIndicator resume;
 
-	@Override
+    {
+        inGameScene = true;
+    }
+    @Override
 	public void create() {
 
         if (Dungeon.hero == null || Dungeon.level == null){
@@ -266,6 +269,7 @@ public class GameScene extends PixelScene {
 		effects = new Group();
 		healthIndicators = new Group();
 		emoicons = new Group();
+        overFogEffects = new Group();
 
 		mobs = new Group();
 		add( mobs );
@@ -315,6 +319,8 @@ public class GameScene extends PixelScene {
 
 		talents = new Group();
 		add( talents );
+
+        add(overFogEffects);
 
 		statuses = new Group();
 		add( statuses );
@@ -522,6 +528,15 @@ public class GameScene extends PixelScene {
 
 	public void destroy() {
 
+        //tell the actor thread to finish, then wait for it to complete any actions it may be doing.
+        if (!waitForActorThread( 4500, true )){
+            Throwable t = new Throwable();
+            t.setStackTrace(actorThread.getStackTrace());
+            throw new RuntimeException("timeout waiting for actor thread! ", t);
+        }
+
+        Emitter.freezeEmitters = false;
+        /*
 		//tell the actor thread to finish, then wait for it to complete any actions it may be doing.
 		if (actorThread.isAlive()){
 			synchronized (GameScene.class){
@@ -543,7 +558,7 @@ public class GameScene extends PixelScene {
 			}
 		}
 
-		freezeEmitters = false;
+		freezeEmitters = false;*/
 
 		scene = null;
 		Badges.saveGlobal();
@@ -625,7 +640,7 @@ public class GameScene extends PixelScene {
         if (!Emitter.freezeEmitters) water.offset( 0, -5 * Game.elapsed );
 
 
-        if(logActorThread){
+        /*if(logActorThread){
             if (actorThread != null){
                 logActorThread = false;
                 String s = "";
@@ -643,7 +658,7 @@ public class GameScene extends PixelScene {
                 );
                 add(new WndMessage(Messages.get(this, "copied")));
             }
-        }
+        }*/
 
         if (!Actor.processing() && Dungeon.hero.isAlive()) {
             if (actorThread == null || !actorThread.isAlive()) {
@@ -691,6 +706,13 @@ public class GameScene extends PixelScene {
 			tagAction = action.visible;
 			tagResume = resume.visible;
 
+
+            //except if action is the only tag left, then let it drop to the bottom
+            // this is because the action tag can sometimes be persistent
+            if (tagAction && !tagAttack && !tagLoot && !tagResume){
+                tagAppearing = true;
+            }
+
 			if (tagAppearing) layoutTags();
 		}
 
@@ -703,6 +725,15 @@ public class GameScene extends PixelScene {
 	}
 
     private static Point lastOffset = null;
+
+    @Override
+    public synchronized Gizmo erase (Gizmo g) {
+        Gizmo result = super.erase(g);
+        if (result instanceof Window){
+            lastOffset = ((Window) result).getOffset();
+        }
+        return result;
+    }
 
     private boolean tagAttack    = false;
 	private boolean tagLoot      = false;
@@ -923,7 +954,12 @@ public class GameScene extends PixelScene {
 		scene.effects.add( effect );
 	}
 
-	public static Ripple ripple( int pos ) {
+    public static void effectOverFog( Visual effect ) {
+        scene.overFogEffects.add( effect );
+    }
+
+
+    public static Ripple ripple( int pos ) {
 		if (scene != null) {
 			Ripple ripple = (Ripple) scene.ripples.recycle(Ripple.class);
 			ripple.reset(pos);
@@ -1105,6 +1141,7 @@ public class GameScene extends PixelScene {
 		}
 	}
 
+
 	public static void afterObserve() {
 		if (scene != null) {
 			for (Mob mob : Dungeon.level.mobs) {
@@ -1199,7 +1236,8 @@ public class GameScene extends PixelScene {
     }
 
 	public static boolean cancel() {
-		if (Dungeon.hero != null && (Dungeon.hero.curAction != null || Dungeon.hero.resting)) {
+        cellSelector.resetKeyHold();
+        if (Dungeon.hero != null && (Dungeon.hero.curAction != null || Dungeon.hero.resting)) {
 
 			Dungeon.hero.curAction = null;
 			Dungeon.hero.resting = false;
@@ -1215,6 +1253,7 @@ public class GameScene extends PixelScene {
 	public static void ready() {
 		selectCell( defaultCellListener );
 		QuickSlotButton.cancel();
+        SkillLoader.cancel();
         InventoryPane.cancelTargeting();
 		if (scene != null && scene.toolbar != null) scene.toolbar.examining = false;
 	}

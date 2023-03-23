@@ -28,7 +28,6 @@ import com.unifier.arknightspixeldungeon.Statistics;
 import com.unifier.arknightspixeldungeon.actors.blobs.Blob;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.SparseArray;
@@ -61,21 +60,48 @@ public abstract class Actor implements Bundlable {
     }
 
 	protected abstract boolean act();
-	
+
+    //Always spends exactly the specified amount of time, regardless of time-influencing factors
+    protected void spendConstant( float time ){
+        this.time += time;
+        //if time is very close to a whole number, round to a whole number to fix errors
+        float ex = Math.abs(this.time % 1f);
+        if (ex < .001f){
+            this.time = Math.round(this.time);
+        }
+    }
+
 	protected void spend( float time ) {
 		this.time += time;
 	}
-	
+
+    public void spendToWhole(){
+        time = (float)Math.ceil(time);
+    }
+
 	protected void postpone( float time ) {
 		if (this.time < now + time) {
 			this.time = now + time;
+            //if time is very close to a whole number, round to a whole number to fix errors
+            float ex = Math.abs(this.time % 1f);
+            if (ex < .001f){
+                this.time = Math.round(this.time);
+            }
 		}
 	}
 	
 	public float cooldown() {
 		return time - now;
 	}
-	
+
+    public void clearTime() {
+        time = 0;
+    }
+
+    public void timeToNow() {
+        time = now;
+    }
+
 	protected void diactivate() {
 		time = Float.MAX_VALUE;
 	}
@@ -130,7 +156,9 @@ public abstract class Actor implements Bundlable {
 	}
 	
 	public static synchronized void fixTime() {
-		
+
+        if (all.isEmpty()) return;
+
 		if (Dungeon.hero != null && all.contains( Dungeon.hero )) {
 			Statistics.duration += now;
 		}
@@ -258,11 +286,9 @@ public abstract class Actor implements Bundlable {
 						current = null;
 						interrupted = false;
 					}
-					
-					synchronized (GameScene.class){
-						//signals to the gamescene that actor processing is finished for now
-						GameScene.class.notify();
-					}
+
+                    //signals to the gamescene that actor processing is finished for now
+                    Thread.currentThread().notify();
 					
 					try {
 						Thread.currentThread().wait();
@@ -317,7 +343,16 @@ public abstract class Actor implements Bundlable {
 			}
 		}
 	}
-	
+
+    //'freezes' a character in time for a specified amount of time
+    //USE CAREFULLY! Manipulating time like this is useful for some gameplay effects but is tricky
+    public static void delayChar( Char ch, float time ){
+        ch.spendConstant(time);
+        for (Buff b : ch.buffs()){
+            b.spendConstant(time);
+        }
+    }
+
 	public static synchronized Char findChar( int pos ) {
 		for (Char ch : chars){
 			if (ch.pos == pos)

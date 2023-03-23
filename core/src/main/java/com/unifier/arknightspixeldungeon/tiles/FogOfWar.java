@@ -21,9 +21,9 @@
 
 package com.unifier.arknightspixeldungeon.tiles;
 
+import com.badlogic.gdx.graphics.Pixmap;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.PDSettings;
-import com.watabou.gltextures.BufferTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NoosaScript;
@@ -37,24 +37,24 @@ public class FogOfWar extends Image {
 	//first index is visibility type, second is brightness level
 	private static final int FOG_COLORS[][] = new int[][]{{
 			//visible
-			0x55000000, 0x00000000, //-2 and -1 brightness
+			0x00000000,
 			0x00000000, //0 brightness
-			0x00000000, 0x00000000 //1 and 2 brightness
+            0x00000000
 			}, {
 			//visited
-			0xDD000000, 0xBB000000,
-			0x99000000,
-			0x77000000, 0x55000000
+            0xCC000000,
+            0x99000000,
+            0x55000000
 			}, {
 			//mapped
-			0xDD221108, 0xBB442211,
-			0x99663319,
-			0x77884411, 0x55AA552A
+            0xCC112244,
+            0x99193366,
+            0x55224488
 			}, {
 			//invisible
-			0xFF000000, 0xFF000000,
-			0xFF000000,
-			0xFF000000, 0xFF000000
+            0xFF000000,
+            0xFF000000,
+            0xFF000000
 			}};
 
 	private static final int VISIBLE    =   0;
@@ -110,10 +110,19 @@ public class FogOfWar extends Image {
 		width = width2 * size;
 		height = height2 * size;
 		
-		BufferTexture tx = new BufferTexture(width2, height2);
-		TextureCache.add(FogOfWar.class, tx);
-		texture( tx );
-		
+		//BufferTexture tx = new BufferTexture(width2, height2);
+		//TextureCache.add(FogOfWar.class, tx);
+		//texture( tx );
+
+        String key = "FogOfWar" + width2 + "x" + height2;
+        texture(TextureCache.create(key, width2, height2));
+
+        //sets contents to all black
+        texture.bitmap.setColor( 0x000000FF );
+        texture.bitmap.fill();
+
+        texture.bind();
+
 		scale.set(
 			DungeonTilemap.SIZE / PIX_PER_TILE,
 			DungeonTilemap.SIZE / PIX_PER_TILE);
@@ -170,7 +179,7 @@ public class FogOfWar extends Image {
 		this.visible = visible;
 		this.visited = visited;
 		this.mapped = mapped;
-		this.brightness = PDSettings.brightness() + 2;
+		this.brightness = PDSettings.brightness() + 1;
 
 		moveToUpdating();
 		
@@ -182,7 +191,8 @@ public class FogOfWar extends Image {
 			}
 		}
 
-		BufferTexture fog = (BufferTexture) texture;
+        Pixmap fog = texture.bitmap;
+        fog.setBlending(Pixmap.Blending.None);
 
 		int cell;
 		
@@ -273,13 +283,14 @@ public class FogOfWar extends Image {
 			
 		}
 		
-		if (updating.size() == 1 && !fullUpdate){
-			fog.update(updating.get(0).top * PIX_PER_TILE, updating.get(0).bottom * PIX_PER_TILE);
-		} else {
-			fog.update();
-		}
+		//if (updating.size() == 1 && !fullUpdate){
+		//	fog.update(updating.get(0).top * PIX_PER_TILE, updating.get(0).bottom * PIX_PER_TILE);
+		//} else {
+		//	fog.update();
+		//}
 
-	}
+        texture.bitmap(fog);
+    }
 	
 	private boolean wall(int cell) {
 		return DungeonTileSheet.wallStitcheable(Dungeon.level.map[cell]);
@@ -298,31 +309,37 @@ public class FogOfWar extends Image {
 		}
 	}
 	
-	private void fillLeft( BufferTexture fog, int x, int y, int color){
-		for (int i = 0; i < PIX_PER_TILE; i++){
+	private void fillLeft( Pixmap fog, int x, int y, int color){
+		/*for (int i = 0; i < PIX_PER_TILE; i++){
 			fog.pixels.position(((y * PIX_PER_TILE)+i)*width2 + x * PIX_PER_TILE);
 			for (int j = 0; j < PIX_PER_TILE/2; j++) {
 				fog.pixels.put(color);
 			}
-		}
+		}*/
+        fog.setColor((color << 8) | (color >>> 24));
+        fog.fillRectangle(x * PIX_PER_TILE, y*PIX_PER_TILE, PIX_PER_TILE/2, PIX_PER_TILE);
 	}
 	
-	private void fillRight( BufferTexture fog, int x, int y, int color){
-		for (int i = 0; i < PIX_PER_TILE; i++){
+	private void fillRight( Pixmap fog, int x, int y, int color){
+		/*for (int i = 0; i < PIX_PER_TILE; i++){
 			fog.pixels.position(((y * PIX_PER_TILE)+i)*width2 + x * PIX_PER_TILE + PIX_PER_TILE/2);
 			for (int j = PIX_PER_TILE/2; j < PIX_PER_TILE; j++) {
 				fog.pixels.put(color);
 			}
-		}
-	}
+		}*/
+        fog.setColor((color << 8) | (color >>> 24));
+        fog.fillRectangle(x * PIX_PER_TILE + PIX_PER_TILE/2, y*PIX_PER_TILE, PIX_PER_TILE/2, PIX_PER_TILE);
+    }
 
-	private void fillCell( BufferTexture fog, int x, int y, int color){
-		for (int i = 0; i < PIX_PER_TILE; i++){
+	private void fillCell( Pixmap fog, int x, int y, int color){
+		/*for (int i = 0; i < PIX_PER_TILE; i++){
 			fog.pixels.position(((y * PIX_PER_TILE)+i)*width2 + x * PIX_PER_TILE);
 			for (int j = 0; j < PIX_PER_TILE; j++) {
 				fog.pixels.put(color);
 			}
-		}
+		}*/
+        fog.setColor((color << 8) | (color >>> 24));
+        fog.fillRectangle(x * PIX_PER_TILE, y*PIX_PER_TILE, PIX_PER_TILE, PIX_PER_TILE);
 	}
 
 	@Override

@@ -145,13 +145,13 @@ public class Thief extends Mob {
 	}
 
     @Override
-    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage, ArrayList<Boolean> burstArray, int hittedTime) {
 
         if (state == FLEEING && !damage.isEmpty()) {
-            Dungeon.level.drop( new Gold(damage.size()), pos ).sprite.drop();
+            Dungeon.level.drop( new Gold(hittedTime), pos ).sprite.drop();
         }
 
-        return super.multipleDefenseProc(enemy, damage);
+        return super.multipleDefenseProc(enemy, damage, burstArray, hittedTime);
     }
 
 

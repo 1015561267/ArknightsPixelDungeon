@@ -2,16 +2,19 @@ package com.unifier.arknightspixeldungeon.ui;
 
 import com.unifier.arknightspixeldungeon.Chrome;
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Actor;
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
-import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.ExusiaiSkill;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
+import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
-import com.unifier.arknightspixeldungeon.windows.WndExusiaiSkill;
-import com.unifier.arknightspixeldungeon.windows.WndHeroSkill;
+import com.unifier.arknightspixeldungeon.utils.BArray;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Image;
+import com.watabou.utils.PathFinder;
 
 public class SkillLoader extends Tag{
 
@@ -19,6 +22,11 @@ public class SkillLoader extends Tag{
     private static final float DISABLED	= 0.3f;
 
     protected static final int ICON_SIZE = 16;
+
+    private static Image cross = Icons.TARGET.get();
+
+    public static Char lastTarget = null;
+    public static boolean targetting = false;
 
     Image icon;
 
@@ -118,12 +126,28 @@ public class SkillLoader extends Tag{
     protected void onPointerUp() { bg.resetColor(); }
 
     protected void onClick() {
+        //FIXME feels weird no matter what change make,damn it should have more polish
         if(skill!=null && skill.activated())
         {
-            skill.doAction();
-        }
-        else {
+            if(!targetting && skill.useTargetting()){
+                skill.doAction();
+                targetting = true;
+            }else {
+                if(skill.useTargetting()){
+                    int cell = autoAim(lastTarget);
 
+                    if (cell != -1){
+                        GameScene.handleCell(cell);
+                        }
+                    else {
+                        //couldn't auto-aim, do nothing for now
+                            if(lastTarget!=null)
+                                GameScene.handleCell( lastTarget.pos );
+                            //GameScene.handleCell( lastTarget.pos );
+                        }
+                }
+                else skill.doAction();
+            }
         }
     }
 
@@ -131,14 +155,63 @@ public class SkillLoader extends Tag{
 
         if(skill!=null)
         {
-            if(skill instanceof ExusiaiSkill){
-                GameScene.show(new WndExusiaiSkill((ExusiaiSkill) skill));
-                //FIXME Well,considering it involve in too much relative work,it should be wise to make a independent ui to handle them,or merge others together later?
-            }else
-            GameScene.show(new WndHeroSkill(skill));
+            skill.handleLongClick();
             return true;
         }
         return false;
     }
 
+    public static void target( Char target ) {
+        if (target != null && target.alignment != Char.Alignment.ALLY) {
+            lastTarget = target;
+        }
+    }
+
+    public static void cancel() {
+        if (targetting) {
+            cross.remove();
+            targetting = false;
+        }
+    }
+
+    public static void useTargeting() {
+
+        if (lastTarget != null &&
+                Actor.chars().contains( lastTarget ) &&
+                lastTarget.isAlive() &&
+                lastTarget.alignment != Char.Alignment.ALLY &&
+                Dungeon.level.heroFOV[lastTarget.pos]) {
+
+            CharSprite sprite = lastTarget.sprite;
+
+            if (sprite.parent != null) {
+                sprite.parent.addToFront(cross);
+                cross.point(sprite.center(cross));
+            }
+
+        } else {
+            lastTarget = null;
+        }
+    }
+
+    public int autoAim(Char target){
+
+        if(target!=null && skill!=null && skill.owner!=null){
+            Ballistica ballistica = new Ballistica(skill.owner.pos,target.pos,Ballistica.PROJECTILE);
+
+            //first try to directly target
+            if (ballistica.dist == target.pos) {
+                return target.pos;
+            }
+            //Otherwise pick nearby tiles to try and 'angle' the shot, auto-aim basically.
+            PathFinder.buildDistanceMap( target.pos, BArray.not( new boolean[Dungeon.level.length()], null ), 2 );
+            for (int i = 0; i < PathFinder.distance.length; i++) {
+                if (PathFinder.distance[i] < Integer.MAX_VALUE
+                        && ballistica.dist == target.pos)
+                    return i;
+            }
+        }
+        //couldn't find a cell, give up.
+        return -1;
+    }
 }

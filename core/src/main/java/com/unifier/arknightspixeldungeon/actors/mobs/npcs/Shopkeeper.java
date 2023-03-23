@@ -37,6 +37,8 @@ import com.unifier.arknightspixeldungeon.windows.WndTradeItem;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Callback;
 
+import java.util.ArrayList;
+
 public class Shopkeeper extends NPC {
 
 	{
@@ -59,6 +61,11 @@ public class Shopkeeper extends NPC {
 	public void damage( int dmg, Object src ) {
 		flee();
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+        flee();
+    }
 	
 	@Override
 	public void add( Buff buff ) {

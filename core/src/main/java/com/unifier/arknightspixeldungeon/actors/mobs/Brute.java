@@ -31,6 +31,8 @@ import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class Brute extends Mob {
 	
 	{
@@ -83,7 +85,19 @@ public class Brute extends Mob {
 			}
 		}
 	}
-	
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+	    super.multipleDamage(burstArray,damageArray,src,hittedTime);
+        if (isAlive() && !enraged && HP < HT / 4) {
+            enraged = true;
+            spend( TICK );
+            if (Dungeon.level.heroFOV[pos]) {
+                sprite.showStatus( CharSprite.NEGATIVE, Messages.get(this, "enraged") );
+            }
+        }
+	}
+
 	{
 		immunities.add( Terror.class );
 	}

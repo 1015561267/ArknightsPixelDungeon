@@ -152,9 +152,9 @@ public class Yog extends Mob {
 	}
 
     @Override
-    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage, ArrayList<Boolean> burstArray, int hittedTime) {
 
-	    if(damage.isEmpty())  return super.multipleDefenseProc(enemy, damage);
+	    if(damage.isEmpty())  return super.multipleDefenseProc(enemy, damage, burstArray, hittedTime);
 
         ArrayList<Integer> spawnPoints = new ArrayList<>();
 
@@ -179,7 +179,7 @@ public class Yog extends Mob {
             }
         }
 
-        return super.multipleDefenseProc(enemy, damage);
+        return super.multipleDefenseProc(enemy, damage, burstArray, hittedTime);
     }
 
         @Override
@@ -268,7 +268,7 @@ public class Yog extends Mob {
 			damage = super.attackProc( enemy, damage );
 			
 			if (Random.Int( 3 ) == 0) {
-				Buff.affect( enemy, Ooze.class );
+				Buff.affect( enemy, Ooze.class ).set( Ooze.DURATION );
 				enemy.sprite.burst( 0xFF000000, 5 );
 			}
 			

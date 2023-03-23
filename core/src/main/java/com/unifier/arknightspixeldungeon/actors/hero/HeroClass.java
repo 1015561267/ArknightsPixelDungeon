@@ -30,6 +30,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Revolver;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Vector;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.skills.Exusiai.AdjustTool;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
@@ -37,6 +38,7 @@ import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.LevelTeleporter;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
+import com.unifier.arknightspixeldungeon.items.Torch;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
 import com.unifier.arknightspixeldungeon.items.artifacts.Artifact;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
@@ -155,6 +157,7 @@ public enum HeroClass {
         //new ScrollOfRage().identify().collect();
 
         //new TomeOfMastery().collect();
+        new Torch().collect();
 	}
 
 	public Badges.Badge masteryBadge() {
@@ -258,7 +261,7 @@ public enum HeroClass {
         ((Vector) hero.skill_2).setAMMO_BOX(Attachment.ORIGINUMS_REFINING_CLIP);
         hero.skill_2.attachTo(hero);
 
-		hero.skill_3  = new Revolver();
+		hero.skill_3  = new SniperRifle();
         //((Revolver) hero.skill_3).setGUN_SIGHT(Attachment.CLOSE_COMBAT_OPTICAL_SIGHT);
         //((Revolver) hero.skill_3).setBULLET(Attachment.HOLLOW_POINT_BULLET);
 		hero.skill_3.attachTo(hero);

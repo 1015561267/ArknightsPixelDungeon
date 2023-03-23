@@ -134,12 +134,22 @@ public class Rect {
         return p.x >= left && p.x < right && p.y >= top && p.y < bottom;
     }
 
+    public Point center() {
+        return new Point(
+                (left + right) / 2 + (((right - left) % 2) == 0 ? Random.Int( 2 ) : 0),
+                (top + bottom) / 2 + (((bottom - top) % 2) == 0 ? Random.Int( 2 ) : 0) );
+    }
+
     public Rect shrink(int d) {
         return new Rect(left + d, top + d, right - d, bottom - d);
     }
 
     public Rect shrink() {
         return shrink(1);
+    }
+
+    public Rect scale( int d ){
+        return new Rect( left * d, top * d, right * d, bottom * d );
     }
 
     public ArrayList<Point> getPoints() {

@@ -30,11 +30,13 @@ import com.unifier.arknightspixeldungeon.items.Heap;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Matrix;
 import com.watabou.glwrap.Vertexbuffer;
+import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.NoosaScript;
@@ -42,6 +44,8 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+
+import java.nio.Buffer;
 
 public class ItemSprite extends MovieClip {
 
@@ -136,9 +140,11 @@ public class ItemSprite extends MovieClip {
 		final int csize = DungeonTilemap.SIZE;
 		
 		return new PointF(
-			cell % Dungeon.level.width() * csize + (csize - width()) * 0.5f,
-			cell / Dungeon.level.width() * csize + (csize - height()) - csize * perspectiveRaise
-		);
+			//cell % Dungeon.level.width() * csize + (csize - width()) * 0.5f,
+			//cell / Dungeon.level.width() * csize + (csize - height()) - csize * perspectiveRaise
+                PixelScene.align(Camera.main, ((cell % Dungeon.level.width()) + 0.5f) * csize - width() * 0.5f),
+                PixelScene.align(Camera.main, ((cell / Dungeon.level.width()) + 1.0f) * csize - height() - csize * perspectiveRaise)
+        );
 	}
 	
 	public void place( int p ) {
@@ -233,6 +239,8 @@ public class ItemSprite extends MovieClip {
 	public void frame( int image ){
 		frame( ItemSpriteSheet.film.get( image ));
 
+        //GLog.i(String.valueOf(image));
+
 		float height = ItemSpriteSheet.film.height( image );
 		//adds extra raise to very short items, so they are visible
 		if (height < 8f){
@@ -248,6 +256,10 @@ public class ItemSprite extends MovieClip {
 	@Override
 	public void kill() {
 		super.kill();
+        if (emitter != null) {
+            emitter.on = false;
+            emitter.autoKill = true;
+        }
 		if (emitter != null) emitter.killAndErase();
 		emitter = null;
 	}
@@ -271,7 +283,7 @@ public class ItemSprite extends MovieClip {
 
 		if (renderShadow) {
 			if (dirty) {
-				verticesBuffer.position(0);
+                ((Buffer)verticesBuffer).position(0);
 				verticesBuffer.put(vertices);
 				if (buffer == null)
 					buffer = new Vertexbuffer(verticesBuffer);
@@ -305,6 +317,10 @@ public class ItemSprite extends MovieClip {
 		super.update();
 
 		visible = (heap == null || heap.seen);
+
+        if (emitter != null){
+            emitter.visible = visible;
+        }
 
 		if (dropInterval > 0){
 			shadowOffset -= speed.y * Game.elapsed * 0.8f;

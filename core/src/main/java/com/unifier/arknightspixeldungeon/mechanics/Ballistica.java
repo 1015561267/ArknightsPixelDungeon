@@ -36,8 +36,9 @@ public class Ballistica {
 	public Integer sourcePos = null;
 	public Integer collisionPos = null;
 	public Integer dist = 0;
+    public Integer collisionProperties = WONT_STOP;
 
-	//parameters to specify the colliding cell
+    //parameters to specify the colliding cell
 	public static final int STOP_TARGET = 1; //ballistica will stop at the target cell
 	public static final int STOP_CHARS = 2; //ballistica will stop on first char hit
 	public static final int STOP_TERRAIN = 4; //ballistica will stop on terrain(LOS blocking, impassable, etc.)

@@ -49,7 +49,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 	
 	public void updateDisplaySize(){
 		if (PDSettings.landscape() != null) {
-			AndroidGame.instance.setRequestedOrientation( PDSettings.landscape() ?
+            AndroidLauncher.instance.setRequestedOrientation( PDSettings.landscape() ?
 					ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE :
 					ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT );
 		}
@@ -63,7 +63,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		Game.dispHeight = view.getMeasuredHeight();
 
 		boolean fullscreen = Build.VERSION.SDK_INT < Build.VERSION_CODES.N
-				|| !AndroidGame.instance.isInMultiWindowMode();
+				|| !AndroidLauncher.instance.isInMultiWindowMode();
 
 		if (fullscreen && PDSettings.landscape() != null
 				&& (Game.dispWidth >= Game.dispHeight) != PDSettings.landscape()){
@@ -97,8 +97,8 @@ public class AndroidPlatformSupport extends PlatformSupport {
 			final int finalW = Math.round(renderWidth);
 			final int finalH = Math.round(renderHeight);
 			if (finalW != Game.width || finalH != Game.height){
-				
-				AndroidGame.instance.runOnUiThread(new Runnable() {
+
+                AndroidLauncher.instance.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						view.getHolder().setFixedSize(finalW, finalH);
@@ -107,7 +107,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 				
 			}
 		} else {
-			AndroidGame.instance.runOnUiThread(new Runnable() {
+            AndroidLauncher.instance.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					view.getHolder().setSizeFromLayout();
@@ -117,30 +117,30 @@ public class AndroidPlatformSupport extends PlatformSupport {
 	}
 	
 	public void updateSystemUI() {
-		
-		AndroidGame.instance.runOnUiThread(new Runnable() {
+
+        AndroidLauncher.instance.runOnUiThread(new Runnable() {
 			@SuppressLint("NewApi")
 			@Override
 			public void run() {
 				boolean fullscreen = Build.VERSION.SDK_INT < Build.VERSION_CODES.N
-						|| !AndroidGame.instance.isInMultiWindowMode();
+						|| !AndroidLauncher.instance.isInMultiWindowMode();
 				
 				if (fullscreen){
-					AndroidGame.instance.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    AndroidLauncher.instance.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 							WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 				} else {
-					AndroidGame.instance.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
+                    AndroidLauncher.instance.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
 							WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 				}
 				
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
 					if (PDSettings.fullscreen()) {
-						AndroidGame.instance.getWindow().getDecorView().setSystemUiVisibility(
+                        AndroidLauncher.instance.getWindow().getDecorView().setSystemUiVisibility(
 								View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 										| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN
 										| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY );
 					} else {
-						AndroidGame.instance.getWindow().getDecorView().setSystemUiVisibility(
+                        AndroidLauncher.instance.getWindow().getDecorView().setSystemUiVisibility(
 								View.SYSTEM_UI_FLAG_LAYOUT_STABLE );
 					}
 				}
@@ -153,7 +153,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 	@SuppressWarnings("deprecation")
 	public boolean connectedToUnmeteredNetwork() {
 		//Returns true if using unmetered connection, use shortcut method if available
-		ConnectivityManager cm = (ConnectivityManager) AndroidGame.instance.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) AndroidLauncher.instance.getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 			return !cm.isActiveNetworkMetered();
 		} else {
@@ -198,7 +198,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
         } else if (systemfont && Gdx.files.absolute("/system/fonts/DroidSans.ttf").exists()){
             basicFontGenerator = new FreeTypeFontGenerator(Gdx.files.absolute("/system/fonts/DroidSans.ttf"));
         } else {
-            basicFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pixel_font.ttf"));
+            basicFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("pixel_font.ttf"));
         }
 
         //android 7.0+. all asian fonts are nicely contained in one spot

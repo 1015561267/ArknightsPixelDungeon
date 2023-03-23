@@ -159,8 +159,8 @@ public class RenderedText extends Image {
 
             FloatBuffer toOpenGL;
             if (buffers.containsKey(count / 20)) {
-                toOpenGL = buffers.get(count / 20);
-                toOpenGL.position(0);
+                toOpenGL = buffers.get(count/20);
+                ((Buffer)toOpenGL).position(0);
             } else {
                 toOpenGL = Quad.createSet(count / 20);
                 buffers.put(count / 20, toOpenGL);

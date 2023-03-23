@@ -65,6 +65,17 @@ public class RotHeart extends Mob {
 		}
 	}
 
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
+        //TODO: when effect properties are done, change this to FIRE
+        if (src instanceof Burning) {
+            destroy();
+            sprite.die();
+        } else {
+            super.multipleDamage(burstArray,damageArray,src,hittedTime);
+        }
+    }
+
 	@Override
 	public int defenseProc(Char enemy, int damage) {
 		GameScene.add(Blob.seed(pos, 20, ToxicGas.class));
@@ -73,12 +84,12 @@ public class RotHeart extends Mob {
 	}
 
     @Override
-    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage, ArrayList<Boolean> burstArray, int hittedTime) {
         if(damage.size()>0) {
-            GameScene.add(Blob.seed(pos, 20 * Random.Int(1, damage.size()), ToxicGas.class));
+            GameScene.add(Blob.seed(pos, 20 * Random.Int(1, hittedTime), ToxicGas.class));
         }//release random gas amount for now
 
-        return super.multipleDefenseProc(enemy, damage);
+        return super.multipleDefenseProc(enemy, damage, burstArray, hittedTime);
     }
 
     @Override

@@ -23,12 +23,12 @@ package com.watabou.noosa;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.watabou.gltextures.SmartTexture;
-import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Matrix;
 import com.watabou.glwrap.Quad;
 import com.watabou.glwrap.Vertexbuffer;
 import com.watabou.utils.RectF;
 
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 
 public class BitmapText extends Visual {
@@ -75,7 +75,7 @@ public class BitmapText extends Visual {
 
         if (dirty) {
             updateVertices();
-            quads.limit(quads.position());
+            ((Buffer)quads).limit(quads.position());
             if (buffer == null)
                 buffer = new Vertexbuffer(quads);
             else
@@ -210,8 +210,10 @@ public class BitmapText extends Visual {
     }
 
     public synchronized void text(String str) {
-        text = str;
-        dirty = true;
+        if (str == null || !str.equals(text)) {
+            text = str;
+            dirty = true;
+        }
     }
 
     public static class Font extends TextureFilm {
@@ -342,15 +344,15 @@ public class BitmapText extends Visual {
             return pixel != color;
         }
 
-        public static Font colorMarked(Pixmap bmp, int color, String chars) {
-            Font font = new Font(TextureCache.get(bmp));
-            font.splitBy(bmp, bmp.getHeight(), color, chars);
+        public static Font colorMarked( SmartTexture tex, int color, String chars ) {
+            Font font = new Font( tex );
+            font.splitBy( tex.bitmap, tex.height, color, chars );
             return font;
         }
 
-        public static Font colorMarked(Pixmap bmp, int height, int color, String chars) {
-            Font font = new Font(TextureCache.get(bmp));
-            font.splitBy(bmp, height, color, chars);
+        public static Font colorMarked( SmartTexture tex, int height, int color, String chars ) {
+            Font font = new Font( tex );
+            font.splitBy( tex.bitmap, height, color, chars );
             return font;
         }
 

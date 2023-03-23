@@ -31,6 +31,8 @@ import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.GreatCrabSprite;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 
+import java.util.ArrayList;
+
 public class GreatCrab extends Crab {
 
 	{
@@ -74,6 +76,18 @@ public class GreatCrab extends Crab {
 			super.damage( dmg, src );
 		}
 	}
+
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
+        if ((enemySeen && state != SLEEPING && paralysed == 0)
+                && (src instanceof Wand || src instanceof Char)){
+            GLog.n( Messages.get(this, "noticed") );
+            sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, "blocked") );
+        } else {
+            super.multipleDamage(burstArray,damageArray,src,hittedTime);
+        }
+    }
 
 	@Override
 	public void die( Object cause ) {

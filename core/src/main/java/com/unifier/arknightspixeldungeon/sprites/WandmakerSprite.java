@@ -23,7 +23,7 @@ package com.unifier.arknightspixeldungeon.sprites;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.effects.Halo;
+import com.watabou.noosa.Halo;
 import com.unifier.arknightspixeldungeon.effects.particles.ElmoParticle;
 import com.watabou.glwrap.Blending;
 import com.watabou.noosa.Game;

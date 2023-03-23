@@ -50,7 +50,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class InterlevelScene extends PixelScene {
-	
+
+    {
+        inGameScene = true;
+    }
+
 	//slow fade on entering a new region
 	private static final float SLOW_FADE = 1f; //.33 in, 1.33 steady, .33 out, 2 seconds total
 	//norm fade when loading, falling, returning, or descending to a new floor
@@ -83,7 +87,9 @@ public class InterlevelScene extends PixelScene {
 	private static Thread thread;
 	private static Exception error = null;
 	private float waitingTime;
-	
+
+    public static int lastRegion = -1;
+
 	@Override
 	public void create() {
 		super.create();
@@ -130,13 +136,27 @@ public class InterlevelScene extends PixelScene {
 				scrollSpeed = returnDepth > Dungeon.depth ? 15 : -15;
 				break;
 		}
-		if (loadingDepth <= 5)          loadingAsset = Assets.LOADING_SEWERS;
+		/*if (loadingDepth <= 5)          loadingAsset = Assets.LOADING_SEWERS;
 		else if (loadingDepth <= 10)    loadingAsset = Assets.LOADING_PRISON;
 		else if (loadingDepth <= 15)    loadingAsset = Assets.LOADING_CAVES;
 		else if (loadingDepth <= 21)    loadingAsset = Assets.LOADING_CITY;
 		else if (loadingDepth <= 25)    loadingAsset = Assets.LOADING_HALLS;
-		else                            loadingAsset = Assets.SHADOW;
-		
+		else                            loadingAsset = Assets.SHADOW;*/
+
+        //flush the texture cache whenever moving between regions, helps reduce memory load
+        int region = (int)Math.ceil(loadingDepth / 5f);
+        if (region != lastRegion){
+            TextureCache.clear();
+            lastRegion = region;
+        }
+
+        if      (lastRegion == 1)    loadingAsset = Assets.LOADING_SEWERS;
+        else if (lastRegion == 2)    loadingAsset = Assets.LOADING_PRISON;
+        else if (lastRegion == 3)    loadingAsset = Assets.LOADING_CAVES;
+        else if (lastRegion == 4)    loadingAsset = Assets.LOADING_CITY;
+        else if (lastRegion == 5)    loadingAsset = Assets.LOADING_HALLS;
+        else                         loadingAsset = Assets.SHADOW;
+
 		SkinnedBlock bg = new SkinnedBlock(Camera.main.width, Camera.main.height, loadingAsset ){
 			@Override
 			protected NoosaScript script() {

@@ -634,7 +634,7 @@ public abstract class Char extends Actor {
 	}
 
     //use for damage with multiple attacks.to decrease unnecessary calculation repeated again and again,improve performance,and avoid some stupid things like many fly,or drop gold one by one
-    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage, ArrayList<Boolean> burstArray, int hittedTime) {
         return damage;
     }
 
@@ -699,8 +699,104 @@ public abstract class Char extends Actor {
 			die( src );
 		}
 	}
-	
-	public void destroy() {
+
+	//FIXME After finish this I realize this process actually contains message showing and hit/miss check,so after more multiple-damage ways implemented,it should be merged and used as a "multiple attack"function
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+
+        if (!isAlive()) {
+            return ;
+        }
+
+        if(isInvulnerable(src.getClass())){
+            sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
+            return ;
+        }
+
+        if (this.buff(Frost.class) != null){
+            Buff.detach( this, Frost.class );
+        }
+        if (this.buff(MagicalSleep.class) != null){
+            Buff.detach(this, MagicalSleep.class);
+        }
+
+        int flag = 0;
+        int totalDamage = 0;
+
+        for(Integer dmg : damageArray){
+
+            if(burstArray.get(flag)){
+                if (this.buff(Doom.class) != null){
+                    dmg *= 2;
+                }
+
+                Class<?> srcClass = src.getClass();
+                if (isImmune( srcClass )) {
+                    dmg = 0;
+                } else {
+                    dmg = Math.round( dmg * resist( srcClass ));
+                }
+
+                if (buff( Paralysis.class ) != null) {
+                    buff( Paralysis.class ).processDamage(dmg);
+                }
+
+                totalDamage+=dmg;
+
+                //FIXME: when I add proper damage properties, should add an IGNORES_SHIELDS property to use here.
+                if (src instanceof Hunger || SHLD == 0){
+                    HP -= dmg;
+                } else if (SHLD >= dmg){
+                    SHLD -= dmg;
+                } else if (SHLD > 0) {
+                    HP -= (dmg - SHLD);
+                    SHLD = 0;
+                }
+                //if(this instanceof Hero) {
+                //    Talent.onHealthLose((Hero) this, src, Math.min(dmg, HP));
+                //} //not needed for now
+                sprite.showStatus( HP > HT / 2 ?
+                                CharSprite.WARNING :
+                                CharSprite.NEGATIVE,
+                        Integer.toString( dmg ) );
+                if (HP < 0) {
+                    HP = 0;
+                    break;
+                }
+            }else {
+                if (Dungeon.level.heroFOV[Dungeon.hero.pos] || Dungeon.level.heroFOV[pos]) {
+                    String defense = defenseVerb();
+                    sprite.showStatus( CharSprite.NEUTRAL, defense );
+
+                    Sample.INSTANCE.play(Assets.SND_MISS);
+                }
+            }
+            flag++;
+        }
+
+        if(hittedTime>0){
+            sprite.bloodBurstA(sprite.center(), totalDamage);
+            sprite.flash();
+        }
+
+        if (!isAlive()) {
+            die( src );
+            if (Dungeon.level.heroFOV[Dungeon.hero.pos] || Dungeon.level.heroFOV[pos]) {
+                while (flag < damageArray.size() - 1) {
+                    if (!burstArray.get(flag)) {
+                        //verbArray += enemy.defenseVerb();
+                        String defense = defenseVerb();
+                        sprite.showStatus(CharSprite.NEUTRAL, defense);
+                    } else {
+                        sprite.showStatus( HP > HT / 2 ? CharSprite.WARNING : CharSprite.NEGATIVE, damageArray.get(flag).toString());
+                    }
+                    flag++;
+                }
+            }
+        }
+    }
+
+
+    public void destroy() {
 		HP = 0;
 		Actor.remove( this );
 	}

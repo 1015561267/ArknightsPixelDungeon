@@ -41,6 +41,9 @@ public class WelcomeScene extends PixelScene {
 
 	private static int LATEST_UPDATE = ArknightsPixelDungeon.Demo;
 
+    //used so that the game does not keep showing the window forever if cleaning fails
+    private static boolean triedCleaningTemp = false;
+
 	@Override
 	public void create() {
 		super.create();

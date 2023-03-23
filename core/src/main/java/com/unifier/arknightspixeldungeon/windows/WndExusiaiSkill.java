@@ -6,6 +6,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.ExusiaiSkill;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Revolver;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Vector;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
@@ -89,6 +90,31 @@ public class WndExusiaiSkill extends Window {
 
             button = new AttachmentSlot(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT(), skill);
             button.setPos( (bluePrint.width * 111 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 62 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+        }else if(skill instanceof SniperRifle){
+
+            button = new AttachmentSlot(Attachment.AttachType.FRONT_HANG , skill.getFRONT_HANG(), skill,this);
+            button.setPos( (bluePrint.width * 17 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+
+            button = new AttachmentSlot(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT(), skill ,this);
+            button.setPos( (bluePrint.width * 49 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+
+            button = new AttachmentSlot(Attachment.AttachType.AMMO_BOX , skill.getAMMO_BOX(), skill,this);
+            button.setPos( (bluePrint.width * 80 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+
+            button = new AttachmentSlot(Attachment.AttachType.BACK_HANG , skill.getBELOW_HANG(), skill,this);
+            button.setPos( (bluePrint.width * 111 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);

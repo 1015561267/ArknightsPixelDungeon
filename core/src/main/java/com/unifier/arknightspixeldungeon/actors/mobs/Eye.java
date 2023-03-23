@@ -48,6 +48,8 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class Eye extends Mob {
 	
 	{
@@ -166,7 +168,18 @@ public class Eye extends Mob {
 		super.damage(dmg, src);
 	}
 
-	public void deathGaze(){
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+        if (beamCharged) {
+            for(Integer dmg : damageArray){
+                dmg /= 4;
+            }
+        }
+        super.multipleDamage(burstArray,damageArray,src,hittedTime);
+    }
+
+
+    public void deathGaze(){
 
 	    boolean tracker = false;
 

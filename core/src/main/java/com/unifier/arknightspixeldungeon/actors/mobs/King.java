@@ -52,6 +52,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class King extends Mob {
 	
 	private static final int MAX_ARMY_SIZE	= 5;
@@ -143,6 +145,17 @@ public class King extends Mob {
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (lock != null) lock.addTime(dmg);
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+        int beforeHitHP = HP;
+        super.multipleDamage(burstArray,damageArray,src,hittedTime);
+        int totaldmg = beforeHitHP - HP;
+        LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+        if (lock != null && !isImmune(src.getClass())) {
+            lock.addTime(totaldmg);
+        }
+    }
 	
 	@Override
 	public void die( Object cause ) {

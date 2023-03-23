@@ -23,7 +23,6 @@
 package com.unifier.arknightspixeldungeon.desktop;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3FileHandle;
@@ -84,6 +83,10 @@ public class DesktopLauncher {
 				exceptionMsg = exceptionMsg.replace("com.badlogic.gdx.", "");
 				exceptionMsg = exceptionMsg.replace("\t", "    ");
 
+                if (exceptionMsg.length() > 1000){
+                    exceptionMsg = exceptionMsg.substring(0, 1000) + "...";
+                }
+
 				if (exceptionMsg.contains("Couldn't create window")){
 					TinyFileDialogs.tinyfd_messageBox(title + " Has Crashed!",
 							title + " wasn't able to initialize it's graphics display, sorry about that!\n\n" +
@@ -98,7 +101,8 @@ public class DesktopLauncher {
 									exceptionMsg,
 							"ok", "error", false);
 				}
-				if (Gdx.app != null) Gdx.app.exit();
+				//if (Gdx.app != null) Gdx.app.exit();
+                System.exit(1);
 			}
 		});
 

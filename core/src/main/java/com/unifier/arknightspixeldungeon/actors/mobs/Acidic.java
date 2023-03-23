@@ -56,12 +56,12 @@ public class Acidic extends Scorpio {
 	}
 
     @Override
-    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage) {
+    public ArrayList<Integer> multipleDefenseProc(Char enemy, ArrayList<Integer> damage, ArrayList<Boolean> burstArray, int hittedTime) {
 	    //Update to newest SPD,Teller,2023-2-1
         if (Dungeon.level.adjacent(pos, enemy.pos)){
             Buff.affect(enemy, Ooze.class).set( Ooze.DURATION );
         }
 
-        return super.multipleDefenseProc(enemy, damage);
+        return super.multipleDefenseProc(enemy, damage, burstArray, hittedTime);
     }
 }

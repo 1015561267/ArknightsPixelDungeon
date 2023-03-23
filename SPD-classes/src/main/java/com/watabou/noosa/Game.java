@@ -24,12 +24,14 @@ package com.watabou.noosa;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.glutils.GLVersion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.watabou.glscripts.Script;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Blending;
 import com.watabou.glwrap.Vertexbuffer;
+import com.watabou.input.ControllerHandler;
 import com.watabou.input.InputHandler;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.audio.Music;
@@ -105,7 +107,9 @@ public class Game implements ApplicationListener {
         dispWidth = Gdx.graphics.getDisplayMode().width;
 
         inputHandler = new InputHandler( Gdx.input );
-
+        if (ControllerHandler.controllersSupported()){
+            Controllers.addListener(new ControllerHandler());
+        }
         //refreshes texture and vertex data stored on the gpu
         versionContextRef = Gdx.graphics.getGLVersion();
         Blending.useDefault();
@@ -183,7 +187,7 @@ public class Game implements ApplicationListener {
 
     @Override
     public void resume() {
-        justResumed = false;
+        justResumed = true;
     }
 
     public void finish() {

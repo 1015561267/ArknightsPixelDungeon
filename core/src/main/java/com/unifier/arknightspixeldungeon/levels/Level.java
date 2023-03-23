@@ -35,6 +35,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
 import com.unifier.arknightspixeldungeon.actors.buffs.MindVision;
 import com.unifier.arknightspixeldungeon.actors.buffs.Shadows;
+import com.unifier.arknightspixeldungeon.actors.buffs.SniperSight;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
@@ -57,6 +58,8 @@ import com.unifier.arknightspixeldungeon.levels.features.Door;
 import com.unifier.arknightspixeldungeon.levels.features.HighGrass;
 import com.unifier.arknightspixeldungeon.levels.painters.Painter;
 import com.unifier.arknightspixeldungeon.levels.traps.Trap;
+import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
+import com.unifier.arknightspixeldungeon.mechanics.ConeAOE;
 import com.unifier.arknightspixeldungeon.mechanics.ShadowCaster;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.plants.Plant;
@@ -828,8 +831,12 @@ public abstract class Level implements Bundlable {
 		int cx = c.pos % width();
 		int cy = c.pos / width();
 		
-		boolean sighted = c.buff( Blindness.class ) == null && c.buff( Shadows.class ) == null
-						&& c.buff( TimekeepersHourglass.timeStasis.class ) == null && c.isAlive();
+		boolean sighted = c.buff( Blindness.class ) == null
+                && c.buff( Shadows.class ) == null
+                && c.buff( TimekeepersHourglass.timeStasis.class ) == null
+                && c.buff(SniperSight.class) == null
+                && c.isAlive();
+
 		if (sighted) {
 			ShadowCaster.castShadow( cx, cy, fieldOfView, c.viewDistance );
 		} else {
@@ -843,10 +850,10 @@ public abstract class Level implements Bundlable {
 				sense = Math.max( ((MindVision)b).distance, sense );
 			}
 		}
-		
-		if ((sighted && sense > 1) || !sighted) {
-			
-			int ax = Math.max( 0, cx - sense );
+
+        ///if ((sighted && sense > 1 || !sighted) {
+        if (sense > 1 || !sighted) {
+            int ax = Math.max( 0, cx - sense );
 			int bx = Math.min( cx + sense, width() - 1 );
 			int ay = Math.max( 0, cy - sense );
 			int by = Math.min( cy + sense, height() - 1 );
@@ -858,7 +865,7 @@ public abstract class Level implements Bundlable {
 			}
 		}
 
-		//Currently only the hero can get mind vision or awareness
+		//Currently only the hero can get mind vision or awareness,and SniperSight
 		if (c.isAlive() && c == Dungeon.hero) {
 			Dungeon.hero.mindVisionEnemies.clear();
 			if (c.buff( MindVision.class ) != null) {
@@ -881,13 +888,13 @@ public abstract class Level implements Bundlable {
 					}
 				}
 			}
-			
+
 			for (Mob m : Dungeon.hero.mindVisionEnemies) {
 				for (int i : PathFinder.NEIGHBOURS9) {
 					fieldOfView[m.pos + i] = true;
 				}
 			}
-			
+
 			if (c.buff( Awareness.class ) != null) {
 				for (Heap heap : heaps.values()) {
 					int p = heap.pos;
@@ -895,6 +902,25 @@ public abstract class Level implements Bundlable {
 						fieldOfView[p+i] = true;
 				}
 			}
+
+            if (c.buff(SniperSight.class)!=null && c.buff(Blindness.class)==null) {
+
+                int count = 0;
+
+                SniperSight t = c.buff(SniperSight.class);
+
+                int d = c.buff(SniperSight.class).distance;
+                float a = c.buff(SniperSight.class).angle;
+
+                //
+                ConeAOE cone = new ConeAOE(c.pos, t.distance, t.angle, t.degrees, Ballistica.WONT_STOP);
+                GLog.i(String.valueOf(c.pos));
+                for (int cell : cone.cells) {
+                    count ++;
+                    fieldOfView[cell] = true;
+                    //GLog.i(String.valueOf(cell));
+                }
+            }
 		}
 
 		if (c == Dungeon.hero) {
