@@ -32,7 +32,7 @@ public class ExitButton extends IconButton {
 	protected Image image;
 
 	public ExitButton() {
-		super();
+        super(Icons.EXIT.get());
 
 		width = image.width;
 		height = image.height;

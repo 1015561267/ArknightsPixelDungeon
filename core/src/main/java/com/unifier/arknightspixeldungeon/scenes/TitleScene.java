@@ -30,12 +30,12 @@ import com.unifier.arknightspixeldungeon.effects.Fireball;
 import com.unifier.arknightspixeldungeon.effects.particles.ArcParticle;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.ui.Archs;
+import com.unifier.arknightspixeldungeon.ui.Button;
 import com.unifier.arknightspixeldungeon.ui.DoublesideAlignmentButton;
 import com.unifier.arknightspixeldungeon.ui.ExitButton;
 import com.unifier.arknightspixeldungeon.ui.Icons;
 import com.unifier.arknightspixeldungeon.ui.PrefsButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
-import com.unifier.arknightspixeldungeon.windows.WndStartGame;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
@@ -43,7 +43,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
-import com.unifier.arknightspixeldungeon.ui.Button;
+import com.watabou.utils.DeviceCompat;
 
 public class TitleScene extends PixelScene {
 
@@ -86,10 +86,24 @@ public class TitleScene extends PixelScene {
             @Override
             protected void onClick() {
                 if (GamesInProgress.checkAll().size() == 0){
-                    TitleScene.this.add( new WndStartGame(1) );
+                    GamesInProgress.selectedClass = null;
+                    GamesInProgress.curSlot = 1;
+                    ArknightsPixelDungeon.switchScene(HeroSelectScene.class);
                 } else {
                     ArknightsPixelDungeon.switchNoFade( StartScene.class );
                 }
+            }
+
+            @Override
+            protected boolean onLongClick() {
+                //making it easier to start runs quickly while debugging
+                if (DeviceCompat.isDebug()) {
+                    GamesInProgress.selectedClass = null;
+                    GamesInProgress.curSlot = 1;
+                    ArknightsPixelDungeon.switchScene(HeroSelectScene.class);
+                    return true;
+                }
+                return super.onLongClick();
             }
         };
         btnPlay.icon(Icons.get(Icons.ENTER));

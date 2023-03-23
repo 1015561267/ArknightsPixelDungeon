@@ -33,6 +33,14 @@ public class Revolver extends ExusiaiSkill {
     }
 
     @Override
+    public boolean equippingAttachment(Attachment attachment) {
+        if(attachment == this.getGUN_SIGHT() || attachment == this.getBULLET()){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public GunType getType() { return GunType.REVOLVER; }
 
     @Override

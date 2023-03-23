@@ -135,6 +135,7 @@ public class Bundle {
     }
 
     public <E extends Enum<E>> E getEnum(String key, Class<E> enumClass) {
+        //return Enum.valueOf(enumClass, data.getString(key));
         try {
             return Enum.valueOf(enumClass, data.getString(key));
         } catch (JSONException e) {

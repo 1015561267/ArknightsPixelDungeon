@@ -24,7 +24,9 @@ package com.unifier.arknightspixeldungeon.scenes;
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
+import com.unifier.arknightspixeldungeon.Chrome;
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.GamesInProgress;
 import com.unifier.arknightspixeldungeon.PDSettings;
 import com.unifier.arknightspixeldungeon.Statistics;
 import com.unifier.arknightspixeldungeon.actors.Actor;
@@ -81,7 +83,9 @@ import com.unifier.arknightspixeldungeon.ui.MenuPane;
 import com.unifier.arknightspixeldungeon.ui.QuickSlotButton;
 import com.unifier.arknightspixeldungeon.ui.ResumeIndicator;
 import com.unifier.arknightspixeldungeon.ui.RightClickMenu;
+import com.unifier.arknightspixeldungeon.ui.SkillLoader;
 import com.unifier.arknightspixeldungeon.ui.StatusPane;
+import com.unifier.arknightspixeldungeon.ui.StyledButton;
 import com.unifier.arknightspixeldungeon.ui.Tag;
 import com.unifier.arknightspixeldungeon.ui.TargetHealthIndicator;
 import com.unifier.arknightspixeldungeon.ui.Toast;
@@ -97,6 +101,7 @@ import com.unifier.arknightspixeldungeon.windows.WndInfoItem;
 import com.unifier.arknightspixeldungeon.windows.WndInfoMob;
 import com.unifier.arknightspixeldungeon.windows.WndInfoPlant;
 import com.unifier.arknightspixeldungeon.windows.WndInfoTrap;
+import com.unifier.arknightspixeldungeon.windows.WndKeyBindings;
 import com.unifier.arknightspixeldungeon.windows.WndMessage;
 import com.unifier.arknightspixeldungeon.windows.WndOptions;
 import com.watabou.glwrap.Blending;
@@ -1171,7 +1176,52 @@ public class GameScene extends PixelScene {
 		gameOver.show( 0x000000, 1f );
 		scene.showBanner( gameOver );
 
-		Sample.INSTANCE.play( Assets.SND_DEATH );
+        StyledButton restart = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(StartScene.class, "new"), 9){
+            @Override
+            protected void onClick() {
+                GamesInProgress.selectedClass = Dungeon.hero.heroClass;
+                GamesInProgress.curSlot = GamesInProgress.firstEmpty();
+                ArknightsPixelDungeon.switchScene(HeroSelectScene.class);
+            }
+
+            @Override
+            public void update() {
+                alpha(gameOver.am);
+                super.update();
+            }
+        };
+        restart.icon(Icons.get(Icons.ENTER));
+        restart.alpha(0);
+        restart.camera = uiCamera;
+        float offset = Camera.main.centerOffset.y;
+        restart.setSize(Math.max(80, restart.reqWidth()), 20);
+        restart.setPos(
+                align(uiCamera, (restart.camera.width - restart.width()) / 2),
+                align(uiCamera, (restart.camera.height - restart.height()) / 2 + restart.height()/2 + 16 - offset)
+        );
+        scene.add(restart);
+
+        StyledButton menu = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(WndKeyBindings.class, "menu"), 9){
+            @Override
+            protected void onClick() {
+                GameScene.show(new WndGame());
+            }
+
+            @Override
+            public void update() {
+                alpha(gameOver.am);
+                super.update();
+            }
+        };
+        menu.icon(Icons.get(Icons.SETTINGS));
+        menu.alpha(0);
+        menu.camera = uiCamera;
+        menu.setSize(Math.max(80, menu.reqWidth()), 20);
+        menu.setPos(
+                align(uiCamera, (menu.camera.width - menu.width()) / 2),
+                restart.bottom() + 2
+        );
+        scene.add(menu);
 	}
 
 	public static void bossSlain() {

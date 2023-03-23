@@ -2,6 +2,7 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.ExusiaiSkill;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.watabou.noosa.Image;
@@ -11,15 +12,10 @@ import java.util.ArrayList;
 
 public enum Attachment {
     //FIXME type judgement should be unnecessary as window should filte already,just in case
-    RED_DOT_SIGHT(1,AttachType.GUN_SIGHT){
-        @Override
-        public Status condition(Hero hero, ExusiaiSkill skill){
-            if(skill.getType() == ExusiaiSkill.GunType.REVOLVER || skill.getType() == ExusiaiSkill.GunType.VECTOR || skill.getType() == ExusiaiSkill.GunType.SNIPER_RIFLE){
 
-            }
-            return super.condition(hero,skill);
-        }
-    },
+    NULL_ATTACHMENT(0,null),//FIXME have to add this as enum cannot be saved as null and it's to complex and unnecessary to repeat try-catch
+
+    RED_DOT_SIGHT(1,AttachType.GUN_SIGHT),
     CLOSE_COMBAT_OPTICAL_SIGHT(2,AttachType.GUN_SIGHT),
     THERMAL_IMAGING_SIGHT(3,AttachType.GUN_SIGHT),
     MEDIUM_RANGE_SIGHT(4,AttachType.GUN_SIGHT),
@@ -124,19 +120,28 @@ public enum Attachment {
 
     public Status condition(Hero hero,ExusiaiSkill skill){
 
-        if(skill == hero.skill_1){
+        if(!skill.canUse(this))
+            return Status.locked_by_generic;
 
-        }
-        else if(skill == hero.skill_2){
+        //if(!hero.hasTalent(this.getTalent()))
+        //    return Status.locked_by_talent;
 
+        if(skill.equippingAttachment(this))
+            return Status.using;
 
-        }else if(skill == hero.skill_3){
+        ArrayList<ExusiaiSkill> exusiaiSkills = ExusiaiSkill.getSkillList();
+        exusiaiSkills.remove(skill);
 
-
+        for(ExusiaiSkill temp : exusiaiSkills){
+            if(temp.equippingAttachment(this)) return Status.locked_by_using;
         }
 
         return Status.available;}
-        //return Status.wrong_exist;}
+
+    private Talent getTalent() {
+        return null;
+    }
+    //return Status.wrong_exist;}
 
     public static ArrayList<Attachment> getAttachmentList(AttachType attachType){
         //in this function we return a list of all possible attachment for a selected skill(gun type)in a particular attachment slot.

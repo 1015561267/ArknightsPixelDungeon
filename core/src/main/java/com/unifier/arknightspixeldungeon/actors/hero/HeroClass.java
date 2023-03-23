@@ -28,7 +28,6 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Shadowless;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
-import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Revolver;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Vector;
@@ -65,7 +64,18 @@ import com.unifier.arknightspixeldungeon.items.weapon.missiles.Boomerang;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingStone;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.ui.TalentIcon;
+import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
+
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.CONTINUOUS_ASSAULT;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.FAST_RECOVERY;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.REFLECT;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHADOWLESS;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATHED_STRIKE;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.UNSHEATH;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.WEAPON_ADAPT;
 
 public enum HeroClass {
 
@@ -251,14 +261,14 @@ public enum HeroClass {
 		new AdjustTool().collect();
 
 		hero.skill_1 = new Revolver();
-        ((Revolver) hero.skill_1).setGUN_SIGHT(Attachment.RED_DOT_SIGHT);
-        ((Revolver) hero.skill_1).setBULLET(Attachment.BLACKJACK_SOLITAIRE);
+        //((Revolver) hero.skill_1).doAttach(Attachment.RED_DOT_SIGHT);
+        //((Revolver) hero.skill_1).doAttach(Attachment.BLACKJACK_SOLITAIRE);
 		hero.skill_1.attachTo(hero);
 
 		hero.skill_2 = new Vector();
-        ((Vector) hero.skill_2).setFRONT_HANG(Attachment.SILENCER);
-        ((Vector) hero.skill_2).setBELOW_HANG(Attachment.TACTICAL_FLASHLIGHT);
-        ((Vector) hero.skill_2).setAMMO_BOX(Attachment.ORIGINUMS_REFINING_CLIP);
+        //((Vector) hero.skill_2).doAttach(Attachment.SILENCER);
+        //((Vector) hero.skill_2).doAttach(Attachment.TACTICAL_FLASHLIGHT);
+        //((Vector) hero.skill_2).doAttach(Attachment.ORIGINUMS_REFINING_CLIP);
         hero.skill_2.attachTo(hero);
 
 		hero.skill_3  = new SniperRifle();
@@ -290,7 +300,20 @@ public enum HeroClass {
 		
 		return null;
 	}
-	
+
+    public String splashArt(){
+        switch (this) {
+            case WARRIOR: default:
+                return Assets.WARRIORSPLASH;
+            case MAGE:
+                return Assets.MAGESPLASH;
+            case ROGUE:
+                return Assets.ROGUESPLASH;
+            case HUNTRESS:
+                return Assets.HUNTRESSSPLASH;
+        }
+    }
+
 	public String[] perks() {
 		
 		switch (this) {
@@ -341,4 +364,182 @@ public enum HeroClass {
 		String value = bundle.getString( CLASS );
 		return value.length() > 0 ? valueOf( value ) : ROGUE;
 	}
+
+    public boolean isUnlocked() {
+            //always unlock on debug builds
+            if (DeviceCompat.isDebug()) return true;
+
+            switch (this){
+                case WARRIOR: default:
+                    return true;
+                case MAGE:
+                    //return Badges.isUnlocked(Badges.Badge.UNLOCK_MAGE);
+                    return true;
+                case ROGUE:
+                   // return Badges.isUnlocked(Badges.Badge.UNLOCK_ROGUE);
+                return true;
+                case HUNTRESS:
+                    //return Badges.isUnlocked(Badges.Badge.UNLOCK_HUNTRESS);
+                return true;
+            }
+    }
+
+    public String unlockMsg() {
+        switch (this){
+            case WARRIOR: default:
+                return "";
+            case MAGE:
+                return Messages.get(HeroClass.class, "mage_unlock");
+            case ROGUE:
+                return Messages.get(HeroClass.class, "rogue_unlock");
+            case HUNTRESS:
+                return Messages.get(HeroClass.class, "huntress_unlock");
+        }
+    }
+
+    public String desc(){
+        return Messages.get(HeroClass.class, name()+"_desc");
+    }
+
+    public String shortDesc() {
+        return Messages.get(HeroClass.class, name()+"_desc_short");
+    }
+
+    public String skillDesc(HeroClass heroClass){
+
+	    String message="";
+
+	    switch (heroClass){
+            case WARRIOR:
+            case MAGE:
+            case ROGUE:
+            case HUNTRESS:
+                for(int i=1;i<=getSkillSize();i++){
+                    message += Messages.get(HeroClass.class, name()+"_skill"+i+"_desc");
+                    message += "\n\n";
+                }
+        }
+
+        return message;
+    }
+
+    public String specificDesc(HeroClass heroClass){
+        String message="";
+
+        switch (heroClass){
+            case WARRIOR:
+            case MAGE:
+            case ROGUE:
+            case HUNTRESS:
+                for(int i=1;i<=getSpecificSize();i++){
+                    message += Messages.get(HeroClass.class, name()+"_specific"+i+"_desc");
+                    message += "\n\n";
+                }
+        }
+
+        return message;    }
+
+    public Integer getSkillSize() {
+        switch (this){
+            case WARRIOR: default:
+                return 3;
+            case MAGE:
+                return 3;
+            case ROGUE:
+                return 3;
+            case HUNTRESS:
+                return 3;
+        }
+    }
+
+
+    public Image[] getSkillIcons() {
+        switch (this){
+            case WARRIOR: default:
+                return new Image[]{
+                    new TalentIcon(SHEATHED_STRIKE),new TalentIcon(UNSHEATH),new TalentIcon(SHADOWLESS)
+                };
+            case MAGE:
+                return new Image[]{
+                        new TalentIcon(SHEATHED_STRIKE),new TalentIcon(UNSHEATH),new TalentIcon(SHADOWLESS)
+                };
+                case ROGUE:
+                return new Image[]{
+                        new TalentIcon(SHEATHED_STRIKE),new TalentIcon(UNSHEATH),new TalentIcon(SHADOWLESS)
+                };
+                case HUNTRESS:
+                return new Image[]{
+                        new TalentIcon(SHEATHED_STRIKE),new TalentIcon(UNSHEATH),new TalentIcon(SHADOWLESS)
+                };
+        }
+    }
+
+    public Integer getSpecificSize() {
+        switch (this){
+            case WARRIOR: default:
+                return 4;
+            case MAGE:
+                return 1;
+            case ROGUE:
+                return 1;
+            case HUNTRESS:
+                return 1;
+        }
+    }
+
+
+    public Image[] getSpecificIcons() {
+        switch (this){
+            case WARRIOR: default:
+                return new Image[]{
+                        new TalentIcon(FAST_RECOVERY),new TalentIcon(WEAPON_ADAPT),new TalentIcon(REFLECT),new TalentIcon(CONTINUOUS_ASSAULT)
+                };
+            case MAGE:
+                return new Image[]{
+                        new TalentIcon(FAST_RECOVERY),new TalentIcon(WEAPON_ADAPT),new TalentIcon(REFLECT)
+                };
+            case ROGUE:
+                return new Image[]{
+                        new TalentIcon(FAST_RECOVERY),new TalentIcon(WEAPON_ADAPT),new TalentIcon(REFLECT)
+                };
+            case HUNTRESS:
+                return new Image[]{
+                        new TalentIcon(FAST_RECOVERY),new TalentIcon(WEAPON_ADAPT),new TalentIcon(REFLECT)
+                };
+        }
+    }
+
+    public Image[] getSkillDetailIcons(int order) {
+        switch (this){
+            case WARRIOR: default:
+                switch (order){
+                    case 1: return new Image[]{
+                            new TalentIcon(Talent.SHEATH_THROW),new TalentIcon(Talent.REPRIMAND),new TalentIcon(Talent.PARRY),new TalentIcon(Talent.SEIZE_OPPORTUNITY)
+                        };
+                    case 2:  return new Image[]{
+                            new TalentIcon(Talent.FLASH),new TalentIcon(Talent.SUN_CROSS),new TalentIcon(Talent.WIND_CUTTER),new TalentIcon(Talent.BOILING_KENSHIN)
+                    };
+                    case 3:  return new Image[]{
+                            new TalentIcon(Talent.SONIC_CUTTING),new TalentIcon(Talent.SWORD_RAIN),new TalentIcon(Talent.CLOUD_CRACK)
+                    };
+                }
+
+                return new Image[]{
+                        new TalentIcon(SHEATHED_STRIKE),new TalentIcon(UNSHEATH),new TalentIcon(SHADOWLESS)
+                };
+            case MAGE:
+                return new Image[]{
+
+                };
+            case ROGUE:
+                return new Image[]{
+
+                };
+            case HUNTRESS:
+                return new Image[]{
+
+                };
+        }
+    }
+
 }

@@ -255,6 +255,14 @@ public class Assets {
 	public static final String TUNE		= SOUNDS + "game.ogg";
 	public static final String HAPPY	= SOUNDS + "surface.ogg";
 
+    private static final String SPLASH=  "splashes/";
+
+    public static final String WARRIORSPLASH	= SPLASH + "warrior.jpg";
+    public static final String MAGESPLASH		= SPLASH + "mage.jpg";
+    public static final String ROGUESPLASH	= SPLASH + "rogue.jpg";
+    public static final String HUNTRESSSPLASH	= SPLASH + "huntress.jpg";
+
+
     public static class Messages {
         public static final String ACTORS   = "messages/actors/actors";
         public static final String ITEMS    = "messages/items/items";

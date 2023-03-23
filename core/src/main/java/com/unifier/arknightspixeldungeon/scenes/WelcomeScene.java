@@ -23,6 +23,8 @@ package com.unifier.arknightspixeldungeon.scenes;
 
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
+import com.unifier.arknightspixeldungeon.Chrome;
+import com.unifier.arknightspixeldungeon.GamesInProgress;
 import com.unifier.arknightspixeldungeon.PDSettings;
 import com.unifier.arknightspixeldungeon.Rankings;
 import com.unifier.arknightspixeldungeon.effects.BannerSprites;
@@ -31,7 +33,7 @@ import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.ui.Archs;
 import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
-import com.unifier.arknightspixeldungeon.windows.WndStartGame;
+import com.unifier.arknightspixeldungeon.ui.StyledButton;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
@@ -98,19 +100,33 @@ public class WelcomeScene extends PixelScene {
 		signs.y = title.y;
 		add( signs );*/
 
-		DarkRedButton okay = new DarkRedButton(Messages.get(this, "continue")){
-			@Override
-			protected void onClick() {
-				super.onClick();
-				if (previousVersion == 0){
-					PDSettings.version(ArknightsPixelDungeon.versionCode);
-					WelcomeScene.this.add(new WndStartGame(1));
-				} else {
-					updateVersion(previousVersion);
-					ArknightsPixelDungeon.switchScene(TitleScene.class);
-				}
-			}
-		};
+        StyledButton okay = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "continue")){
+            @Override
+            protected void onClick() {
+                super.onClick();
+                if (previousVersion == 0 || PDSettings.intro()){
+
+                    if (previousVersion > 0){
+                        updateVersion(previousVersion);
+                    }
+
+                    PDSettings.version(ArknightsPixelDungeon.versionCode);
+                    GamesInProgress.selectedClass = null;
+                    GamesInProgress.curSlot = GamesInProgress.firstEmpty();
+                    if (GamesInProgress.curSlot == -1){
+                        PDSettings.intro(false);
+                        ArknightsPixelDungeon.switchScene(TitleScene.class);
+                    } else {
+                        ArknightsPixelDungeon.switchScene(HeroSelectScene.class);
+                    }
+                } else {
+                    updateVersion(previousVersion);
+                    ArknightsPixelDungeon.switchScene(TitleScene.class);
+                }
+            }
+        };
+
+        float buttonY = Math.min(topRegion + (PixelScene.landscape() ? 60 : 120), h - 24);
 
 		if (previousVersion != 0){
 			DarkRedButton changes = new DarkRedButton(Messages.get(this, "changelist")){

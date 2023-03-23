@@ -31,12 +31,12 @@ public class TalentScene extends PixelScene {
     public void create() {
         scale = PDSettings.scale();//here I'd like a smaller scale to make it display better
 
-        if (PDSettings.landscape() != null) {
-            if (!PDSettings.landscape()) {
-                PDSettings.scale((int)Math.ceil(2* Game.density));
-                ArknightsPixelDungeon.seamlessResetScene();
-            }
-        }
+        //if (PDSettings.landscape() != null) {
+        //    if (!PDSettings.landscape()) {
+         //       PDSettings.scale((int)Math.ceil(2* Game.density));
+        //        ArknightsPixelDungeon.seamlessResetScene();
+        //   }
+       //}
 
         super.create();
 
@@ -62,7 +62,6 @@ public class TalentScene extends PixelScene {
             else pane.setPos(margin,top);
         }
         else pane.setPos(margin,top);
-
 
         ExitButton btnExit = new ExitButton(){
             @Override
@@ -96,4 +95,8 @@ public class TalentScene extends PixelScene {
         super.destroy();
     }
 
+    public void update(){
+        super.update();
+        ///Camera.main.zoom(minZoom);
+    }
 }

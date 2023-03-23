@@ -219,6 +219,8 @@ public class PDSettings extends GameSettings {
 		return getInt( KEY_CHALLENGES, 0, 0, Challenges.MAX_VALUE );
 	}
 
+	
+
     //Input
 
     public static final String KEY_CONTROLLER_SENS  = "controller_sens";

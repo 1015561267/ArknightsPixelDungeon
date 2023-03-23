@@ -30,17 +30,16 @@ import com.unifier.arknightspixeldungeon.journal.Journal;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.ui.ActionIndicator;
 import com.unifier.arknightspixeldungeon.ui.Archs;
+import com.unifier.arknightspixeldungeon.ui.Button;
 import com.unifier.arknightspixeldungeon.ui.ExitButton;
 import com.unifier.arknightspixeldungeon.ui.Icons;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.Window;
 import com.unifier.arknightspixeldungeon.windows.WndGameInProgress;
-import com.unifier.arknightspixeldungeon.windows.WndStartGame;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
-import com.unifier.arknightspixeldungeon.ui.Button;
 
 import java.util.ArrayList;
 
@@ -266,7 +265,9 @@ public class StartScene extends PixelScene {
 		@Override
 		protected void onClick() {
 			if (newGame) {
-				ArknightsPixelDungeon.scene().add( new WndStartGame(slot));
+                GamesInProgress.selectedClass = null;
+                GamesInProgress.curSlot = slot;
+                ArknightsPixelDungeon.switchScene(HeroSelectScene.class);
 			} else {
 				ArknightsPixelDungeon.scene().add( new WndGameInProgress(slot));
 			}

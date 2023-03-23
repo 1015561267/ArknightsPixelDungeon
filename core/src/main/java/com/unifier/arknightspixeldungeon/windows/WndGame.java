@@ -27,6 +27,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.GamesInProgress;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.scenes.HeroSelectScene;
 import com.unifier.arknightspixeldungeon.scenes.InterlevelScene;
 import com.unifier.arknightspixeldungeon.scenes.RankingsScene;
 import com.unifier.arknightspixeldungeon.scenes.TitleScene;
@@ -70,15 +71,16 @@ public class WndGame extends Window {
 		}
 
 		// Restart
-		if (!Dungeon.hero.isAlive()) {
+		if (Dungeon.hero == null || !Dungeon.hero.isAlive()) {
 			
 			RedButton btnStart;
 			addButton( btnStart = new RedButton( Messages.get(this, "start") ) {
 				@Override
 				protected void onClick() {
-					GamesInProgress.selectedClass = Dungeon.hero.heroClass;
-					InterlevelScene.noStory = true;
-					GameScene.show(new WndStartGame(GamesInProgress.firstEmpty()));
+                    InterlevelScene.noStory = true;
+                    GamesInProgress.selectedClass = Dungeon.hero.heroClass;
+                    GamesInProgress.curSlot = GamesInProgress.firstEmpty();
+                    ArknightsPixelDungeon.switchScene(HeroSelectScene.class);
 				}
 			} );
 			btnStart.textColor(Window.TITLE_COLOR);
