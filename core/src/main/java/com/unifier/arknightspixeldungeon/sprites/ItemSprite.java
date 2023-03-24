@@ -28,7 +28,6 @@ import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.items.Gold;
 import com.unifier.arknightspixeldungeon.items.Heap;
 import com.unifier.arknightspixeldungeon.items.Item;
-import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
@@ -89,16 +88,13 @@ public class ItemSprite extends MovieClip {
     }
 
     public ItemSprite( int image ){
-        this( image, null );
+	    this( image, null );
     }
 
     public ItemSprite( int image, Glowing glowing ) {
 		super( Assets.ITEMS );
+
 		view(image, glowing);
-	}
-	
-	public void originToCenter() {
-		origin.set(width / 2, height / 2);
 	}
 	
 	public void link() {
@@ -140,9 +136,7 @@ public class ItemSprite extends MovieClip {
 		final int csize = DungeonTilemap.SIZE;
 		
 		return new PointF(
-			//cell % Dungeon.level.width() * csize + (csize - width()) * 0.5f,
-			//cell / Dungeon.level.width() * csize + (csize - height()) - csize * perspectiveRaise
-                PixelScene.align(Camera.main, ((cell % Dungeon.level.width()) + 0.5f) * csize - width() * 0.5f),
+		        PixelScene.align(Camera.main, ((cell % Dungeon.level.width()) + 0.5f) * csize - width() * 0.5f),
                 PixelScene.align(Camera.main, ((cell / Dungeon.level.width()) + 1.0f) * csize - height() - csize * perspectiveRaise)
         );
 	}
@@ -231,6 +225,7 @@ public class ItemSprite extends MovieClip {
 	public ItemSprite view( int image, Glowing glowing ) {
 		if (this.emitter != null) this.emitter.killAndErase();
 		emitter = null;
+        //GLog.i(String.valueOf(image) + (glowing == null? "null" : glowing.toString()));
 		frame( image );
 		glow( glowing );
 		return this;
@@ -239,9 +234,8 @@ public class ItemSprite extends MovieClip {
 	public void frame( int image ){
 		frame( ItemSpriteSheet.film.get( image ));
 
-        //GLog.i(String.valueOf(image));
-
 		float height = ItemSpriteSheet.film.height( image );
+		//GLog.i(String.valueOf(height));
 		//adds extra raise to very short items, so they are visible
 		if (height < 8f){
 			perspectiveRaise =  (5 + 8 - height) / 16f;
@@ -260,7 +254,7 @@ public class ItemSprite extends MovieClip {
             emitter.on = false;
             emitter.autoKill = true;
         }
-		if (emitter != null) emitter.killAndErase();
+		//if (emitter != null) emitter.killAndErase();
 		emitter = null;
 	}
 
@@ -333,17 +327,22 @@ public class ItemSprite extends MovieClip {
 				place(heap.pos);
 
 				if (visible) {
-					boolean water = Dungeon.level.water[heap.pos];
+
+				    /*boolean water = Dungeon.level.water[heap.pos];
 
 					if (water) {
 						GameScene.ripple(heap.pos);
 					} else {
 						int cell = Dungeon.level.map[heap.pos];
 						water = (cell == Terrain.WELL || cell == Terrain.ALCHEMY);
-					}
+					}*/
+
+                    if (Dungeon.level.water[heap.pos]) {
+                        GameScene.ripple(heap.pos);
+                    }
 
 					if (!(heap.peek() instanceof Gold)) {
-						Sample.INSTANCE.play(water ? Assets.SND_WATER : Assets.SND_STEP, 0.8f, 0.8f, 1.2f);
+						Sample.INSTANCE.play(Dungeon.level.water[heap.pos] ? Assets.SND_WATER : Assets.SND_STEP, 0.8f, 0.8f, 1.2f);
 					}
 				}
 			}
@@ -369,6 +368,7 @@ public class ItemSprite extends MovieClip {
 			ga = glowing.green * value;
 			ba = glowing.blue * value;
 		}
+
 	}
 
 	public static int pick( int index, int x, int y ) {

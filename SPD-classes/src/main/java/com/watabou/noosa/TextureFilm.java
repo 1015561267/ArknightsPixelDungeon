@@ -95,8 +95,7 @@ public class TextureFilm {
         frames.put(id, rect);
     }
 
-    public void add(Object id, int left, int top, int right, int bottom) {
-        //frames.put(id, texture.uvRect(left, top, right, bottom));
+    public void add(Object id, float left, float top, float right, float bottom) {
         frames.put( id,
                 new RectF(
                         left	/ texWidth,
@@ -106,6 +105,7 @@ public class TextureFilm {
     }
 
     public RectF get(Object id) {
+        RectF t = frames.get(id);
         return frames.get(id);
     }
 

@@ -762,6 +762,7 @@ public class GameScene extends PixelScene {
         //TODO Android never draws into notch atm, perhaps allow it for center notches?
         RectF insets = DeviceCompat.getSafeInsets();
         insets = insets.scale(1f / uiCamera.zoom);
+        DeviceCompat.log( "uiCamera.zoom", String.valueOf(uiCamera.zoom));
 
         boolean tagsOnLeft = PDSettings.flipTags();
         float tagWidth = Tag.SIZE + (tagsOnLeft ? insets.left : insets.right);

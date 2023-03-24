@@ -185,7 +185,6 @@ public class TextureCache {
 
                 //LibGDX does not support android resource integer handles, and they were
                 //never used by the game anyway, should probably remove this entirely
-                int i = (Integer)src / 0;
                 return null;
 
             } else if (src instanceof String) {

@@ -37,9 +37,12 @@ public class ItemSpriteSheet {
 	}
 
     private static void assignItemRect( int item, int width, int height){
-        int x = (item % WIDTH) * WIDTH;
-        int y = (item / WIDTH) * WIDTH;
+        int x = (item % WIDTH) * SIZE;
+        int y = (item / WIDTH) * SIZE;
+
         film.add( item, x, y, x+width, y+height);
+        //DeviceCompat.log("assignItemRect", item + " " + width + " " + height);
+
     }
 
 	private static final int PLACEHOLDERS   =                               xy(1, 1);   //16 slots

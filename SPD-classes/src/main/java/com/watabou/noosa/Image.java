@@ -96,6 +96,8 @@ public class Image extends Visual {
         width = other.width;
         height = other.height;
 
+        scale = other.scale;
+
         updateFrame();
         updateVertices();
     }

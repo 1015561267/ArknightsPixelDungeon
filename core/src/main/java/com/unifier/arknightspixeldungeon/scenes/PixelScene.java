@@ -128,6 +128,10 @@ public class PixelScene extends Scene {
 
         if (defaultZoom < Math.ceil( Game.density * 2 ) || defaultZoom > maxDefaultZoom){
             defaultZoom = (int) GameMath.gate(2, (int)Math.ceil( Game.density * 2.5 ), maxDefaultZoom);
+
+            if (PDSettings.interfaceSize() > 0 && defaultZoom < (maxDefaultZoom+1)/2){
+                defaultZoom = (maxDefaultZoom+1)/2;
+            }
         }
 
 		minZoom = 1;
@@ -144,23 +148,6 @@ public class PixelScene extends Scene {
                     TextureCache.get( Assets.PIXELFONT), 0x00000000, BitmapText.Font.LATIN_FULL );
 			pixelFont.baseLine = 6;
 			pixelFont.tracking = -1;
-
-			//Fonts disabled to save memory (~1mb of texture data just sitting there unused)
-			//uncomment if you wish to enable these again.
-			
-			// 9x15 (18)
-			/*font1x = Font.colorMarked(
-					BitmapCache.get( Assets.FONT1X), 22, 0x00000000, BitmapText.Font.LATIN_FULL );
-			font1x.baseLine = 17;
-			font1x.tracking = -2;
-			font1x.texture.filter(Texture.LINEAR, Texture.LINEAR);
-
-			//font1x double scaled
-			font2x = Font.colorMarked(
-					BitmapCache.get( Assets.FONT2X), 44, 0x00000000, BitmapText.Font.LATIN_FULL );
-			font2x.baseLine = 38;
-			font2x.tracking = -4;
-			font2x.texture.filter(Texture.LINEAR, Texture.NEAREST);*/
 
         //set up the texture size which rendered text will use for any new glyphs.
         int renderedTextPageSize;
