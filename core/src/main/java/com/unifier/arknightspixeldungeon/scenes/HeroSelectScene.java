@@ -688,15 +688,14 @@ public class HeroSelectScene extends PixelScene {
                         ArknightsPixelDungeon.scene().addToFront(new WndChallenges(PDSettings.challenges(), true) {
                             public void onBackPressed() {
                                 super.onBackPressed();
-                                icon(Icons.get(PDSettings.challenges() ==0 ? Icons.CHALLENGE_OFF : PDSettings.challenges() ==7 ? Icons.CHALLENGE_FULL : PDSettings.challenges() > 3 ? Icons.CHALLENGE_MORE:Icons.CHALLENGE_ON));
+                                icon(PDSettings.challengesIcon(PDSettings.challenges()));
                                 updateOptionsColor();
                             }
                         } );
                     }
                 };
                 challengeButton.leftJustify = true;
-                //challengeButton.icon(Icons.get(PDSettings.challenges() > 0 ? Icons.CHALLENGE_ON : Icons.CHALLENGE_OFF));
-                challengeButton.icon(Icons.get(PDSettings.challenges() ==0 ? Icons.CHALLENGE_OFF : PDSettings.challenges() ==7 ? Icons.CHALLENGE_FULL : PDSettings.challenges() > 3 ? Icons.CHALLENGE_MORE:Icons.CHALLENGE_ON));
+                challengeButton.icon(PDSettings.challengesIcon(PDSettings.challenges()));
                 add(challengeButton);
                 buttons.add(challengeButton);
             }

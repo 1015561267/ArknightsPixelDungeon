@@ -182,7 +182,7 @@ public class WndSettings extends WndTabbed {
 
         layoutTabs();
 
-        if (tabs.size() == 5 && last_index >= 3){
+        if (tabs.size() == 4 && last_index >= 3){
             //input tab isn't visible
             select(last_index-1);
         } else {

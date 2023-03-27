@@ -123,6 +123,12 @@ public class WelcomeScene extends PixelScene {
                     updateVersion(previousVersion);
                     ArknightsPixelDungeon.switchScene(TitleScene.class);
                 }
+
+                //FIXME a temp trick due to have no intro and have to access challenge
+                if(PDSettings.intro()){
+                    PDSettings.intro(false);
+                }
+
             }
         };
 

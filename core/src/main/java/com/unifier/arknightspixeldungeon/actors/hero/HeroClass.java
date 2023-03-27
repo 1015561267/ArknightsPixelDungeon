@@ -60,7 +60,6 @@ import com.unifier.arknightspixeldungeon.items.weapon.melee.Dagger;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Knuckles;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MagesStaff;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.WornShortsword;
-import com.unifier.arknightspixeldungeon.items.weapon.missiles.Boomerang;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingStone;
 import com.unifier.arknightspixeldungeon.messages.Messages;
@@ -247,10 +246,10 @@ public enum HeroClass {
 	private static void initHuntress( Hero hero ) {
 
 		(hero.belongings.weapon = new Knuckles()).identify();
-		Boomerang boomerang = new Boomerang();
-		boomerang.identify().collect();
+		//Boomerang boomerang = new Boomerang();
+		//boomerang.identify().collect();
 
-		Dungeon.quickslot.setSlot(0, boomerang);
+		//Dungeon.quickslot.setSlot(0, boomerang);
 
 		new VelvetPouch().collect();
 		Dungeon.LimitedDrops.VELVET_POUCH.drop();
@@ -261,19 +260,12 @@ public enum HeroClass {
 		new AdjustTool().collect();
 
 		hero.skill_1 = new Revolver();
-        //((Revolver) hero.skill_1).doAttach(Attachment.RED_DOT_SIGHT);
-        //((Revolver) hero.skill_1).doAttach(Attachment.BLACKJACK_SOLITAIRE);
 		hero.skill_1.attachTo(hero);
 
 		hero.skill_2 = new Vector();
-        //((Vector) hero.skill_2).doAttach(Attachment.SILENCER);
-        //((Vector) hero.skill_2).doAttach(Attachment.TACTICAL_FLASHLIGHT);
-        //((Vector) hero.skill_2).doAttach(Attachment.ORIGINUMS_REFINING_CLIP);
         hero.skill_2.attachTo(hero);
 
 		hero.skill_3  = new SniperRifle();
-        //((Revolver) hero.skill_3).setGUN_SIGHT(Attachment.CLOSE_COMBAT_OPTICAL_SIGHT);
-        //((Revolver) hero.skill_3).setBULLET(Attachment.HOLLOW_POINT_BULLET);
 		hero.skill_3.attachTo(hero);
 	}
 	

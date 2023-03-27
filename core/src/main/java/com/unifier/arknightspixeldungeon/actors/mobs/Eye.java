@@ -170,10 +170,14 @@ public class Eye extends Mob {
 
     @Override
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+        ArrayList<Integer> tempArray = new ArrayList<>();
+
         if (beamCharged) {
             for(Integer dmg : damageArray){
                 dmg /= 4;
+                tempArray.add(dmg);
             }
+            damageArray = tempArray;
         }
         super.multipleDamage(burstArray,damageArray,src,hittedTime);
     }

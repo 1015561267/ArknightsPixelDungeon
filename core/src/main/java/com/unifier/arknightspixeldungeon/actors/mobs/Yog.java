@@ -121,6 +121,34 @@ public class Yog extends Mob {
 		if (lock != null) lock.addTime(dmg*0.5f);
 
 	}
+
+    @Override
+    public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
+
+        HashSet<Mob> fists = new HashSet<>();
+
+        for (Mob mob : Dungeon.level.mobs)
+            if (mob instanceof RottingFist || mob instanceof BurningFist)
+                fists.add( mob );
+
+        ArrayList<Integer> tempArray = new ArrayList<>();
+
+        if(fists.size()>0){
+            for(Integer dmg : damageArray){
+                dmg /= (fists.size() * 2); // *0.5 when one left and *0.25 when two
+                tempArray.add(dmg);
+            }
+            damageArray = tempArray;
+        }
+
+        int beforeHitHP = HP;
+        super.multipleDamage(burstArray,damageArray,src,hittedTime);
+        int totaldmg = beforeHitHP - HP;
+        LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+        if (lock != null && !isImmune(src.getClass())) {
+            lock.addTime(totaldmg * 0.5f);
+        }
+    }
 	
 	@Override
 	public int defenseProc( Char enemy, int damage ) {
@@ -293,6 +321,17 @@ public class Yog extends Mob {
 			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 			if (lock != null) lock.addTime(dmg*0.5f);
 		}
+
+        @Override
+        public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
+            int beforeHitHP = HP;
+            super.multipleDamage(burstArray,damageArray,src,hittedTime);
+            int totaldmg = beforeHitHP - HP;
+            LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+            if (lock != null && !isImmune(src.getClass())) {
+                lock.addTime(totaldmg * 0.5f);
+            }
+        }
 		
 		{
 			immunities.add( Paralysis.class );
@@ -387,6 +426,17 @@ public class Yog extends Mob {
 			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 			if (lock != null) lock.addTime(dmg*0.5f);
 		}
+
+        @Override
+        public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
+            int beforeHitHP = HP;
+            super.multipleDamage(burstArray,damageArray,src,hittedTime);
+            int totaldmg = beforeHitHP - HP;
+            LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+            if (lock != null && !isImmune(src.getClass())) {
+                lock.addTime(totaldmg * 0.5f);
+            }
+        }
 		
 		{
 			resistances.add( ToxicGas.class );

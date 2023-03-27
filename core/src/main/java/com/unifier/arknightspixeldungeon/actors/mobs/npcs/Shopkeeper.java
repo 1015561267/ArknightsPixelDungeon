@@ -73,7 +73,7 @@ public class Shopkeeper extends NPC {
 	}
 	
 	public void flee() {
-		for (Heap heap: Dungeon.level.heaps.values()) {
+		for (Heap heap: Dungeon.level.heaps.valueList()) {
 			if (heap.type == Heap.Type.FOR_SALE) {
 				CellEmitter.get( heap.pos ).burst( ElmoParticle.FACTORY, 4 );
 				heap.destroy();

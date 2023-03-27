@@ -66,11 +66,10 @@ public class Challenges {
         return chCount;
     }
 
-    public static int getChallengeCount(int value)
-    {
+    public static int activingChallenges(int challenge){//same but with given number
         int chCount = 0;
         for (int ch : Challenges.MASKS){
-            if ((value & ch) != 0) chCount++;
+            if ((challenge & ch) != 0) chCount++;
         }
         return chCount;
     }

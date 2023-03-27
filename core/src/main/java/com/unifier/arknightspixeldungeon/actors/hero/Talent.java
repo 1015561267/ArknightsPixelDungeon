@@ -614,7 +614,12 @@ public enum Talent {
         return true;
     }
 
-    public static int onAttackProc(Hero hero, Char enemy, int dmg ){
+    public enum AttackType{
+        melee,ranged,magic
+    }
+
+
+    public static int onAttackProc(Hero hero, Char enemy, int dmg , AttackType type){
 
         if (enemy.buff(ReprimandTracker.class) != null) {
             if (hero.pointsInTalent(REPRIMAND) == 2) {
@@ -623,7 +628,11 @@ public enum Talent {
             enemy.buff(ReprimandTracker.class).detach();
         }
 
-        if (hero.hasTalent(Talent.PREEMPTIVE_STRIKE) && enemy instanceof Mob && enemy.HP >= Math.floor(enemy.HT * (0.9f - 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE))) && enemy.buff(PreemptiveStrikeUsedTracker.class) == null ){// Have 30% possibility when enemy above 70%HP at level 1 and 50% possibility when enemy above 50%HP at level 2
+        if ( type == AttackType.melee &&
+             hero.hasTalent(Talent.PREEMPTIVE_STRIKE) &&
+                enemy instanceof Mob && enemy.HP >= Math.floor(enemy.HT * (0.9f - 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)))
+                && enemy.buff(PreemptiveStrikeUsedTracker.class) == null ){// Have 30% possibility when enemy above 70%HP at level 1 and 50% possibility when enemy above 50%HP at level 2
+
             if(Random.Float() < 0.1f + 0.2f * hero.pointsInTalent(PREEMPTIVE_STRIKE)) {
                 Buff.affect(Dungeon.hero, PreemptiveStrikeActiveTracker.class);//See Hero.attackDelay()
             }

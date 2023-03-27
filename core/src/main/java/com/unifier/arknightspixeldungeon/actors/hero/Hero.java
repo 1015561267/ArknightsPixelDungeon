@@ -1143,7 +1143,9 @@ public class Hero extends Char {
 		default:
 		}
 
-		damage = Talent.onAttackProc(this,enemy,damage);
+		boolean ranged = wep instanceof MissileWeapon && rangedAttack;
+
+		damage = Talent.onAttackProc(this,enemy,damage,wep instanceof MissileWeapon && rangedAttack ? Talent.AttackType.ranged : Talent.AttackType.melee);
 
 		return damage;
 	}

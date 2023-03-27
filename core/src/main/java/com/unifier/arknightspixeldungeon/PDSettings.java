@@ -24,7 +24,9 @@ package com.unifier.arknightspixeldungeon;
 import com.unifier.arknightspixeldungeon.messages.Languages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
+import com.unifier.arknightspixeldungeon.ui.Icons;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.DeviceCompat;
@@ -219,7 +221,23 @@ public class PDSettings extends GameSettings {
 		return getInt( KEY_CHALLENGES, 0, 0, Challenges.MAX_VALUE );
 	}
 
-	
+    public static Image challengesIcon(int challenge) {
+
+        Image icon;
+        //DeviceCompat.log("PDSettings.challenges()", String.valueOf(Challenges.activeChallenges()));
+        switch (Challenges.activingChallenges(challenge)){
+            default:
+            case 0: icon = Icons.get(Icons.CHALLENGE_OFF);break;
+            case 1:
+            case 2:
+            case 3:icon = Icons.get(Icons.CHALLENGE_ON);break;
+            case 4:
+            case 5:
+            case 6:icon = Icons.get(Icons.CHALLENGE_MORE);break;
+            case 7:icon = Icons.get(Icons.CHALLENGE_FULL);break;
+        }
+	    return icon;
+    }
 
     //Input
 

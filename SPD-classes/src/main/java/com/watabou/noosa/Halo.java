@@ -37,7 +37,8 @@ public class Halo extends Image {
         super();
 
         if (!TextureCache.contains(CACHE_KEY)) {
-            Pixmap pixmap = new Pixmap(RADIUS * 2, RADIUS * 2, Pixmap.Format.RGBA8888);
+            Pixmap pixmap = TextureCache.create( CACHE_KEY, 2*RADIUS+1, 2*RADIUS+1 ).bitmap;
+
             pixmap.setColor( 0x00000000 );
             pixmap.fill();
 

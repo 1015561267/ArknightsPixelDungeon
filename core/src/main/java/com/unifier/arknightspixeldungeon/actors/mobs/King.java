@@ -308,6 +308,14 @@ public class King extends Mob {
 				((ToxicGas)src).clear( pos );
 			}
 		}
+
+        @Override
+        public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
+            super.multipleDamage(burstArray,damageArray,src,hittedTime);
+            if (src instanceof ToxicGas) {
+                ((ToxicGas)src).clear( pos );
+            }
+        }
 		
 		@Override
 		public void die( Object cause ) {

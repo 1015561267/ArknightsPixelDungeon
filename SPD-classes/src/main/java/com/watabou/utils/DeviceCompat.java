@@ -60,6 +60,8 @@ public class DeviceCompat {
     }
 
     public static boolean isDebug() {
+        DeviceCompat.log( "isDebug", Game.version);
+        DeviceCompat.log( "isDebug able ", String.valueOf(Game.version.contains("INDEV")));
         return Game.version.contains("INDEV");
     }
 
