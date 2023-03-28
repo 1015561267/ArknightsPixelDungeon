@@ -81,7 +81,7 @@ public class SniperRifle extends ExusiaiSkill {
 
     @Override
     public float rawCD() {
-        return 90f;
+        return 80f;
     }
 
     @Override

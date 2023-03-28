@@ -36,7 +36,7 @@ public class Vector extends ExusiaiSkill {
     }
 
     public int shootDamageMin(){
-        int dmg = (int) (1 + owner.lvl/5f + Dungeon.depth);
+        int dmg = 1 + (int) (owner.lvl/5f + Dungeon.depth);
         return Math.max(0, dmg);
     }
 

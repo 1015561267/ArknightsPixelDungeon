@@ -5,6 +5,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
@@ -59,6 +60,8 @@ public class SkillLoader extends Tag{
 
         bg = Chrome.get( Chrome.Type.TAB_SET );
         add( bg );
+
+        cross = Icons.TARGET.get();
     }
 
 
@@ -118,6 +121,10 @@ public class SkillLoader extends Tag{
         } else {
             enable( false );
         }
+
+        if (lastTarget != null && lastTarget.sprite != null){
+            cross.point(lastTarget.sprite.center(cross));
+        }
     }
 
     @Override
@@ -174,7 +181,7 @@ public class SkillLoader extends Tag{
         }
     }
 
-    public static void useTargeting() {
+    public static void useTargeting() {//We can make some targeted aiming tactics to specific skill
 
         if (lastTarget != null &&
                 Actor.chars().contains( lastTarget ) &&
@@ -197,7 +204,15 @@ public class SkillLoader extends Tag{
     public int autoAim(Char target){
 
         if(target!=null && skill!=null && skill.owner!=null){
-            Ballistica ballistica = new Ballistica(skill.owner.pos,target.pos,Ballistica.PROJECTILE);
+
+            int params = Ballistica.PROJECTILE;
+
+            if(skill instanceof SniperRifle)
+            {
+                params = Ballistica.STOP_CHARS;
+            }
+
+            Ballistica ballistica = new Ballistica(skill.owner.pos,target.pos,params);
 
             //first try to directly target
             if (ballistica.dist == target.pos) {
