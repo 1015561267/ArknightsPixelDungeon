@@ -25,8 +25,6 @@ import java.util.ArrayList;
 
 public class Shadowless extends ChenSkill {
 
-    private ArrayList<Image> images = new ArrayList<>();
-
     @Override
     public boolean activated() { return owner.hasTalent(Talent.SHADOWLESS); }
 
@@ -46,7 +44,7 @@ public class Shadowless extends ChenSkill {
 
     @Override
     public float rawCD() {
-        return 200f;
+        return 2f;
     }
 
     @Override
@@ -103,31 +101,9 @@ public class Shadowless extends ChenSkill {
         Hero hero = Dungeon.hero;
 
         Mob mob=targets.get(Random.Int(targets.size()));
-
-//        Emitter emitter = new Emitter();
-//        emitter.autoKill = false;
-//        emitter.pos(mob.sprite.center());
-//        Group parent = Dungeon.hero.sprite.parent;
-//        parent.add(emitter);
-//        emitter.pour(BloodParticle.FACTORY, 0.3f);
-
-//        mob.sprite.flash();
-//        Random.Int(0,30)
-        float angle = Random.Int(195,255);
-
-        Image image = new Image(Effects.get(Effects.Type.CHEN_SLASH));
-        image.origin.set(image.width / 2,image.height / 2);
-        image.point(mob.sprite.center(image));
-        image.angle = angle;
-
-
-        ChenSlash.hit(mob,angle,new Callback() {
+        ChenSlash.hit(mob.pos, Random.Int(360),new Callback() {
             @Override
             public void call() {
-
-                hero.sprite.parent.add(image);
-//                Game.scene().add(image);
-                images.add(image);
 
 //                mob.damage(1, hero);
                 mob.damage(skillDamage(mob, false), hero);
@@ -161,12 +137,6 @@ public class Shadowless extends ChenSkill {
                         @Override
                         public void call() {
                             ((HeroSprite) owner.sprite).setAfterSkillAnimation();
-
-                            for (Image i : images) {
-                                hero.sprite.parent.remove(i);
-//                                Game.scene().remove(i);
-                            }
-                            images = new ArrayList<>();
 
                             doAfterAction();
                             owner.spendAndNext(1f);
