@@ -60,13 +60,13 @@ public class Bestiary {
 				//2x rat, 4x gnoll, 1x crab, 1x swarm
 				return new ArrayList<>(Arrays.asList(Rat.class, Rat.class,
 						Gnoll.class, Gnoll.class, Gnoll.class, Gnoll.class,
-						Crab.class, Swarm.class));
+                        DublinnSnifferHound.class, Swarm.class));
 			case 4:
-				//1x rat, 2x gnoll, 3x crab, 1x swarm
-				return new ArrayList<>(Arrays.asList(Rat.class,
-						Gnoll.class, Gnoll.class,
-						Crab.class, Crab.class, Crab.class,
-						Swarm.class));
+                //1x gnoll, 1x swarm, 2x crab, 2x slime
+				return new ArrayList<>(Arrays.asList(Gnoll.class,
+                        Swarm.class,
+                        DublinnSnifferHound.class, DublinnSnifferHound.class,
+                        DublinnPhalanxInfantry.class, DublinnPhalanxInfantry.class));
 				
 			// Prison
 			case 6:

@@ -3,7 +3,7 @@ package com.unifier.arknightspixeldungeon.scripts.NPCPlot;
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.mobs.FetidRat;
+import com.unifier.arknightspixeldungeon.actors.mobs.BlackwaterOriginiumSlug;
 import com.unifier.arknightspixeldungeon.actors.mobs.GnollTrickster;
 import com.unifier.arknightspixeldungeon.actors.mobs.GreatCrab;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
@@ -343,7 +343,7 @@ public class FrostNovaQuestPlot extends Plot {
         Mob questBoss;
         switch (FrostNovaQuestPlot.Quest.type){
             case 1: default:
-                questBoss = new FetidRat(); break;
+                questBoss = new BlackwaterOriginiumSlug(); break;
             case 2:
                 questBoss = new GnollTrickster(); break;
             case 3:

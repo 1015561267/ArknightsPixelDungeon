@@ -22,13 +22,15 @@
 package com.unifier.arknightspixeldungeon.tiles;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.Tilemap;
 
 
 public class WallBlockingTilemap extends Tilemap {
 
-	public static final int SIZE = 16;
+	//public static final int SIZE = 16;
+    public static final int SIZE = 32;
 
 	private static final int CLEARED        = -2;
 	private static final int BLOCK_NONE     = -1;
@@ -44,8 +46,8 @@ public class WallBlockingTilemap extends Tilemap {
 
 	@Override
 	public synchronized void updateMap() {
-		super.updateMap();
-		data = new int[size]; //clears all values, including cleared tiles
+		//super.updateMap();
+		//data = new int[size]; //clears all values, including cleared tiles
 		
 		for (int cell = 0; cell < data.length; cell++) {
 			//force all top/bottom row, and none-discoverable cells to cleared
@@ -57,6 +59,7 @@ public class WallBlockingTilemap extends Tilemap {
 				updateMapCell(cell);
 			}
 		}
+        super.updateMap();
 	}
 
 	private int curr;
@@ -100,8 +103,12 @@ public class WallBlockingTilemap extends Tilemap {
 				
 				//if all 3 above are wall we can shortcut and just clear the cell
 				if (wall(cell - 1 - mapWidth) && wall(cell - mapWidth) && wall(cell + 1 - mapWidth)){
-					curr = CLEARED;
-					
+					//curr = CLEARED;
+                    if (shelf(cell - 1 - mapWidth) || shelf(cell - mapWidth) || shelf(cell + 1 - mapWidth)){
+                        curr = BLOCK_NONE;
+                    } else {
+                        curr = CLEARED;
+                    }
 				} else if ((!wall(cell - 1 - mapWidth) && !fogHidden(cell - 1 - mapWidth) && wall(cell - 1)) ||
 						(!wall(cell - mapWidth) && !fogHidden(cell - mapWidth)) ||
 						(!wall(cell + 1 - mapWidth) && !fogHidden(cell + 1 - mapWidth) && wall(cell+1))){
@@ -187,6 +194,9 @@ public class WallBlockingTilemap extends Tilemap {
 	private boolean wall(int cell) {
 		return DungeonTileSheet.wallStitcheable(Dungeon.level.map[cell]);
 	}
+    private boolean shelf(int cell) {
+        return Dungeon.level.map[cell] == Terrain.BOOKSHELF;
+    }
 
 	private boolean door(int cell) {
 		return DungeonTileSheet.doorTile(Dungeon.level.map[cell]);

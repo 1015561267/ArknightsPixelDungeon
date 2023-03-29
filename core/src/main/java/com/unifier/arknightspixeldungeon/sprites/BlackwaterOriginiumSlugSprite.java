@@ -27,11 +27,11 @@ import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.particles.Emitter;
 
-public class FetidRatSprite extends MobSprite {
+public class BlackwaterOriginiumSlugSprite extends MobSprite {
 	
 	private Emitter cloud;
 
-	public FetidRatSprite() {
+	public BlackwaterOriginiumSlugSprite() {
 		super();
 
 		texture( Assets.RAT );

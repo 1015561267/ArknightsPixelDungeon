@@ -92,6 +92,9 @@ public class Assets {
     public static final String ROT_HEART= MOBS + "rot_heart.png";
     public static final String GUARD    = MOBS + "guard.png";
 
+    public static final String DUBLINNPHALANXINFANTRY = MOBS + "dublinn_phalanx_infantry.png";
+    public static final String DUBLINNSNIFFERHOUND    = MOBS + "dublinn_sniffer_hound.png";
+
     private static final String NPCS = ACTORS + "npcs/";
     public static final String GHOST	= NPCS + "ghost.png";
     public static final String KEEPER	= NPCS + "shopkeeper.png";

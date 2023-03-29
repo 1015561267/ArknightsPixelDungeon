@@ -33,8 +33,8 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Ooze;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.effects.particles.ElmoParticle;
+import com.unifier.arknightspixeldungeon.items.Amulet;
 import com.unifier.arknightspixeldungeon.items.artifacts.LloydsBeacon;
-import com.unifier.arknightspixeldungeon.items.keys.SkeletonKey;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
@@ -259,7 +259,9 @@ public class Goo extends Mob {
 		Dungeon.level.unseal();
 		
 		GameScene.bossSlain();
-		Dungeon.level.drop( new SkeletonKey( Dungeon.depth ), pos ).sprite.drop();
+
+		//Dungeon.level.drop( new SkeletonKey( Dungeon.depth ), pos ).sprite.drop();
+        Dungeon.level.drop( new Amulet(), pos ).sprite.drop();
 		
 		Badges.validateBossSlain();
 		

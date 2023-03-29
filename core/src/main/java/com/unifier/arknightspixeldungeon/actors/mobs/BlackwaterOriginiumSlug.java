@@ -28,15 +28,15 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Ooze;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scripts.NPCPlot.FrostNovaQuestPlot;
-import com.unifier.arknightspixeldungeon.sprites.FetidRatSprite;
+import com.unifier.arknightspixeldungeon.sprites.BlackwaterOriginiumSlugSprite;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class FetidRat extends Rat {
+public class BlackwaterOriginiumSlug extends Rat {
 
 	{
-		spriteClass = FetidRatSprite.class;
+		spriteClass = BlackwaterOriginiumSlugSprite.class;
 
 		HP = HT = 20;
 		defenseSkill = 5;
