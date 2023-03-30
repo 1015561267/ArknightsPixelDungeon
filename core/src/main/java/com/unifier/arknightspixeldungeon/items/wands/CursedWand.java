@@ -241,7 +241,7 @@ public class CursedWand {
 								    user.heal(this,damage);
 									//user.HP = Math.min(user.HT, user.HP + damage);
 									user.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
-									target.damage(damage, wand);
+									target.magicalDamage(damage, wand);
 									target.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
 									break;
 								case 1:

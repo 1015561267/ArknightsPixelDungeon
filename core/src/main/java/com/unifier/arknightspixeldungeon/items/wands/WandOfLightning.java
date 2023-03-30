@@ -73,7 +73,7 @@ public class WandOfLightning extends DamageWand {
 
 		for (Char ch : affected){
 			processSoulMark(ch, chargesPerCast());
-			ch.damage(Math.round(damageRoll() * multipler), this);
+			ch.magicalDamage(Math.round(damageRoll() * multipler), this);
 
 			if (ch == Dungeon.hero) Camera.main.shake( 2, 0.3f );
 			ch.sprite.centerEmitter().burst( SparkParticle.FACTORY, 3 );

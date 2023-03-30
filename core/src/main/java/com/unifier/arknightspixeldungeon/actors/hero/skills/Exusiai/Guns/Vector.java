@@ -165,14 +165,14 @@ public class Vector extends ExusiaiSkill {
         }
 
         if(everHitted){
-            doDamageCalculation(from,to,enemy,burstArray);
-
             if (enemy.buff(Frost.class) != null){
                 Buff.detach( enemy, Frost.class );
             }
             if (enemy.buff(MagicalSleep.class) != null){
                 Buff.detach(enemy, MagicalSleep.class);
             }
+
+            doDamageCalculation(from,to,enemy,burstArray);
 
         }else {
             Splash.at( to, 0xCCFFC800, 1 );
@@ -194,7 +194,8 @@ public class Vector extends ExusiaiSkill {
                 int damage = Random.Int(shootDamageMin(),shootDamageMax());
                 int dr = enemy.drRoll();
 
-                int effectiveDamage = enemy.defenseProc( enemy, damage );
+                int effectiveDamage = damage;
+                //int effectiveDamage = enemy.defenseProc( enemy, damage );
                 effectiveDamage = Math.max( effectiveDamage - dr, 0 );
 
                 if ( enemy.buff( Vulnerable.class ) != null){
@@ -214,10 +215,11 @@ public class Vector extends ExusiaiSkill {
         }
 
         damageArray = enemy.multipleDefenseProc(owner,damageArray,burstArray,hittedTime);
+        //FIXME better change this to "multiple attack" to keep same logic,what works now makes defenseProc after Vulnerable/weakness,not before,as what happen in attack()
 
-        Integer totalDamage = 0;
+        //Integer totalDamage = 0;
 
-        boolean visibleFight = Dungeon.level.heroFOV[owner.pos] || Dungeon.level.heroFOV[enemy.pos];
+        //boolean visibleFight = Dungeon.level.heroFOV[owner.pos] || Dungeon.level.heroFOV[enemy.pos];
 
         //GLog.i(damageArray.size()+ " " + hittedTime);
 

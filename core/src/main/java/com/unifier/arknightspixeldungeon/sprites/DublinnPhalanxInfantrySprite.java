@@ -15,7 +15,7 @@ public class DublinnPhalanxInfantrySprite extends MobSprite {
         idle = new Animation( 8, true );
         idle.frames( frames,7, 8, 9, 10 ,11,12,13 ,13,12,11,10,9,8,7);
 
-        run = new Animation( 23, true );
+        run = new Animation( 18, true );
         run.frames( frames,  0, 1, 2, 3 ,4,5,6 ,6,5,4,3,2,1,0);
 
         attack = new Animation( 18, false );

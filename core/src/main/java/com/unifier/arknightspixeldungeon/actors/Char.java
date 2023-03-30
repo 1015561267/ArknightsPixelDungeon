@@ -85,6 +85,7 @@ import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.levels.features.Door;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
+import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Camera;
@@ -371,6 +372,11 @@ public abstract class Char extends Actor {
             switch (type){
                 default:
                     case GnollTrickster:sprite = new ParalyticDart();break;
+                    case DublinnSniper:sprite = new Item(){
+                    { image = ItemSpriteSheet.ONE_BURST; }
+                    @Override
+                    public boolean isBulletForEffect(){return true;}
+                };
                     case Tengu:sprite = new Shuriken();break;
                     case Scorpio:sprite = new Dart();break;
             }
@@ -570,7 +576,9 @@ public abstract class Char extends Actor {
                 default:
                     case Dismiss: break;
                     case Shaman: enemy.sprite.parent.add( new Lightning( enemy.pos, reflected.pos, (Shaman)reflected ) );break;
-                    case Warlock:	MagicMissile.boltFromChar( enemy.sprite.parent,
+                    case Warlock:
+                    case DublinnShadowCaster:
+                        MagicMissile.boltFromChar( enemy.sprite.parent,
                             MagicMissile.SHADOW,
                             enemy.sprite,
                             reflected.pos,
@@ -700,7 +708,12 @@ public abstract class Char extends Actor {
 		}
 	}
 
-	//FIXME After finish this I realize this process actually contains message showing and hit/miss check,so after more multiple-damage ways implemented,it should be merged and used as a "multiple attack"function
+    //a temp way for magic related checking
+    public void magicalDamage(int dmg, Object src){
+	    damage(dmg,src);
+    };
+
+    //FIXME After finish this I realize this process actually contains message showing and hit/miss check,so after more multiple-damage ways implemented,it should be merged and used as a "multiple attack"function
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
 
         if (!isAlive()) {
@@ -779,7 +792,6 @@ public abstract class Char extends Actor {
         }
 
         if (!isAlive()) {
-            die( src );
             if (Dungeon.level.heroFOV[Dungeon.hero.pos] || Dungeon.level.heroFOV[pos]) {
                 while (flag < damageArray.size() - 1) {
                     if (!burstArray.get(flag)) {
@@ -792,6 +804,7 @@ public abstract class Char extends Actor {
                     flag++;
                 }
             }
+            die( src );
         }
     }
 
@@ -957,11 +970,13 @@ public abstract class Char extends Actor {
 
 	public enum rangeType{
         Dismiss,//With some should not be considered able to reflect
-        GnollTrickster,Tengu,Scorpio
+        GnollTrickster,Tengu,Scorpio,
+        DublinnSniper
     }
 
     public enum magicType{
-        Dismiss,Shaman,Eye,Warlock
+        Dismiss,Shaman,Eye,Warlock,
+        DublinnShadowCaster
     }
 
 	public void onAttackComplete(rangeType Type) {

@@ -78,7 +78,7 @@ public class WandOfFrost extends DamageWand {
 			}
 
 			processSoulMark(ch, chargesPerCast());
-			ch.damage(damage, this);
+			ch.magicalDamage(damage, this);
 
 			if (ch.isAlive()){
 				if (Dungeon.level.water[ch.pos])

@@ -90,7 +90,6 @@ public class BlackwaterOriginiumSlug extends Rat {
 	@Override
 	public void die( Object cause ) {
 		super.die( cause );
-
 		FrostNovaQuestPlot.Quest.process();
 	}
 	

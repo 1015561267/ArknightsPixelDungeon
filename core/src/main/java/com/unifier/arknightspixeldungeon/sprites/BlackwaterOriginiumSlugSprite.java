@@ -34,21 +34,21 @@ public class BlackwaterOriginiumSlugSprite extends MobSprite {
 	public BlackwaterOriginiumSlugSprite() {
 		super();
 
-		texture( Assets.RAT );
+		texture( Assets.BLACKWATERORIGINIUM );
 
 		TextureFilm frames = new TextureFilm( texture, 16, 13 );
 
-		idle = new Animation( 2, true );
-		idle.frames( frames, 32, 32, 32, 33 );
+		idle = new Animation( 4, true );
+		idle.frames( frames, 0, 1, 2, 3 ,4,5,6 );
 
-		run = new Animation( 10, true );
-		run.frames( frames, 38, 39, 40, 41, 42 );
+		run = new Animation( 6, true );
+		run.frames( frames, 7, 8, 9, 10 ,11,12,13 );
 
-		attack = new Animation( 15, false );
-		attack.frames( frames, 34, 35, 36, 37, 32 );
+		attack = new Animation( 10, false );
+		attack.frames( frames, 14, 15, 16, 17, 18 );
 
 		die = new Animation( 10, false );
-		die.frames( frames, 43, 44, 45, 46 );
+		die.frames( frames, 21, 22, 23, 24,25 );
 
 		play( idle );
 	}

@@ -88,7 +88,7 @@ public class WandOfFireblast extends DamageWand {
 			if (ch != null) {
 
 				processSoulMark(ch, chargesPerCast());
-				ch.damage(damageRoll(), this);
+				ch.magicalDamage(damageRoll(), this);
 				Buff.affect( ch, Burning.class ).reignite( ch );
 				switch(chargesPerCast()){
 					case 1:

@@ -99,7 +99,7 @@ public class WandOfTransfusion extends Wand {
 
 				//deals 30%+5%*lvl total HP.
 				int damage = (int) Math.ceil(ch.HT*(0.3f+(0.05f*level())));
-				ch.damage(damage, this);
+				ch.magicalDamage(damage, this);
 				ch.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10 + level());
 				Sample.INSTANCE.play(Assets.SND_BURNING);
 
@@ -174,7 +174,7 @@ public class WandOfTransfusion extends Wand {
 	private void damageHero(){
 		// 10% of max hp
 		int damage = (int)Math.ceil(curUser.HT*0.10f);
-		curUser.damage(damage, this);
+		curUser.magicalDamage(damage, this);
 
 		if (!curUser.isAlive()){
 			Dungeon.fail( getClass() );

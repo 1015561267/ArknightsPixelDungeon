@@ -92,8 +92,15 @@ public class Assets {
     public static final String ROT_HEART= MOBS + "rot_heart.png";
     public static final String GUARD    = MOBS + "guard.png";
 
+    public static final String BLACKWATERORIGINIUM = MOBS + "blackwater_originium_slug.png";
     public static final String DUBLINNPHALANXINFANTRY = MOBS + "dublinn_phalanx_infantry.png";
     public static final String DUBLINNSNIFFERHOUND    = MOBS + "dublinn_sniffer_hound.png";
+    public static final String DUBLINNSNIPER = MOBS + "dublinn_sniper.png";
+    public static final String DUBLINNSHADOWCASTER = MOBS + "dublinn_shadowcaster.png";
+    public static final String SARKAZREQUISITIONEDENGINEERINGDRONE = MOBS + "sarkaz_requisitioned_engineering_drone.png";
+    public static final String TOUCHOFTHESANGUINARCH = MOBS + "touch_of_the_sanguinarch.png";
+
+    public static final String SewerBoss = MOBS + "Centurion-Sheet.png";
 
     private static final String NPCS = ACTORS + "npcs/";
     public static final String GHOST	= NPCS + "ghost.png";

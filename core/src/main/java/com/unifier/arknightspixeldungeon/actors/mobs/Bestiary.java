@@ -42,31 +42,25 @@ public class Bestiary {
 			
 			// Sewers
 			case 1: default:
-				//10x rat
+				//10x 源石虫
 				return new ArrayList<Class<? extends Mob>>(Arrays.asList(
 						Rat.class, Rat.class, Rat.class, Rat.class, Rat.class,
 						Rat.class, Rat.class, Rat.class, Rat.class, Rat.class));
-
-            //return new ArrayList<Class<? extends Mob>>(Arrays.asList(
-              //      Shaman.class, Shaman.class, Warlock.class, Eye.class, Warlock.class,
-               //     Shaman.class, Eye.class, Eye.class, Warlock.class, Eye.class));
 			case 2:
-				//3x rat, 3x gnoll
-                //return new ArrayList<>(Arrays.asList(GnollTrickster.class, GnollTrickster.class, GnollTrickster.class,
-                //        GnollTrickster.class, GnollTrickster.class, GnollTrickster.class));
-				return new ArrayList<>(Arrays.asList(Rat.class, Rat.class, Rat.class,
-						Gnoll.class, Gnoll.class, Gnoll.class));
+				//2x 源石虫, 3x 深池侦察兵 1x 大君之触
+				return new ArrayList<>(Arrays.asList(Rat.class, Rat.class, Gnoll.class,
+						Gnoll.class, Gnoll.class, TouchOfTheSanguinarch.class));
 			case 3:
-				//2x rat, 4x gnoll, 1x crab, 1x swarm
-				return new ArrayList<>(Arrays.asList(Rat.class, Rat.class,
-						Gnoll.class, Gnoll.class, Gnoll.class, Gnoll.class,
-                        DublinnSnifferHound.class, Swarm.class));
+				//1x 源石虫, 2x 深池侦察兵, 2x 深池狙击手, 1x 深池暗影术士,1x 深池侦察犬,1x 萨卡兹征用工程无人机
+				return new ArrayList<>(Arrays.asList(Rat.class, Gnoll.class,
+                        Gnoll.class, DublinnSniper.class, DublinnSniper.class, DublinnShadowcaster.class,
+                        DublinnSnifferHound.class, SarkazRequisitionedEngineeringDrone.class));
 			case 4:
-                //1x gnoll, 1x swarm, 2x crab, 2x slime
+                //1x 深池侦察兵, 1x 深池狙击手, 2x 深池侦查犬, 1x 深池暗影术士,1x 深池方阵战士,1x 萨卡兹征用工程无人机,1x 大君之触
 				return new ArrayList<>(Arrays.asList(Gnoll.class,
-                        Swarm.class,
-                        DublinnSnifferHound.class, DublinnSnifferHound.class,
-                        DublinnPhalanxInfantry.class, DublinnPhalanxInfantry.class));
+                        DublinnSniper.class,
+                        DublinnSnifferHound.class, DublinnSnifferHound.class,DublinnShadowcaster.class,
+                        DublinnPhalanxInfantry.class, SarkazRequisitionedEngineeringDrone.class,TouchOfTheSanguinarch.class));
 				
 			// Prison
 			case 6:

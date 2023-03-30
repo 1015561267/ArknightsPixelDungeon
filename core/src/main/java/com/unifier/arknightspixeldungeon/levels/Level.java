@@ -904,19 +904,9 @@ public abstract class Level implements Bundlable {
 			}
 
             if (c.buff(SniperSight.class)!=null && c.buff(Blindness.class)==null) {
-
-                int count = 0;
-
                 SniperSight t = c.buff(SniperSight.class);
-
-                int d = c.buff(SniperSight.class).distance;
-                float a = c.buff(SniperSight.class).angle;
-
-                //
                 ConeAOE cone = new ConeAOE(c.pos, t.distance, t.angle, t.degrees, Ballistica.WONT_STOP);
-                GLog.i(String.valueOf(c.pos));
                 for (int cell : cone.cells) {
-                    count ++;
                     fieldOfView[cell] = true;
                     //GLog.i(String.valueOf(cell));
                 }
