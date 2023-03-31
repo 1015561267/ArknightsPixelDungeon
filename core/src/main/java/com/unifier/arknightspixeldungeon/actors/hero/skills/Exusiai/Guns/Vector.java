@@ -178,6 +178,7 @@ public class Vector extends ExusiaiSkill {
             Splash.at( to, 0xCCFFC800, 1 );
             Sample.INSTANCE.play(Assets.SND_MISS);
             enemy.sprite.showStatus( CharSprite.NEUTRAL,defense);
+            doCheckAfterShooting(burst,false);
         }
     }
 

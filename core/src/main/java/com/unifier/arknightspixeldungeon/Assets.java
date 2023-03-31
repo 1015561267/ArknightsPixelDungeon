@@ -92,6 +92,7 @@ public class Assets {
     public static final String ROT_HEART= MOBS + "rot_heart.png";
     public static final String GUARD    = MOBS + "guard.png";
 
+    public static final String DUBLINNSCOUT = MOBS + "dublinn_scout.png";
     public static final String BLACKWATERORIGINIUM = MOBS + "blackwater_originium_slug.png";
     public static final String DUBLINNPHALANXINFANTRY = MOBS + "dublinn_phalanx_infantry.png";
     public static final String DUBLINNSNIFFERHOUND    = MOBS + "dublinn_sniffer_hound.png";

@@ -10,7 +10,7 @@ public class DublinnSnifferHoundSprite extends MobSprite {
 
         texture( Assets.DUBLINNSNIFFERHOUND );
 
-        TextureFilm frames = new TextureFilm( texture, 32, 32 );
+        TextureFilm frames = new TextureFilm( texture, 32, 21 );
 
         idle = new Animation( 8, true );
         idle.frames( frames,7, 8, 9, 10 ,11,12,13 ,13,12,11,10,9,8,7);

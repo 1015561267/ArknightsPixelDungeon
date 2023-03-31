@@ -173,7 +173,6 @@ public abstract class ExusiaiSkill extends HeroSkill {
         return true;
     };
 
-    ;
 
     public void doAfterAction() {
 
@@ -240,24 +239,31 @@ public abstract class ExusiaiSkill extends HeroSkill {
     protected void doEnemyCheck(int from, int to){
         Char enemy = Char.findChar(to);
         boolean visibleFight = Dungeon.level.heroFOV[to];
-
+        GLog.i("1");
         if(enemy != null && enemy.alignment == Char.Alignment.ENEMY){
             if(doHitCheck(from,to,enemy)){
+                GLog.i("2-1");
                 doDamageCalculation(from,to,enemy);
+                GLog.i("2-2");
             }else {
                 if (visibleFight) {
+                    GLog.i("3-1");
                     Splash.at( to, 0xCCFFC800, 1 );
                     String defense = enemy.defenseVerb();
                     enemy.sprite.showStatus( CharSprite.NEUTRAL, defense );
                     Sample.INSTANCE.play(Assets.SND_MISS);
                 }
+                GLog.i("4-1");
                 doCheckAfterShooting(1,false);
+                GLog.i("4-2");
             }
         }else {
             if (visibleFight) {
                 Splash.at(to, 0xCCFFC800, 1);
             }
+            GLog.i("5-1");
             doCheckAfterShooting(1,false);
+            GLog.i("5-2");
         }
     }
 
@@ -286,7 +292,7 @@ public abstract class ExusiaiSkill extends HeroSkill {
         if (enemy.buff(Bless.class) != null) defRoll *= 1.25f;
         if (enemy.buff(Hex.class) != null) defRoll *= 0.8f;
 
-        //GLog.i(owner.getAttackSkill()+" "+basicAccuracy+" "+acuRoll+" "+defRoll);
+        GLog.i(owner.getAttackSkill()+" "+basicAccuracy+" "+acuRoll+" "+defRoll);
 
        return acuRoll >= defRoll;
     }

@@ -26,6 +26,7 @@ import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
+import com.watabou.utils.DeviceCompat;
 
 import java.text.DecimalFormat;
 import java.util.HashSet;
@@ -115,6 +116,7 @@ public class Buff extends Actor {
 			buff.attachTo( target );
 			return buff;
 		} catch (Exception e) {
+            DeviceCompat.log("log",e.getMessage());
 			ArknightsPixelDungeon.reportException(e);
 			return null;
 		}

@@ -48,16 +48,16 @@ public class Bestiary {
 						Rat.class, Rat.class, Rat.class, Rat.class, Rat.class));
 			case 2:
 				//2x 源石虫, 3x 深池侦察兵 1x 大君之触
-				return new ArrayList<>(Arrays.asList(Rat.class, Rat.class, Gnoll.class,
-						Gnoll.class, Gnoll.class, TouchOfTheSanguinarch.class));
+				return new ArrayList<>(Arrays.asList(Rat.class, Rat.class, DublinnScout.class,
+                        DublinnScout.class, DublinnScout.class, TouchOfTheSanguinarch.class));
 			case 3:
 				//1x 源石虫, 2x 深池侦察兵, 2x 深池狙击手, 1x 深池暗影术士,1x 深池侦察犬,1x 萨卡兹征用工程无人机
-				return new ArrayList<>(Arrays.asList(Rat.class, Gnoll.class,
-                        Gnoll.class, DublinnSniper.class, DublinnSniper.class, DublinnShadowcaster.class,
+				return new ArrayList<>(Arrays.asList(Rat.class, DublinnScout.class,
+                        DublinnScout.class, DublinnSniper.class, DublinnSniper.class, DublinnShadowcaster.class,
                         DublinnSnifferHound.class, SarkazRequisitionedEngineeringDrone.class));
 			case 4:
                 //1x 深池侦察兵, 1x 深池狙击手, 2x 深池侦查犬, 1x 深池暗影术士,1x 深池方阵战士,1x 萨卡兹征用工程无人机,1x 大君之触
-				return new ArrayList<>(Arrays.asList(Gnoll.class,
+				return new ArrayList<>(Arrays.asList(DublinnScout.class,
                         DublinnSniper.class,
                         DublinnSnifferHound.class, DublinnSnifferHound.class,DublinnShadowcaster.class,
                         DublinnPhalanxInfantry.class, SarkazRequisitionedEngineeringDrone.class,TouchOfTheSanguinarch.class));

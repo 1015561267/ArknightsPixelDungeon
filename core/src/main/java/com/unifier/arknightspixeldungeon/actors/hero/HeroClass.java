@@ -154,6 +154,8 @@ public enum HeroClass {
 			new PotionOfExperience().identify().collect();
 		}
 
+		new WandOfMagicMissile().identify().collect();
+
 		//SandalsOfNature sandalsOfNature = new SandalsOfNature();
 		//sandalsOfNature.identify().collect();
 

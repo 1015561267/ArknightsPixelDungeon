@@ -3,12 +3,15 @@ package com.unifier.arknightspixeldungeon.actors.mobs;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.DublinnScoutSprite;
 import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Random;
 
 public class DublinnScout extends Mob {
+
+    private boolean attached = false;
 
     {
         spriteClass = DublinnScoutSprite.class;
@@ -39,8 +42,7 @@ public class DublinnScout extends Mob {
 
     @Override
     public void magicalDamage(int dmg, Object src){
-
-        if(buff(DublinnScoutMagicResist.class)!=null)
+        if(this.buff(DublinnScoutMagicResist.class)!=null)
         {
             dmg *= 0.3f;
             Buff.detach( this, DublinnScoutMagicResist.class );
@@ -48,20 +50,25 @@ public class DublinnScout extends Mob {
         super.magicalDamage(dmg,src);
     };
 
-    public class DublinnScoutMagicResist extends Buff{
+    public static class DublinnScoutMagicResist extends Buff{
         @Override
         public int icon() {
             return BuffIndicator.ARMOR;
         }
 
         @Override
-        public void tintIcon(Image icon) {
-            icon.hardlight(0.5f, 1f, 2f);
+        public void tintIcon(Image icon) { icon.hardlight(0.5f, 1f, 2f);
         }
 
         @Override
         public String toString() {
             return Messages.get(this, "name");
+        }
+
+        @Override
+        public void detach() {
+            super.detach();
+            target.sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, "blocked"));
         }
 
         @Override
