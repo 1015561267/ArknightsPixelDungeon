@@ -44,10 +44,14 @@ public class SarkazCenturionSprite extends MobSprite {
         die = new Animation(5, false);
         die.frames(frames, 30, 31, 32, 33, 34, 35, 36, 37);
 
+//        play(idle);
+
         spray = centerEmitter();
         spray.autoKill = false;
         spray.pour( BlackParticle.FACTORY, 0.04f );
         spray.on = false;
+
+        play(idle);
     }
 
     @Override

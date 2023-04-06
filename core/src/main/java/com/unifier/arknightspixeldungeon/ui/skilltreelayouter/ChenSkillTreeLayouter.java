@@ -13,7 +13,7 @@ public class ChenSkillTreeLayouter {
 
     private static float HUDHeight = 1f;
 
-    private static float Horizontal_Separator= ButtonWidth() / 2f;//Half of Talent Button's width
+    private static float Horizontal_Separator= ButtonWidth() / 4f;//Half of Talent Button's width
     private static float Vertical_separator= ButtonHeight() / 2f;//Half of Talent Button's height
 
     public static float ContentWidth = 10 * Horizontal_Separator + 5 * ButtonWidth();

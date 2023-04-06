@@ -139,6 +139,7 @@ public class AttackIndicator extends Tag {
 			active = true;
 			sprite.idle();
 			sprite.paused = true;
+			sprite.scale.set(0.7f);
 			add( sprite );
 
 			sprite.x = x + (width - sprite.width()) / 2 + 1;

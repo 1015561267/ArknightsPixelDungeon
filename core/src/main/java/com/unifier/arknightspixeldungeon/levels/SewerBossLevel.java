@@ -262,13 +262,34 @@ public class SewerBossLevel extends Level {
 
     public int getSummoningPos(){
 
-        Point c = arena.center();
+//        Point c = arena.center();
+//
+//        ArrayList<Integer> temp = new ArrayList<>();
+//        for(Integer record : positions){
+//            if(Actor.findChar(record)==null){
+//                temp.add(record);
+//            }
+//        }
 
         ArrayList<Integer> temp = new ArrayList<>();
-        for(Integer record : positions){
-            if(Actor.findChar(record)==null){
-                temp.add(record);
-            }
+
+        int k;
+        for (int i = 1;i < 11;i++) {
+            //1,1 to 10,1
+            k = i + 1 * WIDTH;
+            temp.add(k);
+
+            //11,1 to 11,10
+            k = 11 + i * WIDTH;
+            temp.add(k);
+
+            //1,2 to 1,11
+            k = 1 + (i + 1) * WIDTH;
+            temp.add(k);
+
+            //2,11 to 11,11
+            k =(i + 1) + 11 * WIDTH;
+            temp.add(k);
         }
 
         if (temp.isEmpty()){
