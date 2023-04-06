@@ -162,8 +162,11 @@ public class v0_2_X_Changes {
 				"Not Implemented:\n" +
 				"_-_ Key ring and unstackable keys\n" +
 				"_-_ Blindweed has not been removed"));
-		
-		changes.addButton( new ChangeButton(new Image(Assets.TERRAIN_FEATURES, 112, 112, 16, 16), "New Plants",
+
+		Image temp = new Image(Assets.TERRAIN_FEATURES, 224, 224, 32, 32);
+		temp.scale.set(0.5f,0.5f);
+
+		changes.addButton( new ChangeButton(temp, "New Plants",
 				"Added two new plants:\n" +
 				"_-_ Stormvine, which brews into levitation\n" +
 				"_-_ Dreamfoil, which brews into purity\n\n" +

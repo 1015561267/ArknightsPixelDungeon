@@ -147,8 +147,12 @@ public class WndHeroInfo extends WndTabbed{
                             new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
                     break;
                 case HUNTRESS:
-                    icons = new Image[]{ new ItemSprite(ItemSpriteSheet.BOOMERANG),
-                            new Image(Assets.TILES_SEWERS, 112, 96, 16, 16),
+
+                    Image temp = new Image(Assets.TILES_SEWERS, 224, 192, 32, 32);
+                    temp.scale.set(0.5f,0.5f);
+
+                            icons = new Image[]{ new ItemSprite(ItemSpriteSheet.BOOMERANG),
+                                    temp,
                             new ItemSprite(ItemSpriteSheet.KNUCKLEDUSTER),
                             new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
                     break;

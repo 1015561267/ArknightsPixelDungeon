@@ -238,8 +238,10 @@ public class v0_3_X_Changes {
 				"I was too obsessed with quantity over quality, and so I ended up adding lots of frustrating traps in the mid and lategame. I only ended up fixing this years later, primarily with the trap changes in v0.6.2 and v0.8.0. Incrementally adding well-designed traps over time would have been a much better approach.\n" +
 				"\n" +
 				"Still, v0.3.1 wasn't all bad. Traps in the earlygame were improved, and it also introduced some very important interface changes such as four quickslots, expanded game settings, and quickslot autotargeting. This was also the first update that had a beta release, something that I've done for every update since."));
-		
-		changes.addButton( new ChangeButton(new Image(Assets.TERRAIN_FEATURES, 112, 96, 16, 16), "Trap Overhaul",
+
+        Image temp = new Image(Assets.TERRAIN_FEATURES, 224, 192, 32, 32);
+        temp.scale.set(0.5f,0.5f);
+		changes.addButton( new ChangeButton(temp, "Trap Overhaul",
 				"_-_ Over 20 new traps + tweaks to existing ones\n" +
 				"_-_ Trap visuals overhauled\n" +
 				"_-_ Traps now get trickier deeper in the dungeon\n" +

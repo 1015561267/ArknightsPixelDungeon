@@ -69,11 +69,13 @@ public class DungeonWallsTilemap extends DungeonTilemap {
 					pos % mapWidth != 0 ?       map[pos - 1 + mapWidth] : -1
 			);
 
-		} else if (Dungeon.level.insideMap(pos) && (map[pos+mapWidth] == Terrain.DOOR || map[pos+mapWidth] == Terrain.LOCKED_DOOR) ) {
+		} else if (Dungeon.level.insideMap(pos) && (map[pos+mapWidth] == Terrain.DOOR) ) {
 			return DungeonTileSheet.DOOR_OVERHANG;
 		} else if (Dungeon.level.insideMap(pos) && map[pos+mapWidth] == Terrain.OPEN_DOOR ) {
 			return DungeonTileSheet.DOOR_OVERHANG_OPEN;
-		} else if (pos + mapWidth < size && (map[pos+mapWidth] == Terrain.STATUE || map[pos+mapWidth] == Terrain.STATUE_SP)){
+		}else if (Dungeon.level.insideMap(pos) && map[pos+mapWidth] == Terrain.LOCKED_DOOR ) {
+            return DungeonTileSheet.DOOR_OVERHANG_LOCKED;
+        } else if (pos + mapWidth < size && (map[pos+mapWidth] == Terrain.STATUE || map[pos+mapWidth] == Terrain.STATUE_SP)){
 			return DungeonTileSheet.STATUE_OVERHANG;
 		} else if (pos + mapWidth < size && map[pos+mapWidth] == Terrain.ALCHEMY){
 			return DungeonTileSheet.ALCHEMY_POT_OVERHAND;

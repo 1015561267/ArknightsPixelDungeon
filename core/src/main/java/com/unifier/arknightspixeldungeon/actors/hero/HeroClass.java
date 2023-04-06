@@ -48,6 +48,7 @@ import com.unifier.arknightspixeldungeon.items.food.Food;
 import com.unifier.arknightspixeldungeon.items.food.SmallRation;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfExperience;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfHealing;
+import com.unifier.arknightspixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfMindVision;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfStrength;
 import com.unifier.arknightspixeldungeon.items.rings.Ring;
@@ -148,6 +149,7 @@ public enum HeroClass {
             new ScrollOfRemoveCurse().identify().collect();*/
             new PotionOfStrength().identify().collect();
             new ScrollOfMagicMapping().identify().collect();
+            new PotionOfLiquidFlame().identify().collect();
         }
 
 		for(int j=0;j<30;j++) {

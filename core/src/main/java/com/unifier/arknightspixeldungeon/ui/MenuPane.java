@@ -174,10 +174,11 @@ public class MenuPane extends Component {
         version.scale.set(PixelScene.align(0.5f));
         version.measure();
         version.x = x + WIDTH - version.width();
-        version.y = y + bg.height() + (3 - version.baseLine());
+        //version.y = y + bg.height() + (3 - version.baseLine());
+        version.y = y + bg.height() + (5 - version.baseLine());
         PixelScene.align(version);
 
-        danger.setPos( x + WIDTH - danger.width(), y + bg.height + 3 );
+        danger.setPos( x + WIDTH - danger.width(), y + bg.height + 5 );
     }
 
     public void pickup(Item item, int cell) {

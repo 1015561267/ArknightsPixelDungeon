@@ -21,6 +21,7 @@
 
 package com.unifier.arknightspixeldungeon.mechanics;
 
+import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.utils.BArray;
 
@@ -47,22 +48,31 @@ public final class ShadowCaster {
 	
 	public static void castShadow( int x, int y, boolean[] fieldOfView, int distance ) {
 
+        if (distance >= MAX_DISTANCE){
+            distance = MAX_DISTANCE;
+        }
+
 		BArray.setFalse(fieldOfView);
 
 		//set source cell to true
 		fieldOfView[y * Dungeon.level.width() + x] = true;
 
 		boolean[] losBlocking = Dungeon.level.losBlocking;
-		
-		//scans octants, clockwise
-		scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, +1, -1, false);
-		scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, -1, +1, true);
-		scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, +1, +1, true);
-		scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, +1, +1, false);
-		scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, -1, +1, false);
-		scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, +1, -1, true);
-		scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, -1, -1, true);
-		scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, -1, -1, false);
+
+        try {
+            //scans octants, clockwise
+            scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, +1, -1, false);
+            scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, -1, +1, true);
+            scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, +1, +1, true);
+            scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, +1, +1, false);
+            scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, -1, +1, false);
+            scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, +1, -1, true);
+            scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, -1, -1, true);
+            scanOctant(distance, fieldOfView, losBlocking, 1, x, y, 0.0, 1.0, -1, -1, false);
+        }catch (Exception e){
+            ArknightsPixelDungeon.reportException(e);
+            BArray.setFalse(fieldOfView);
+        }
 
 	}
 	
@@ -82,7 +92,10 @@ public final class ShadowCaster {
 		
 		//for each row, starting with the current one
 		for (; row <= distance; row++){
-			
+
+            //if we have negative space to traverse, just quit.
+            if (rSlope < lSlope) return;
+
 			//we offset by slightly less than 0.5 to account for slopes just touching a cell
 			if (lSlope == 0)    start = 0;
 			else                start = (int)Math.floor((row - 0.5) * lSlope + 0.499);
@@ -100,7 +113,13 @@ public final class ShadowCaster {
 			
 			//for each column in this row, which
 			for (col = start; col <= end; col++){
-				
+
+                //handles the error case of the slope value at the end of a cell being 1 farther
+                // along then at the beginning of the cell, and that earlier cell is vision blocking
+                if (col == end && inBlocking && (int)Math.ceil((row - 0.5) * rSlope - 0.499) != end){
+                    break;
+                }
+
 				fov[cell] = true;
 				
 				if (blocking[cell]){

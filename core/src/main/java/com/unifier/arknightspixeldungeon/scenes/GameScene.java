@@ -642,7 +642,11 @@ public class GameScene extends PixelScene {
 
         if (notifyDelay > 0) notifyDelay -= Game.elapsed;
 
-        if (!Emitter.freezeEmitters) water.offset( 0, -5 * Game.elapsed );
+        if (!Emitter.freezeEmitters){
+            if(Dungeon.depth < 6){
+                water.offset( 0, -2.5f * Game.elapsed );
+            }else water.offset( 0, -5 * Game.elapsed );
+        }
 
 
         /*if(logActorThread){

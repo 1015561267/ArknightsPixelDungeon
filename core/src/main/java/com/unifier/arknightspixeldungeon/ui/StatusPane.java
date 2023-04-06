@@ -63,7 +63,7 @@ public class StatusPane extends Component {
 	private BitmapText level;
 	//private BitmapText depth;
 
-	private DangerIndicator danger;
+	//private DangerIndicator danger;
 	private BuffIndicator buffs;
 	private Compass compass;
 
@@ -134,8 +134,8 @@ public class StatusPane extends Component {
 		//depth.measure();
 		//add( depth );
 
-		danger = new DangerIndicator();
-		add( danger );
+		//danger = new DangerIndicator();
+		//add( danger );
 
 		buffs = new BuffIndicator( Dungeon.hero );
 		add( buffs );
@@ -180,7 +180,7 @@ public class StatusPane extends Component {
 		//depth.y = 8f - depth.baseLine() / 2f;
 		//PixelScene.align(depth);
 
-		danger.setPos( width - danger.width(), 20 );
+		//danger.setPos( width - danger.width(), 20 );
 
 		buffs.setPos( 31, 9 );
 

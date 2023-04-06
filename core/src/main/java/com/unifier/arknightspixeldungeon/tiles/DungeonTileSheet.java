@@ -319,15 +319,18 @@ public class DungeonTileSheet {
 	//no attachment to adjacent walls
 	public static final int DOOR_OVERHANG               = WALL_OVERHANG+21;
 	public static final int DOOR_OVERHANG_OPEN          = WALL_OVERHANG+22;
+
 	public static final int DOOR_SIDEWAYS               = WALL_OVERHANG+23;
 	public static final int DOOR_SIDEWAYS_LOCKED        = WALL_OVERHANG+24;
 
-	public static final int STATUE_OVERHANG             = WALL_OVERHANG+26;
-	public static final int ALCHEMY_POT_OVERHAND        = WALL_OVERHANG+27;
-	public static final int BARRICADE_OVERHANG          = WALL_OVERHANG+28;
-	public static final int HIGH_GRASS_OVERHANG         = WALL_OVERHANG+29;
+    public static final int DOOR_OVERHANG_LOCKED         = WALL_OVERHANG+25;
 
-	public static final int HIGH_GRASS_OVERHANG_ALT     = WALL_OVERHANG+31;
+	public static final int STATUE_OVERHANG             = WALL_OVERHANG+32;
+	public static final int ALCHEMY_POT_OVERHAND        = WALL_OVERHANG+33;
+	public static final int BARRICADE_OVERHANG          = WALL_OVERHANG+34;
+	public static final int HIGH_GRASS_OVERHANG         = WALL_OVERHANG+35;
+
+	public static final int HIGH_GRASS_OVERHANG_ALT     = WALL_OVERHANG+38;
 
 	/**********************************************************************
 	 * Logic for the selection of tile visuals

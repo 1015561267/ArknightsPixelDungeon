@@ -7,11 +7,10 @@ import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.DublinnScoutSprite;
 import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 public class DublinnScout extends Mob {
-
-    private boolean attached = false;
 
     {
         spriteClass = DublinnScoutSprite.class;
@@ -21,8 +20,30 @@ public class DublinnScout extends Mob {
 
         EXP = 2;
         maxLvl = 7;
+    }
 
-        Buff.affect(this,DublinnScoutMagicResist.class);
+    private boolean attached = false;
+    private static final String ATTACHED	= "attached";
+
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle( bundle );
+        bundle.put( ATTACHED, attached );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle( bundle );
+        attached = bundle.getBoolean(ATTACHED);
+    }
+
+    @Override
+    protected boolean act() {
+        if(!attached){
+            Buff.affect(this,DublinnScoutMagicResist.class);
+            attached = true;
+        }
+        return super.act();
     }
 
     @Override
@@ -42,10 +63,11 @@ public class DublinnScout extends Mob {
 
     @Override
     public void magicalDamage(int dmg, Object src){
-        if(this.buff(DublinnScoutMagicResist.class)!=null)
+        if(buff(DublinnScoutMagicResist.class)!=null)
         {
             dmg *= 0.3f;
             Buff.detach( this, DublinnScoutMagicResist.class );
+            sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, "block"));
         }
         super.magicalDamage(dmg,src);
     };
@@ -63,12 +85,6 @@ public class DublinnScout extends Mob {
         @Override
         public String toString() {
             return Messages.get(this, "name");
-        }
-
-        @Override
-        public void detach() {
-            super.detach();
-            target.sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, "blocked"));
         }
 
         @Override

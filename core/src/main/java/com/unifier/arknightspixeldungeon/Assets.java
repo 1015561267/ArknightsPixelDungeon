@@ -100,6 +100,7 @@ public class Assets {
     public static final String DUBLINNSHADOWCASTER = MOBS + "dublinn_shadowcaster.png";
     public static final String SARKAZREQUISITIONEDENGINEERINGDRONE = MOBS + "sarkaz_requisitioned_engineering_drone.png";
     public static final String TOUCHOFTHESANGUINARCH = MOBS + "touch_of_the_sanguinarch.png";
+    public static final String SARKAZCENTURION = MOBS + "sarkaz_centurion.png";
 
     public static final String SewerBoss = MOBS + "Centurion-Sheet.png";
 
