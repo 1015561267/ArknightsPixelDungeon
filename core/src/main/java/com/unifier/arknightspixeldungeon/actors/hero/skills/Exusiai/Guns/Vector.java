@@ -144,8 +144,6 @@ public class Vector extends ExusiaiSkill {
 
     private void startBurst(int burst, int from, int to, Char enemy) {
 
-        boolean visibleFight = Dungeon.level.heroFOV[to];
-
         ArrayList<Boolean> burstArray = new ArrayList<>();
 
         String defense = enemy.defenseVerb();
@@ -217,12 +215,6 @@ public class Vector extends ExusiaiSkill {
 
         damageArray = enemy.multipleDefenseProc(owner,damageArray,burstArray,hittedTime);
         //FIXME better change this to "multiple attack" to keep same logic,what works now makes defenseProc after Vulnerable/weakness,not before,as what happen in attack()
-
-        //Integer totalDamage = 0;
-
-        //boolean visibleFight = Dungeon.level.heroFOV[owner.pos] || Dungeon.level.heroFOV[enemy.pos];
-
-        //GLog.i(damageArray.size()+ " " + hittedTime);
 
         enemy.multipleDamage(burstArray,damageArray,this,hittedTime);
 

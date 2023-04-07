@@ -1,15 +1,22 @@
 package com.unifier.arknightspixeldungeon.actors.mobs;
 
+import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
-import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
 import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
+import com.unifier.arknightspixeldungeon.actors.buffs.MagicalSleep;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.items.keys.SkeletonKey;
+import com.unifier.arknightspixeldungeon.items.wands.WandOfBlastWave;
 import com.unifier.arknightspixeldungeon.levels.SewerBossLevel;
+import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
+import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.SarkazCenturionSprite;
 import com.unifier.arknightspixeldungeon.ui.BossHealthBar;
+import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
@@ -28,16 +35,24 @@ public class SarkazCenturion extends Mob {
 
         properties.add(Property.BOSS);
         properties.add(Property.DEMONIC);
-
-        HUNTING = new SarkazCenturionHunting();
     }
 
+    @Override
+    public boolean act() {
+
+        if (abilityCd == 0 && paralysed <= 0){
+            //if can use ability then always use it,unless controlled
+            ((SarkazCenturionSprite)sprite).performAbility();
+            spend(attackDelay());
+            next();
+            return true;
+        } else return super.act();
+    }
     @Override
     public int damageRoll(Char enemy, boolean isMagic) {
 
         float bouns = 1f;
         if(abilityCd==0){
-
             switch (phase){
                 case 1:bouns = 1.2f;break;
                 case 2:bouns = 1.5f;break;
@@ -75,27 +90,21 @@ public class SarkazCenturion extends Mob {
     }
 
     @Override
-    protected boolean act() {
-        return super.act();
-    }
-
-    @Override
     public boolean attack( Char enemy ) {
 
         boolean result = super.attack(enemy);
 
-        if (result && abilityCd > 0){//ability aoe attack won't charge itself
+        if (abilityCd > 0){//ability aoe attack won't charge itself
             abilityCd --;
             if (abilityCd == 0){
-                ((SarkazCenturionSprite)sprite).showWarn(1);
+                ((SarkazCenturionSprite)sprite).chargingAbility();
             }
         }
         return result;
     }
 
     public void doAbility() {
-
-        int count = 1;
+        int count = 0;
         for (int i : PathFinder.NEIGHBOURS8){
             Char ch = Actor.findChar(pos + i);
             if(ch!=null){
@@ -108,11 +117,12 @@ public class SarkazCenturion extends Mob {
         }
 
         if(count>0){
-            Camera.main.shake( GameMath.gate( 3, count, 9), 0.2f );
+            Camera.main.shake( GameMath.gate( 1, count, 9), 0.2f );
         }
 
         abilityCd = resetAbilityCd();
-        spend( attackDelay() );
+        //next();
+        //spend( attackDelay() )
         return;
     }
 
@@ -135,12 +145,12 @@ public class SarkazCenturion extends Mob {
         if(phase == 1 && HP<=75){
             HP = 75;
             phase++;
-            Buff.affect(this,CenturionBerserk.class,6f);
+            Buff.affect(this,CenturionBerserk.class).on(6f);
         }
         else if(phase == 2 && HP<=15){
             HP = 15;
             phase++;
-            Buff.affect(this,CenturionBerserk.class,6f);
+            Buff.affect(this,CenturionBerserk.class).on(6f);
         }
     }
 
@@ -150,7 +160,6 @@ public class SarkazCenturion extends Mob {
 
         ArrayList<Integer> tempArray = new ArrayList<>();
 
-        if(phase == 3 || buff(CenturionBerserk.class)!=null){
             for(Integer record : damageArray){
                 if(phase==3){
                     record /= 2;
@@ -159,8 +168,8 @@ public class SarkazCenturion extends Mob {
                     record = (int) Math.ceil(record/10);
                 }
                 tempArray.add(record);
+                GLog.i(String.valueOf(record));
             }
-        }
 
         super.multipleDamage(burstArray,tempArray,src,hittedTime);
         int totaldmg = beforeHitHP - HP;
@@ -173,17 +182,37 @@ public class SarkazCenturion extends Mob {
         if(phase == 1 && HP<=75){
             HP = 75;
             phase++;
-            Buff.affect(this,CenturionBerserk.class,6f);
+            Buff.affect(this,CenturionBerserk.class).on(6f);
         }
         else if(phase == 2 && HP<=15){
             HP = 15;
             phase++;
-            Buff.affect(this,CenturionBerserk.class,6f);
+            Buff.affect(this,CenturionBerserk.class).on(6f);
         }
+    }
+
+    @Override
+    public void die( Object cause ) {
+
+        super.die( cause );
+
+        Dungeon.level.unseal();
+
+        GameScene.bossSlain();
+
+        Dungeon.level.drop( new SkeletonKey( Dungeon.depth ), pos ).sprite.drop();
+
+        Badges.validateBossSlain();
+
+        yell( "被击败台词，待替换" );
     }
 
     public float speed() {
         return super.speed() * (buff( CenturionBerserk.class ) != null ? 1.33f : 1f);
+    }
+
+    public boolean haveToBleed() {
+        return buff( CenturionBerserk.class ) != null;
     }
 
     private static final String PHASE = "phase";
@@ -199,41 +228,102 @@ public class SarkazCenturion extends Mob {
     @Override
     public void restoreFromBundle(Bundle bundle) {
         super.restoreFromBundle(bundle);
-        phase = bundle.getInt( PHASE );
-        abilityCd = bundle.getInt( ABILITY_CD );
+        phase = bundle.getInt(PHASE);
+        abilityCd = bundle.getInt(ABILITY_CD);
+
+        //if (state instanceof Hunting) {
+        //    this.state = new SarkazCenturionHunting();
+        ////}
 
         BossHealthBar.assignBoss(this);
-        if (phase == 3) BossHealthBar.bleed(true);
+        if (buffs(CenturionBerserk.class) != null) {
+            BossHealthBar.bleed(true);
+        }
     }
+    public static class CenturionBerserk extends Buff {
 
-    public static class CenturionBerserk extends FlavourBuff {
+        private static final String LEFT	= "left";
+        private float left;
+
+        @Override
+        public boolean act() {
+            spend( TICK );
+            left -= TICK;
+
+            if (left <= 0) {
+                ((SewerBossLevel)Dungeon.level).onBerserkEnd();
+                target.sprite.showStatus(CharSprite.NEUTRAL,"zzz");
+                Buff.affect(target, MagicalSleep.class);
+                ((SarkazCenturion)target).abilityCd = ((SarkazCenturion)target).resetAbilityCd();
+                BossHealthBar.bleed(false);
+                ((SarkazCenturionSprite)target.sprite).spray(false);
+                detach();
+            }
+
+            return true;
+        }
+
+        public void on(float time) {
+            left = time;
+        }
+
+        @Override
+        public void storeInBundle( Bundle bundle ) {
+            super.storeInBundle( bundle );
+            bundle.put( LEFT, left );
+        }
+
+        @Override
+        public void restoreFromBundle( Bundle bundle ) {
+            super.restoreFromBundle(bundle);
+            left = bundle.getFloat( LEFT );
+        }
+
         @Override
         public boolean attachTo( Char target ) {
             ((SewerBossLevel)Dungeon.level).onBerserkBegin();
-            return super.attachTo(target);
-        }
+            target.sprite.showStatus(CharSprite.WARNING,"狂暴化！");
+            BossHealthBar.bleed(true);
+            ((SarkazCenturionSprite)target.sprite).spray(true);
 
-        @Override
-        public void detach() {
-            if(((SarkazCenturion)target).phase != 3){
-                ((SewerBossLevel)Dungeon.level).onBerserkEnd();
+            for (int i : PathFinder.NEIGHBOURS8){
+                Char ch = Actor.findChar(target.pos + i);
+                if(ch!=null && ch instanceof Hero){
+                    int oppositeHero = ch.pos + (ch.pos - target.pos);
+                    Ballistica trajectory = new Ballistica(ch.pos, oppositeHero, Ballistica.MAGIC_BOLT);
+                    WandOfBlastWave.throwChar(ch, trajectory, 2);
+                    break;
+                }
             }
-            super.detach();
+
+            return super.attachTo(target);
         }
     }
 
-    private class SarkazCenturionHunting extends Mob.Hunting{
-        @Override
-        public boolean act( boolean enemyInFOV, boolean justAlerted ) {
-            enemySeen = enemyInFOV;
+    public static class DerivativeRat extends Rat {
+        public boolean isDerivative(){return true;}
+    }
 
-            if (abilityCd == 0){//if can use ability then always use it,unless controlled
-                ((SarkazCenturionSprite)sprite).performAbility();
-                return true;
-            } else {
-                return super.act( enemyInFOV, justAlerted );
-            }
+    public static class DerivativeDublinnScout extends DublinnScout {
+        public boolean isDerivative(){return true;}
+    }
 
+
+    public boolean isDerivative(){return false;}
+
+
+    @Override
+    public void notice() {
+        super.notice();
+        BossHealthBar.assignBoss(this);
+    }
+
+    @Override
+    public void updateSpriteState() {
+        super.updateSpriteState();
+
+        if (abilityCd == 0){
+            ((SarkazCenturionSprite)sprite).chargingAbility();
         }
     }
 }

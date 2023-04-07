@@ -697,7 +697,11 @@ public abstract class Mob extends Char {
 		return enemySeen && (target == Dungeon.hero.pos);
 	}
 
-	public interface AiState {
+    public boolean haveToBleed() {
+        return true;
+	}
+
+    public interface AiState {
 		boolean act( boolean enemyInFOV, boolean justAlerted );
 	}
 
@@ -863,5 +867,7 @@ public abstract class Mob extends Char {
 			return true;
 		}
 	}
+
+	public boolean isDerivative(){return false;}
 }
 

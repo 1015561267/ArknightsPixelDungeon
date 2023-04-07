@@ -779,7 +779,6 @@ public abstract class Char extends Actor {
                 if (Dungeon.level.heroFOV[Dungeon.hero.pos] || Dungeon.level.heroFOV[pos]) {
                     String defense = defenseVerb();
                     sprite.showStatus( CharSprite.NEUTRAL, defense );
-
                     Sample.INSTANCE.play(Assets.SND_MISS);
                 }
             }

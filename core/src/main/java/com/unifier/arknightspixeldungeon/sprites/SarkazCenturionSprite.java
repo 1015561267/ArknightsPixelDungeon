@@ -20,6 +20,8 @@ public class SarkazCenturionSprite extends MobSprite {
     private Emitter spray;
     private ArrayList<Emitter> pumpUpEmitters = new ArrayList<>();
 
+    public Animation charging;
+
     public SarkazCenturionSprite() {
 
         texture(Assets.SARKAZCENTURION);
@@ -35,11 +37,11 @@ public class SarkazCenturionSprite extends MobSprite {
         attack = new Animation(18, false);
         attack.frames(frames, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21);
 
+        charging = new Animation(4,true);
+        charging.frames(frames, 22);
+
         operate = new Animation(12, false);
         operate.frames(frames, 22, 23, 24, 25, 26, 27, 28, 29);
-
-        //fade = new Animation(12,false);
-        //fade.frames(frames, 22, 23, 24, 25, 26 );
 
         die = new Animation(5, false);
         die.frames(frames, 30, 31, 32, 33, 34, 35, 36, 37);
@@ -56,9 +58,10 @@ public class SarkazCenturionSprite extends MobSprite {
 
     @Override
     public void play(Animation anim) {
-        //if (anim != operate){
-       //     clearEmitters();
-        //}
+        if (anim != charging && anim!=operate){
+            clearEmitters();
+        }
+
         super.play(anim);
     }
 
@@ -84,11 +87,19 @@ public class SarkazCenturionSprite extends MobSprite {
         if (anim == operate) {
             triggerEmitters();
             idle();
-            ch.next();
             ((SarkazCenturion)ch).doAbility();
         } else if (anim == die) {
             spray.killAndErase();
         }
+    }
+
+    public void spray(boolean on){
+        spray.on = on;
+    }
+
+    public void chargingAbility(){
+        play(charging);
+        showWarn(1);
     }
 
     public void performAbility() { play(operate); }

@@ -142,7 +142,6 @@ public class GooSprite extends MobSprite {
 		super.onComplete(anim);
 
 		if (anim == pumpAttack) {
-
 			idle();
 			ch.onAttackComplete(Char.rangeType.Dismiss);
 		} else if (anim == die) {

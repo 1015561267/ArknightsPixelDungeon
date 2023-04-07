@@ -45,9 +45,10 @@ public abstract class HeroSkill extends Buff {
     public abstract void getCoolDown(float amount);
 
     public float cooldownRatio() {//For now it means to handle cooldown for multi charge skill have problem when there are only one charge
-        if(charge == getMaxCharge())
+        if(charge == getMaxCharge()){
             return 0;
-        else if(charge >= 0 ){
+        }
+        else if(charge > 0 ){
             return charge / getMaxCharge();
         }
         else

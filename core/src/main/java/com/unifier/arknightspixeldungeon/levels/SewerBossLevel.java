@@ -26,9 +26,7 @@ import com.unifier.arknightspixeldungeon.Bones;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.actors.mobs.DublinnScout;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.actors.mobs.Rat;
 import com.unifier.arknightspixeldungeon.actors.mobs.SarkazCenturion;
 import com.unifier.arknightspixeldungeon.items.Heap;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -41,7 +39,6 @@ import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class SewerBossLevel extends Level {
@@ -51,18 +48,6 @@ public class SewerBossLevel extends Level {
 		color2 = 0x59994a;
 	}
 
-    private static final String STAIRS	= "stairs";
-
-    @Override
-    public void storeInBundle( Bundle bundle ) {
-        super.storeInBundle( bundle );
-    }
-
-    @Override
-    public void restoreFromBundle( Bundle bundle ) {
-        super.restoreFromBundle( bundle );
-    }
-
     private static final int WIDTH = 13;
     private static final int HEIGHT = 24;
 
@@ -70,9 +55,23 @@ public class SewerBossLevel extends Level {
     private static final Rect arena = new Rect(1, 1, 12, 12);
 
     private static final int bottomDoor = 6 + (arena.bottom) * WIDTH;
-    //private static final int topDoor = 7 + arena.top * WIDTH;
-
     private static final int topDoor = 6;
+
+    private boolean triggered = false;
+
+    private static final String TRIGGERED	= "triggered";
+
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle( bundle );
+        bundle.put( TRIGGERED, triggered );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle( bundle );
+        triggered = bundle.getBoolean( TRIGGERED );
+    }
 
     @Override
     protected boolean build() {
@@ -101,7 +100,6 @@ public class SewerBossLevel extends Level {
         int entrance = c.x + (c.y+3)*width();
         Painter.set(this, entrance, Terrain.ENTRANCE);
         this.entrance = entrance;
-        //transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 
         //Arena room
         Painter.fill(this, arena,Terrain.EMPTY);
@@ -109,18 +107,20 @@ public class SewerBossLevel extends Level {
         Painter.fill(this, arena, 4, Terrain.EMPTY_SP);
 
         c = arena.center();
-        Painter.set(this, c.x-3, c.y - 3, Terrain.STATUE);
-        Painter.set(this, c.x, c.y - 3, Terrain.STATUE);
-        Painter.set(this, c.x+3, c.y - 3, Terrain.STATUE);
+        Painter.set(this, c.x-3, c.y - 3, Terrain.WALL);
+        Painter.set(this, c.x, c.y - 3, Terrain.WALL_DECO);
+        Painter.set(this, c.x+3, c.y - 3, Terrain.WALL);
 
-        Painter.set(this, c.x-3, c.y, Terrain.STATUE);
-        Painter.set(this, c.x+3, c.y, Terrain.STATUE);
+        Painter.set(this, c.x-3, c.y, Terrain.WALL_DECO);
+        Painter.set(this, c.x+3, c.y, Terrain.WALL_DECO);
 
-        Painter.set(this, c.x-3, c.y + 3, Terrain.STATUE);
-        Painter.set(this, c.x, c.y + 3, Terrain.STATUE);
-        Painter.set(this, c.x+3, c.y + 3, Terrain.STATUE);
+        Painter.set(this, c.x-3, c.y + 3, Terrain.WALL);
+        Painter.set(this, c.x, c.y + 3, Terrain.WALL_DECO);
+        Painter.set(this, c.x+3, c.y + 3, Terrain.WALL);
 
         //Painter.set(this, c.x, arena.top, Terrain.LOCKED_DOOR);
+        exit = topDoor;
+        map[exit] = Terrain.LOCKED_EXIT;
 
         return true;
     }
@@ -184,15 +184,21 @@ public class SewerBossLevel extends Level {
 	}
 	
 	public void unseal() {
-			super.unseal();
+        super.unseal();
 
-            set( bottomDoor, Terrain.DOOR );
-            GameScene.updateMap( bottomDoor );
+        set( entrance, Terrain.ENTRANCE );
+        GameScene.updateMap( entrance );
 
-            set(topDoor,Terrain.EXIT);
-            GameScene.updateMap( topDoor );
+        set( bottomDoor, Terrain.DOOR );
+        GameScene.updateMap( bottomDoor );
 
-            Dungeon.observe();
+        for (Mob m : mobs){
+            if(m.isDerivative()){
+                m.die(null);
+            }
+        }
+
+        Dungeon.observe();
 	}
 
     @Override
@@ -200,8 +206,10 @@ public class SewerBossLevel extends Level {
 
         super.press( cell, ch );
 
-        if (map[bottomDoor] != Terrain.LOCKED_DOOR //&& map[topDoor] == Terrain.LOCKED_DOOR
+        if (!triggered && map[bottomDoor] != Terrain.LOCKED_DOOR //&& map[topDoor] == Terrain.LOCKED_DOOR
                 && cell == arena.center().x + arena.center().y * WIDTH && ch == Dungeon.hero) {
+
+            triggered = true;
 
             seal();
 
@@ -213,89 +221,78 @@ public class SewerBossLevel extends Level {
             boss.beckon(Dungeon.hero.pos);
 
             if (heroFOV[boss.pos]) {
-                boss.notice();
+                boss.yell( "开战yell,待替换" );
                 boss.sprite.alpha( 0 );
                 boss.sprite.parent.add( new AlphaTweener( boss.sprite, 1, 0.1f ) );
             }
-
-            set( bottomDoor, Terrain.LOCKED_DOOR );
-            GameScene.updateMap( bottomDoor );
-            Dungeon.observe();
         }
     }
 
 	public void onBerserkBegin()
     {
         for(int i=0;i<2;i++){
-            Mob rat = new Rat();
+            Mob rat = new SarkazCenturion.DerivativeRat();
             rat.state = rat.WANDERING;
-            rat.pos = pointToCell(arena.center());
+            rat.pos = getSummoningPos();
             GameScene.add( rat );
             rat.beckon(Dungeon.hero.pos);
+            if (heroFOV[rat.pos]) {
+                rat.notice();
+                rat.sprite.alpha( 0 );
+                rat.sprite.parent.add( new AlphaTweener( rat.sprite, 1, 0.1f ) );
+            }
         }
     }
 
     public void onBerserkEnd()
     {
         for(int i=0;i<2;i++){
-            Mob dublinnScout = new DublinnScout();
+            Mob dublinnScout = new SarkazCenturion.DerivativeDublinnScout();
             dublinnScout.state = dublinnScout.WANDERING;
-            dublinnScout.pos = pointToCell(arena.center());
+            dublinnScout.pos = getSummoningPos();
             GameScene.add( dublinnScout );
             dublinnScout.beckon(Dungeon.hero.pos);
+            if (heroFOV[dublinnScout.pos]) {
+                dublinnScout.notice();
+                dublinnScout.sprite.alpha( 0 );
+                dublinnScout.sprite.parent.add( new AlphaTweener( dublinnScout.sprite, 1, 0.1f ) );
+            }
         }
     }
 
     static final HashSet<Integer> positions = new HashSet<>();
 
     static {
-        Point c = arena.center();
-
-        for(int i=0;i<WIDTH-2;i++)
-        {
-            positions.add(c.x - 5 + (c.y - 5 ) * WIDTH + i);//top
-            positions.add(c.x - 5 + (c.y + 5 ) * WIDTH + i);//bottom
-            positions.add(c.x - 5 + (c.y - 5 ) * WIDTH + i * WIDTH);//left
-            positions.add(c.x - 5 + (c.y + 5 ) * WIDTH + i * WIDTH);//right
-        }
-    }
-
-    public int getSummoningPos(){
-
-//        Point c = arena.center();
-//
-//        ArrayList<Integer> temp = new ArrayList<>();
-//        for(Integer record : positions){
-//            if(Actor.findChar(record)==null){
-//                temp.add(record);
-//            }
-//        }
-
-        ArrayList<Integer> temp = new ArrayList<>();
-
         int k;
         for (int i = 1;i < 11;i++) {
             //1,1 to 10,1
             k = i + 1 * WIDTH;
-            temp.add(k);
+            positions.add(k);
 
             //11,1 to 11,10
             k = 11 + i * WIDTH;
-            temp.add(k);
+            positions.add(k);
 
             //1,2 to 1,11
             k = 1 + (i + 1) * WIDTH;
-            temp.add(k);
+            positions.add(k);
 
             //2,11 to 11,11
             k =(i + 1) + 11 * WIDTH;
-            temp.add(k);
+            positions.add(k);
         }
 
-        if (temp.isEmpty()){
-            return -1;//this should not happen
-        } else {
-            return Random.element(temp);
+    }
+
+    public int getSummoningPos(){
+
+        for(int i = 0;i<10;i++)
+        {
+            int temp = Random.element(positions);
+            if(Actor.findChar(temp)==null){
+                return temp;
+            }
         }
+            return -1;//this should not happen
     }
 }

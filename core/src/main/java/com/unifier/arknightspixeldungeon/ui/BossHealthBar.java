@@ -93,7 +93,7 @@ public class BossHealthBar extends Component {
 				visible = active = false;
 			} else {
 				hp.scale.x = (float)boss.HP/boss.HT;
-				if (hp.scale.x < 0.25f) bleed( true );
+				if (hp.scale.x < 0.25f && boss.haveToBleed()) bleed( true );
 
 				if (bleeding != blood.on){
 					if (bleeding)   skull.tint( 0xcc0000, 0.6f );
