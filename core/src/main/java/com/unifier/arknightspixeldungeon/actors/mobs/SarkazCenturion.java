@@ -108,7 +108,18 @@ public class SarkazCenturion extends Mob {
         for (int i : PathFinder.NEIGHBOURS8){
             Char ch = Actor.findChar(pos + i);
             if(ch!=null){
+
+                Char temp = null;
+                if(ch instanceof Mob) {
+                    temp = ((Mob)ch).enemy;
+                }
                 attack(ch);
+
+                if(ch instanceof Mob) {
+                    ((Mob)ch).enemy = temp;
+                    //FIXME a little bit stupid,but it is necessary as the ability should not change damaged mob's target(it will in because of attack-defenseProc-aggro function chain)
+                }
+
                 count ++;
                 if(ch instanceof Hero){
                     count += 3;
@@ -155,7 +166,13 @@ public class SarkazCenturion extends Mob {
     }
 
     @Override
+    public boolean isAlive() {
+        return phase < 3 || HP > 0 ;//FIXME doing so feels stupid as this is caused by multiple damage
+    }
+
+    @Override
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
+
         int beforeHitHP = HP;
 
         ArrayList<Integer> tempArray = new ArrayList<>();
@@ -250,7 +267,7 @@ public class SarkazCenturion extends Mob {
             spend( TICK );
             left -= TICK;
 
-            if (left <= 0) {
+            if (left <= 0 && target.isAlive()) {
                 ((SewerBossLevel)Dungeon.level).onBerserkEnd();
                 target.sprite.showStatus(CharSprite.NEUTRAL,"zzz");
                 Buff.affect(target, MagicalSleep.class);
@@ -281,18 +298,21 @@ public class SarkazCenturion extends Mob {
 
         @Override
         public boolean attachTo( Char target ) {
-            ((SewerBossLevel)Dungeon.level).onBerserkBegin();
-            target.sprite.showStatus(CharSprite.WARNING,"狂暴化！");
-            BossHealthBar.bleed(true);
-            ((SarkazCenturionSprite)target.sprite).spray(true);
 
-            for (int i : PathFinder.NEIGHBOURS8){
-                Char ch = Actor.findChar(target.pos + i);
-                if(ch!=null && ch instanceof Hero){
-                    int oppositeHero = ch.pos + (ch.pos - target.pos);
-                    Ballistica trajectory = new Ballistica(ch.pos, oppositeHero, Ballistica.MAGIC_BOLT);
-                    WandOfBlastWave.throwChar(ch, trajectory, 2);
-                    break;
+            if(target.isAlive()) {
+                ((SewerBossLevel) Dungeon.level).onBerserkBegin();
+                target.sprite.showStatus(CharSprite.WARNING, "狂暴化！");
+                BossHealthBar.bleed(true);
+                ((SarkazCenturionSprite) target.sprite).spray(true);
+
+                for (int i : PathFinder.NEIGHBOURS8) {
+                    Char ch = Actor.findChar(target.pos + i);
+                    if (ch != null && ch instanceof Hero) {
+                        int oppositeHero = ch.pos + (ch.pos - target.pos);
+                        Ballistica trajectory = new Ballistica(ch.pos, oppositeHero, Ballistica.MAGIC_BOLT);
+                        WandOfBlastWave.throwChar(ch, trajectory, 2);
+                        break;
+                    }
                 }
             }
 

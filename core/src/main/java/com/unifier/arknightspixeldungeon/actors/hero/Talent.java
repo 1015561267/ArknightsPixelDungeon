@@ -783,15 +783,10 @@ public enum Talent {
     }
 
     public static void afterReflectKill() {
-
         if(hero.hasTalent(Talent.EYE_FOR_EYE)){
             if(hero.buff(ReflectTracker.class)!=null) {
                 hero.buff(ReflectTracker.class).getCoolDown(25f);
             }
-        }
-
-        if(hero.hasTalent(Talent.DECISIVENESS)){
-
         }
     }
 
@@ -811,10 +806,6 @@ public enum Talent {
             HeroSkill picked = Random.element(pool);
 
             if(picked!=null) picked.getCoolDown(picked.rawCD() * 0.2f);
-        }
-
-        if(hero.hasTalent(Talent.DECISIVENESS)){
-
         }
     }
 

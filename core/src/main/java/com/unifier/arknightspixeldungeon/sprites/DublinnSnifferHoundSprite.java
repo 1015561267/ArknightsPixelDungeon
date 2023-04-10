@@ -13,10 +13,10 @@ public class DublinnSnifferHoundSprite extends MobSprite {
         TextureFilm frames = new TextureFilm( texture, 32, 21 );
 
         idle = new Animation( 8, true );
-        idle.frames( frames,7, 8, 9, 10 ,11,12,13 ,13,12,11,10,9,8,7);
+        idle.frames( frames,7, 8, 9, 10 ,11,12,13);
 
         run = new Animation( 12, true );
-        run.frames( frames,  0, 1, 2, 3 ,4,5,6 ,6,5,4,3,2,1,0);
+        run.frames( frames,  0, 1, 2, 3 ,4,5,6);
 
         attack = new Animation( 18, false );
         attack.frames( frames, 14, 15, 16, 17 ,18,19,20 );

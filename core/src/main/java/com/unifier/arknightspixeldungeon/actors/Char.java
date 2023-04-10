@@ -790,19 +790,20 @@ public abstract class Char extends Actor {
             sprite.flash();
         }
 
-        if (!isAlive()) {
-            if (Dungeon.level.heroFOV[Dungeon.hero.pos] || Dungeon.level.heroFOV[pos]) {
-                while (flag < damageArray.size() - 1) {
-                    if (!burstArray.get(flag)) {
-                        //verbArray += enemy.defenseVerb();
-                        String defense = defenseVerb();
-                        sprite.showStatus(CharSprite.NEUTRAL, defense);
-                    } else {
-                        sprite.showStatus( HP > HT / 2 ? CharSprite.WARNING : CharSprite.NEGATIVE, damageArray.get(flag).toString());
-                    }
-                    flag++;
+        if (Dungeon.level.heroFOV[Dungeon.hero.pos] || Dungeon.level.heroFOV[pos]) {
+            while (flag < damageArray.size() - 1) {
+                if (!burstArray.get(flag)) {
+                    //verbArray += enemy.defenseVerb();
+                    String defense = defenseVerb();
+                    sprite.showStatus(CharSprite.NEUTRAL, defense);
+                } else {
+                    sprite.showStatus( HP > HT / 2 ? CharSprite.WARNING : CharSprite.NEGATIVE, damageArray.get(flag).toString());
                 }
+                flag++;
             }
+        }
+
+        if (!isAlive()) {
             die( src );
         }
     }

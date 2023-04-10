@@ -54,7 +54,6 @@ import com.unifier.arknightspixeldungeon.items.potions.PotionOfStrength;
 import com.unifier.arknightspixeldungeon.items.rings.Ring;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfHaste;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicMapping;
-import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMirrorImage;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfMagicMissile;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Dagger;
@@ -158,6 +157,8 @@ public enum HeroClass {
 
 		new WandOfMagicMissile().identify().collect();
 
+        new LevelTeleporter().identify().collect();
+
 		//SandalsOfNature sandalsOfNature = new SandalsOfNature();
 		//sandalsOfNature.identify().collect();
 
@@ -210,8 +211,7 @@ public enum HeroClass {
         hero.skill_3 = new Shadowless();
         hero.skill_3.attachTo(hero);
 
-        new LevelTeleporter().identify().collect();
-        new ScrollOfMirrorImage().identify().collect();
+        ///new LevelTeleporter().identify().collect();
 	}
 
 	private static void initMage( Hero hero ) {

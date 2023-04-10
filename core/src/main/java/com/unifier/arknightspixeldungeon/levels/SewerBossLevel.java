@@ -48,14 +48,18 @@ public class SewerBossLevel extends Level {
 		color2 = 0x59994a;
 	}
 
-    private static final int WIDTH = 13;
-    private static final int HEIGHT = 24;
+    //private static final int WIDTH = 13;
+    //private static final int HEIGHT = 24;
 
-    private static final Rect entry = new Rect(1, 13, 12, 24);
-    private static final Rect arena = new Rect(1, 1, 12, 12);
+    private static final int WIDTH = 15;
+    private static final int HEIGHT = 25;
 
-    private static final int bottomDoor = 6 + (arena.bottom) * WIDTH;
-    private static final int topDoor = 6;
+
+    private static final Rect entry = new Rect(2, 14, 13, 25);
+    private static final Rect arena = new Rect(2, 2, 13, 13);
+
+    private static final int bottomDoor = 7 + (arena.bottom) * WIDTH;
+    private static final int topDoor = 7 + WIDTH;
 
     private boolean triggered = false;
 
@@ -192,7 +196,7 @@ public class SewerBossLevel extends Level {
         set( bottomDoor, Terrain.DOOR );
         GameScene.updateMap( bottomDoor );
 
-        for (Mob m : mobs){
+        for (Mob m : Dungeon.level.mobs.toArray( new Mob[0] )){
             if(m.isDerivative()){
                 m.die(null);
             }
@@ -231,7 +235,7 @@ public class SewerBossLevel extends Level {
 	public void onBerserkBegin()
     {
         for(int i=0;i<2;i++){
-            Mob rat = new SarkazCenturion.DerivativeRat();
+            SarkazCenturion.DerivativeRat rat = new SarkazCenturion.DerivativeRat();
             rat.state = rat.WANDERING;
             rat.pos = getSummoningPos();
             GameScene.add( rat );
@@ -247,7 +251,7 @@ public class SewerBossLevel extends Level {
     public void onBerserkEnd()
     {
         for(int i=0;i<2;i++){
-            Mob dublinnScout = new SarkazCenturion.DerivativeDublinnScout();
+            SarkazCenturion.DerivativeDublinnScout dublinnScout = new SarkazCenturion.DerivativeDublinnScout();
             dublinnScout.state = dublinnScout.WANDERING;
             dublinnScout.pos = getSummoningPos();
             GameScene.add( dublinnScout );
