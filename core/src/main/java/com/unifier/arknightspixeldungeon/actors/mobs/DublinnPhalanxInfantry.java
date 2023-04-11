@@ -11,6 +11,8 @@ import com.watabou.utils.Reflection;
 
 public class DublinnPhalanxInfantry extends Mob {
 
+    //raw Slime
+
     {
         spriteClass = DublinnPhalanxInfantrySprite.class;
 

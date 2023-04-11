@@ -18,10 +18,10 @@ public class DublinnSnifferHoundSprite extends MobSprite {
         run = new Animation( 12, true );
         run.frames( frames,  0, 1, 2, 3 ,4,5,6);
 
-        attack = new Animation( 18, false );
+        attack = new Animation( 14, false );
         attack.frames( frames, 14, 15, 16, 17 ,18,19,20 );
 
-        die = new Animation( 18, false );
+        die = new Animation( 14, false );
         die.frames( frames, 21, 22, 23, 24 ,25,26,27 );
 
         play(idle);

@@ -6,6 +6,8 @@ import com.watabou.utils.Random;
 
 public class DublinnSnifferHound extends Mob {
 
+    //raw Crab
+
     {
         spriteClass = DublinnSnifferHoundSprite.class;
 

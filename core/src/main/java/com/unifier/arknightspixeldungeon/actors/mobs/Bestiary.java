@@ -21,6 +21,8 @@
 
 package com.unifier.arknightspixeldungeon.actors.mobs;
 
+import com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob.Rat;
+import com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob.Swarm;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -44,15 +46,15 @@ public class Bestiary {
 			case 1: default:
 				//10x 源石虫
 				return new ArrayList<Class<? extends Mob>>(Arrays.asList(
-						Rat.class, Rat.class, Rat.class, Rat.class, Rat.class,
-						Rat.class, Rat.class, Rat.class, Rat.class, Rat.class));
+                        OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class,
+                        OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class));
 			case 2:
 				//2x 源石虫, 3x 深池侦察兵 1x 大君之触
-				return new ArrayList<>(Arrays.asList(Rat.class, Rat.class, DublinnScout.class,
+				return new ArrayList<>(Arrays.asList(OriginiumSlug.class, OriginiumSlug.class, DublinnScout.class,
                         DublinnScout.class, DublinnScout.class, TouchOfTheSanguinarch.class));
 			case 3:
 				//1x 源石虫, 2x 深池侦察兵, 2x 深池狙击手, 1x 深池暗影术士,1x 深池侦察犬,1x 萨卡兹征用工程无人机
-				return new ArrayList<>(Arrays.asList(Rat.class, DublinnScout.class,
+				return new ArrayList<>(Arrays.asList(OriginiumSlug.class, DublinnScout.class,
                         DublinnScout.class, DublinnSniper.class, DublinnSniper.class, DublinnShadowcaster.class,
                         DublinnSnifferHound.class, SarkazRequisitionedEngineeringDrone.class));
 			case 4:

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.actors.mobs;
+package com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
@@ -28,7 +28,7 @@ import com.unifier.arknightspixeldungeon.items.wands.Wand;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scripts.NPCPlot.FrostNovaQuestPlot;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
-import com.unifier.arknightspixeldungeon.sprites.GreatCrabSprite;
+import com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite.GreatCrabSprite;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 
 import java.util.ArrayList;

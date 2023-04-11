@@ -19,34 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.actors.mobs;
+package com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite;
 
-import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.sprites.RatSprite;
-import com.watabou.utils.Random;
+import com.unifier.arknightspixeldungeon.Assets;
+import com.unifier.arknightspixeldungeon.sprites.MobSprite;
+import com.watabou.noosa.TextureFilm;
 
-public class Rat extends Mob {
-	{
-		spriteClass = RatSprite.class;
-
-		HP = HT = 8;
-		defenseSkill = 2;
-
-		maxLvl = 5;
-	}
-
-	@Override
-	public int damageRoll(Char enemy, boolean isMagic) {
-		return Random.NormalIntRange( 1, 4 );
-	}
-
-	@Override
-	public int attackSkill( Char target ) {
-		return 8;
-	}
-
-	@Override
-	public int drRoll() {
-		return Random.NormalIntRange(0, 1);
+public class RatSprite extends MobSprite {
+	
+	public RatSprite() {
+		super();
+		
+		texture( Assets.RAT );
+		
+		TextureFilm frames = new TextureFilm( texture, 16, 13 );
+		
+		idle = new Animation( 2, true );
+		idle.frames( frames, 0, 0, 0, 1 );
+		
+		run = new Animation( 10, true );
+		run.frames( frames, 6, 7, 8, 9, 10 );
+		
+		attack = new Animation( 15, false );
+		attack.frames( frames, 2, 3, 4, 5, 0 );
+		
+		die = new Animation( 10, false );
+		die.frames( frames, 11, 12, 13, 14 );
+		
+		play( idle );
 	}
 }

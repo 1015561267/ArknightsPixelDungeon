@@ -235,15 +235,15 @@ public class SewerBossLevel extends Level {
 	public void onBerserkBegin()
     {
         for(int i=0;i<2;i++){
-            SarkazCenturion.DerivativeRat rat = new SarkazCenturion.DerivativeRat();
-            rat.state = rat.WANDERING;
-            rat.pos = getSummoningPos();
-            GameScene.add( rat );
-            rat.beckon(Dungeon.hero.pos);
-            if (heroFOV[rat.pos]) {
-                rat.notice();
-                rat.sprite.alpha( 0 );
-                rat.sprite.parent.add( new AlphaTweener( rat.sprite, 1, 0.1f ) );
+            SarkazCenturion.DerivativeOriginiumSlug originiumSlug = new SarkazCenturion.DerivativeOriginiumSlug();
+            originiumSlug.state = originiumSlug.WANDERING;
+            originiumSlug.pos = getSummoningPos();
+            GameScene.add( originiumSlug );
+            originiumSlug.beckon(Dungeon.hero.pos);
+            if (heroFOV[originiumSlug.pos]) {
+                originiumSlug.notice();
+                originiumSlug.sprite.alpha( 0 );
+                originiumSlug.sprite.parent.add( new AlphaTweener( originiumSlug.sprite, 1, 0.1f ) );
             }
         }
     }

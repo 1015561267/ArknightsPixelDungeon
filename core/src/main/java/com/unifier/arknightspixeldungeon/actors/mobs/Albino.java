@@ -24,6 +24,7 @@ package com.unifier.arknightspixeldungeon.actors.mobs;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Bleeding;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob.Rat;
 import com.unifier.arknightspixeldungeon.sprites.AlbinoSprite;
 import com.watabou.utils.Random;
 

@@ -19,41 +19,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.actors.mobs;
+package com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob;
 
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.items.food.MysteryMeat;
-import com.unifier.arknightspixeldungeon.sprites.CrabSprite;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
+import com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite.RatSprite;
 import com.watabou.utils.Random;
 
-public class Crab extends Mob {
-
+public class Rat extends Mob {
 	{
-		spriteClass = CrabSprite.class;
-		
-		HP = HT = 15;
-		defenseSkill = 5;
-		baseSpeed = 2f;
-		
-		EXP = 4;
-		maxLvl = 9;
-		
-		loot = new MysteryMeat();
-		lootChance = 0.167f;
+		spriteClass = RatSprite.class;
+
+		HP = HT = 8;
+		defenseSkill = 2;
+
+		maxLvl = 5;
 	}
-	
+
 	@Override
 	public int damageRoll(Char enemy, boolean isMagic) {
-		return Random.NormalIntRange( 1, 8 );
+		return Random.NormalIntRange( 1, 4 );
 	}
-	
+
 	@Override
 	public int attackSkill( Char target ) {
-		return 12;
+		return 8;
 	}
-	
+
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(0, 4);
+		return Random.NormalIntRange(0, 1);
 	}
 }

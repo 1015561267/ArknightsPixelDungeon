@@ -377,6 +377,7 @@ public abstract class Char extends Actor {
                     @Override
                     public boolean isBulletForEffect(){return true;}
                 };
+                    case SarkazSniper:sprite = new ParalyticDart();break;
                     case Tengu:sprite = new Shuriken();break;
                     case Scorpio:sprite = new Dart();break;
             }
@@ -971,7 +972,7 @@ public abstract class Char extends Actor {
 	public enum rangeType{
         Dismiss,//With some should not be considered able to reflect
         GnollTrickster,Tengu,Scorpio,
-        DublinnSniper
+        DublinnSniper,SarkazSniper
     }
 
     public enum magicType{

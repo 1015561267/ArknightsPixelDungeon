@@ -19,38 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.sprites;
+package com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite;
 
 import com.unifier.arknightspixeldungeon.Assets;
-import com.watabou.noosa.MovieClip;
+import com.unifier.arknightspixeldungeon.sprites.MobSprite;
 import com.watabou.noosa.TextureFilm;
 
-public class GreatCrabSprite extends MobSprite {
-
-	public GreatCrabSprite() {
+public class GnollSprite extends MobSprite {
+	
+	public GnollSprite() {
 		super();
-
-		texture( Assets.CRAB );
-
+		
+		texture( Assets.GNOLL );
+		
 		TextureFilm frames = new TextureFilm( texture, 16, 16 );
-
-		idle = new MovieClip.Animation( 5, true );
-		idle.frames( frames, 16, 17, 16, 18 );
-
-		run = new MovieClip.Animation( 10, true );
-		run.frames( frames, 19, 20, 21, 22 );
-
-		attack = new MovieClip.Animation( 12, false );
-		attack.frames( frames, 23, 24, 25 );
-
-		die = new MovieClip.Animation( 12, false );
-		die.frames( frames, 26, 27, 28, 29 );
-
+		
+		idle = new Animation( 2, true );
+		idle.frames( frames, 0, 0, 0, 1, 0, 0, 1, 1 );
+		
+		run = new Animation( 12, true );
+		run.frames( frames, 4, 5, 6, 7 );
+		
+		attack = new Animation( 12, false );
+		attack.frames( frames, 2, 3, 0 );
+		
+		die = new Animation( 12, false );
+		die.frames( frames, 8, 9, 10 );
+		
 		play( idle );
-	}
-
-	@Override
-	public int blood() {
-		return 0xFFFFEA80;
 	}
 }

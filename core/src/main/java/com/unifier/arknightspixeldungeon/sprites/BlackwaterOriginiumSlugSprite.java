@@ -36,7 +36,7 @@ public class BlackwaterOriginiumSlugSprite extends MobSprite {
 
 		texture( Assets.BLACKWATERORIGINIUM );
 
-		TextureFilm frames = new TextureFilm( texture, 16, 13 );
+		TextureFilm frames = new TextureFilm( texture, 32, 19 );
 
 		idle = new Animation( 4, true );
 		idle.frames( frames, 0, 1, 2, 3 ,4,5,6 );

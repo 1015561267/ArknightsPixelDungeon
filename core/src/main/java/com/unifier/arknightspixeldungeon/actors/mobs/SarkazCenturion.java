@@ -320,7 +320,7 @@ public class SarkazCenturion extends Mob {
         }
     }
 
-    public static class DerivativeRat extends Rat {
+    public static class DerivativeOriginiumSlug extends OriginiumSlug {
         public boolean isDerivative(){return true;}
     }
 

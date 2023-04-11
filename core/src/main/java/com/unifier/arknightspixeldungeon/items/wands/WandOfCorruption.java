@@ -60,7 +60,7 @@ import com.unifier.arknightspixeldungeon.actors.mobs.Mimic;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.Piranha;
 import com.unifier.arknightspixeldungeon.actors.mobs.Statue;
-import com.unifier.arknightspixeldungeon.actors.mobs.Swarm;
+import com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob.Swarm;
 import com.unifier.arknightspixeldungeon.actors.mobs.Wraith;
 import com.unifier.arknightspixeldungeon.actors.mobs.Yog;
 import com.unifier.arknightspixeldungeon.effects.MagicMissile;

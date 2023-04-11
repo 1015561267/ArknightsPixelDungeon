@@ -26,7 +26,7 @@ package com.unifier.arknightspixeldungeon.actors.blobs;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.effects.BlobEmitter;
 import com.unifier.arknightspixeldungeon.messages.Messages;
-import com.unifier.arknightspixeldungeon.sprites.GooSprite;
+import com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite.GooSprite;
 
 public class GooWarn extends Blob {
 

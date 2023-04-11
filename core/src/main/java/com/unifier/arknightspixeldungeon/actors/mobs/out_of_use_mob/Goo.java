@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.actors.mobs;
+package com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
@@ -30,6 +30,7 @@ import com.unifier.arknightspixeldungeon.actors.blobs.GooWarn;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
 import com.unifier.arknightspixeldungeon.actors.buffs.Ooze;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.effects.particles.ElmoParticle;
@@ -38,7 +39,7 @@ import com.unifier.arknightspixeldungeon.items.artifacts.LloydsBeacon;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
-import com.unifier.arknightspixeldungeon.sprites.GooSprite;
+import com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite.GooSprite;
 import com.unifier.arknightspixeldungeon.ui.BossHealthBar;
 import com.unifier.arknightspixeldungeon.utils.BArray;
 import com.unifier.arknightspixeldungeon.utils.GLog;

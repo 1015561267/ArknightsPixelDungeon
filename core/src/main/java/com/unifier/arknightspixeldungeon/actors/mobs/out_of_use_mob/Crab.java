@@ -19,37 +19,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.sprites;
+package com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob;
 
-import com.unifier.arknightspixeldungeon.Assets;
-import com.watabou.noosa.TextureFilm;
+import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
+import com.unifier.arknightspixeldungeon.items.food.MysteryMeat;
+import com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite.CrabSprite;
+import com.watabou.utils.Random;
 
-public class SwarmSprite extends MobSprite {
-	
-	public SwarmSprite() {
-		super();
+public class Crab extends Mob {
+
+	{
+		spriteClass = CrabSprite.class;
 		
-		texture( Assets.SWARM );
+		HP = HT = 15;
+		defenseSkill = 5;
+		baseSpeed = 2f;
 		
-		TextureFilm frames = new TextureFilm( texture, 17, 16 );
+		EXP = 4;
+		maxLvl = 9;
 		
-		idle = new Animation( 10, true );
-		idle.frames( frames, 0, 1 );
-		
-		run = new Animation( 20, true );
-		run.frames( frames, 2,3,4,5 );
-		
-		attack = new Animation( 10, false );
-		attack.frames( frames, 6,7 );
-		
-		die = new Animation( 15, false );
-		die.frames( frames, 8,9,10);
-		
-		play( idle );
+		loot = new MysteryMeat();
+		lootChance = 0.167f;
 	}
 	
 	@Override
-	public int blood() {
-		return 0xFF8BA077;
+	public int damageRoll(Char enemy, boolean isMagic) {
+		return Random.NormalIntRange( 1, 8 );
+	}
+	
+	@Override
+	public int attackSkill( Char target ) {
+		return 12;
+	}
+	
+	@Override
+	public int drRoll() {
+		return Random.NormalIntRange(0, 4);
 	}
 }

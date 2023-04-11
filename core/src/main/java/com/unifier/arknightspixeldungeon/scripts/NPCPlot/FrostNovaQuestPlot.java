@@ -4,9 +4,9 @@ import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.mobs.BlackwaterOriginiumSlug;
-import com.unifier.arknightspixeldungeon.actors.mobs.GnollTrickster;
-import com.unifier.arknightspixeldungeon.actors.mobs.GreatCrab;
+import com.unifier.arknightspixeldungeon.actors.mobs.DublinnHeavyDefender;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
+import com.unifier.arknightspixeldungeon.actors.mobs.SarkazSniper;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.Ghost;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.NPC;
 import com.unifier.arknightspixeldungeon.items.Generator;
@@ -345,9 +345,9 @@ public class FrostNovaQuestPlot extends Plot {
             case 1: default:
                 questBoss = new BlackwaterOriginiumSlug(); break;
             case 2:
-                questBoss = new GnollTrickster(); break;
+                questBoss = new SarkazSniper(); break;
             case 3:
-                questBoss = new GreatCrab();break;
+                questBoss = new DublinnHeavyDefender();break;
         }
         questBoss.pos = Dungeon.level.randomRespawnCell();
         if (questBoss.pos != -1) {

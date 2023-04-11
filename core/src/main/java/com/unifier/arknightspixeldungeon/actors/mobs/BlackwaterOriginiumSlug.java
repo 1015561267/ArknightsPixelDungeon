@@ -33,7 +33,9 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class BlackwaterOriginiumSlug extends Rat {
+public class BlackwaterOriginiumSlug extends OriginiumSlug {
+
+    //raw FetidRat
 
 	{
 		spriteClass = BlackwaterOriginiumSlugSprite.class;

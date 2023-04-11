@@ -26,7 +26,7 @@ import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
 import com.unifier.arknightspixeldungeon.messages.Messages;
-import com.unifier.arknightspixeldungeon.sprites.RatSprite;
+import com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite.RatSprite;
 import com.unifier.arknightspixeldungeon.ui.Archs;
 import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.watabou.gltextures.SmartTexture;

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.actors.mobs;
+package com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
@@ -35,7 +35,7 @@ import com.unifier.arknightspixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scripts.NPCPlot.FrostNovaQuestPlot;
-import com.unifier.arknightspixeldungeon.sprites.GnollTricksterSprite;
+import com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite.GnollTricksterSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.actors.mobs;
+package com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
@@ -28,13 +28,14 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Burning;
 import com.unifier.arknightspixeldungeon.actors.buffs.Corruption;
 import com.unifier.arknightspixeldungeon.actors.buffs.Poison;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.Pushing;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.potions.PotionOfHealing;
 import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.levels.features.Door;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
-import com.unifier.arknightspixeldungeon.sprites.SwarmSprite;
+import com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite.SwarmSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 

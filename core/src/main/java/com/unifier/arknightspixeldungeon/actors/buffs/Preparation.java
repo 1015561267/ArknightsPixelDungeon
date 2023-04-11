@@ -25,7 +25,7 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.actors.mobs.Rat;
+import com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob.Rat;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.NPC;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Effects;

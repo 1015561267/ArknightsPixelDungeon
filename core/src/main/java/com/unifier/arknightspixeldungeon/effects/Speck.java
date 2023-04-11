@@ -309,7 +309,7 @@ public class Speck extends Image {
 			break;
 
 		case STENCH:
-			hardlight( 0x003300 );
+			hardlight( 0x9f1ab5 );
 			angularSpeed = -30;
 			angle = Random.Float( 360 );
 			lifespan = Random.Float( 1f, 3f );
