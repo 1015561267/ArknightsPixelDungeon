@@ -94,8 +94,8 @@ public class Shotgun extends ExusiaiSkill {
 
                         Ballistica ballistica = new Ballistica(owner.pos,cell,Ballistica.PROJECTILE);
                         ConeAOE coneAOE = new ConeAOE(ballistica,initDistance(),degrees(), Ballistica.PROJECTILE);
-
-
+                        //Here we construct a "virtual" process by calculate the damage of each bullet but don't do it immediately,just remove the mob from Ballistica checking
+                        //so the close mob won't block later bullet if they should(and in fact will)be killed by former bullets.
                     }
             }
         }

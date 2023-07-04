@@ -33,6 +33,8 @@ public class Assets {
     public static final String ROGUE	= HEROS + "rogue.png";
     public static final String HUNTRESS	= HEROS + "huntress.png";
 
+    public static final String CHEN	= HEROS + "chenSheet.png";
+
     public static final String SKILLS = HEROS + "skills/";
     public static final String GUNS = HEROS + "guns/";
     public static final String GUN_BLUEPRINTS = GUNS + "gun_blueprints/";

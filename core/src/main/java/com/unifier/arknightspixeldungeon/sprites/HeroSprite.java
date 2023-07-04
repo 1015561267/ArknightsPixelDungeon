@@ -39,6 +39,9 @@ public class HeroSprite extends CharSprite {
 	private static final int FRAME_WIDTH	= 13;
 	private static final int FRAME_HEIGHT	= 17;
 
+    private static final int IMPROVED_FRAME_WIDTH	= 32;
+    private static final int IMPROVED_FRAME_HEIGHT	= 26;
+
     private static final int SKILL_WIDTH	= 17;
     private static final int SKILL_HEIGHT	= 17;
 
@@ -59,8 +62,14 @@ public class HeroSprite extends CharSprite {
 
 		link( Dungeon.hero );
 
-        texture( Dungeon.hero.heroClass.spritesheet() );
-		updateArmor();
+        if(Dungeon.hero.heroClass==HeroClass.WARRIOR ) {
+            texture(Assets.CHEN);
+        }
+        else {
+            texture( Dungeon.hero.heroClass.spritesheet() );
+        }
+
+        updateArmor();
 
 		if (ch.isAlive())
 			idle();
@@ -70,35 +79,78 @@ public class HeroSprite extends CharSprite {
 	
 	public void updateArmor() {
 
-		TextureFilm film = new TextureFilm( tiers(), ((Hero)ch).tier(), FRAME_WIDTH, FRAME_HEIGHT );
-		
-		idle = new Animation( 1, true );
-		idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
-		
-		run = new Animation( RUN_FRAMERATE, true );
-		run.frames( film, 2, 3, 4, 5, 6, 7 );
-		
-		die = new Animation( 20, false );
-		die.frames( film, 8, 9, 10 );
-		
-		attack = new Animation( 15, false );
-		attack.frames( film, 11, 12, 13, 0 );
-		
-		zap = attack.clone();
-		
-		operate = new Animation( 8, false );
-		operate.frames( film, 14, 15, 14, 15 );
-		
-		fly = new Animation( 1, true );
-		fly.frames( film, 16 );
+        if(Dungeon.hero.heroClass==HeroClass.WARRIOR ){
 
-		read = new Animation( 20, false );
-		read.frames( film, 17, 18, 18, 18, 18, 18, 18, 18, 18, 17 );
+            SmartTexture texture = TextureCache.get( Assets.CHEN );
+            tiers = new TextureFilm( texture, texture.width, IMPROVED_FRAME_HEIGHT );
 
-		if (ch.isAlive())
-			idle();
-		else
-			die();
+            TextureFilm film = new TextureFilm(tiers, ((Hero) ch).tier(), IMPROVED_FRAME_WIDTH, IMPROVED_FRAME_HEIGHT);
+
+            idle = new Animation( 6, true );
+            idle.frames( film, 0, 1, 2, 3 );
+
+            run = new Animation( 25, true );
+            run.frames( film, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 );
+
+            die = new Animation( 6, false );
+            die.frames( film, 13, 14, 15, 16, 17, 18, 19, 20);
+
+            attack = new Animation( 15, false );
+            attack.frames( film, 21, 22, 23, 24, 25, 26, 27, 22 );
+
+            zap = attack.clone();
+
+            operate = new Animation( 8, false );
+            operate.frames( film, 31, 32, 33, 34 );
+
+            fly = new Animation( 8, true );
+            fly.frames( film, 28, 29, 30, 29 );
+
+            read = new Animation( 20, false );
+            read.frames( film, 31, 32, 33, 34 );
+
+            if (ch.isAlive())
+                idle();
+            else
+                die();
+        }
+
+        else {
+
+            SmartTexture texture = TextureCache.get( Assets.ROGUE );
+            tiers = new TextureFilm( texture, texture.width, FRAME_HEIGHT );//Have no choice but to reset texture manually as it could be changed by chen new sprite
+            //such a mess could only be improved once all hero's new sprite are finished
+
+            TextureFilm film = new TextureFilm(tiers(), ((Hero) ch).tier(), FRAME_WIDTH, FRAME_HEIGHT);
+
+            idle = new Animation(1, true);
+            idle.frames(film, 0, 0, 0, 1, 0, 0, 1, 1);
+
+            run = new Animation(RUN_FRAMERATE, true);
+            run.frames(film, 2, 3, 4, 5, 6, 7);
+
+            die = new Animation(20, false);
+            die.frames(film, 8, 9, 10);
+
+            attack = new Animation(15, false);
+            attack.frames(film, 11, 12, 13, 0);
+
+            zap = attack.clone();
+
+            operate = new Animation(8, false);
+            operate.frames(film, 14, 15, 14, 15);
+
+            fly = new Animation(1, true);
+            fly.frames(film, 16);
+
+            read = new Animation(20, false);
+            read.frames(film, 17, 18, 18, 18, 18, 18, 18, 18, 18, 17);
+
+            if (ch.isAlive())
+                idle();
+            else
+                die();
+        }
 	}
 
     @Override
@@ -160,8 +212,8 @@ public class HeroSprite extends CharSprite {
 	
 	public static TextureFilm tiers() {
 		if (tiers == null) {
-			SmartTexture texture = TextureCache.get( Assets.ROGUE );
-			tiers = new TextureFilm( texture, texture.width, FRAME_HEIGHT );
+		    SmartTexture texture = TextureCache.get( Assets.ROGUE );
+		    tiers = new TextureFilm( texture, texture.width, FRAME_HEIGHT );
 		}
 		return tiers;
 	}
