@@ -165,6 +165,8 @@ public class SarkazCenturion extends Mob {
         }
     }
 
+
+
     @Override
     public boolean isAlive() {
         return phase < 3 || HP > 0 ;//FIXME doing so feels stupid as this is caused by multiple damage
@@ -206,6 +208,17 @@ public class SarkazCenturion extends Mob {
             phase++;
             Buff.affect(this,CenturionBerserk.class).on(6f);
         }
+    }
+
+    protected int pretendDefenseFactor(int dmg, Object src) {
+        if(phase == 3){
+            dmg /= 2;
+        }
+
+        if(buff(CenturionBerserk.class)!=null){
+            dmg = (int) Math.ceil(dmg/10);
+        }
+        return dmg;
     }
 
     @Override

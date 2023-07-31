@@ -216,6 +216,8 @@ public abstract class ExusiaiSkill extends HeroSkill {
         Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.PROJECTILE);
         int result = ballistica.collisionPos;
 
+        owner.busy();
+
         ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(from, result, ammoSprite() , new Callback() {
             @Override
             public void call() {

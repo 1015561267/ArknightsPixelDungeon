@@ -316,13 +316,6 @@ public class Yog extends Mob {
 			return super.act();
 		}
 
-		@Override
-		public void damage(int dmg, Object src) {
-			super.damage(dmg, src);
-			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-			if (lock != null) lock.addTime(dmg*0.5f);
-		}
-
         @Override
         public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
             int beforeHitHP = HP;
@@ -332,6 +325,12 @@ public class Yog extends Mob {
             if (lock != null && !isImmune(src.getClass())) {
                 lock.addTime(totaldmg * 0.5f);
             }
+        }
+
+        @Override
+        protected void afterDamage(int rawDamage, int finalDamage, Object src) {
+            LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+            if (lock != null) lock.addTime(rawDamage*0.5f);
         }
 		
 		{
@@ -422,11 +421,10 @@ public class Yog extends Mob {
 		}
 
 		@Override
-		public void damage(int dmg, Object src) {
-			super.damage(dmg, src);
-			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-			if (lock != null) lock.addTime(dmg*0.5f);
-		}
+        protected void afterDamage(int rawDamage, int finalDamage, Object src) {
+            LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+            if (lock != null) lock.addTime(rawDamage*0.5f);
+        }
 
         @Override
         public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {

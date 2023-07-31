@@ -62,6 +62,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Shotgun;
 import com.unifier.arknightspixeldungeon.actors.mobs.Shaman;
 import com.unifier.arknightspixeldungeon.effects.Lightning;
 import com.unifier.arknightspixeldungeon.effects.MagicMissile;
@@ -650,12 +651,14 @@ public abstract class Char extends Actor {
     public float speed() {
 		return buff( Cripple.class ) == null ? baseSpeed : baseSpeed * 0.5f;
 	}
-	
+
 	public void damage( int dmg, Object src ) {
 		
 		if (!isAlive() || dmg < 0) {
 			return;
 		}
+
+		int rawDamage = dmg;
 
         if(isInvulnerable(src.getClass())){
             sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
@@ -707,7 +710,12 @@ public abstract class Char extends Actor {
 		if (!isAlive()) {
 			die( src );
 		}
+
+		afterDamage(rawDamage,dmg,src );
 	}
+
+	//FIXME it's quite stupid to specially note every damage function,so I'm improving it,many damage function can be departed to improve reusability
+    protected void afterDamage(int rawDamage, int finalDamage, Object src) {}
 
     //a temp way for magic related checking
     public void magicalDamage(int dmg, Object src){
@@ -715,9 +723,11 @@ public abstract class Char extends Actor {
     };
 
     //FIXME After finish this I realize this process actually contains message showing and hit/miss check,so after more multiple-damage ways implemented,it should be merged and used as a "multiple attack"function
+    //burstArray == null means each of them is hit
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
 
         if (!isAlive()) {
+            GLog.i("already dead");
             return ;
         }
 
@@ -738,7 +748,7 @@ public abstract class Char extends Actor {
 
         for(Integer dmg : damageArray){
 
-            if(burstArray.get(flag)){
+            if(burstArray == null || burstArray.get(flag)){
                 if (this.buff(Doom.class) != null){
                     dmg *= 2;
                 }
@@ -768,6 +778,8 @@ public abstract class Char extends Actor {
                 //if(this instanceof Hero) {
                 //    Talent.onHealthLose((Hero) this, src, Math.min(dmg, HP));
                 //} //not needed for now
+
+                GLog.i("on loss:" + dmg);
                 sprite.showStatus( HP > HT / 2 ?
                                 CharSprite.WARNING :
                                 CharSprite.NEGATIVE,
@@ -786,6 +798,8 @@ public abstract class Char extends Actor {
             flag++;
         }
 
+        GLog.i(hittedTime + " " + HP + "/"+ HT + " " +isAlive());
+
         if(hittedTime>0){
             sprite.bloodBurstA(sprite.center(), totalDamage);
             sprite.flash();
@@ -793,7 +807,7 @@ public abstract class Char extends Actor {
 
         if (Dungeon.level.heroFOV[Dungeon.hero.pos] || Dungeon.level.heroFOV[pos]) {
             while (flag < damageArray.size() - 1) {
-                if (!burstArray.get(flag)) {
+                if (burstArray==null || !burstArray.get(flag)) {
                     //verbArray += enemy.defenseVerb();
                     String defense = defenseVerb();
                     sprite.showStatus(CharSprite.NEUTRAL, defense);
@@ -805,6 +819,7 @@ public abstract class Char extends Actor {
         }
 
         if (!isAlive()) {
+            GLog.i("die");
             die( src );
         }
     }
@@ -1153,4 +1168,68 @@ public abstract class Char extends Actor {
             return true;
         }
     }
+
+    //It is a process mainly for calculating the damage while don't consult result at once, we only care if the enemy should die.
+    // It add a buff to do it later,makes some logic to be achievable.
+    //FIXME so the spilt of swarm is really a problem,for it may change Ballistica result
+    public void pretendDamage(int dmg,Object src){
+
+        // here save the original damage for calculation later
+        buff(Shotgun.DelayedDamage.class).addDamage(dmg);
+
+        dmg = pretendDefenseFactor(dmg,src);
+
+        if (this.buff(Doom.class) != null){
+            dmg *= 2;
+        }
+
+        Class<?> srcClass = src.getClass();
+        if (isImmune( srcClass )) {
+            dmg = 0;
+        } else {
+            dmg = Math.round( dmg * resist( srcClass ));
+        }
+
+        //Paralysis influence hit/miss
+        if (buff( Paralysis.class ) != null) {
+            buff( Paralysis.class ).processDamage(dmg);
+        }
+
+        if (src instanceof Hunger || SHLD == 0){
+            HP -= dmg;
+        } else if (SHLD >= dmg){
+            SHLD -= dmg;
+        } else if (SHLD > 0) {
+            HP -= (dmg - SHLD);
+            SHLD = 0;
+        }
+
+        if (HP < 0) {
+            buff(Shotgun.DelayedDamage.class).triggerFlag();
+        }
+
+        return;
+    }
+
+    //here we only construct those defense factor (and damage method) which will change the damage value
+    //FIXME it's quite stupid
+    protected int pretendDefenseFactor(int dmg, Object src) {
+	    return dmg;//do nothing in default
+    }
+
+    public boolean shouldDismiss() {
+
+	    if(buff(Shotgun.DelayedDamage.class)!=null)
+        {
+            return buff(Shotgun.DelayedDamage.class).dismissFlag;
+        }
+	    return false;
+
+    }
+
+    public void recall() {
+
+
+
+	}
 }

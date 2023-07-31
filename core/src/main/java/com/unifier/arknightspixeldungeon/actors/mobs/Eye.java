@@ -182,6 +182,11 @@ public class Eye extends Mob {
         super.multipleDamage(burstArray,damageArray,src,hittedTime);
     }
 
+    protected int pretendDefenseFactor(int dmg, Object src) {
+        if (beamCharged) dmg /= 4;
+        return dmg;
+    }
+
 
     public void deathGaze(){
 

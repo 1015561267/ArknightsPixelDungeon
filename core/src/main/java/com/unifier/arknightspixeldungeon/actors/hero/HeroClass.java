@@ -28,10 +28,9 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Shadowless;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
-import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Revolver;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Shotgun;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Vector;
-import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.skills.Exusiai.AdjustTool;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -261,9 +260,7 @@ public enum HeroClass {
 
 		new TomeOfMastery().identify().collect();
 
-		new AdjustTool().collect();
-
-		hero.skill_1 = new Revolver();
+		hero.skill_1 = new Shotgun();
 		hero.skill_1.attachTo(hero);
 
 		hero.skill_2 = new Vector();

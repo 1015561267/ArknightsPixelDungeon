@@ -177,6 +177,9 @@ public class SniperRifle extends ExusiaiSkill {
     }
 
     protected void doShoot(Hero owner,Integer cell){
+
+        owner.busy();
+
         int from = owner.pos;
 
         Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.STOP_CHARS);

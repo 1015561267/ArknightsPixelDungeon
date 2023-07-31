@@ -44,6 +44,14 @@ public class DublinnPhalanxInfantry extends Mob {
         super.damage(dmg, src);
     }
 
+    protected int pretendDefenseFactor(int dmg, Object src) {
+        if (dmg >= 6){
+            //takes 6/7/8/9/10/11 dmg at 6/8/11/15/20/26 incoming dmg
+            dmg = 5 + (int)(Math.sqrt(8*(dmg - 5) + 1) - 1)/2;
+        }
+        return dmg;
+    }
+
     @Override
     public float lootChance(){
         //each drop makes future drops 1/3 as likely

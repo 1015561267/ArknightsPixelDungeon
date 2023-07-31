@@ -89,7 +89,6 @@ public class ConeAOE {
                 outerRays.add(ray);
             }
         }
-
     }
 
     public ConeAOE( int from,int maxDist,float angle,int degrees,int ballisticaParams)
@@ -182,6 +181,5 @@ public class ConeAOE {
                 outerRays.add(ray);
             }
         }
-
     }
 }

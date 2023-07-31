@@ -69,6 +69,8 @@ public class Goo extends Mob {
 
 	private int pumpedUp = 0;
 
+    private boolean bleeding = (HP*2 <= HT);
+
 	@Override
 	public int damageRoll(Char enemy, boolean isMagic) {
 		int min = 1;
@@ -217,22 +219,17 @@ public class Goo extends Mob {
 
 	@Override
 	public void damage(int dmg, Object src) {
-		boolean bleeding = (HP*2 <= HT);
+        bleeding = (HP*2 <= HT);
+
 		super.damage(dmg, src);
-		if ((HP*2 <= HT) && !bleeding){
-			BossHealthBar.bleed(true);
-			sprite.showStatus(CharSprite.NEGATIVE, Messages.get(this, "enraged"));
-			((GooSprite)sprite).spray(true);
-			yell(Messages.get(this, "gluuurp"));
-		}
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-		if (lock != null) lock.addTime(dmg*2);
+
 	}
 
     @Override
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
-        boolean bleeding = (HP*2 <= HT);
-        int beforeHitHP = HP;
+	    bleeding = (HP*2 <= HT);
+
+	    int beforeHitHP = HP;
         super.multipleDamage(burstArray,damageArray,src,hittedTime);
         int totaldmg = beforeHitHP - HP;
 
@@ -249,7 +246,18 @@ public class Goo extends Mob {
         }
     }
 
+    protected void afterDamage(int rawDamage, int finalDamage, Object src) {
 
+        if ((HP*2 <= HT) && !bleeding){
+            BossHealthBar.bleed(true);
+            sprite.showStatus(CharSprite.NEGATIVE, Messages.get(this, "enraged"));
+            ((GooSprite)sprite).spray(true);
+            yell(Messages.get(this, "gluuurp"));
+        }
+        LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+        if (lock != null) lock.addTime(rawDamage*2);
+
+    }
 
 
 	@Override

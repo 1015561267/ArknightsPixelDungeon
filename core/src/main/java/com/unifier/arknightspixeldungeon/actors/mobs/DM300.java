@@ -134,13 +134,6 @@ public class DM300 extends Mob {
 		}
 	}
 
-	@Override
-	public void damage(int dmg, Object src) {
-		super.damage(dmg, src);
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-		if (lock != null && !isImmune(src.getClass())) lock.addTime(dmg*1.5f);
-	}
-
     @Override
         public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
 
@@ -152,6 +145,12 @@ public class DM300 extends Mob {
             if (lock != null && !isImmune(src.getClass())) {
                     lock.addTime(totaldmg*1.5f);
             }
+    }
+
+    @Override
+    protected void afterDamage(int rawDamage, int finalDamage, Object src) {
+	    LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+	    if (lock != null && !isImmune(src.getClass())) lock.addTime(rawDamage*1.5f);
     }
 
 	@Override

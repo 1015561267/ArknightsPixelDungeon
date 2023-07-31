@@ -139,13 +139,6 @@ public class King extends Mob {
 		}
 	}
 
-	@Override
-	public void damage(int dmg, Object src) {
-		super.damage(dmg, src);
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-		if (lock != null) lock.addTime(dmg);
-	}
-
     @Override
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
         int beforeHitHP = HP;
@@ -155,6 +148,12 @@ public class King extends Mob {
         if (lock != null && !isImmune(src.getClass())) {
             lock.addTime(totaldmg);
         }
+    }
+
+    @Override
+    protected void afterDamage(int rawDamage, int finalDamage, Object src) {
+        LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+        if (lock != null) lock.addTime(rawDamage);
     }
 	
 	@Override
@@ -300,14 +299,6 @@ public class King extends Mob {
 			
 			return damage;
 		}
-		
-		@Override
-		public void damage( int dmg, Object src ) {
-			super.damage( dmg, src );
-			if (src instanceof ToxicGas) {
-				((ToxicGas)src).clear( pos );
-			}
-		}
 
         @Override
         public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime) {
@@ -316,8 +307,16 @@ public class King extends Mob {
                 ((ToxicGas)src).clear( pos );
             }
         }
-		
-		@Override
+
+        @Override
+        protected void afterDamage(int rawDamage, int finalDamage, Object src) {
+            if (src instanceof ToxicGas) {
+                ((ToxicGas)src).clear( pos );
+            }
+        }
+
+
+        @Override
 		public void die( Object cause ) {
 			super.die( cause );
 			

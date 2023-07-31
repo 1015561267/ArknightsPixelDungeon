@@ -28,6 +28,7 @@ public class TouchOfTheSanguinarch extends Mob {
         return 15;
     }
 
+    @Override
     public void damage( int dmg, Object src ) {
 
         if(dmg>0) dmg = 1;
@@ -35,6 +36,7 @@ public class TouchOfTheSanguinarch extends Mob {
         super.damage(dmg,src);
     }
 
+    @Override
     //FIXME After finish this I realize this process actually contains message showing and hit/miss check,so after more multiple-damage ways implemented,it should be merged and used as a "multiple attack"function
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
 
@@ -53,4 +55,11 @@ public class TouchOfTheSanguinarch extends Mob {
 
         super.multipleDamage(burstArray,tmp,src,hittedTime);
     }
+
+    @Override
+    protected int pretendDefenseFactor(int dmg, Object src) {
+        if(dmg>0) dmg = 1;
+        return dmg;
+    }
+
 }

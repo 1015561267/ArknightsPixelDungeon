@@ -112,8 +112,11 @@ public class Ballistica {
 			path.add(cell);
 
 			if ((stopTerrain && cell != sourcePos && Dungeon.level.solid[cell]) //do as evan did in 0.7.0,makes range attack pass high grass - by Teller,in 2021/7/21
-					|| (cell != sourcePos && stopChars && Actor.findChar( cell ) != null)
-					|| (cell == to && stopTarget)){
+                    || (cell != sourcePos && stopChars && Actor.findChar( cell ) != null
+
+                    && !Actor.findChar( cell ).shouldDismiss()) //add this to make shotgun check much easier rather than check path manually
+
+                    || (cell == to && stopTarget)){
 				collide(cell);
 			}
 

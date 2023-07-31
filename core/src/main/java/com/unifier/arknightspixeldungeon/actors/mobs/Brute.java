@@ -72,19 +72,18 @@ public class Brute extends Mob {
 	public int drRoll() {
 		return Random.NormalIntRange(0, 8);
 	}
-	
-	@Override
-	public void damage( int dmg, Object src ) {
-		super.damage( dmg, src );
-		
-		if (isAlive() && !enraged && HP < HT / 4) {
-			enraged = true;
-			spend( TICK );
-			if (Dungeon.level.heroFOV[pos]) {
-				sprite.showStatus( CharSprite.NEGATIVE, Messages.get(this, "enraged") );
-			}
-		}
-	}
+
+    @Override
+    protected void afterDamage(int rawDamage, int finalDamage, Object src) {
+        if (isAlive() && !enraged && HP < HT / 4) {
+            enraged = true;
+            spend( TICK );
+            if (Dungeon.level.heroFOV[pos]) {
+                sprite.showStatus( CharSprite.NEGATIVE, Messages.get(this, "enraged") );
+            }
+        }
+    }
+
 
     @Override
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){

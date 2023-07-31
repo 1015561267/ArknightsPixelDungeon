@@ -27,7 +27,7 @@ import com.watabou.noosa.NinePatch;
 
 public class ShadowBox extends NinePatch {
 
-	public static final float SIZE	= 16;
+	public static final float SIZE	= 32;
 	
 	public ShadowBox() {
 		super( Assets.SHADOW, 1 );

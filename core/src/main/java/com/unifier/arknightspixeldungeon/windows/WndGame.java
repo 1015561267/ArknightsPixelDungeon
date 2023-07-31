@@ -25,6 +25,7 @@ import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.GamesInProgress;
+import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.HeroSelectScene;
@@ -33,6 +34,7 @@ import com.unifier.arknightspixeldungeon.scenes.RankingsScene;
 import com.unifier.arknightspixeldungeon.scenes.TitleScene;
 import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.Window;
+import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.utils.DeviceCompat;
@@ -139,6 +141,7 @@ public class WndGame extends Window {
                 @Override
                 protected void onClick() {
                     GameScene.logActorThread = true;
+                    GLog.i(String.valueOf(Actor.getCurrentActorClass()));
                 }
             });
             curBtn.icon(new Image(Assets.SPINNER, 144, 0, 16, 16));

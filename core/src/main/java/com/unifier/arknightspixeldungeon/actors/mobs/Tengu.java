@@ -158,7 +158,11 @@ public class Tengu extends Mob {
 
 	}
 
+    //TODO TengGu is really a thing as it has important phase switch,and many boss would be like that after their rework,leave it here until it reworked or base machine polished
+    @Override
+    protected void afterDamage(int rawDamage, int finalDamage, Object src) {
 
+    }
 
 	@Override
 	public boolean isAlive() {

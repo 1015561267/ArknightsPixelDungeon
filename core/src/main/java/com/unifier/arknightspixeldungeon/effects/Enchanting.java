@@ -27,7 +27,7 @@ import com.unifier.arknightspixeldungeon.sprites.ItemSprite;
 import com.watabou.noosa.Game;
 
 public class Enchanting extends ItemSprite {
-	private static final int SIZE	= 16;
+	private static final int SIZE	= 32;
 
 	private enum Phase {
 		FADE_IN, STATIC, FADE_OUT
