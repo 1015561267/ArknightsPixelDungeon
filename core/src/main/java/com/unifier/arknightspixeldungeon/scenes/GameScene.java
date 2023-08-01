@@ -21,6 +21,7 @@
 
 package com.unifier.arknightspixeldungeon.scenes;
 
+import com.badlogic.gdx.Gdx;
 import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
@@ -541,7 +542,7 @@ public class GameScene extends PixelScene {
         }
 
         Emitter.freezeEmitters = false;
-        /*
+
 		//tell the actor thread to finish, then wait for it to complete any actions it may be doing.
 		if (actorThread.isAlive()){
 			synchronized (GameScene.class){
@@ -563,7 +564,7 @@ public class GameScene extends PixelScene {
 			}
 		}
 
-		freezeEmitters = false;*/
+		freezeEmitters = false;
 
 		scene = null;
 		Badges.saveGlobal();
@@ -649,7 +650,7 @@ public class GameScene extends PixelScene {
         }
 
 
-        /*if(logActorThread){
+        if(logActorThread){
             if (actorThread != null){
                 logActorThread = false;
                 String s = "";
@@ -667,7 +668,7 @@ public class GameScene extends PixelScene {
                 );
                 add(new WndMessage(Messages.get(this, "copied")));
             }
-        }*/
+        }
 
         if (!Actor.processing() && Dungeon.hero.isAlive()) {
             if (actorThread == null || !actorThread.isAlive()) {

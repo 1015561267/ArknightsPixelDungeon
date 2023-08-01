@@ -19,7 +19,6 @@ import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.ui.SkillLoader;
-import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Callback;
@@ -29,6 +28,7 @@ import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class Shotgun extends ExusiaiSkill {
@@ -124,9 +124,6 @@ public class Shotgun extends ExusiaiSkill {
     };
 
     protected void doShoot(Hero owner,Integer cell){
-
-        //FIXME quite a mess,it might be fixed after "random angel differ from selected" is not only used at here.
-
         Ballistica ballistica = new Ballistica(owner.pos,cell,Ballistica.WONT_STOP);
         int maxDist = Math.min(ballistica.dist, initDistance());
 
@@ -161,9 +158,10 @@ public class Shotgun extends ExusiaiSkill {
         for(int i=0;i<bullets();i++){
 
             Integer destination = owner.pos;
-            Integer count = 5;
+            Integer count = 3;
 
             //try a few times to reduce bad performance around corner,as bullet would stop at user and have no affect
+            //in fact it means bullet have more chance to hit ideal cell when at this condition
             while (destination == owner.pos && count-- > 0) {
                 Ballistica randomBallistica = randomBallistica(owner.pos, fromP, circleRadius, initalAngle, degrees(), Ballistica.PROJECTILE, false);
                 destination = randomBallistica.collisionPos;
@@ -198,26 +196,20 @@ public class Shotgun extends ExusiaiSkill {
                 //Here we construct a "virtual" process by calculate the damage of each bullet but don't do it immediately,just remove the mob from Ballistica checking
                 //so the close mob won't block later bullet if they should(and in fact will)be killed by former bullets.
                 enemy.pretendDamage(effectiveDamage,this);
-
             }
         }
 
-        //in fact enemy's already damaged,have to recall to avoid skip damage
+        //in fact enemy is already damaged,have to recall it
         //FIXME is it really necessary to pretend damage and recall,then do it in fact?
         for (Char enemy:affectedEnemy) {
             enemy.buff(Shotgun.DelayedDamage.class).recall();
         }
 
-            Camera.main.shake(1.5f, 0.35f);
+        Camera.main.shake(1.5f, 0.35f);
 
         ConeAOE effect = new ConeAOE( ballistica ,maxDist,degrees(),Ballistica.DISMISS_CHAR);
 
-        GLog.i("orginal:" + owner.pos);
-
         for (Ballistica ray : effect.outerRays){
-
-            GLog.i(ray.path.get(ray.dist) + " ");
-
             MagicMissile visual = (MagicMissile)owner.sprite.parent.recycle( MagicMissile.class );
             visual.reset(  MagicMissile.FORCE_CONE,
                     owner.sprite,
@@ -227,10 +219,13 @@ public class Shotgun extends ExusiaiSkill {
         }
 
         for(Integer pos : bulletResult) {
+            doEnemyCheck(owner.pos,pos);
+
             ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(owner.pos, pos, ammoSprite() , new Callback() {
                 @Override
                 public void call() {
-                    doEnemyCheck(owner.pos,pos);
+                    //doEnemyCheck(owner.pos,pos);
+                    //FIXME if damage logic is added at here there will be a bunch of Actor main process jam bugs,have no choice but to move it outside before I found a good way to do it.
                 }
             });
         }
@@ -241,8 +236,10 @@ public class Shotgun extends ExusiaiSkill {
     protected void doEnemyCheck(int from, int to){
         Char enemy = Char.findChar(to);
         boolean visibleFight = Dungeon.level.heroFOV[to];
-        if(enemy != null && enemy.alignment == Char.Alignment.ENEMY && enemy.buff(Shotgun.DelayedDamage.class)!=null){
-            enemy.buff(Shotgun.DelayedDamage.class).triggerDamage();
+        if(enemy != null && enemy.alignment == Char.Alignment.ENEMY){
+            if(enemy.buff(Shotgun.DelayedDamage.class)!=null) {
+                enemy.buff(Shotgun.DelayedDamage.class).triggerDamage();
+            }
         }else {
             if (visibleFight) {
                 Splash.at(to, 0xCCFFC800, 1);
@@ -265,6 +262,7 @@ public class Shotgun extends ExusiaiSkill {
 
     public Ballistica randomBallistica(Integer formPos,PointF fromP,float circleRadius,float coreAngle,float rangeVariety,int ballisticaParams,boolean isTriangularlyDistributed) {
 
+        //FIXME quite a mess,it might be fixed after "random angel differ from selected" is not only used at here
         //very similar to coneAoe,but use a random angel instead
 
         PointF scan = new PointF();
@@ -312,27 +310,15 @@ public class Shotgun extends ExusiaiSkill {
         public int initHp;
         public int initShield;
 
-        public int currentHP;
-        public int currentShield;
-
         //mind that we save original damage value at here,let true damage process do their own job
         //what we concerned mainly is whether the enemy should die and be dismissed in Ballistica calculation
+
         public ArrayList<Integer> damageArray = new ArrayList<>();
 
         public void initialize(Char enemy) {
             initHp = enemy.HP;
             initShield = enemy.SHLD;
         }
-
-        //public void readState(Char aChar) {
-        //    currentHP = aChar.HP;
-        //    currentShield = aChar.SHLD;
-        //}
-
-        //public void updateState(Char aChar) {
-        //    aChar.HP = currentHP;
-        //    aChar.SHLD = currentShield;
-        //}
 
         public void addDamage(int dmg) {
             damageArray.add(dmg);
@@ -343,9 +329,11 @@ public class Shotgun extends ExusiaiSkill {
         }
 
         public void triggerDamage() {
-            GLog.i("before damage:" + damageArray);
-            target.multipleDamage(null,damageArray,Shotgun.class,damageArray.size());
-            target.sprite.idle();//FIXME it will jam as Actor.current if mob is killed by this
+            //avoid void value
+            //TODO now that bullet is already affected by this random angle,it seems unfair to calculate hit/miss again.
+            //The bullet number,random angle,even repeat check time and their damage,their value may need balance after test
+            ArrayList<Boolean> burstArray = new ArrayList<>((Collections.nCopies(damageArray.size(),true)));
+            target.multipleDamage(burstArray,damageArray,Shotgun.class,damageArray.size());
             detach();
         }
 

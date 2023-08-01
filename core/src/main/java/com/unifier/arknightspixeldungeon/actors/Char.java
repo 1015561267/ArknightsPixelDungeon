@@ -748,7 +748,7 @@ public abstract class Char extends Actor {
 
         for(Integer dmg : damageArray){
 
-            if(burstArray == null || burstArray.get(flag)){
+            if(burstArray.get(flag)){
                 if (this.buff(Doom.class) != null){
                     dmg *= 2;
                 }
@@ -779,7 +779,6 @@ public abstract class Char extends Actor {
                 //    Talent.onHealthLose((Hero) this, src, Math.min(dmg, HP));
                 //} //not needed for now
 
-                GLog.i("on loss:" + dmg);
                 sprite.showStatus( HP > HT / 2 ?
                                 CharSprite.WARNING :
                                 CharSprite.NEGATIVE,
@@ -798,8 +797,6 @@ public abstract class Char extends Actor {
             flag++;
         }
 
-        GLog.i(hittedTime + " " + HP + "/"+ HT + " " +isAlive());
-
         if(hittedTime>0){
             sprite.bloodBurstA(sprite.center(), totalDamage);
             sprite.flash();
@@ -807,7 +804,7 @@ public abstract class Char extends Actor {
 
         if (Dungeon.level.heroFOV[Dungeon.hero.pos] || Dungeon.level.heroFOV[pos]) {
             while (flag < damageArray.size() - 1) {
-                if (burstArray==null || !burstArray.get(flag)) {
+                if (!burstArray.get(flag)) {
                     //verbArray += enemy.defenseVerb();
                     String defense = defenseVerb();
                     sprite.showStatus(CharSprite.NEUTRAL, defense);
@@ -819,7 +816,6 @@ public abstract class Char extends Actor {
         }
 
         if (!isAlive()) {
-            GLog.i("die");
             die( src );
         }
     }
@@ -874,8 +870,8 @@ public abstract class Char extends Actor {
 	@SuppressWarnings("unchecked")
 	public synchronized  <T extends Buff> T buff( Class<T> c ) {
 		for (Buff b : buffs) {
-			if (c.isInstance( b )) {
-				return (T)b;
+			if (b.getClass() == c ) {
+                return (T)b;
 			}
 		}
 		return null;
