@@ -33,23 +33,23 @@ public class FreeSprite extends MobSprite {
 
         TextureFilm frames = new TextureFilm( texture, 32, 28 );
 
-        idle = new Animation( 12, true );
+        idle = new Animation( 6, true );
         idle.frames( frames, 0, 1, 2, 3, 4 );
 
-        run = new Animation( 15, true );
+        run = new Animation( 8, true );
         run.frames( frames, 0, 1, 2, 3, 4 );
 
-        attack = new Animation( 20, false );
+        attack = new Animation( 8, false );
         attack.frames( frames, 5, 6, 7, 8 );
 
-        die = new Animation( 20, false );
-        die.frames( frames, 9, 10, 11, 12, 13, 14, 15 );
+        die = new Animation( 7, false );
+        die.frames( frames, 9, 10, 11, 12, 13, 14, 15, 16  );
 
         play( idle );
 	}
 	
 	@Override
 	public int blood() {
-		return 0xffd500;
+		return 0x93b2c8;
 	}
 }
