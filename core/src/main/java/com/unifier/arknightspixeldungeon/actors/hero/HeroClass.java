@@ -33,6 +33,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperR
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Vector;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Generator;
+import com.unifier.arknightspixeldungeon.items.Honeypot;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.LevelTeleporter;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
@@ -148,6 +149,7 @@ public enum HeroClass {
             new PotionOfStrength().identify().collect();
             new ScrollOfMagicMapping().identify().collect();
             new PotionOfLiquidFlame().identify().collect();
+            new Honeypot().collect();
         }
 
 		for(int j=0;j<30;j++) {

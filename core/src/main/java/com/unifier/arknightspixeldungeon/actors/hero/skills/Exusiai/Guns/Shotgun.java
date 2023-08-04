@@ -330,7 +330,7 @@ public class Shotgun extends ExusiaiSkill {
 
         public void triggerDamage() {
             //avoid void value
-            //TODO now that bullet is already affected by this random angle,it seems unfair to calculate hit/miss again.
+            //TODO now that bullet is already affected by random angle,it seems unfair to calculate hit/miss again.
             //The bullet number,random angle,even repeat check time and their damage,their value may need balance after test
             ArrayList<Boolean> burstArray = new ArrayList<>((Collections.nCopies(damageArray.size(),true)));
             target.multipleDamage(burstArray,damageArray,Shotgun.class,damageArray.size());

@@ -727,7 +727,6 @@ public abstract class Char extends Actor {
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
 
         if (!isAlive()) {
-            GLog.i("already dead");
             return ;
         }
 
@@ -805,7 +804,6 @@ public abstract class Char extends Actor {
         if (Dungeon.level.heroFOV[Dungeon.hero.pos] || Dungeon.level.heroFOV[pos]) {
             while (flag < damageArray.size() - 1) {
                 if (!burstArray.get(flag)) {
-                    //verbArray += enemy.defenseVerb();
                     String defense = defenseVerb();
                     sprite.showStatus(CharSprite.NEUTRAL, defense);
                 } else {
