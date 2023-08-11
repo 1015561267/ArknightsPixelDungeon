@@ -175,6 +175,11 @@ public class Honeypot extends Item {
 			updateBee( hero.pos, null );
 		}
 
+		//TODO this is a temp move from new spd,may rework honeypot totally later
+		public void destroyPot( int potPos ){
+			updateBee(-1, null);
+		}
+
 		@Override
 		protected void onThrow(int cell) {
 			super.onThrow(cell);
@@ -225,5 +230,5 @@ public class Honeypot extends Item {
 			myBee = bundle.getInt( MYBEE );
 			beeDepth = bundle.getInt( BEEDEPTH );
 		}
-	}
+    }
 }

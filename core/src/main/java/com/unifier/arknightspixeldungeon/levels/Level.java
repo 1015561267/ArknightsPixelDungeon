@@ -40,6 +40,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.GrenadeLauncher;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.particles.FlowParticle;
 import com.unifier.arknightspixeldungeon.effects.particles.WindParticle;
@@ -755,13 +756,27 @@ public abstract class Level implements Bundlable {
 	//generally a 'hard' press should be forced is something is moving forcefully (e.g. thrown)
 	public void press( int cell, Char ch, boolean hard ) {
 
-		if (ch != null && pit[cell] && !ch.flying) {
-			if (ch == Dungeon.hero) {
-				Chasm.heroFall(cell);
-			} else if (ch instanceof Mob) {
-				Chasm.mobFall( (Mob)ch );
+		if (ch != null  &&  !ch.flying) {
+			if(pit[cell]){
+				if (ch == Dungeon.hero) {
+					Chasm.heroFall(cell);
+				} else if (ch instanceof Mob) {
+					Chasm.mobFall( (Mob)ch );
+				}
+				return;
 			}
-			return;
+
+			if(!(ch instanceof Hero) && Dungeon.level.heaps.get( cell )!=null){
+				//a bit tricky here,
+				// if there are grenade,explode the heap instead of item itself,as explode heap contains other function and visual check
+				for (Item item :  Dungeon.level.heaps.get( cell ).items.toArray(new Item[0])) {
+					if(item instanceof GrenadeLauncher.GrenadeItem){
+						Dungeon.level.heaps.get( cell ).items.remove( item );
+						((GrenadeLauncher.GrenadeItem) item).explode( cell );
+						break;
+					}
+				}
+			}
 		}
 		
 		Trap trap = null;

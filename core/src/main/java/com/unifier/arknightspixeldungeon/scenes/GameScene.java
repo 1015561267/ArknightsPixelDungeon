@@ -543,6 +543,7 @@ public class GameScene extends PixelScene {
 
         Emitter.freezeEmitters = false;
 
+		/*
 		//tell the actor thread to finish, then wait for it to complete any actions it may be doing.
 		if (actorThread.isAlive()){
 			synchronized (GameScene.class){
@@ -565,6 +566,7 @@ public class GameScene extends PixelScene {
 		}
 
 		freezeEmitters = false;
+		*/
 
 		scene = null;
 		Badges.saveGlobal();
@@ -767,7 +769,7 @@ public class GameScene extends PixelScene {
         //TODO Android never draws into notch atm, perhaps allow it for center notches?
         RectF insets = DeviceCompat.getSafeInsets();
         insets = insets.scale(1f / uiCamera.zoom);
-        DeviceCompat.log( "uiCamera.zoom", String.valueOf(uiCamera.zoom));
+        //DeviceCompat.log( "uiCamera.zoom", String.valueOf(uiCamera.zoom));
 
         boolean tagsOnLeft = PDSettings.flipTags();
         float tagWidth = Tag.SIZE + (tagsOnLeft ? insets.left : insets.right);

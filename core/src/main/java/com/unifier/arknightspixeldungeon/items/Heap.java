@@ -29,22 +29,19 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Frost;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mimic;
 import com.unifier.arknightspixeldungeon.actors.mobs.Wraith;
-import com.unifier.arknightspixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Flare;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.effects.particles.ElmoParticle;
 import com.unifier.arknightspixeldungeon.effects.particles.FlameParticle;
 import com.unifier.arknightspixeldungeon.effects.particles.ShadowParticle;
+import com.unifier.arknightspixeldungeon.items.armor.Armor;
 import com.unifier.arknightspixeldungeon.items.artifacts.Artifact;
-import com.unifier.arknightspixeldungeon.items.artifacts.DriedRose;
 import com.unifier.arknightspixeldungeon.items.food.ChargrilledMeat;
 import com.unifier.arknightspixeldungeon.items.food.FrozenCarpaccio;
 import com.unifier.arknightspixeldungeon.items.food.MysteryMeat;
 import com.unifier.arknightspixeldungeon.items.journal.DocumentPage;
 import com.unifier.arknightspixeldungeon.items.potions.Potion;
-import com.unifier.arknightspixeldungeon.items.potions.PotionOfMight;
-import com.unifier.arknightspixeldungeon.items.potions.PotionOfStrength;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfWealth;
 import com.unifier.arknightspixeldungeon.items.scrolls.Scroll;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicalInfusion;
@@ -84,7 +81,10 @@ public class Heap implements Bundlable {
 	
 	public ItemSprite sprite;
 	public boolean seen = false;
-	
+
+	//not used yet
+	public boolean autoExplored = false; //used to determine if this heap should count for exploration bonus
+
 	public LinkedList<Item> items = new LinkedList<Item>();
 	
 	public int image() {
@@ -194,8 +194,9 @@ public class Heap implements Bundlable {
 			items.remove( item );
 			
 		}
-		
-		if ((item instanceof Dewdrop || item instanceof DriedRose.Petal) && type != Type.FOR_SALE) {
+
+		if ((item.dropsDownHeap && type != Type.FOR_SALE) // || peek() instanceof LostBackpack
+				 ) {
 			items.add( item );
 		} else {
 			items.addFirst( item );
@@ -215,10 +216,27 @@ public class Heap implements Bundlable {
 		int index = items.indexOf( a );
 		if (index != -1) {
 			items.remove( index );
+
+			for (Item i : items) {
+				if (i.isSimilar( b )) {
+					i.merge( b );
+					return;
+				}
+			}
+
 			items.add( index, b );
 		}
 	}
-	
+
+	public void remove( Item a ){
+		items.remove(a);
+		if (items.isEmpty()){
+			destroy();
+		} else if (sprite != null) {
+			sprite.view(this).place( pos );
+		}
+	}
+
 	public void burn() {
 
 		if (type == Type.MIMIC) {
@@ -251,8 +269,12 @@ public class Heap implements Bundlable {
 			} else if (item instanceof Bomb) {
 				items.remove( item );
 				((Bomb) item).explode( pos );
-				//stop processing the burning, it will be replaced by the explosion.
-				return;
+				if (((Bomb) item).explodesDestructively()) {
+					//stop processing the burning, it will be replaced by the explosion.
+					return;
+				} else {
+					burnt = true;
+				}
 			}
 		}
 		
@@ -269,7 +291,8 @@ public class Heap implements Bundlable {
 			if (isEmpty()) {
 				destroy();
 			} else if (sprite != null) {
-				sprite.view( items.peek() );
+				sprite.view(this).place( pos );
+				//sprite.view( items.peek() );
 			}
 			
 		}
@@ -294,26 +317,34 @@ public class Heap implements Bundlable {
 
 			for (Item item : items.toArray( new Item[0] )) {
 
+				//unique items aren't affect by explosions
+				if (item.unique || (item instanceof Armor && ((Armor) item).checkSeal() != null)){
+					continue;
+				}
+
 				if (item instanceof Potion) {
 					items.remove( item );
 					((Potion) item).shatter(pos);
 
+				} else if (item instanceof Honeypot.ShatteredPot) {
+					items.remove(item);
+					((Honeypot.ShatteredPot) item).destroyPot(pos);
 				} else if (item instanceof Bomb) {
 					items.remove( item );
 					((Bomb) item).explode(pos);
-					//stop processing current explosion, it will be replaced by the new one.
-					return;
-
+					if (((Bomb) item).explodesDestructively()) {
+						//stop processing current explosion, it will be replaced by the new one.
+						return;
+					}
 				//unique and upgraded items can endure the blast
 				} else if (!(item.level() > 0 || item.unique))
 					items.remove( item );
-
 			}
 
 			if (isEmpty()){
 				destroy();
 			} else if (sprite != null) {
-				sprite.view( items.peek() );
+				sprite.view(this).place( pos );
 			}
 		}
 	}
@@ -337,8 +368,7 @@ public class Heap implements Bundlable {
 			if (item instanceof MysteryMeat) {
 				replace( item, FrozenCarpaccio.cook( (MysteryMeat)item ) );
 				frozen = true;
-			} else if (item instanceof Potion
-					&& !(item instanceof PotionOfStrength || item instanceof PotionOfMight)) {
+			} else if (item instanceof Potion && !item.unique) {
 				items.remove(item);
 				((Potion) item).shatter(pos);
 				frozen = true;
@@ -352,7 +382,7 @@ public class Heap implements Bundlable {
 			if (isEmpty()) {
 				destroy();
 			} else if (sprite != null) {
-				sprite.view( items.peek() );
+				sprite.view(this).place( pos );
 			}
 		}
 	}

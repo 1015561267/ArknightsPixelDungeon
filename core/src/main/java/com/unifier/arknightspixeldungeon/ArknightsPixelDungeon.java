@@ -31,8 +31,6 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PlatformSupport;
 
-;
-
 public class ArknightsPixelDungeon extends Game {
 	
 	//variable constants for specific older versions of shattered, used for data conversion

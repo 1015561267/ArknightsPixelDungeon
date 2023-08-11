@@ -37,16 +37,15 @@ public class Shotgun extends ExusiaiSkill {
         return new Image(Assets.SHOTGUN,0,0,128,64);
     }
 
+    //each bullet
     @Override
     public int shootDamageMin(){
-        int dmg = 1 + (int) (owner.lvl/5f + Dungeon.depth);
-        return Math.max(0, dmg);
+        return 1 + (int) (owner.lvl/5f + Dungeon.depth);
     }
 
     @Override
     public int shootDamageMax(){
-        int dmg = 3 + (int)(owner.lvl/5f +  Dungeon.depth);
-        return Math.max(0, dmg);
+        return 3 + (int)(owner.lvl/5f +  Dungeon.depth);
     }
 
     @Override

@@ -21,6 +21,7 @@
 
 package com.unifier.arknightspixeldungeon.scenes;
 
+import com.badlogic.gdx.Input;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.PDSettings;
@@ -33,6 +34,7 @@ import com.unifier.arknightspixeldungeon.ui.Window;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Blending;
 import com.watabou.input.ControllerHandler;
+import com.watabou.input.KeyEvent;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.BitmapText.Font;
@@ -46,9 +48,11 @@ import com.watabou.noosa.Visual;
 import com.watabou.noosa.ui.Component;
 import com.watabou.noosa.ui.Cursor;
 import com.watabou.utils.Callback;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Reflection;
+import com.watabou.utils.Signal;
 
 import java.util.ArrayList;
 
@@ -83,7 +87,7 @@ public class PixelScene extends Scene {
 
     protected boolean inGameScene = false;
 
-    ///private Signal.Listener<KeyEvent> fullscreenListener;
+    private Signal.Listener<KeyEvent> fullscreenListener;
 
 	@Override
 	public void create() {
@@ -98,17 +102,9 @@ public class PixelScene extends Scene {
             TextureCache.clear();
         }
 
-		float minWidth, minHeight;
-		if (landscape()) {
-			minWidth = MIN_WIDTH_L;
-			minHeight = MIN_HEIGHT_L;
-		} else {
-			minWidth = MIN_WIDTH_P;
-			minHeight = MIN_HEIGHT_P;
-		}
+		float minWidth, minHeight , scaleFactor;
 
-		/*, scaleFactor;
-        if (SPDSettings.interfaceSize() > 0){
+        if (PDSettings.interfaceSize() > 0){
             minWidth = MIN_WIDTH_FULL;
             minHeight = MIN_HEIGHT_FULL;
             scaleFactor = 3.75f;
@@ -120,14 +116,14 @@ public class PixelScene extends Scene {
             minWidth = MIN_WIDTH_P;
             minHeight = MIN_HEIGHT_P;
             scaleFactor = 2.5f;
-        }*/
+        }
 
 		maxDefaultZoom = (int)Math.min(Game.width/minWidth, Game.height/minHeight);
 		maxScreenZoom = (int)Math.min(Game.dispWidth/minWidth, Game.dispHeight/minHeight);
 		defaultZoom = PDSettings.scale();
 
         if (defaultZoom < Math.ceil( Game.density * 2 ) || defaultZoom > maxDefaultZoom){
-            defaultZoom = (int) GameMath.gate(2, (int)Math.ceil( Game.density * 2.5 ), maxDefaultZoom);
+            defaultZoom = (int) GameMath.gate(2, (int)Math.ceil( Game.density * scaleFactor ), maxDefaultZoom);
 
             if (PDSettings.interfaceSize() > 0 && defaultZoom < (maxDefaultZoom+1)/2){
                 defaultZoom = (maxDefaultZoom+1)/2;
@@ -176,7 +172,7 @@ public class PixelScene extends Scene {
     @Override
     public void update() {
         //we create this here so that it is last in the scene
-        /*if (DeviceCompat.isDesktop() && fullscreenListener == null){
+        if (DeviceCompat.isDesktop() && fullscreenListener == null){
             KeyEvent.addKeyListener(fullscreenListener = new Signal.Listener<KeyEvent>() {
 
                 private boolean alt;
@@ -201,7 +197,7 @@ public class PixelScene extends Scene {
                     return false;
                 }
             });
-        }*/
+        }
 
         super.update();
         //20% deadzone
@@ -245,6 +241,8 @@ public class PixelScene extends Scene {
                 }
 
                 cameraShift.invScale(Camera.main.zoom);
+                //cameraShift.x *= Camera.main.edgeScroll.x;
+                //cameraShift.y *= Camera.main.edgeScroll.y;
                 if (cameraShift.length() > 0 && Camera.main.scrollable){
                     Camera.main.shift(cameraShift);
                 }
@@ -307,9 +305,9 @@ public class PixelScene extends Scene {
 	public void destroy() {
 		super.destroy();
         PointerEvent.clearListeners();
-        //if (fullscreenListener != null){
-        //    KeyEvent.removeKeyListener(fullscreenListener);
-        //}
+        if (fullscreenListener != null){
+            KeyEvent.removeKeyListener(fullscreenListener);
+        }
         if (cursor != null){
             cursor.destroy();
         }
@@ -394,6 +392,11 @@ public class PixelScene extends Scene {
             }
         });
 	}
+
+    public static void shake( float magnitude, float duration){
+        //magnitude *= PDSettings.screenShake();
+        Camera.main.shake(magnitude, duration);
+    }
 	
 	protected static class Fader extends ColorBlock {
 		

@@ -37,14 +37,12 @@ public class Vector extends ExusiaiSkill {
 
     @Override
     public int shootDamageMin(){
-        int dmg = 1 + (int) (owner.lvl/5f + Dungeon.depth);
-        return Math.max(0, dmg);
+        return 1 + (int) (owner.lvl/5f + Dungeon.depth);
     }
 
     @Override
     public int shootDamageMax(){
-        int dmg = 3 + (int)(owner.lvl/5f +  Dungeon.depth);
-        return Math.max(0, dmg);
+        return 3 + (int)(owner.lvl/5f +  Dungeon.depth);
     }
 
     @Override

@@ -114,49 +114,76 @@ public class Bomb extends Item {
 		this.fuse = null;
 
 		Sample.INSTANCE.play( Assets.SND_BLAST );
+		if (explodesDestructively()) {
 
-		if (Dungeon.level.heroFOV[cell]) {
-			CellEmitter.center( cell ).burst( BlastParticle.FACTORY, 30 );
-		}
+			ArrayList<Char> affected = new ArrayList<>();
 
-		boolean terrainAffected = false;
-		for (int n : PathFinder.NEIGHBOURS9) {
-			int c = cell + n;
-			if (c >= 0 && c < Dungeon.level.length()) {
-				if (Dungeon.level.heroFOV[c]) {
-					CellEmitter.get( c ).burst( SmokeParticle.FACTORY, 4 );
-				}
+			if (Dungeon.level.heroFOV[cell]) {
+				CellEmitter.center(cell).burst(BlastParticle.FACTORY, 30);
+			}
 
-				if (Dungeon.level.flamable[c]) {
-					Dungeon.level.destroy( c );
-					GameScene.updateMap( c );
-					terrainAffected = true;
-				}
+			boolean terrainAffected = false;
 
-				//destroys items / triggers bombs caught in the blast.
-				Heap heap = Dungeon.level.heaps.get( c );
-				if(heap != null)
-					heap.explode();
-
-				Char ch = Actor.findChar( c );
-				if (ch != null) {
-					//those not at the center of the blast take damage less consistently.
-					int minDamage = c == cell ? Dungeon.depth+5 : 1;
-					int maxDamage = 10 + Dungeon.depth * 2;
-
-					int dmg = Random.NormalIntRange( minDamage, maxDamage ) - ch.drRoll();
-					if (dmg > 0) {
-						ch.damage( dmg, this );
+			for (int n : PathFinder.NEIGHBOURS9) {
+				int c = cell + n;
+				if (c >= 0 && c < Dungeon.level.length()) {
+					if (Dungeon.level.heroFOV[c]) {
+						CellEmitter.get(c).burst(SmokeParticle.FACTORY, 4);
 					}
 
-					if (ch == Dungeon.hero && !ch.isAlive())
-						Dungeon.fail( getClass() );
+					if (Dungeon.level.flamable[c]) {
+						Dungeon.level.destroy(c);
+						GameScene.updateMap(c);
+						terrainAffected = true;
+					}
+
+					//destroys items / triggers bombs caught in the blast.
+					Heap heap = Dungeon.level.heaps.get(c);
+					if (heap != null)
+						heap.explode();
+
+					Char ch = Actor.findChar(c);
+					if (ch != null) {
+						affected.add(ch);
+					}
 				}
 			}
-		}
 
-		if (terrainAffected) {
-			Dungeon.observe();
+			for (Char ch : affected) {
+
+				//if they have already been killed by another bomb
+				if (!ch.isAlive()) {
+					continue;
+				}
+
+				//int dmg = Random.NormalIntRange(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth()*2);
+
+				int dmg = Random.NormalIntRange(5 + Dungeon.depth, 10 + Dungeon.depth * 2);
+
+				//those not at the center of the blast take less damage
+				if (ch.pos != cell) {
+					dmg = Math.round(dmg * 0.67f);
+				}
+
+				dmg -= ch.drRoll();
+
+				if (dmg > 0) {
+					ch.damage(dmg, this);
+				}
+
+				if (ch == Dungeon.hero && !ch.isAlive()) {
+					//if (this instanceof MagicalBomb){
+					//	Badges.validateDeathFromFriendlyMagic();
+					//}
+					GLog.n(Messages.get(this, "ondeath"));
+					//TODO dungeon.fail use class itself as cause in newer version
+					Dungeon.fail(this.getClass());
+				}
+			}
+
+			if (terrainAffected) {
+				Dungeon.observe();
+			}
 		}
 	}
 	
@@ -214,6 +241,10 @@ public class Bomb extends Item {
 			Actor.add( fuse = ((Fuse)bundle.get(FUSE)).ignite(this) );
 	}
 
+	public boolean explodesDestructively() {
+		return true;
+	}
+
 
 	public static class Fuse extends Actor{
 
@@ -240,10 +271,20 @@ public class Bomb extends Item {
 			//look for our bomb, remove it from its heap, and blow it up.
 			for (Heap heap : Dungeon.level.heaps.values()) {
 				if (heap.items.contains(bomb)) {
-					heap.items.remove(bomb);
+					//FIXME this is a bit hacky, might want to generalize the functionality
+					//of bombs that don't explode instantly when their fuse ends
+					//if (bomb instanceof Noisemaker){
 
-					bomb.explode(heap.pos);
+					//	((Noisemaker) bomb).setTrigger(heap.pos);
 
+					//} else {
+
+						heap.remove(bomb);
+
+						bomb.explode(heap.pos);
+					//}
+
+					diactivate();
 					Actor.remove(this);
 					return true;
 				}

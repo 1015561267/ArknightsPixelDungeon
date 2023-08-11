@@ -16,14 +16,14 @@ public class Revolver extends ExusiaiSkill {
         return new Image(Assets.REVOLVER,0,0,128,64);
     }
 
+    @Override
     public int shootDamageMin(){
-        int dmg = (int) (1 + owner.lvl/5 + Dungeon.depth);
-        return Math.max(0, dmg);
+        return (int) (1 + owner.lvl/5f + Dungeon.depth);
     }
 
+    @Override
     public int shootDamageMax(){
-        int dmg = 6 + (int)(owner.lvl/2.5f +  Dungeon.depth * 2);
-        return Math.max(0, dmg);
+        return (int)(owner.lvl/2.5f +  Dungeon.depth * 2);
     }
 
     @Override

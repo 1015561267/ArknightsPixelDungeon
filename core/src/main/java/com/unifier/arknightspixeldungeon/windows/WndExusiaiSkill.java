@@ -5,6 +5,7 @@ import com.unifier.arknightspixeldungeon.Chrome;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.ExusiaiSkill;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.GrenadeLauncher;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Revolver;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Shotgun;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
@@ -55,6 +56,7 @@ public class WndExusiaiSkill extends Window {
         attachmentSlot = new ArrayList<>();
         AttachmentSlot button;
 
+        //FIXME it looks like there would be some problem or issues if I make this button arranged in seperated function
         if(skill instanceof Revolver){
 
             button = new AttachmentSlot(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT(), skill,this);
@@ -144,11 +146,20 @@ public class WndExusiaiSkill extends Window {
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
-        }
+        }else if(skill instanceof GrenadeLauncher){
 
-        //for (AttachmentSlot button:attachmentSlot) {
-        //    add(button);
-        //}
+            button = new AttachmentSlot(Attachment.AttachType.BELOW_HANG , skill.getFRONT_HANG(), skill,this);
+            button.setPos( (bluePrint.width * 27 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+
+            button = new AttachmentSlot(Attachment.AttachType.BACK_HANG , skill.getGUN_SIGHT(), skill ,this);
+            button.setPos( (bluePrint.width * 102 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+        }
 
         String message = skill.desc();
         RenderedTextBlock text = PixelScene.renderTextBlock( 6 );

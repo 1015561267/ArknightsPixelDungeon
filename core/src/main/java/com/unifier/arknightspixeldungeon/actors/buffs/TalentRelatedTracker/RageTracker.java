@@ -1,10 +1,7 @@
 package com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker;
 
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
-import com.unifier.arknightspixeldungeon.actors.hero.Hero;
-import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
-import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 

@@ -28,9 +28,9 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Shadowless;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.GrenadeLauncher;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Shotgun;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
-import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Vector;
 import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -74,6 +74,9 @@ import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHADOWLESS;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATHED_STRIKE;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.UNSHEATH;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.WEAPON_ADAPT;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public enum HeroClass {
 
@@ -136,6 +139,8 @@ public enum HeroClass {
 		ring.level(6);
 		ring.identify().collect();
 
+		ArrayList<String> list = new ArrayList<>(Arrays.asList("张三", "李四", "王五"));
+
         for(int j=0;j<10;j++) {
             /*new ScrollOfMagicalInfusion().identify().collect();
             new StoneOfAugmentation().collect();
@@ -187,7 +192,7 @@ public enum HeroClass {
 		return null;
 	}
 
-	private static void initWarrior( Hero hero ) {
+	private static void initWarrior(Hero hero ) {
 		(hero.belongings.weapon = new WornShortsword()).identify();
 		ThrowingStone stones = new ThrowingStone();
 		stones.identify().quantity(3).collect();
@@ -263,7 +268,7 @@ public enum HeroClass {
 		hero.skill_1 = new Shotgun();
 		hero.skill_1.attachTo(hero);
 
-		hero.skill_2 = new Vector();
+		hero.skill_2 = new GrenadeLauncher();
         hero.skill_2.attachTo(hero);
 
 		hero.skill_3  = new SniperRifle();

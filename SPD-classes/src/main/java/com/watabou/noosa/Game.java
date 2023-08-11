@@ -255,6 +255,7 @@ public class Game implements ApplicationListener {
         if (scene != null) {
             scene.destroy();
         }
+        //clear any leftover vertex buffers
         Vertexbuffer.clear();
         scene = requestedScene;
         if (onChange != null) onChange.beforeCreate();
@@ -281,7 +282,7 @@ public class Game implements ApplicationListener {
     }
 
     public static void reportException(Throwable tr) {
-        if (instance != null) {
+        if (instance != null && Gdx.app != null) {
             instance.logException(tr);
         } else {
             //fallback if error happened in initialization

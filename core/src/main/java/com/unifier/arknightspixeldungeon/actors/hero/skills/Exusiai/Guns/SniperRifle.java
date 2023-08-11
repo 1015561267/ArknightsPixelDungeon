@@ -35,14 +35,12 @@ public class SniperRifle extends ExusiaiSkill {
 
     @Override
     public int shootDamageMin() {
-        int dmg = 3 + owner.lvl/3 + Dungeon.depth;
-        return Math.max(0, dmg);
+        return 3 + owner.lvl/3 + Dungeon.depth;
     }
 
     @Override
     public int shootDamageMax() {
-        int dmg = 8 + owner.lvl + Dungeon.depth * 3;
-        return Math.max(0, dmg);
+        return 8 + owner.lvl + Dungeon.depth * 3;
     }
 
     @Override

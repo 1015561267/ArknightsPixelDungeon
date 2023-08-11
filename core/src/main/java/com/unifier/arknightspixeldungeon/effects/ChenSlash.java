@@ -2,7 +2,6 @@ package com.unifier.arknightspixeldungeon.effects;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.utils.Callback;
 
