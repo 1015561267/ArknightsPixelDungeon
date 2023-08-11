@@ -26,16 +26,16 @@ import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Amok;
 import com.unifier.arknightspixeldungeon.actors.buffs.Poison;
-import com.unifier.arknightspixeldungeon.sprites.BeeSprite;
+import com.unifier.arknightspixeldungeon.sprites.FreeSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 import java.util.HashSet;
 
-public class Bee extends Mob {
+public class Free extends Mob {
 	
 	{
-		spriteClass = BeeSprite.class;
+		spriteClass = FreeSprite.class;
 		
 		viewDistance = 4;
 
@@ -127,7 +127,7 @@ public class Bee extends Mob {
 				//find all mobs near the pot
 				HashSet<Char> enemies = new HashSet<>();
 				for (Mob mob : Dungeon.level.mobs) {
-					if (!(mob instanceof Bee)
+					if (!(mob instanceof Free)
 							&& Dungeon.level.distance(mob.pos, potPos) <= 3
 							&& mob.alignment != Alignment.NEUTRAL
 							&& !(alignment == Alignment.ALLY && mob.alignment == Alignment.ALLY)) {

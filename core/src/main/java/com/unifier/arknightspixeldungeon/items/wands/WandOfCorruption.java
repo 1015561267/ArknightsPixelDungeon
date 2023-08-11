@@ -54,7 +54,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Terror;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
-import com.unifier.arknightspixeldungeon.actors.mobs.Bee;
+import com.unifier.arknightspixeldungeon.actors.mobs.Free;
 import com.unifier.arknightspixeldungeon.actors.mobs.King;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mimic;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
@@ -140,7 +140,7 @@ public class WandOfCorruption extends Wand {
 			float enemyResist = 1 + enemy.EXP;
 			if (ch instanceof Mimic || ch instanceof Statue){
 				enemyResist = 1 + Dungeon.depth;
-			} else if (ch instanceof Piranha || ch instanceof Bee) {
+			} else if (ch instanceof Piranha || ch instanceof Free) {
 				enemyResist = 1 + Dungeon.depth/2f;
 			} else if (ch instanceof Wraith) {
 				//this is so low because wraiths are always at max hp

@@ -22,7 +22,7 @@
 package com.unifier.arknightspixeldungeon.levels.rooms.secret;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.mobs.Bee;
+import com.unifier.arknightspixeldungeon.actors.mobs.Free;
 import com.unifier.arknightspixeldungeon.items.Bomb;
 import com.unifier.arknightspixeldungeon.items.Honeypot;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -47,14 +47,14 @@ public class SecretHoneypotRoom extends SecretRoom {
 		Honeypot.ShatteredPot pot = new Honeypot.ShatteredPot();
 		level.drop(pot, level.pointToCell(brokenPotPos));
 		
-		Bee bee = new Bee();
-		bee.spawn( Dungeon.depth );
-		bee.HP = bee.HT;
-		bee.pos = level.pointToCell(brokenPotPos);
-		level.mobs.add( bee );
+		Free free = new Free();
+		free.spawn( Dungeon.depth );
+		free.HP = free.HT;
+		free.pos = level.pointToCell(brokenPotPos);
+		level.mobs.add(free);
 		
-		pot.setBee(bee);
-		bee.setPotInfo(level.pointToCell(brokenPotPos), null);
+		pot.setBee(free);
+		free.setPotInfo(level.pointToCell(brokenPotPos), null);
 		
 		placeItem(new Honeypot(), level);
 		

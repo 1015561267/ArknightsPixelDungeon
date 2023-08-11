@@ -175,8 +175,6 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
 
     public void doAfterAction() {
-
-
     }
 
     protected final CellSelector.Listener aimer = new CellSelector.Listener() {

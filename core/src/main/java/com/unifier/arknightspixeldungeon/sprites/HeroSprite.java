@@ -40,7 +40,7 @@ public class HeroSprite extends CharSprite {
 	private static final int FRAME_HEIGHT	= 17;
 
     private static final int IMPROVED_FRAME_WIDTH	= 32;
-    private static final int IMPROVED_FRAME_HEIGHT	= 26;
+    private static final int IMPROVED_FRAME_HEIGHT	= 27;
 
     private static final int SKILL_WIDTH	= 17;
     private static final int SKILL_HEIGHT	= 17;
@@ -89,10 +89,10 @@ public class HeroSprite extends CharSprite {
             idle = new Animation( 6, true );
             idle.frames( film, 0, 1, 2, 3 );
 
-            run = new Animation( 25, true );
-            run.frames( film, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 );
+            run = new Animation( 16, true );
+            run.frames( film, 4, 5, 6, 7, 8, 9, 10, 11, 12 );
 
-            die = new Animation( 6, false );
+            die = new Animation( 4, false );
             die.frames( film, 13, 14, 15, 16, 17, 18, 19, 20);
 
             attack = new Animation( 15, false );

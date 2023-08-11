@@ -88,7 +88,6 @@ public class Assets {
     public static final String BURNING	= MOBS + "burning_fist.png";
     public static final String YOG		= MOBS + "yog.png";
     public static final String LARVA	= MOBS + "larva.png";
-    public static final String BEE      = MOBS + "bee.png";
     public static final String MIMIC    = MOBS + "mimic.png";
     public static final String ROT_LASH = MOBS + "rot_lasher.png";
     public static final String ROT_HEART= MOBS + "rot_heart.png";
@@ -108,6 +107,9 @@ public class Assets {
     public static final String DUBLINNHEAVYDEFENDER = MOBS + "dublinn_heavy_defender.png";
 
     public static final String SARKAZCENTURION = MOBS + "sarkaz_centurion.png";
+
+    public static final String FREE      = MOBS + "free.png";
+
 
     public static final String SewerBoss = MOBS + "Centurion-Sheet.png";
 

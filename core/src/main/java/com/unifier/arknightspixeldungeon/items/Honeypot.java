@@ -26,7 +26,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
-import com.unifier.arknightspixeldungeon.actors.mobs.Bee;
+import com.unifier.arknightspixeldungeon.actors.mobs.Free;
 import com.unifier.arknightspixeldungeon.effects.Pushing;
 import com.unifier.arknightspixeldungeon.effects.Splash;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
@@ -109,20 +109,20 @@ public class Honeypot extends Item {
 		}
 		
 		if (newPos != -1) {
-			Bee bee = new Bee();
-			bee.spawn( Dungeon.depth );
-			bee.setPotInfo( pos, owner );
-			bee.HP = bee.HT;
-			bee.pos = newPos;
+			Free free = new Free();
+			free.spawn( Dungeon.depth );
+			free.setPotInfo( pos, owner );
+			free.HP = free.HT;
+			free.pos = newPos;
 			
-			GameScene.add( bee );
-			Actor.addDelayed( new Pushing( bee, pos, newPos ), -1f );
+			GameScene.add(free);
+			Actor.addDelayed( new Pushing(free, pos, newPos ), -1f );
 			
-			bee.sprite.alpha( 0 );
-			bee.sprite.parent.add( new AlphaTweener( bee.sprite, 1, 0.15f ) );
+			free.sprite.alpha( 0 );
+			free.sprite.parent.add( new AlphaTweener( free.sprite, 1, 0.15f ) );
 			
 			Sample.INSTANCE.play( Assets.SND_BEE );
-			return new ShatteredPot().setBee( bee );
+			return new ShatteredPot().setBee(free);
 		} else {
 			return this;
 		}
@@ -199,9 +199,9 @@ public class Honeypot extends Item {
 			if (Dungeon.depth != beeDepth)
 				return;
 
-			Bee bee = (Bee)Actor.findById( myBee );
-			if (bee != null)
-				bee.setPotInfo( cell, holder );
+			Free free = (Free)Actor.findById( myBee );
+			if (free != null)
+				free.setPotInfo( cell, holder );
 		}
 
 		@Override
