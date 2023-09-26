@@ -67,24 +67,21 @@ public class Unsheath extends ChenSkill {
     @Override
     public void doAction() {
 
-        Buff.detach( owner, Talent.BoilingKenshinTracker.class );
+        Buff.detach(owner, Talent.BoilingKenshinTracker.class);
 
-        if(!available()){
-            if(owner.hasTalent(Talent.BOILING_KENSHIN) && ( owner.HP > owner.HT * 0.4f ) ){
-                Buff.affect(owner,Talent.BoilingKenshinTracker.class);
+        if (!available()) {
+            if (owner.hasTalent(Talent.BOILING_KENSHIN) && (owner.HP > owner.HT * 0.4f)) {
+                Buff.affect(owner, Talent.BoilingKenshinTracker.class);
                 GameScene.selectCell(unsheath_selector);
-            }
-
-            else if(owner.buff( Talent.FlowingWaterTracker.class ) != null || owner.buff( Talent.AnotherFlowingWaterTracker.class ) != null){
+            } else if (owner.buff(Talent.FlowingWaterTracker.class) != null || owner.buff(Talent.AnotherFlowingWaterTracker.class) != null) {
                 GameScene.selectCell(unsheath_selector);
-            }
-
-            else{
+            } else {
                 GLog.h(Messages.get(HeroSkill.class, "unavailable"));
                 return;
             }
+        } else {
+            GameScene.selectCell(unsheath_selector);
         }
-        GameScene.selectCell(unsheath_selector);
     }
 
     @Override
@@ -111,7 +108,6 @@ public class Unsheath extends ChenSkill {
                 //Second,if the pointed position is occupied then check if further pos is both unoccupied and stand-able until max range
                 //Third,if second step cannot get,roll back to the pointed position,then get closer to check possible pos
                 //Finally,if reach the zero pos,it represent finding failure.
-
 
                 if (attack.dist == owner.pos) {
                     GLog.i("Unable to use");
@@ -331,7 +327,6 @@ public class Unsheath extends ChenSkill {
                                                             owner.skill_1.getCoolDown(owner.skill_1.rawCD());
                                                         }
 
-
                                                         if( owner.hasTalent(Talent.FLOWING_WATER) && hitAny){
                                                             if(owner.buff( Talent.FlowingWaterTracker.class ) != null){
                                                                 Buff.detach( owner, Talent.FlowingWaterTracker.class );
@@ -342,14 +337,7 @@ public class Unsheath extends ChenSkill {
                                                                 cooldown = tempCooldown;
                                                             }
                                                             else Buff.affect(owner, Talent.FlowingWaterTracker.class , 5f);
-
-
-
-
                                                         }
-
-
-
                                                         owner.spendAndNext(1f);
                                                     }
                                                 }, HeroSprite.skillAnimationType.unsheath_over);

@@ -265,7 +265,6 @@ public class HeroSprite extends CharSprite {
                 throw new IllegalStateException("Unexpected value: " + skillAnimationType);
         }
 
-
         TextureFilm frames;
         Animation animation;
 
@@ -301,7 +300,12 @@ public class HeroSprite extends CharSprite {
 
     public void setAfterSkillAnimation()
     {
-        texture( Dungeon.hero.heroClass.spritesheet() );
+        if(Dungeon.hero.heroClass==HeroClass.WARRIOR ) {
+            texture(Assets.CHEN);
+        }
+        else {
+            texture( Dungeon.hero.heroClass.spritesheet() );
+        }
         updateArmor();
         if (ch.isAlive())
             idle();

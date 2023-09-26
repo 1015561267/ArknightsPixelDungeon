@@ -27,8 +27,6 @@ import java.util.Collections;
 
 public class SheathedStrike extends ChenSkill {
 
-//    public boolean enable = false;
-
     @Override
     public boolean activated() { return owner.hasTalent(Talent.SHEATHED_STRIKE); }//I'd like to use owner but it somehow doesn't work
 

@@ -33,7 +33,7 @@ public class Beam extends Image {
 	
 	protected static final double A = 180 / Math.PI;
 
-    protected  float duration;
+    protected float duration;
 
     protected float timeLeft;
 
@@ -49,7 +49,7 @@ public class Beam extends Image {
 		float dy = e.y - s.y;
 		angle = (float)(Math.atan2( dy, dx ) * A);
 		scale.x = (float)Math.sqrt( dx * dx + dy * dy ) / width;
-		
+
 		Sample.INSTANCE.play( Assets.SND_RAY );
 		
 		timeLeft = this.duration = duration;
@@ -77,15 +77,34 @@ public class Beam extends Image {
 
         private Callback callback;
 
-        public UnSheathRay(PointF s, PointF e, Callback callback){
-            super(s, e, Effects.Type.CHEN_UNSHEATH, 0.5f);
-            this.callback = callback;
+		protected float unSheathScaleMax;
+
+		public UnSheathRay(PointF s, PointF e, Callback callback){
+            super(s, e, Effects.Type.CHEN_UNSHEATH, 0.25f);
+
+			float dx = e.x - s.x;
+			float dy = e.y - s.y;
+			angle = (float)(Math.atan2( dy, dx ) * A);
+			//used in update()
+			unSheathScaleMax = (float)Math.sqrt( dx * dx + dy * dy ) / width;
+			scale.x = 0;
+
+			this.callback = callback;
         }
 
         @Override
         public void update() {
             if ((timeLeft - Game.elapsed) <= 0) { if (callback != null) { callback.call(); } }//Note here is - to predict and call
-            super.update();
+
+			updateMotion();
+
+			float p = timeLeft / duration;
+			//alpha( p );
+			scale.set( unSheathScaleMax * (1-p) , p );//in this way we can let the beam become a little more "shooting-like" with a cheap code cost
+
+			if ((timeLeft -= Game.elapsed) <= 0) {
+				killAndErase();
+			}
         }
     }
 
