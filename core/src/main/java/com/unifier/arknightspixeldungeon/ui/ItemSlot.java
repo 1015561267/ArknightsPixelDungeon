@@ -131,8 +131,9 @@ public class ItemSlot extends Button {
 	protected void layout() {
 		super.layout();
 
-        sprite.x = x + (width - sprite.width) / 2f;
-        sprite.y = y + (height - sprite.height) / 2f;
+		//FIXME it is due to doubled resolution
+        sprite.x = x + (width - sprite.width/2) / 2f;
+        sprite.y = y + (height - sprite.height/2) / 2f;
 		PixelScene.align(sprite);
 		
 		if (topLeft != null) {

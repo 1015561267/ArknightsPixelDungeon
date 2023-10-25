@@ -48,7 +48,7 @@ import java.nio.Buffer;
 
 public class ItemSprite extends MovieClip {
 
-	public static final int SIZE	= 16;
+	public static final int SIZE = 32;
 	
 	private static final float DROP_INTERVAL = 0.4f;
 	
@@ -95,6 +95,10 @@ public class ItemSprite extends MovieClip {
 		super( Assets.ITEMS );
 
 		view(image, glowing);
+	}
+
+	public void originToCenter() {
+		origin.set(width / 2, height / 2);
 	}
 	
 	public void link() {
@@ -233,6 +237,9 @@ public class ItemSprite extends MovieClip {
 
 	public void frame( int image ){
 		frame( ItemSpriteSheet.film.get( image ));
+
+		scale.x = 0.5f;
+		scale.y = 0.5f;
 
 		float height = ItemSpriteSheet.film.height( image );
 		//GLog.i(String.valueOf(height));

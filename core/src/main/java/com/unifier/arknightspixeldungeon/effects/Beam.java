@@ -94,7 +94,12 @@ public class Beam extends Image {
 
         @Override
         public void update() {
-            if ((timeLeft - Game.elapsed) <= 0) { if (callback != null) { callback.call(); } }//Note here is - to predict and call
+			if ((timeLeft - Game.elapsed) <= 0) //Note here is - to predict and call
+			{
+				if (callback != null) {
+					callback.call();
+				}
+			}
 
 			updateMotion();
 

@@ -318,8 +318,11 @@ public class v0_6_X_Changes {
 				"Chance to resist paralysis is now based on all recent damage taken while paralyzed, instead of each specific instance of damage separately.\n" +
 				"\n" +
 				"This means that after taking around half current HP in damage, breaking from paralysis becomes very likely, and immediately re-applying paralysis will not reset this resist chance."));
-		
-		changes.addButton( new ChangeButton(new Image(Assets.TILES_SEWERS, 96, 96, 32, 32), "Chasm changes",
+
+		Image tempChasm = new Image(Assets.TILES_SEWERS, 96, 96, 32, 32);
+		tempChasm.scale.x *=0.5f;
+		tempChasm.scale.y *=0.5f;//FIXME it is super stupid to do this due to the doubled resolution,there should be a better way
+		changes.addButton( new ChangeButton(tempChasm, "Chasm changes",
 				"Dropping enemies into chasms is a very fun way to deal with enemies, but killing an enemy instantly and getting almost the full reward is simply too strong. This change should keep killing via chasms fun and useful, without it being as strong.\n" +
 				"\n" +
 				"_-_ Enemies killed via chasms now only award 50% exp"));

@@ -13,6 +13,7 @@ import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
 import com.unifier.arknightspixeldungeon.ui.TalentIcon;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
+import com.watabou.utils.RectF;
 
 public class WndHeroInfo extends WndTabbed{
 
@@ -61,10 +62,21 @@ public class WndHeroInfo extends WndTabbed{
         finalHeight = (int)Math.max(finalHeight, heroInfo.height());
 
         add( new IconTab( tabIcon ){
+
+            private RectF defaultFrame;
+
             @Override
             protected void select(boolean value) {
                 super.select(value);
                 heroInfo.visible = heroInfo.active = value;
+            }
+
+            //FIXME tabIcon use itemSprite with doubled resolution,half size at here to make it centered in ui
+            @Override
+            protected void layout() {
+                super.layout();
+                icon.x = x + (width - icon.width/2) / 2;
+                icon.y = y + (height - icon.height/2) / 2 - 1;
             }
         });
 

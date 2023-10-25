@@ -41,6 +41,7 @@ import com.unifier.arknightspixeldungeon.items.Torch;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
 import com.unifier.arknightspixeldungeon.items.artifacts.Artifact;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
+import com.unifier.arknightspixeldungeon.items.bags.MagicalHolster;
 import com.unifier.arknightspixeldungeon.items.bags.PotionBandolier;
 import com.unifier.arknightspixeldungeon.items.bags.ScrollHolder;
 import com.unifier.arknightspixeldungeon.items.bags.VelvetPouch;
@@ -55,7 +56,9 @@ import com.unifier.arknightspixeldungeon.items.rings.Ring;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfHaste;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.unifier.arknightspixeldungeon.items.wands.Wand;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfMagicMissile;
+import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Dagger;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Knuckles;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MagesStaff;
@@ -67,6 +70,7 @@ import com.unifier.arknightspixeldungeon.ui.TalentIcon;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.DeviceCompat;
+import com.watabou.utils.Random;
 
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.CONTINUOUS_ASSAULT;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.FAST_RECOVERY;
@@ -131,16 +135,27 @@ public enum HeroClass {
 			new SmallRation().collect();
 		}
 
+		new ScrollHolder().collect();
+		Dungeon.LimitedDrops.SCROLL_HOLDER.drop();
+
+		new MagicalHolster().collect();
+		Dungeon.LimitedDrops.MAGICAL_HOLSTER.drop();
+
         for(int j=0;j<3;j++) {
             Artifact artifact = Generator.randomArtifact();
             artifact.identify().collect();
-        }
+
+			Item wand = Generator.random(Generator.Category.WAND);
+        	wand.identify().collect();
+
+			Generator.randomWeapon(Random.Int(1,4)).collect();
+			Generator.randomMissile(Random.Int(1,4)).collect();
+			Generator.randomArmor(Random.Int(1,4)).collect();
+		}
 
         Ring ring= new RingOfHaste();
 		ring.level(6);
 		ring.identify().collect();
-
-		ArrayList<String> list = new ArrayList<>(Arrays.asList("张三", "李四", "王五"));
 
         for(int j=0;j<10;j++) {
             /*new ScrollOfMagicalInfusion().identify().collect();
@@ -161,22 +176,8 @@ public enum HeroClass {
 			new PotionOfExperience().identify().collect();
 		}
 
-		new WandOfMagicMissile().identify().collect();
-
         new LevelTeleporter().identify().collect();
 
-		//SandalsOfNature sandalsOfNature = new SandalsOfNature();
-		//sandalsOfNature.identify().collect();
-
-        //for(int j=0;j<100;j++) {
-       //     Item seed = Generator.random(Generator.Category.SEED);
-      //      seed.collect();
-        //}
-
-
-        //new ScrollOfRage().identify().collect();
-
-        //new TomeOfMastery().collect();
         new Torch().collect();
 	}
 
