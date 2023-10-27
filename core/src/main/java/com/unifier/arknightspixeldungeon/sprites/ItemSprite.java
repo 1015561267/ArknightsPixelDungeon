@@ -69,9 +69,9 @@ public class ItemSprite extends MovieClip {
 	//the width and height of the shadow are a percentage of sprite size
 	//offset is the number of pixels the shadow is moved down or up (handy for some animations)
 	protected boolean renderShadow  = false;
-	protected float shadowWidth     = 1f;
-	protected float shadowHeight    = 0.25f;
-	protected float shadowOffset    = 0.5f;
+	protected float shadowWidth     = 1.25f;
+	protected float shadowHeight    = 0.5f;
+	protected float shadowOffset    = 0.75f;
 
 	public ItemSprite() {
 		this( ItemSpriteSheet.SOMETHING, null );
@@ -153,7 +153,6 @@ public class ItemSprite extends MovieClip {
 	}
 	
 	public void drop() {
-
 		if (heap.isEmpty()) {
 			return;
 		} else if (heap.size() == 1){
@@ -167,7 +166,7 @@ public class ItemSprite extends MovieClip {
 		
 		speed.set( 0, -100 );
 		acc.set(0, -speed.y / DROP_INTERVAL * 2);
-		
+
 		if (heap != null && heap.seen && heap.peek() instanceof Gold) {
 			CellEmitter.center( heap.pos ).burst( Speck.factory( Speck.COIN ), 5 );
 			Sample.INSTANCE.play( Assets.SND_GOLD, 1, 1, Random.Float( 0.9f, 1.1f ) );
@@ -201,28 +200,38 @@ public class ItemSprite extends MovieClip {
 		return this;
 	}
 
+
+	public ItemSprite floorView( Item item ) {
+		view(item);
+		scale.x = 0.85f;
+		scale.y = 0.85f;
+		return this;
+	}
+
+	//XXX use floorView to separate sprite in ui(like bag)and in map(map floor also have doubled resolution,use halved sprite will cause them to be too small)
     public ItemSprite view( Heap heap ){
+
         if (heap.size() <= 0 || heap.items == null){
-            return view( 0, null );
+            return floorView( 0, null );
         }
         switch (heap.type) {
             case HEAP: case FOR_SALE:
-                return view( heap.peek() );
+                return floorView( heap.peek() );
             case CHEST:
             case MIMIC:
-                return view( ItemSpriteSheet.CHEST, null );
+                return floorView( ItemSpriteSheet.CHEST, null );
             case LOCKED_CHEST:
-                return view( ItemSpriteSheet.LOCKED_CHEST, null );
+                return floorView( ItemSpriteSheet.LOCKED_CHEST, null );
             case CRYSTAL_CHEST:
-                return view( ItemSpriteSheet.CRYSTAL_CHEST, null );
+                return floorView( ItemSpriteSheet.CRYSTAL_CHEST, null );
             case TOMB:
-                return view( ItemSpriteSheet.TOMB, null );
+                return floorView( ItemSpriteSheet.TOMB, null );
             case SKELETON:
-                return view( ItemSpriteSheet.BONES, null );
+                return floorView( ItemSpriteSheet.BONES, null );
             case REMAINS:
-                return view( ItemSpriteSheet.REMAINS, null );
+                return floorView( ItemSpriteSheet.REMAINS, null );
             default:
-                return view( 0, null );
+                return floorView( 0, null );
         }
     }
 
@@ -232,6 +241,13 @@ public class ItemSprite extends MovieClip {
         //GLog.i(String.valueOf(image) + (glowing == null? "null" : glowing.toString()));
 		frame( image );
 		glow( glowing );
+		return this;
+	}
+
+	public ItemSprite floorView( int image, Glowing glowing ) {
+		view(image,glowing);
+		scale.x = 0.85f;
+		scale.y = 0.85f;
 		return this;
 	}
 

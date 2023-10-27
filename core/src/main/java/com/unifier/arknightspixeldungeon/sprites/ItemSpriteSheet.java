@@ -42,7 +42,6 @@ public class ItemSpriteSheet {
 
         film.add( item, x, y, x+width, y+height);
         //DeviceCompat.log("assignItemRect", item + " " + width + " " + height);
-
     }
 
 	private static final int PLACEHOLDERS   =                               xy(1, 1);   //16 slots
@@ -384,13 +383,15 @@ public class ItemSpriteSheet {
 	public static final int ARTIFACT_CHALICE1   = ARTIFACTS+13;
 	public static final int ARTIFACT_CHALICE2   = ARTIFACTS+14;
 	public static final int ARTIFACT_CHALICE3   = ARTIFACTS+15;
-	public static final int ARTIFACT_SANDALS    = ARTIFACTS+16;
-	public static final int ARTIFACT_SHOES      = ARTIFACTS+17;
-	public static final int ARTIFACT_BOOTS      = ARTIFACTS+18;
-	public static final int ARTIFACT_GREAVES    = ARTIFACTS+19;
-	public static final int ARTIFACT_ROSE1      = ARTIFACTS+20;
-	public static final int ARTIFACT_ROSE2      = ARTIFACTS+21;
-	public static final int ARTIFACT_ROSE3      = ARTIFACTS+22;
+
+	private static final int ARTIFACTS2          =                            xy(1, 17);  //32 slots
+	public static final int ARTIFACT_SANDALS    = ARTIFACTS2+0;
+	public static final int ARTIFACT_SHOES      = ARTIFACTS2+1;
+	public static final int ARTIFACT_BOOTS      = ARTIFACTS2+2;
+	public static final int ARTIFACT_GREAVES    = ARTIFACTS2+3;
+	public static final int ARTIFACT_ROSE1      = ARTIFACTS2+4;
+	public static final int ARTIFACT_ROSE2      = ARTIFACTS2+5;
+	public static final int ARTIFACT_ROSE3      = ARTIFACTS2+6;
 	static{
 		assignItemRect(ARTIFACT_CLOAK,      27,  21);
 		assignItemRect(ARTIFACT_ARMBAND,    21, 25);
@@ -417,7 +418,6 @@ public class ItemSpriteSheet {
 		assignItemRect(ARTIFACT_ROSE3,      24, 24);
 	}
 
-	                                                                                    //32 free slots
 
 	private static final int SCROLLS        =                               xy(1, 20);  //16 slots
 	public static final int SCROLL_KAUNAN   = SCROLLS+0;

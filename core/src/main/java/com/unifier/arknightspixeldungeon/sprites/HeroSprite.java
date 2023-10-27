@@ -84,7 +84,7 @@ public class HeroSprite extends CharSprite {
             SmartTexture texture = TextureCache.get( Assets.CHEN );
             tiers = new TextureFilm( texture, texture.width, IMPROVED_FRAME_HEIGHT );
 
-            TextureFilm film = new TextureFilm(tiers, ((Hero) ch).tier(), IMPROVED_FRAME_WIDTH, IMPROVED_FRAME_HEIGHT);
+            TextureFilm film = new TextureFilm(improvedTiers(), ((Hero) ch).tier(), IMPROVED_FRAME_WIDTH, IMPROVED_FRAME_HEIGHT);
 
             idle = new Animation( 6, true );
             idle.frames( film, 0, 1, 2, 3 );
@@ -212,11 +212,18 @@ public class HeroSprite extends CharSprite {
 	
 	public static TextureFilm tiers() {
 		if (tiers == null) {
-		    SmartTexture texture = TextureCache.get( Assets.ROGUE );
-		    tiers = new TextureFilm( texture, texture.width, FRAME_HEIGHT );
-		}
+            SmartTexture texture = TextureCache.get(Assets.ROGUE);
+            tiers = new TextureFilm(texture, texture.width, FRAME_HEIGHT);
+        }
 		return tiers;
 	}
+    public static TextureFilm improvedTiers() {
+        if (tiers == null) {
+            SmartTexture texture = TextureCache.get(Assets.CHEN);
+            tiers = new TextureFilm(texture, texture.width, IMPROVED_FRAME_HEIGHT);
+        }
+        return tiers;
+    }
 	
 	public static Image avatar( HeroClass cl, int armorTier ) {
 		

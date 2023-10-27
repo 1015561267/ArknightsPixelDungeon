@@ -59,8 +59,19 @@ public class TextureFilm {
 
         float uw = (float) width / texWidth;
         float vh = (float) height / texHeight;
-        int cols = texWidth / width;
-        int rows = texHeight / height;
+
+        float tempcols = 1f * texWidth / width;
+        if(Math.abs(tempcols % 1f)>0.99999f||Math.abs(tempcols % 1f)<0.00001f){
+            tempcols = Math.round(tempcols);
+        }
+
+        float temprows = 1f * texHeight / height;
+        if(Math.abs(temprows % 1f)>0.99999f||Math.abs(temprows % 1f)<0.00001f){
+            temprows = Math.round(temprows);
+        }
+
+        int cols = (int)tempcols;
+        int rows = (int)temprows;
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -79,8 +90,22 @@ public class TextureFilm {
 
         float uw = (float) width / texWidth;
         float vh = (float) height / texHeight;
-        int cols = (int) (width(patch) / width);
-        int rows = (int) (height(patch) / height);
+
+        float tempcols = 1f * texWidth / width;
+        if(Math.abs(tempcols % 1f)>0.99999f||Math.abs(tempcols % 1f)<0.00001f){
+            tempcols = Math.round(tempcols);
+        }
+
+        float temprows = 1f * texWidth / height;
+        if(Math.abs(temprows % 1f)>0.99999f||Math.abs(temprows % 1f)<0.00001f){
+            temprows = Math.round(temprows);
+        }
+
+        //new hero sprite is 32*27,it may have Significance Loss,round to a whole number to fix errors,like what done in Actor.spendConstant
+        int cols = (int)tempcols;
+        int rows = (int)temprows;
+        //int cols = (int) (width(patch) / width);
+        //int rows = (int) (height(patch) / height);
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
