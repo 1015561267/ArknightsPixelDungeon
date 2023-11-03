@@ -127,34 +127,6 @@ public class WndDialog extends Window {
             skip = makeSkip();
             add(skip);
 
-        float modifier = 0;
-
-       /* switch (PDSettings.language()) {
-            case CHINESE: modifier = 1f;
-            default: }
-            //FIXME Well it sounds weird but it really happens:Chinese characters have bigger possible height than English,so with its margin,in fact there are some small overlap between lines.
-            //There are nothing elsewhere,but at here,if I wants to use colorblock to create some text gradually show effect,these small overlap would spoil everything,or at least makes things harder.
-            //As a temporary fix,I add the margin for Chinese between lines,make it looks a little better.Also check RenderedTextBlock.java for the change.
-            //By Teller,2021/9/8
-
-            blocks = new ColorBlock[5];
-
-            for(int i = 0;i < (landscape ? 3 :5) ; i++)
-            {
-                blocks[i] = new ColorBlock(1,1,color);
-                blocks[i].size( width ,textSize + 2f );
-                blocks[i].x = text.left();
-                if(i == 0)
-                {
-                    blocks[i].y = text.top() - 2 * modifier;
-                }
-                else
-                {
-                    blocks[i].y = blocks[ i - 1].y + blocks[ i - 1 ].height() - modifier;
-                }
-                add( blocks[i]);
-            }*/
-
         if(regained)
         {
             settedPlot.reachProcess(this);

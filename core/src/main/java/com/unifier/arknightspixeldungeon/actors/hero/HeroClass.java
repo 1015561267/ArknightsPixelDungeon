@@ -174,6 +174,7 @@ public enum HeroClass {
 
 		for(int j=0;j<30;j++) {
 			new PotionOfExperience().identify().collect();
+			new Generator().random(Generator.Category.SEED).collect();
 		}
 
         new LevelTeleporter().identify().collect();

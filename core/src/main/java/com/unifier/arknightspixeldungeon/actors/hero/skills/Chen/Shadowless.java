@@ -85,8 +85,9 @@ public class Shadowless extends ChenSkill {
                     new Callback() {
                         @Override
                         public void call() {
-                            owner.sprite.visible = false;
-                            owner.sprite.idle();
+                            ((HeroSprite)owner.sprite).setSkillCallbackAnimation(null, HeroSprite.skillAnimationType.shadowless_during);
+                            //owner.sprite.visible = false;
+                            //owner.sprite.idle();
                             doSlash(targets,0);
                         }
                     },HeroSprite.skillAnimationType.shadowless_start);
@@ -98,7 +99,6 @@ public class Shadowless extends ChenSkill {
 
     private void doSlash(ArrayList<Mob> targets, int t){
         Hero hero = Dungeon.hero;
-
         Mob mob=targets.get(Random.Int(targets.size()));
         ChenSlash.hit(mob.pos, Random.Int(360),new Callback() {
             @Override

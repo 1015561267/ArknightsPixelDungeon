@@ -42,8 +42,8 @@ public class HeroSprite extends CharSprite {
     private static final int IMPROVED_FRAME_WIDTH	= 32;
     private static final int IMPROVED_FRAME_HEIGHT	= 27;
 
-    private static final int SKILL_WIDTH	= 17;
-    private static final int SKILL_HEIGHT	= 17;
+    private static final int SKILL_WIDTH	= 32;
+    private static final int SKILL_HEIGHT	= 27;
 
 	private static final int RUN_FRAMERATE	= 20;
 	
@@ -53,7 +53,7 @@ public class HeroSprite extends CharSprite {
 	private Animation read;
 
     public enum skillAnimationType{
-        unsheath_start,unsheath_over,shadowless_start,shadowless_over
+        unsheath_start,unsheath_over,shadowless_start,shadowless_during,shadowless_over
     }
 
 
@@ -265,6 +265,7 @@ public class HeroSprite extends CharSprite {
                 texture(Assets.UNSHEATH);
                 break;
             case shadowless_start:
+            case shadowless_during:
             case shadowless_over:
                texture(Assets.SHADOWLESS);
                 break;
@@ -278,24 +279,29 @@ public class HeroSprite extends CharSprite {
         switch (skillAnimationType)
         {
             case unsheath_start:
-                frames = new TextureFilm( texture, 16, SKILL_HEIGHT );
-                animation = new Animation(10,false);
-                animation.frames(frames,0,1,2,3,4);
+                frames = new TextureFilm( texture, SKILL_WIDTH, SKILL_HEIGHT );
+                animation = new Animation(15,false);
+                animation.frames(frames,0,1,2,3,4,5);
                 break;
             case unsheath_over:
-                frames = new TextureFilm( texture, 16, SKILL_HEIGHT );
-                animation = new Animation(8,false);
-                animation.frames(frames,5,6,7,8);
+                frames = new TextureFilm( texture, SKILL_WIDTH, SKILL_HEIGHT );
+                animation = new Animation(15,false);
+                animation.frames(frames,5,6,7,8,9,10,11);
                 break;
             case shadowless_start:
                 frames = new TextureFilm( texture, SKILL_WIDTH, SKILL_HEIGHT );
-                animation = new Animation(30,false);
-                animation.frames(frames,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33);
+                animation = new Animation(25,false);
+                animation.frames(frames,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14);
+                break;
+            case shadowless_during:
+                frames = new TextureFilm( texture, SKILL_WIDTH, SKILL_HEIGHT );
+                animation = new Animation(100,false);
+                animation.frames(frames,14);
                 break;
             case shadowless_over:
                 frames = new TextureFilm( texture, SKILL_WIDTH, SKILL_HEIGHT );
                 animation = new Animation(20,false);
-                animation.frames(frames,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56);
+                animation.frames(frames,14,15,16,17,18,19,20,21,22,23);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + skillAnimationType);

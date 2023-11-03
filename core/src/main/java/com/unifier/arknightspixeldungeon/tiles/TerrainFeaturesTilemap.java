@@ -80,9 +80,10 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 	public static Image tile(int pos, int tile ) {
 		RectF uv = instance.tileset.get( instance.getTileVisual( pos, tile, true ) );
 		if (uv == null) return null;
-		
+
 		Image img = new Image( instance.texture );
 		img.frame(uv);
+
 		return img;
 	}
 

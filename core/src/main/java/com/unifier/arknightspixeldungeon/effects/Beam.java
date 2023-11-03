@@ -80,7 +80,7 @@ public class Beam extends Image {
 		protected float unSheathScaleMax;
 
 		public UnSheathRay(PointF s, PointF e, Callback callback){
-            super(s, e, Effects.Type.CHEN_UNSHEATH, 0.25f);
+            super(s, e, Effects.Type.CHEN_UNSHEATH, 0.1f);
 
 			float dx = e.x - s.x;
 			float dy = e.y - s.y;
