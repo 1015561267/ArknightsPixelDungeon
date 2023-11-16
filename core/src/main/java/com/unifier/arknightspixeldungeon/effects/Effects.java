@@ -55,10 +55,10 @@ public class Effects {
             case CHEN_SLASH:
                 icon.frame(icon.texture.uvRect(0, 44, 20, 64));
                 break;
-			case CHEN_NEWSLASH:
-				icon = new Image(Assets.NEWSLASH);
-//				icon.frame(icon.texture.uvRect(0, 0, 20, 20));
-				break;
+			//case CHEN_NEWSLASH:
+			//	icon = new Image(Assets.NEWSLASH);
+			//	icon.frame(icon.texture.uvRect(0, 0, 20, 20));
+			//	break;
 			case EXCLAMATION:
 				icon.frame(icon.texture.uvRect(0, 16, 6, 25));
 				break;

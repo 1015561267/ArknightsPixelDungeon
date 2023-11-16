@@ -316,6 +316,14 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		}
 	}
 
+	public void bloodBurstA( float angle, int damage ) {
+		if (visible) {
+			PointF c = center();
+			int n = (int)Math.min( 9 * Math.sqrt( (double)damage / ch.HT ), 9 );
+			Splash.at( c, angle, 3.1415926f / 2, blood(), n );
+		}
+	}
+
 	public int blood() {
 		return 0xFFBB0000;
 	}

@@ -89,13 +89,11 @@ public class Wound extends Image {
 	@Override
 	public void update() {
 		super.update();
-		
 		if ((time -= Game.elapsed) <= 0) {
 			kill();
             if(callback != null)
                 callback.call();
         } else {
-
 			float p = time / fadeTime();
 			alpha( p );
 			scale.x = 1 + p;
@@ -126,16 +124,6 @@ public class Wound extends Image {
 		w.reset( pos );
 		w.angle = angle;
     }
-
-    public static void hit(int pos,float angle ,Callback callback) {
-        Group parent = Dungeon.hero.sprite.parent;
-        Wound w = (Wound)parent.recycle( Wound.class);
-        parent.bringToFront( w );
-        w.reset( pos );
-        w.time = fadeTime();//0.8f is too slow,and even more if you have to wait it end then start the next
-        w.angle = angle;
-        w.callback=callback;
-	}
 
     protected static float fadeTime(){ return 0.8f; }
 }

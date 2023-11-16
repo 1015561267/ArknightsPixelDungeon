@@ -43,7 +43,7 @@ public class Shadowless extends ChenSkill {
 
     @Override
     public float rawCD() {
-        return 2f;
+        return 20f;
     }
 
     @Override
@@ -100,12 +100,15 @@ public class Shadowless extends ChenSkill {
     private void doSlash(ArrayList<Mob> targets, int t){
         Hero hero = Dungeon.hero;
         Mob mob=targets.get(Random.Int(targets.size()));
-        ChenSlash.hit(mob.pos, Random.Int(360),new Callback() {
+
+        int angle = Random.Int(360);
+        int damage = skillDamage(mob, false);
+
+        ChenSlash.hit(mob, angle,new Callback() {
             @Override
             public void call() {
-
-//                mob.damage(1, hero);
-                mob.damage(skillDamage(mob, false), hero);
+                mob.damage(damage, hero);
+                mob.sprite.bloodBurstA(angle,damage);
 
                 if (!mob.isAlive()){
                     GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", mob.name())) );
@@ -143,7 +146,9 @@ public class Shadowless extends ChenSkill {
                         }
                     },HeroSprite.skillAnimationType.shadowless_over);
                 }
-                else { doSlash(targets,t+1); }
+                else {
+                    doSlash(targets,t+1);
+                }
             }
         });
     }

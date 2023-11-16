@@ -371,7 +371,7 @@ public class Potion extends Item {
 				ingredient.quantity(ingredient.quantity() - 1);
 			}
 
-			if(curUser.hasTalent(Talent.FRUGALITY)) {
+			if(Dungeon.hero.hasTalent(Talent.FRUGALITY)) {
                 Item rolled = Random.element(ingredients);
                 rolled.collect();
             }

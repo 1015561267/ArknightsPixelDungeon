@@ -56,7 +56,7 @@ public class Unsheath extends ChenSkill {
 
     @Override
     public float rawCD() {
-        return 100f;
+        return 10f;
     }
 
     @Override
