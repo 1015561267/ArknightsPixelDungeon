@@ -19,10 +19,10 @@ public class DublinnSniperSprite extends MobSprite {
         idle = new Animation(5, true);
         idle.frames(frames, 0,1,2,3,4);
 
-        run = new Animation(12, true);
+        run = new Animation(10, true);
         run.frames(frames, 9,10,11,12,13,14);
 
-        attack = new Animation(9, false);
+        attack = new Animation(10, false);
         attack.frames(frames, 18, 19, 20, 21, 22, 23, 24,25,26);
 
         die = new Animation(10, false);

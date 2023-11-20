@@ -18,10 +18,10 @@ public class DublinnScoutSprite extends MobSprite {
         run = new Animation( 12, true );
         run.frames( frames, 6, 7, 8 , 9, 10, 11, 12, 13);
 
-        attack = new Animation( 18, false );
+        attack = new Animation( 15, false );
         attack.frames( frames,  14, 15, 16, 17, 18, 19, 20);
 
-        die = new Animation( 7, false );
+        die = new Animation( 10, false );
         die.frames( frames, 21, 22, 23, 24, 25, 26, 27 );
 
         play(idle);

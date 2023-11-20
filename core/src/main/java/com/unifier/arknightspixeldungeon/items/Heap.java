@@ -28,7 +28,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Burning;
 import com.unifier.arknightspixeldungeon.actors.buffs.Frost;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mimic;
-import com.unifier.arknightspixeldungeon.actors.mobs.Wraith;
+import com.unifier.arknightspixeldungeon.actors.mobs.SentryAgent;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Flare;
 import com.unifier.arknightspixeldungeon.effects.Speck;
@@ -124,14 +124,14 @@ public class Heap implements Bundlable {
 			}
 			break;
 		case TOMB:
-			Wraith.spawnAround( hero.pos );
+			SentryAgent.spawnAround( hero.pos );
 			break;
 		case REMAINS:
 		case SKELETON:
 			CellEmitter.center( pos ).start(Speck.factory(Speck.RATTLE), 0.1f, 3);
 			for (Item item : items) {
 				if (item.cursed) {
-					if (Wraith.spawnAt( pos ) == null) {
+					if (SentryAgent.spawnAt( pos ) == null) {
 						hero.sprite.emitter().burst( ShadowParticle.CURSE, 6 );
 						hero.damage( hero.HP / 2, this );
 					}

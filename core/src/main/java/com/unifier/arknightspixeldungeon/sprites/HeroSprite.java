@@ -256,7 +256,7 @@ public class HeroSprite extends CharSprite {
         return new Image(Assets.PORTRAITS, 0, 35* row, 36, 35);
     }
 
-    public void setSkillCallbackAnimation(Callback callback,skillAnimationType skillAnimationType)
+    public void setSkillCallbackAnimation(Callback callback,skillAnimationType skillAnimationType) //FIXME may separate
     {
         switch (skillAnimationType)
         {
@@ -290,8 +290,8 @@ public class HeroSprite extends CharSprite {
                 break;
             case shadowless_start:
                 frames = new TextureFilm( texture, SKILL_WIDTH, SKILL_HEIGHT );
-                animation = new Animation(25,false);
-                animation.frames(frames,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14);
+                animation = new Animation(20,false);
+                animation.frames(frames,0,0,1,1,2,3,4,5,6,6,7,8,9,10,11,12,13,14);
                 break;
             case shadowless_during:
                 frames = new TextureFilm( texture, SKILL_WIDTH, SKILL_HEIGHT );
@@ -301,7 +301,7 @@ public class HeroSprite extends CharSprite {
             case shadowless_over:
                 frames = new TextureFilm( texture, SKILL_WIDTH, SKILL_HEIGHT );
                 animation = new Animation(20,false);
-                animation.frames(frames,14,15,16,17,18,19,20,21,22,23);
+                animation.frames(frames,14,14,14,15,16,16,17,17,18,19,20,21,22,23);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + skillAnimationType);

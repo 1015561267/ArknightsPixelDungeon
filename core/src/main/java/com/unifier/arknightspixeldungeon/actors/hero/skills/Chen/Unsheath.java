@@ -273,6 +273,9 @@ public class Unsheath extends ChenSkill {
                                         for(Char enemy : enemys){
                                             int tracker = (int) (skillDamage(enemy,false) * factor);
                                             enemy.damage(tracker,owner);
+                                            enemy.sprite.flash();
+                                            enemy.sprite.bloodBurstA(owner.sprite.center(),tracker);
+
                                             if(owner.hasTalent(Talent.MORTAL_SKILL)){
                                                 ComboTracker comboTracker = enemy.buff(ComboTracker.class);
                                                 if(comboTracker!=null && comboTracker.getStack()>=3 ){

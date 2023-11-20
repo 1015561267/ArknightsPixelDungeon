@@ -59,9 +59,9 @@ import com.unifier.arknightspixeldungeon.actors.mobs.King;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mimic;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.Piranha;
+import com.unifier.arknightspixeldungeon.actors.mobs.SentryAgent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Statue;
 import com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob.Swarm;
-import com.unifier.arknightspixeldungeon.actors.mobs.Wraith;
 import com.unifier.arknightspixeldungeon.actors.mobs.Yog;
 import com.unifier.arknightspixeldungeon.effects.MagicMissile;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MagesStaff;
@@ -142,7 +142,7 @@ public class WandOfCorruption extends Wand {
 				enemyResist = 1 + Dungeon.depth;
 			} else if (ch instanceof Piranha || ch instanceof Free) {
 				enemyResist = 1 + Dungeon.depth/2f;
-			} else if (ch instanceof Wraith) {
+			} else if (ch instanceof SentryAgent) {
 				//this is so low because wraiths are always at max hp
 				enemyResist = 0.5f + Dungeon.depth/8f;
 			} else if (ch instanceof Yog.BurningFist || ch instanceof Yog.RottingFist) {

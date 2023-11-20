@@ -21,7 +21,7 @@ public class SarkazSniperSprite extends MobSprite {
         idle = new Animation( 8, true );
         idle.frames( frames, 0, 1, 2, 3 ,4 ,5 ,6 );
 
-        run = new Animation( 24, true );
+        run = new Animation( 12, true );
         run.frames( frames, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ,18 );
 
         attack = new Animation( 24, false );

@@ -33,7 +33,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
 import com.unifier.arknightspixeldungeon.actors.hero.Belongings;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.actors.mobs.Wraith;
+import com.unifier.arknightspixeldungeon.actors.mobs.SentryAgent;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.NPC;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Speck;
@@ -323,7 +323,7 @@ public class DriedRose extends Artifact {
 				}
 
 				if (spawnPoints.size() > 0) {
-					Wraith.spawnAt(Random.element(spawnPoints));
+					SentryAgent.spawnAt(Random.element(spawnPoints));
 					Sample.INSTANCE.play(Assets.SND_CURSED);
 				}
 

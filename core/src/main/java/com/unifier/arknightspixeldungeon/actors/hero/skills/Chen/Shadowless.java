@@ -108,6 +108,7 @@ public class Shadowless extends ChenSkill {
             @Override
             public void call() {
                 mob.damage(damage, hero);
+                mob.sprite.flash();
                 mob.sprite.bloodBurstA(angle,damage);
 
                 if (!mob.isAlive()){

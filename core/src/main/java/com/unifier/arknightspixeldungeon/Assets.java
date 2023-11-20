@@ -108,8 +108,10 @@ public class Assets {
 
     public static final String SARKAZCENTURION = MOBS + "sarkaz_centurion.png";
 
+
     public static final String FREE      = MOBS + "free.png";
 
+    public static final String SENTRYAGENT=MOBS + "sentry_agent.png";
 
     public static final String SewerBoss = MOBS + "Centurion-Sheet.png";
 
@@ -172,7 +174,6 @@ public class Assets {
 
     public static final String RADIAL_MENU = MISCS + "radial_menu.png";
 
-
     private static final String CREATORS= MISCS + "creators/";
 
     public static final String HONEYPOT	  = CREATORS + "Honeypot.png";
@@ -181,8 +182,6 @@ public class Assets {
     public static final String RAEBERRY	  = CREATORS + "Rawberry.png";
     public static final String TELLER	  = CREATORS + "Teller.png";
     public static final String HYPERGRYPH = CREATORS + "Hypergryph.png";
-
-
 
     private static final String EFFECT= MISCS + "effects/";
     public static final String FIREBALL		= EFFECT + "fireball.png";

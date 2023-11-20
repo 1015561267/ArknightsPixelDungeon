@@ -27,7 +27,7 @@ import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.actors.mobs.Wraith;
+import com.unifier.arknightspixeldungeon.actors.mobs.SentryAgent;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
@@ -91,7 +91,7 @@ public class CorpseDust extends Item {
 			spawnPower++;
 			int wraiths = 1; //we include the wraith we're trying to spawn
 			for (Mob mob : Dungeon.level.mobs){
-				if (mob instanceof Wraith){
+				if (mob instanceof SentryAgent){
 					wraiths++;
 				}
 			}
@@ -104,7 +104,7 @@ public class CorpseDust extends Item {
 				do{
 					pos = Random.Int(Dungeon.level.length());
 				} while (!Dungeon.level.heroFOV[pos] || !Dungeon.level.passable[pos] || Actor.findChar( pos ) != null);
-				Wraith.spawnAt(pos);
+				SentryAgent.spawnAt(pos);
 				Sample.INSTANCE.play(Assets.SND_CURSED);
 			}
 
@@ -115,7 +115,7 @@ public class CorpseDust extends Item {
 		public void dispel(){
 			detach();
 			for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])){
-				if (mob instanceof Wraith){
+				if (mob instanceof SentryAgent){
 					mob.die(null);
 				}
 			}
