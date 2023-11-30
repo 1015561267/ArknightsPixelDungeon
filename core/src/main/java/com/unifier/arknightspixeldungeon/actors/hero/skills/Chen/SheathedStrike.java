@@ -68,7 +68,7 @@ public class SheathedStrike extends ChenSkill {
         }
 
         if (owner.hasTalent(Talent.SEIZE_OPPORTUNITY)) {
-            Buff.affect(owner,Talent.SeizeOpportunityTracker.class);
+            Buff.affect(owner,Talent.SeizeOpportunityTracker.class).reset(3f);
             Buff.affect(owner,TimeBubble.class).reset(2f);
         }
 

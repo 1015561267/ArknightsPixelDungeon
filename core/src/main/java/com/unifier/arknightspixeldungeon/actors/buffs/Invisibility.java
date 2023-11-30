@@ -25,6 +25,7 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroSubClass;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
 import com.unifier.arknightspixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.unifier.arknightspixeldungeon.messages.Messages;
@@ -104,6 +105,11 @@ public class Invisibility extends FlavourBuff {
 		TimeBubble bubble =  Dungeon.hero.buff(TimeBubble.class);
 		if (bubble != null){
 			bubble.detach();
+		}
+
+		Talent.SeizeOpportunityTracker tracker =  Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class);
+		if (tracker != null){
+			tracker.detach();
 		}
 	}
 }

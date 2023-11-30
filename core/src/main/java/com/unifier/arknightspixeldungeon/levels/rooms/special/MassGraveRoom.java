@@ -22,7 +22,7 @@
 package com.unifier.arknightspixeldungeon.levels.rooms.special;
 
 import com.unifier.arknightspixeldungeon.Assets;
-import com.unifier.arknightspixeldungeon.actors.mobs.Skeleton;
+import com.unifier.arknightspixeldungeon.actors.mobs.SarkazWitherer;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Gold;
 import com.unifier.arknightspixeldungeon.items.Heap;
@@ -63,7 +63,7 @@ public class MassGraveRoom extends SpecialRoom {
 
 		//50% 1 skeleton, 50% 2 skeletons
 		for (int i = 0; i <= Random.Int(2); i++){
-			Skeleton skele = new Skeleton();
+			SarkazWitherer skele = new SarkazWitherer();
 
 			int pos;
 			do {

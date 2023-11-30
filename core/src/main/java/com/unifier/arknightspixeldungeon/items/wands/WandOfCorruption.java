@@ -55,12 +55,12 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.mobs.Free;
+import com.unifier.arknightspixeldungeon.actors.mobs.Gopnik;
 import com.unifier.arknightspixeldungeon.actors.mobs.King;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mimic;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.actors.mobs.Piranha;
+import com.unifier.arknightspixeldungeon.actors.mobs.NetherseaPredator;
 import com.unifier.arknightspixeldungeon.actors.mobs.SentryAgent;
-import com.unifier.arknightspixeldungeon.actors.mobs.Statue;
 import com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob.Swarm;
 import com.unifier.arknightspixeldungeon.actors.mobs.Yog;
 import com.unifier.arknightspixeldungeon.effects.MagicMissile;
@@ -138,9 +138,9 @@ public class WandOfCorruption extends Wand {
 			
 			//base enemy resistance is usually based on their exp, but in special cases it is based on other criteria
 			float enemyResist = 1 + enemy.EXP;
-			if (ch instanceof Mimic || ch instanceof Statue){
+			if (ch instanceof Mimic || ch instanceof Gopnik){
 				enemyResist = 1 + Dungeon.depth;
-			} else if (ch instanceof Piranha || ch instanceof Free) {
+			} else if (ch instanceof NetherseaPredator || ch instanceof Free) {
 				enemyResist = 1 + Dungeon.depth/2f;
 			} else if (ch instanceof SentryAgent) {
 				//this is so low because wraiths are always at max hp

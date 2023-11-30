@@ -22,7 +22,7 @@
 package com.unifier.arknightspixeldungeon.levels.rooms.special;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.mobs.Statue;
+import com.unifier.arknightspixeldungeon.actors.mobs.Gopnik;
 import com.unifier.arknightspixeldungeon.items.keys.IronKey;
 import com.unifier.arknightspixeldungeon.levels.Level;
 import com.unifier.arknightspixeldungeon.levels.Terrain;
@@ -67,8 +67,8 @@ public class StatueRoom extends SpecialRoom {
 			
 		}
 		
-		Statue statue = new Statue();
-		statue.pos = cx + cy * level.width();
-		level.mobs.add( statue );
+		Gopnik gopnik = new Gopnik();
+		gopnik.pos = cx + cy * level.width();
+		level.mobs.add( gopnik );
 	}
 }

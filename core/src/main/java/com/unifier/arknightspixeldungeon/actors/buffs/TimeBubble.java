@@ -24,7 +24,7 @@ public class TimeBubble extends FlavourBuff {
 
     @Override
     public int icon() {
-        return BuffIndicator.NONE;
+        return BuffIndicator.SLOW;
     }
 
     @Override
@@ -53,14 +53,14 @@ public class TimeBubble extends FlavourBuff {
         //use 1/1,000 to account for rounding errors
         if (left < -0.001f){
 
-            if (Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class) != null) {
-                Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class).detach();
-            }
+            //if (Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class) != null) {
+            //    Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class).detach();
+            //}
 
-            if (Dungeon.hero.hasTalent(Talent.SEIZE_OPPORTUNITY)) {
-                Dungeon.hero.skill_2.getCoolDown(Dungeon.hero.skill_2.rawCD() * 0.25f);
-                Dungeon.hero.skill_3.getCoolDown(Dungeon.hero.skill_3.rawCD() * 0.25f);
-            }
+            //if (Dungeon.hero.hasTalent(Talent.SEIZE_OPPORTUNITY)) {
+            //    Dungeon.hero.skill_2.getCoolDown(Dungeon.hero.skill_2.rawCD() * 0.25f);
+            //    Dungeon.hero.skill_3.getCoolDown(Dungeon.hero.skill_3.rawCD() * 0.25f);
+            //}
 
             detach();
         }

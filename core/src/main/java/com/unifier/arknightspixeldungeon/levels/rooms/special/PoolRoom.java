@@ -23,7 +23,7 @@ package com.unifier.arknightspixeldungeon.levels.rooms.special;
 
 import com.unifier.arknightspixeldungeon.Challenges;
 import com.unifier.arknightspixeldungeon.Dungeon;
-import com.unifier.arknightspixeldungeon.actors.mobs.Piranha;
+import com.unifier.arknightspixeldungeon.actors.mobs.NetherseaPredator;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Heap;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -91,7 +91,7 @@ public class PoolRoom extends SpecialRoom {
 		level.addItemToSpawn( new PotionOfInvisibility() );
 		
 		for (int i=0; i < NPIRANHAS; i++) {
-			Piranha piranha = new Piranha();
+			NetherseaPredator piranha = new NetherseaPredator();
 			do {
 				piranha.pos = level.pointToCell(random());
 			} while (level.map[piranha.pos] != Terrain.WATER|| level.findMob( piranha.pos ) != null);

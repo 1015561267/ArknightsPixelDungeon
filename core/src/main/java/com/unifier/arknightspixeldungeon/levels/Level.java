@@ -813,7 +813,9 @@ public abstract class Level implements Bundlable {
 					ch != null ? ch.buff(TimekeepersHourglass.timeFreeze.class) : null;
 			TimeBubble timeBubble =
 					ch != null ? ch.buff(TimeBubble.class) : null;
-			
+			Talent.SeizeOpportunityTracker tracker =
+					ch != null ? ch.buff(Talent.SeizeOpportunityTracker.class) : null;
+
 			if (timeFreeze != null) {
 
 				Sample.INSTANCE.play(Assets.SND_TRAP);
@@ -825,6 +827,12 @@ public abstract class Level implements Bundlable {
 				Sample.INSTANCE.play(Assets.SND_TRAP);
 				discover(cell);
 				timeBubble.setDelayedPress(cell);
+
+			} else if (tracker != null) {
+
+				Sample.INSTANCE.play(Assets.SND_TRAP);
+				discover(cell);
+				tracker.setDelayedPress(cell);
 
 			} else {
 

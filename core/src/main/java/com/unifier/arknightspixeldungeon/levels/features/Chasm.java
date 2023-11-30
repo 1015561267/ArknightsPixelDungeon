@@ -29,6 +29,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.unifier.arknightspixeldungeon.levels.RegularLevel;
@@ -84,6 +85,8 @@ public class Chasm {
 		if (buff != null) buff.detach();
 		TimeBubble timeBubble = Dungeon.hero.buff(TimeBubble.class);
 		if (timeBubble != null) timeBubble.detach();
+		Talent.SeizeOpportunityTracker tracker = Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class);
+		if (tracker != null) tracker.detach();
 		
 		if (Dungeon.hero.isAlive()) {
 			Dungeon.hero.interrupt();

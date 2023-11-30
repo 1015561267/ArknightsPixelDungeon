@@ -26,12 +26,18 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
-import com.unifier.arknightspixeldungeon.sprites.SheepSprite;
+import com.unifier.arknightspixeldungeon.sprites.sheep_sprite.BestBuddySprite;
+import com.unifier.arknightspixeldungeon.sprites.sheep_sprite.BigGuySprite;
+import com.unifier.arknightspixeldungeon.sprites.sheep_sprite.HotSpringBuskerSprite;
+import com.unifier.arknightspixeldungeon.sprites.sheep_sprite.HotSpringFluffBagSprite;
+import com.unifier.arknightspixeldungeon.sprites.out_of_use_sprite.SheepSprite;
+import com.unifier.arknightspixeldungeon.sprites.sheep_sprite.WanderLandFrisbeeSprite;
+import com.unifier.arknightspixeldungeon.sprites.sheep_sprite.WanderLandStellarCasterSprite;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class Sheep extends NPC {
+public abstract class Sheep extends NPC {
 
 	private static final String[] LINE_KEYS = {"Baa!", "Baa?", "Baa.", "Baa..."};
 
@@ -79,7 +85,7 @@ public class Sheep extends NPC {
 
     @Override
     public boolean interact(Char c) {
-        sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, Random.element( LINE_KEYS )) );
+        sprite.showStatus( CharSprite.NEUTRAL, Messages.get(Sheep.class, Random.element( LINE_KEYS )) );
         if (c == Dungeon.hero) {
             Dungeon.hero.spendAndNext(1f);
             //Sample.INSTANCE.play(Assets.SND_SHEEP, 1, Random.Float(0.91f, 1.1f));
@@ -90,4 +96,53 @@ public class Sheep extends NPC {
         }
         return true;
     }
+
+	public static Sheep randomSheep(){
+		switch (Random.Int(6)){
+			default:
+			case 0: return new BestBuddy();
+			case 1: return new BIGGUY();
+			case 2: return new HotSpringFluffBag();
+			case 3: return new HotSpringBusker();
+			case 4: return new WanderLandFrisbee();
+			case 5: return new WanderLandStellarCaster();
+		}
+	}
+
+	protected static class BestBuddy extends Sheep{
+		{
+			spriteClass = BestBuddySprite.class;
+		}
+	}
+
+	protected static class BIGGUY extends Sheep{
+		{
+			spriteClass = BigGuySprite.class;
+		}
+	}
+
+	protected static class HotSpringBusker extends Sheep{
+		{
+			spriteClass = HotSpringBuskerSprite.class;
+		}
+	}
+
+	protected static class HotSpringFluffBag extends Sheep{
+		{
+			spriteClass = HotSpringFluffBagSprite.class;
+		}
+	}
+
+	protected static class WanderLandFrisbee extends Sheep{
+		{
+			spriteClass = WanderLandFrisbeeSprite.class;
+		}
+	}
+
+	protected static class WanderLandStellarCaster extends Sheep{
+		{
+			spriteClass = WanderLandStellarCasterSprite.class;
+		}
+	}
+
 }

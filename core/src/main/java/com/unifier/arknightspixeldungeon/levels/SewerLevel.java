@@ -90,9 +90,15 @@ public class SewerLevel extends RegularLevel {
 	protected Class<?>[] trapClasses() {
 		return Dungeon.depth == 1 ?
 				new Class<?>[]{ WornDartTrap.class } :
-				new Class<?>[]{ ChillingTrap.class, ShockingTrap.class, ToxicTrap.class, WornDartTrap.class,
+				new Class<?>[]{ FlockTrap.class, FlockTrap.class, FlockTrap.class, FlockTrap.class,
+						FlockTrap.class, FlockTrap.class, FlockTrap.class, FlockTrap.class,
+						FlockTrap.class, FlockTrap.class, FlockTrap.class, FlockTrap.class,
+						FlockTrap.class, FlockTrap.class, FlockTrap.class, FlockTrap.class,
+						FlockTrap.class, FlockTrap.class, FlockTrap.class,
+						ChillingTrap.class, ShockingTrap.class, ToxicTrap.class, WornDartTrap.class,
 						AlarmTrap.class, OozeTrap.class,
-						ConfusionTrap.class, FlockTrap.class, SummoningTrap.class, TeleportationTrap.class };
+						ConfusionTrap.class, FlockTrap.class, SummoningTrap.class, TeleportationTrap.class
+				};
 }
 
 	@Override

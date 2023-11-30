@@ -75,6 +75,11 @@ public abstract class Actor implements Bundlable {
 		this.time += time;
 	}
 
+	//FIXME make this char gain property whatever
+	protected void gainControl() {
+		this.time = now;
+	}
+
     public void spendToWhole(){
         time = (float)Math.ceil(time);
     }

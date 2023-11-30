@@ -21,6 +21,7 @@
 
 package com.unifier.arknightspixeldungeon.actors.hero;
 
+import com.unifier.arknightspixeldungeon.ArknightsPixelDungeon;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.Bones;
@@ -108,6 +109,8 @@ import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.plants.Earthroot;
+import com.unifier.arknightspixeldungeon.scenes.AmuletScene;
+import com.unifier.arknightspixeldungeon.scenes.DemoScene;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.InterlevelScene;
 import com.unifier.arknightspixeldungeon.scenes.SurfaceScene;
@@ -132,6 +135,7 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -621,6 +625,7 @@ public class Hero extends Char {
 
 		TimekeepersHourglass.timeFreeze buff = buff(TimekeepersHourglass.timeFreeze.class);
 		TimeBubble timeBubble = buff(TimeBubble.class);
+		Talent.SeizeOpportunityTracker tracker = buff(Talent.SeizeOpportunityTracker.class);
 
 		if (buff != null){
 			buff.processTime(time);
@@ -628,6 +633,11 @@ public class Hero extends Char {
 		}
 		if (timeBubble != null) {
 			timeBubble.processTime(time);
+			return;
+		}
+
+		if (tracker != null) {
+			tracker.processTime(time);
 			return;
 		}
 
@@ -1010,14 +1020,33 @@ public class Hero extends Char {
 	private boolean actDescend( HeroAction.Descend action ) {
 		int stairs = action.dst;
 		if (pos == stairs && pos == Dungeon.level.exit) {
-			
+
+			if(Dungeon.depth==5){
+				Actor.addDelayed(new Actor(){
+					@Override
+					protected boolean act() {
+						Actor.remove(this);
+						try {
+							Dungeon.saveAll();
+							//AmuletScene.noText = !showText;
+							Game.switchScene( DemoScene.class );
+						} catch (IOException e) {
+							ArknightsPixelDungeon.reportException(e);
+						}
+						return false;
+					}
+				}, -5);
+				return true;
+			}
 			curAction = null;
 
 			Buff buff = buff(TimekeepersHourglass.timeFreeze.class);
 			if (buff != null) buff.detach();
 			TimeBubble timeBubble = buff(TimeBubble.class);
 			if (timeBubble != null) timeBubble.detach();
-			
+			Talent.SeizeOpportunityTracker tracker = buff(Talent.SeizeOpportunityTracker.class);
+			if (tracker != null) tracker.detach();
+
 			InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
 			Game.switchScene( InterlevelScene.class );
 
@@ -1062,6 +1091,8 @@ public class Hero extends Char {
 				if (buff != null) buff.detach();
 				TimeBubble timeBubble = buff(TimeBubble.class);
 				if (timeBubble != null) timeBubble.detach();
+				Talent.SeizeOpportunityTracker tracker = buff(Talent.SeizeOpportunityTracker.class);
+				if (tracker != null) tracker.detach();
 
 				InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
 				Game.switchScene( InterlevelScene.class );

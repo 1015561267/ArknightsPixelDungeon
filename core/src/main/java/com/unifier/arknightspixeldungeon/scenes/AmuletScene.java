@@ -79,6 +79,7 @@ public class AmuletScene extends PixelScene {
 			@Override
 			protected void onClick() {
 				onBackPressed();
+				Dungeon.hero.pos += Dungeon.level.width();
 			}
 		};
 		btnStay.setSize( WIDTH, BTN_HEIGHT );

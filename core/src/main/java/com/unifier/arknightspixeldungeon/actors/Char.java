@@ -541,8 +541,9 @@ public abstract class Char extends Actor {
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
         if (defender.buff(Hex.class) != null) defRoll *= 0.8f;
 
-        if (attacker instanceof Hero && attacker.buff(Talent.SeizeOpportunityTracker.class) != null && attacker.buff(TimeBubble.class) != null) {
-			attacker.buff(Talent.SeizeOpportunityTracker.class).detach();
+        //if (attacker instanceof Hero && attacker.buff(Talent.SeizeOpportunityTracker.class) != null && attacker.buff(TimeBubble.class) != null) {
+        if (attacker instanceof Hero && attacker.buff(Talent.SeizeOpportunityTracker.class) != null) {
+            attacker.buff(Talent.SeizeOpportunityTracker.class).detach();
         	return true;
 		}
 
@@ -832,6 +833,10 @@ public abstract class Char extends Actor {
 	public boolean isAlive() {
 		return HP > 0;
 	}
+
+    public boolean isActive() {
+        return isAlive();
+    }
 	
 	@Override
 	protected void spend( float time ) {

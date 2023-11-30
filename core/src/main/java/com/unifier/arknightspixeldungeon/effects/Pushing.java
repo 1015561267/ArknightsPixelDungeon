@@ -21,9 +21,11 @@
 
 package com.unifier.arknightspixeldungeon.effects;
 
+import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
+import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.Callback;
@@ -40,7 +42,7 @@ public class Pushing extends Actor {
 	private Callback callback;
 
 	{
-		actPriority = VFX_PRIO;
+		actPriority = VFX_PRIO+10;
 	}
 	
 	public Pushing( Char ch, int from, int to ) {
@@ -48,6 +50,10 @@ public class Pushing extends Actor {
 		this.from = from;
 		this.to = to;
 		this.callback = null;
+
+		if (ch == Dungeon.hero){
+			Camera.main.panFollow(ch.sprite, 20f);
+		}
 	}
 
 	public Pushing( Char ch, int from, int to, Callback callback ) {
@@ -58,7 +64,9 @@ public class Pushing extends Actor {
 	@Override
 	protected boolean act() {
 		if (sprite != null) {
-			
+			if (Dungeon.level.heroFOV[from] || Dungeon.level.heroFOV[to]){
+				sprite.visible = true;
+			}
 			if (effect == null) {
 				new Effect();
 			}

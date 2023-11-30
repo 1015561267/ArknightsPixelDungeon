@@ -72,6 +72,7 @@ public class WndSettings extends WndTabbed {
     private InputTab  input;
     private AudioTab audio;
     private LangsTab langs;
+
     //Moved langs settings into setting interface.By Teller,in 2021.8.9
 
 	private static int last_index = 0;
@@ -182,7 +183,7 @@ public class WndSettings extends WndTabbed {
 
         layoutTabs();
 
-        if (tabs.size() == 4 && last_index >= 3){
+        if (tabs.size() == 5 && last_index >= 4){
             //input tab isn't visible
             select(last_index-1);
         } else {
@@ -222,6 +223,8 @@ public class WndSettings extends WndTabbed {
         OptionSlider optBrightness;
         OptionSlider optVisGrid;
         OptionSlider optFollowIntensity;
+
+        CheckBox flyingSheep;
 
         @Override
         protected void createChildren() {
@@ -345,6 +348,32 @@ public class WndSettings extends WndTabbed {
             optFollowIntensity.setSelectedValue(PDSettings.cameraFollow());
             add(optFollowIntensity);
 
+            flyingSheep = new CheckBox(Messages.get(this, "flying_sheep")) {
+                @Override
+                protected void onClick() {
+                    super.onClick();
+                    if (checked()) {
+                        checked(!checked());
+                        ArknightsPixelDungeon.scene().add(new WndOptions(Icons.get(Icons.FLYING_SHEEP),
+                                Messages.get(DisplayTab.class, "flying_sheep"),
+                                Messages.get(DisplayTab.class, "flying_sheep_desc"),
+                                Messages.get(DisplayTab.class, "flying_sheep_okay"),
+                                Messages.get(DisplayTab.class, "flying_sheep_cancel")) {
+                            @Override
+                            protected void onSelect(int index) {
+                                if (index == 0) {
+                                    checked(!checked());
+                                    PDSettings.flyingSheep(checked());
+                                }
+                            }
+                        });
+                    } else {
+                        PDSettings.flyingSheep(checked());
+                    }
+                }
+            };
+            flyingSheep.checked( PDSettings.flyingSheep() );
+            add( flyingSheep );
         }
 
         @Override
@@ -396,8 +425,9 @@ public class WndSettings extends WndTabbed {
             }
 
             optFollowIntensity.setRect(0, optVisGrid.bottom() + GAP, width, SLIDER_HEIGHT);
+            flyingSheep.setRect(0, optFollowIntensity.bottom() + GAP, width, BTN_HEIGHT);
 
-            height = optFollowIntensity.bottom();
+            height = flyingSheep.bottom();
         }
 
     }

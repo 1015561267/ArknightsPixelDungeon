@@ -141,6 +141,11 @@ public class Visual extends Gizmo {
         return new PointF(x + width / 2, y + height / 2);
     }
 
+    //FIXME damn 32*32 resolution makes this needed for RankingScene
+    public PointF halfScaleCenter() {
+        return new PointF(x + width / 4, y + height / 4);
+    }
+
     public PointF center(PointF p) {
         x = p.x - width / 2;
         y = p.y - height / 2;

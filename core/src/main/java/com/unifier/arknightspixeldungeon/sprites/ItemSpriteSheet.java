@@ -77,7 +77,7 @@ public class ItemSpriteSheet {
     public static final int SPIRIT_ARROW    = UNCOLLECTIBLE+6;
 	static{
 		assignItemRect(GOLD,        27, 26);
-		assignItemRect(DEWDROP,     25, 24);
+		assignItemRect(DEWDROP,     17, 17);
 		assignItemRect(PETAL,       14,  16);
 		assignItemRect(SANDBAG,     16, 16);
 		assignItemRect(DBL_BOMB,    32, 30);
@@ -100,10 +100,10 @@ public class ItemSpriteSheet {
 	public static final int CRYSTAL_CHEST   = CONTAINERS+6;
 	public static final int EBONY_CHEST     = CONTAINERS+7;
 	static{
-		assignItemRect(BONES,           29, 22);
-		assignItemRect(REMAINS,         23, 19);
-		assignItemRect(TOMB,            28, 27);
-		assignItemRect(GRAVE,           28, 23);
+		assignItemRect(BONES,           23, 23);
+		assignItemRect(REMAINS,         23, 21);
+		assignItemRect(TOMB,            32, 31);
+		assignItemRect(GRAVE,           32, 27);
 		assignItemRect(CHEST,           28, 27);
 		assignItemRect(LOCKED_CHEST,    28, 27);
 		assignItemRect(CRYSTAL_CHEST,   28, 27);
@@ -135,8 +135,8 @@ public class ItemSpriteSheet {
 		assignItemRect(TORCH,           22, 28);
 		assignItemRect(BEACON,          32, 24);
 		assignItemRect(BOMB,            32, 22);
-		assignItemRect(HONEYPOT,        32, 24);
-		assignItemRect(SHATTPOT,        32, 24);
+		assignItemRect(HONEYPOT,        12, 29);
+		assignItemRect(SHATTPOT,        24, 30);
 		assignItemRect(IRON_KEY,        16,  28);
 		assignItemRect(GOLDEN_KEY,      16,  28);
 		assignItemRect(CRYSTAL_KEY,     16,  28);

@@ -38,6 +38,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Frost;
 import com.unifier.arknightspixeldungeon.actors.buffs.Recharging;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mimic;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.Sheep;
@@ -300,7 +301,7 @@ public class CursedWand {
 						if (ch != null && ch != user
 								&& !ch.properties().contains(Char.Property.BOSS)
 								&& !ch.properties().contains(Char.Property.MINIBOSS)){
-							Sheep sheep = new Sheep();
+							Sheep sheep = Sheep.randomSheep();
 							sheep.lifespan = 10;
 							sheep.pos = ch.pos;
 							ch.destroy();
@@ -336,6 +337,8 @@ public class CursedWand {
 					if (buff != null) buff.detach();
 					TimeBubble timeBubble = Dungeon.hero.buff(TimeBubble.class);
 					if (timeBubble != null) timeBubble.detach();
+					Talent.SeizeOpportunityTracker tracker = Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class);
+					if (tracker != null) tracker.detach();
 
 					InterlevelScene.mode = InterlevelScene.Mode.RETURN;
 					InterlevelScene.returnDepth = depth;

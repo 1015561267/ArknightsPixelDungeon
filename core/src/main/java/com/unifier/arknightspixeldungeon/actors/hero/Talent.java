@@ -18,6 +18,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageT
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RallyForceTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.SharpJudgementTracker;
+import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
@@ -36,6 +37,8 @@ import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
+import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -667,14 +670,38 @@ public enum Talent {
     public static class PreemptiveStrikeActiveTracker extends Buff{}
 
     public static class SheathedStrikeTracker1 extends Buff{}
-    public static class SheathedStrikeTracker2 extends FlavourBuff{}
+    public static class SheathedStrikeTracker2 extends FlavourBuff{
+        //@Override
+        //public int icon() {
+            //return BuffIndicator.S;
+        //}
+    }
 
     public static class ReprimandTracker extends FlavourBuff{}
 
     public static class ParryTrackerPrepare extends Buff{}
     public static class ParryTrackerUsing extends FlavourBuff{}
 
-    public static class SeizeOpportunityTracker extends Buff{}
+    //FIXME it feels stupid to copy timeBubble function everywhere,but it could performs better when there are other time stop buffs or functions
+    public static class SeizeOpportunityTracker extends TimeBubble {
+
+        @Override
+        public int icon() {
+            return BuffIndicator.SEIZE_OPPORTUNITY;
+        }
+
+        @Override
+        public void tintIcon(Image icon) {
+            icon.hardlight(1f, 1f, 1f);
+        }
+
+        @Override
+        public void processTime(float time) {
+            super.processTime(time);
+            Dungeon.hero.skill_2.getCoolDown(Dungeon.hero.skill_2.rawCD() * 0.25f);
+            Dungeon.hero.skill_3.getCoolDown(Dungeon.hero.skill_3.rawCD() * 0.25f);
+        }
+    }
 
     public static class LightWeaponMasteryTracker extends Buff{}//because it affect enemy's defense,check MeleeWeapon.damageRoll for more info
 

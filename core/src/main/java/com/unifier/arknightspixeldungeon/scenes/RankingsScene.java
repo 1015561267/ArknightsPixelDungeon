@@ -247,7 +247,7 @@ public class RankingsScene extends PixelScene {
 				add(level);
 			}
 			
-			classIcon.copy( Icons.get( rec.heroClass ) );
+			classIcon.copy( Icons.getDark( rec.heroClass ) );
 		}
 		
 		@Override
@@ -281,14 +281,18 @@ public class RankingsScene extends PixelScene {
 			
 			shield.x = x;
 			shield.y = y + (height - shield.height) / 2f;
+
+			//if(!rec.win)  shield.x += 1;//in 32*32 tomb and amulet sprite have quite a difference in width,same for variable position and desc below
+
 			align(shield);
 			
 			position.x = shield.x + (shield.width - position.width()) / 2f;
-			position.y = shield.y + (shield.height - position.height()) / 2f + 1;
+			position.y = shield.y + (shield.height - position.height()) / 2f;
+			//if(!rec.win)  position.x += 1;
 			align(position);
 			
 			if (flare != null) {
-				flare.point( shield.center() );
+				flare.point( shield.halfScaleCenter() );
 			}
 
 			classIcon.x = x + width - classIcon.width;
@@ -305,8 +309,8 @@ public class RankingsScene extends PixelScene {
 			depth.y = steps.y + (steps.height - depth.height()) / 2f + 1;
 			align(depth);
 
-			desc.maxWidth((int)(steps.x - (shield.x + shield.width + GAP)));
-			desc.setPos(shield.x + shield.width + GAP, shield.y + (shield.height - desc.height()) / 2f + 1);
+			desc.maxWidth((int)(steps.x - (shield.x + shield.width/2 + GAP)));
+			desc.setPos(shield.x + shield.width/2 + GAP /*+ (rec.win ? 0:1)*/, shield.y + (shield.height/2 - desc.height()) / 2f + 1);
 			align(desc);
 		}
 		

@@ -47,7 +47,7 @@ public class Bestiary {
 				//10x 源石虫
 				return new ArrayList<Class<? extends Mob>>(Arrays.asList(
                         OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class,
-                        OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class));
+						SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class));
 			case 2:
 				//2x 源石虫, 3x 深池侦察兵 1x 大君之触
 				return new ArrayList<>(Arrays.asList(OriginiumSlug.class, OriginiumSlug.class, DublinnScout.class,
@@ -67,24 +67,24 @@ public class Bestiary {
 			// Prison
 			case 6:
 				//3x skeleton, 1x thief, 1x swarm
-				return new ArrayList<>(Arrays.asList(Skeleton.class, Skeleton.class, Skeleton.class,
+				return new ArrayList<>(Arrays.asList(SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class,
 						Thief.class,
 						Swarm.class));
 			case 7:
 				//3x skeleton, 1x thief, 1x shaman, 1x guard
-				return new ArrayList<>(Arrays.asList(Skeleton.class, Skeleton.class, Skeleton.class,
+				return new ArrayList<>(Arrays.asList(SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class,
 						Thief.class,
 						Shaman.class,
 						Guard.class));
 			case 8:
 				//3x skeleton, 1x thief, 2x shaman, 2x guard
-				return new ArrayList<>(Arrays.asList(Skeleton.class, Skeleton.class, Skeleton.class,
+				return new ArrayList<>(Arrays.asList(SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class,
 						Thief.class,
 						Shaman.class, Shaman.class,
 						Guard.class, Guard.class));
 			case 9:
 				//3x skeleton, 1x thief, 2x shaman, 3x guard
-				return new ArrayList<>(Arrays.asList(Skeleton.class, Skeleton.class, Skeleton.class,
+				return new ArrayList<>(Arrays.asList(SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class,
 						Thief.class,
 						Shaman.class, Shaman.class,
 						Guard.class, Guard.class, Guard.class));
@@ -175,7 +175,7 @@ public class Bestiary {
 			default:
 				return;
 			case 4:
-				if (Random.Float() < 0.01f) rotation.add(Skeleton.class);
+				if (Random.Float() < 0.01f) rotation.add(SarkazWitherer.class);
 				if (Random.Float() < 0.01f) rotation.add(Thief.class);
 				return;
 				

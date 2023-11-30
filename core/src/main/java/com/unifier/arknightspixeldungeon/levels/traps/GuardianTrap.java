@@ -23,12 +23,13 @@ package com.unifier.arknightspixeldungeon.levels.traps;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.mobs.Gopnik;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.actors.mobs.Statue;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.sprites.GopnikSprite;
 import com.unifier.arknightspixeldungeon.sprites.StatueSprite;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
@@ -64,10 +65,10 @@ public class GuardianTrap extends Trap {
 
 	}
 
-	public static class Guardian extends Statue {
+	public static class Guardian extends Gopnik {
 
 		{
-			spriteClass = GuardianSprite.class;
+			spriteClass = GopnikSprite.class;
 
 			EXP = 0;
 			state = WANDERING;

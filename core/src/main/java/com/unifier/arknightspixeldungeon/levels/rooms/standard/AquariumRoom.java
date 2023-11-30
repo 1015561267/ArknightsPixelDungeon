@@ -21,7 +21,7 @@
 
 package com.unifier.arknightspixeldungeon.levels.rooms.standard;
 
-import com.unifier.arknightspixeldungeon.actors.mobs.Piranha;
+import com.unifier.arknightspixeldungeon.actors.mobs.NetherseaPredator;
 import com.unifier.arknightspixeldungeon.levels.Level;
 import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.levels.painters.Painter;
@@ -54,7 +54,7 @@ public class AquariumRoom extends StandardRoom {
 		int numFish = (minDim - 4)/3; //1-3 fish, depending on room size
 		
 		for (int i=0; i < numFish; i++) {
-			Piranha piranha = new Piranha();
+			NetherseaPredator piranha = new NetherseaPredator();
 			do {
 				piranha.pos = level.pointToCell(random(3));
 			} while (level.map[piranha.pos] != Terrain.WATER|| level.findMob( piranha.pos ) != null);

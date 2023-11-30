@@ -28,7 +28,7 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mimic;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
-import com.unifier.arknightspixeldungeon.actors.mobs.Statue;
+import com.unifier.arknightspixeldungeon.actors.mobs.Gopnik;
 import com.unifier.arknightspixeldungeon.actors.mobs.Thief;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.MirrorImage;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
@@ -68,7 +68,7 @@ public class Multiplicity extends Armor.Glyph {
 				} else {
 					//FIXME should probably have a mob property for this
 					if (attacker.properties().contains(Char.Property.BOSS) || attacker.properties().contains(Char.Property.MINIBOSS)
-							|| attacker instanceof Mimic || attacker instanceof Statue){
+							|| attacker instanceof Mimic || attacker instanceof Gopnik){
 						m = Dungeon.level.createMob();
 					} else {
 						try {

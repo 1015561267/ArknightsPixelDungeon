@@ -38,13 +38,16 @@ public class Ripple extends Image {
 	
 	public void reset( int p ) {
 		revive();
+
+		//scale.x *= 2f;
+		//scale.y *= 2f;
+
+		x = (p % Dungeon.level.width()) * DungeonTilemap.SIZE + DungeonTilemap.SIZE/4;
+		y = (p / Dungeon.level.width()) * DungeonTilemap.SIZE + DungeonTilemap.SIZE/4;
 		
-		x = (p % Dungeon.level.width()) * DungeonTilemap.SIZE;
-		y = (p / Dungeon.level.width()) * DungeonTilemap.SIZE;
-		
-		origin.set( width / 2, height / 2 );
+		origin.set( DungeonTilemap.SIZE / 4, DungeonTilemap.SIZE / 4 );
 		scale.set( 0 );
-		
+
 		time = TIME_TO_FADE;
 	}
 	
@@ -56,7 +59,7 @@ public class Ripple extends Image {
 			kill();
 		} else {
 			float p = time / TIME_TO_FADE;
-			scale.set( 1 - p );
+			scale.set( 2*(1 - p) );
 			alpha( p );
 		}
 	}

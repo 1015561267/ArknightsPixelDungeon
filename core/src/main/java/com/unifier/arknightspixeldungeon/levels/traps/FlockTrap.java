@@ -55,7 +55,7 @@ public class FlockTrap extends Trap {
 						if (Dungeon.level.insideMap(i)
 								&& Actor.findChar(i) == null
 								&& !(Dungeon.level.pit[i])) {
-							Sheep sheep = new Sheep();
+							Sheep sheep = Sheep.randomSheep();
 							sheep.lifespan = Random.NormalIntRange(3 + Dungeon.depth/4, 6 + Dungeon.depth/2 );
 							sheep.pos = i;
 							Dungeon.level.press(sheep.pos, sheep);

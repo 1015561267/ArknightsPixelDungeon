@@ -30,6 +30,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Invisibility;
 import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.MagicMissile;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -169,6 +170,8 @@ public class LloydsBeacon extends Artifact {
 				if (buff != null) buff.detach();
 				TimeBubble timeBubble = Dungeon.hero.buff(TimeBubble.class);
 				if (timeBubble != null) timeBubble.detach();
+				Talent.SeizeOpportunityTracker tracker = Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class);
+				if (tracker != null) tracker.detach();
 
 				InterlevelScene.mode = InterlevelScene.Mode.RETURN;
 				InterlevelScene.returnDepth = returnDepth;

@@ -76,6 +76,7 @@ public enum Icons {
     AUDIO,
     SETTINGS,
     LANGUAGE,
+    FLYING_SHEEP,
 
     SKIP,
 
@@ -227,6 +228,10 @@ public enum Icons {
 
             case LANGUAGE:
                 icon.frame( icon.texture.uvRect( 224, 0, 238, 11 ) );
+                break;
+
+            case FLYING_SHEEP:
+                icon.frame( icon.texture.uvRect( 239, 0, 256, 16 ) );
                 break;
 
             case SKIP:

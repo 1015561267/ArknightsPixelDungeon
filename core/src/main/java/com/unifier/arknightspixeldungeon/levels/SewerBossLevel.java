@@ -54,6 +54,7 @@ public class SewerBossLevel extends Level {
     private static final int WIDTH = 15;
     private static final int HEIGHT = 25;
 
+    public static Mob boss;
 
     private static final Rect entry = new Rect(2, 14, 13, 25);
     private static final Rect arena = new Rect(2, 2, 13, 13);
@@ -174,12 +175,10 @@ public class SewerBossLevel extends Level {
 	
 	public void seal() {
 		if (entrance != 0) {
-
 			super.seal();
 			
 			set( entrance, Terrain.EMPTY );
 			GameScene.updateMap( entrance );
-			//GameScene.ripple( entrance );
 
             set( bottomDoor, Terrain.LOCKED_DOOR );
             GameScene.updateMap( bottomDoor );
@@ -217,7 +216,7 @@ public class SewerBossLevel extends Level {
 
             seal();
 
-            SarkazCenturion boss = new SarkazCenturion();
+            boss = new SarkazCenturion();
 
             boss.state = boss.WANDERING;
             boss.pos = getSummoningPos();
@@ -246,6 +245,7 @@ public class SewerBossLevel extends Level {
                 originiumSlug.sprite.parent.add( new AlphaTweener( originiumSlug.sprite, 1, 0.1f ) );
             }
         }
+
     }
 
     public void onBerserkEnd()

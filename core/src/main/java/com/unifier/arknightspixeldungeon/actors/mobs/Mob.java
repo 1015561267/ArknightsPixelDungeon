@@ -38,6 +38,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.SoulMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.Terror;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.effects.Flare;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.effects.Surprise;
@@ -430,7 +431,8 @@ public abstract class Mob extends Char {
 	public void updateSpriteState() {
 		super.updateSpriteState();
 		if (Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class) != null
-				|| Dungeon.hero.buff(TimeBubble.class) != null)
+				|| Dungeon.hero.buff(TimeBubble.class) != null
+				|| Dungeon.hero.buff(Talent.SeizeOpportunityTracker.class) != null)
 			sprite.add( CharSprite.State.PARALYSED );
 	}
 	

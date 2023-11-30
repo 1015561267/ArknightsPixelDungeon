@@ -101,17 +101,16 @@ public class Assets {
     public static final String DUBLINNSHADOWCASTER = MOBS + "dublinn_shadowcaster.png";
     public static final String SARKAZREQUISITIONEDENGINEERINGDRONE = MOBS + "sarkaz_requisitioned_engineering_drone.png";
     public static final String TOUCHOFTHESANGUINARCH = MOBS + "touch_of_the_sanguinarch.png";
-
     public static final String BLACKWATERORIGINIUM = MOBS + "blackwater_originium_slug.png";
     public static final String SARKAZSNIPER = MOBS + "sarkaz_sniper.png";
     public static final String DUBLINNHEAVYDEFENDER = MOBS + "dublinn_heavy_defender.png";
-
     public static final String SARKAZCENTURION = MOBS + "sarkaz_centurion.png";
+    public static final String SARKAZWITHERER = MOBS + "sarkaz_witherer.png";
 
-
-    public static final String FREE      = MOBS + "free.png";
-
-    public static final String SENTRYAGENT=MOBS + "sentry_agent.png";
+    public static final String FREE = MOBS + "free.png";
+    public static final String SENTRYAGENT = MOBS + "sentry_agent.png";
+    public static final String GOPNIK = MOBS + "gopnik.png";
+    public static final String NETHERSEAPREDATOR = MOBS +"nethersea_predator.png";
 
     public static final String SewerBoss = MOBS + "Centurion-Sheet.png";
 
@@ -124,6 +123,16 @@ public class Assets {
     public static final String IMP		= NPCS + "demon.png";
     public static final String PET		= NPCS + "pet.png";
     public static final String RATKING	= NPCS + "ratking.png";
+
+    private static final String SHEEPS = NPCS + "sheeps/";
+
+    public static final String BESTBUDDY	= SHEEPS + "best_buddy.png";
+    public static final String BIGGUY	= SHEEPS + "big_guy.png";
+    public static final String HOTSPRINGFLUFFBAG	= SHEEPS + "hot_spring_fluffbag.png";
+    public static final String HOTSPRINGBUSKER	= SHEEPS + "hot_spring_busker.png";
+    public static final String WANDERLANDFRISBEE	= SHEEPS + "wanderland_frisbee.png";
+    public static final String WANDERLANDSTELLARCASTER	= SHEEPS + "wanderland_stellar_caster.png";
+
 
     private static final String CUSTOM_TILES = "custom_tiles/";
     public static final String WEAK_FLOOR   = CUSTOM_TILES + "weak_floor.png";

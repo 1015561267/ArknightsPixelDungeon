@@ -8,6 +8,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
 import com.unifier.arknightspixeldungeon.actors.buffs.MagicalSleep;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.items.artifacts.DriedRose;
 import com.unifier.arknightspixeldungeon.items.keys.SkeletonKey;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfBlastWave;
 import com.unifier.arknightspixeldungeon.levels.SewerBossLevel;
@@ -37,16 +38,25 @@ public class SarkazCenturion extends Mob {
         properties.add(Property.DEMONIC);
     }
 
+    //this may be polled into all boss even mobs
+    public boolean berserkUnannounced;
+
     @Override
     public boolean act() {
 
+        if(buff(CenturionBerserk.class)==null) {
+            ((SarkazCenturionSprite) sprite).spray(false);
+            BossHealthBar.bleed(false);
+        }
         if (abilityCd == 0 && paralysed <= 0){
             //if can use ability then always use it,unless controlled
             ((SarkazCenturionSprite)sprite).performAbility();
             spend(attackDelay());
             next();
             return true;
-        } else return super.act();
+        }
+
+        return super.act();
     }
     @Override
     public int damageRoll(Char enemy, boolean isMagic) {
@@ -60,7 +70,7 @@ public class SarkazCenturion extends Mob {
             }
         }
 
-        if(buffs(CenturionBerserk.class)!=null)
+        if(buff(CenturionBerserk.class)!=null)
         {
             bouns += 0.6f;
         }
@@ -127,18 +137,15 @@ public class SarkazCenturion extends Mob {
             }
         }
 
-        if(count>0){
-            Camera.main.shake( GameMath.gate( 1, count, 9), 0.2f );
-        }
+        Camera.main.shake( 2 + GameMath.gate( 1, count, 8), 0.2f );
 
         abilityCd = resetAbilityCd();
-        //next();
-        //spend( attackDelay() )
-        return;
     }
 
     @Override
     public void damage(int dmg, Object src) {
+
+        if(berserkUnannounced) dmg = 0;
 
         if(phase == 3){
             dmg /= 2;
@@ -156,16 +163,50 @@ public class SarkazCenturion extends Mob {
         if(phase == 1 && HP<=75){
             HP = 75;
             phase++;
-            Buff.affect(this,CenturionBerserk.class).on(6f);
+            startBerserk();
         }
         else if(phase == 2 && HP<=15){
             HP = 15;
             phase++;
-            Buff.affect(this,CenturionBerserk.class).on(6f);
+            startBerserk();
         }
     }
 
+    private void startBerserk() {
+        GLog.i("before berserk");
+        berserkUnannounced = true;
+        Buff.affect(this,CenturionBerserk.class).on(6f);
+        ((SarkazCenturionSprite)sprite).updateBerserk(true);
+        ((SarkazCenturionSprite)sprite).playBerserk();
+    }
 
+    public void afterBerserk() {
+        GLog.i("after begin");
+        this.gainControl();
+        BossHealthBar.bleed(true);
+        abilityCd = resetAbilityCd();
+        ((SarkazCenturionSprite) sprite).spray(true);
+        GLog.i("spray done");
+        int strength = 3;
+        for (int i : PathFinder.NEIGHBOURS8) {
+            Char ch = Actor.findChar(pos + i);
+            if (ch != null && ch instanceof Hero) {
+                int oppositeHero = ch.pos + (ch.pos - pos);
+                Ballistica trajectory = new Ballistica(ch.pos, oppositeHero, Ballistica.MAGIC_BOLT);
+                WandOfBlastWave.throwChar(ch, trajectory, 2);
+                strength *= 3;
+                GLog.i("knocked");
+                break;
+            }
+        }
+        Camera.main.shake( strength, 0.2f );
+        ((SewerBossLevel) Dungeon.level).onBerserkBegin();
+        berserkUnannounced = false;
+        spend(1f);
+        next();
+        GLog.i("logic done");
+        GLog.i("all done");
+    }
 
     @Override
     public boolean isAlive() {
@@ -177,18 +218,21 @@ public class SarkazCenturion extends Mob {
 
         int beforeHitHP = HP;
 
+        //just skip damage count and use empty damage array to avoid unwanted overkill
+        //Although its not likely to happen,for we don't have multiple times multipleDamage,for now
         ArrayList<Integer> tempArray = new ArrayList<>();
-
-            for(Integer record : damageArray){
-                if(phase==3){
+        if(!berserkUnannounced) {
+            for (Integer record : damageArray) {
+                if (phase == 3) {
                     record /= 2;
                 }
-                if(buff(CenturionBerserk.class)!=null){
-                    record = (int) Math.ceil(record/10);
+                if (buff(CenturionBerserk.class) != null) {
+                    record = (int) Math.ceil(record / 10);
                 }
                 tempArray.add(record);
                 GLog.i(String.valueOf(record));
             }
+        }
 
         super.multipleDamage(burstArray,tempArray,src,hittedTime);
         int totaldmg = beforeHitHP - HP;
@@ -201,12 +245,12 @@ public class SarkazCenturion extends Mob {
         if(phase == 1 && HP<=75){
             HP = 75;
             phase++;
-            Buff.affect(this,CenturionBerserk.class).on(6f);
+            startBerserk();
         }
         else if(phase == 2 && HP<=15){
             HP = 15;
             phase++;
-            Buff.affect(this,CenturionBerserk.class).on(6f);
+            startBerserk();
         }
     }
 
@@ -266,10 +310,21 @@ public class SarkazCenturion extends Mob {
         ////}
 
         BossHealthBar.assignBoss(this);
-        if (buffs(CenturionBerserk.class) != null) {
+        if (buff(CenturionBerserk.class) != null) {
             BossHealthBar.bleed(true);
         }
     }
+
+    @Override
+    public void updateSpriteState() {
+        super.updateSpriteState();
+
+        if (abilityCd == 0){
+            ((SarkazCenturionSprite)sprite).chargingAbility();
+            ((SarkazCenturionSprite)sprite).showWarn(1);
+        }
+    }
+
     public static class CenturionBerserk extends Buff {
 
         private static final String LEFT	= "left";
@@ -283,6 +338,7 @@ public class SarkazCenturion extends Mob {
             if (left <= 0 && target.isAlive()) {
                 ((SewerBossLevel)Dungeon.level).onBerserkEnd();
                 target.sprite.showStatus(CharSprite.NEUTRAL,"zzz");
+                ((SarkazCenturionSprite) target.sprite).updateBerserk(false);
                 Buff.affect(target, MagicalSleep.class);
                 ((SarkazCenturion)target).abilityCd = ((SarkazCenturion)target).resetAbilityCd();
                 BossHealthBar.bleed(false);
@@ -308,31 +364,7 @@ public class SarkazCenturion extends Mob {
             super.restoreFromBundle(bundle);
             left = bundle.getFloat( LEFT );
         }
-
-        @Override
-        public boolean attachTo( Char target ) {
-
-            if(target.isAlive()) {
-                ((SewerBossLevel) Dungeon.level).onBerserkBegin();
-                target.sprite.showStatus(CharSprite.WARNING, "狂暴化！");
-                BossHealthBar.bleed(true);
-                ((SarkazCenturionSprite) target.sprite).spray(true);
-
-                for (int i : PathFinder.NEIGHBOURS8) {
-                    Char ch = Actor.findChar(target.pos + i);
-                    if (ch != null && ch instanceof Hero) {
-                        int oppositeHero = ch.pos + (ch.pos - target.pos);
-                        Ballistica trajectory = new Ballistica(ch.pos, oppositeHero, Ballistica.MAGIC_BOLT);
-                        WandOfBlastWave.throwChar(ch, trajectory, 2);
-                        break;
-                    }
-                }
-            }
-
-            return super.attachTo(target);
-        }
     }
-
     public static class DerivativeOriginiumSlug extends OriginiumSlug {
         public boolean isDerivative(){return true;}
     }
@@ -341,22 +373,16 @@ public class SarkazCenturion extends Mob {
         public boolean isDerivative(){return true;}
     }
 
-
-    public boolean isDerivative(){return false;}
-
-
     @Override
     public void notice() {
         super.notice();
-        BossHealthBar.assignBoss(this);
-    }
-
-    @Override
-    public void updateSpriteState() {
-        super.updateSpriteState();
-
-        if (abilityCd == 0){
-            ((SarkazCenturionSprite)sprite).chargingAbility();
+        if (!BossHealthBar.isAssigned()) {
+            BossHealthBar.assignBoss(this);
+        }
+        for (Char ch : Actor.chars()){
+            if (ch instanceof DriedRose.GhostHero){
+                //((DriedRose.GhostHero) ch).sayBoss();
+            }
         }
     }
 }

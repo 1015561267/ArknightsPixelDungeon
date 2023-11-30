@@ -249,7 +249,8 @@ public class Dungeon {
 		
 		Level level;
 		switch (depth) {
-		case 1:
+		case 1:level = new SewerBossLevel();
+			break;
 		case 2:
 		case 3:
 		case 4:

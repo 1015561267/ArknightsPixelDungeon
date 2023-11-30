@@ -58,8 +58,9 @@ public class PDSettings extends GameSettings {
 	public static final String KEY_BRIGHTNESS	= "brightness";
 	public static final String KEY_GRID 	    = "visual_grid";
     public static final String KEY_CAMERA_FOLLOW= "camera_follow";
+	public static final String KEY_FLYING_SHEEP = "flying_sheep";
 
-    public static void fullscreen( boolean value ) {
+	public static void fullscreen( boolean value ) {
 		put( KEY_FULLSCREEN, value );
 
         ArknightsPixelDungeon.updateSystemUI();
@@ -127,6 +128,15 @@ public class PDSettings extends GameSettings {
     public static int cameraFollow() {
         return getInt( KEY_CAMERA_FOLLOW, 4, 1, 4 );
     }
+
+	public static void flyingSheep(boolean value ){
+		put(KEY_FLYING_SHEEP, value );
+		((ArknightsPixelDungeon) ArknightsPixelDungeon.instance).updateDisplaySize();
+	}
+
+	public static boolean flyingSheep(){
+		return getBoolean(KEY_FLYING_SHEEP, false );
+	}
 
     //Interface
 
@@ -366,4 +376,5 @@ public class PDSettings extends GameSettings {
     public static boolean windowMaximized(){
         return getBoolean( KEY_WINDOW_MAXIMIZED, false );
     }
+
 }

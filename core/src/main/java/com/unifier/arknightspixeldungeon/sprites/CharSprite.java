@@ -200,8 +200,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
         }
     }
 
-
-
 	public void idle() {
 		play(idle);
 	}
@@ -678,7 +676,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				ch.onOperateComplete();
 				
 			}
-			
 		}
 	}
 

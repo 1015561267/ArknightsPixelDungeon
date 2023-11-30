@@ -82,7 +82,8 @@ public class WndInfoMob extends WndTitledMessage {
                     name.bottom() - BuffIndicator.SIZE-2
             );
 
-			height = health.bottom();
+			//height = health.bottom();
+			height = image.y + image.height;
 		}
 	}
 }

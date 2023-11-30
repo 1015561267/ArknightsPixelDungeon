@@ -112,6 +112,10 @@ public class BossHealthBar extends Component {
 		}
 	}
 
+	public static boolean isAssigned(){
+		return boss != null && boss.isAlive() && Dungeon.level.mobs.contains(boss);
+	}
+
 	public static void bleed(boolean value){
 		bleeding = value;
 	}

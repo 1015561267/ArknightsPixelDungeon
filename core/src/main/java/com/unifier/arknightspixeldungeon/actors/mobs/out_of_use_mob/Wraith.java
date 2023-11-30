@@ -19,12 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.actors.mobs;
+package com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob;
 
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Terror;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.particles.ShadowParticle;
 import com.unifier.arknightspixeldungeon.items.weapon.enchantments.Grim;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;

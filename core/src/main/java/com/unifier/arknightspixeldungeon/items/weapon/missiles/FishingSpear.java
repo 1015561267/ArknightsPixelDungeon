@@ -22,7 +22,7 @@
 package com.unifier.arknightspixeldungeon.items.weapon.missiles;
 
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.actors.mobs.Piranha;
+import com.unifier.arknightspixeldungeon.actors.mobs.NetherseaPredator;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 
 public class FishingSpear extends MissileWeapon {
@@ -48,7 +48,7 @@ public class FishingSpear extends MissileWeapon {
 	
 	@Override
 	public int proc(Char attacker, Char defender, int damage) {
-		if (defender instanceof Piranha){
+		if (defender instanceof NetherseaPredator){
 			damage = Math.max(damage, defender.HP/2);
 		}
 		return super.proc(attacker, defender, damage);
