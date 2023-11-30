@@ -175,8 +175,12 @@ public class SarkazCenturion extends Mob {
     private void startBerserk() {
         GLog.i("before berserk");
         berserkUnannounced = true;
-        Buff.affect(this,CenturionBerserk.class).on(6f);
         ((SarkazCenturionSprite)sprite).updateBerserk(true);
+        Buff.affect(this,CenturionBerserk.class).on(8f);
+        spend(1f);
+        //have no choice but to do this because if berserk anim is not finished,later it would attack or move instantly,interrupt previous one
+        //then the onComplete is not called,make afterBerserk() unable to work
+        //In fact it should seize control rightly after damaged,so please check the new function gainControl()
         ((SarkazCenturionSprite)sprite).playBerserk();
     }
 
@@ -188,6 +192,8 @@ public class SarkazCenturion extends Mob {
         ((SarkazCenturionSprite) sprite).spray(true);
         GLog.i("spray done");
         int strength = 3;
+        spend(1f);
+        next();
         for (int i : PathFinder.NEIGHBOURS8) {
             Char ch = Actor.findChar(pos + i);
             if (ch != null && ch instanceof Hero) {
@@ -199,13 +205,13 @@ public class SarkazCenturion extends Mob {
                 break;
             }
         }
+        next();
         Camera.main.shake( strength, 0.2f );
+        GameScene.scene.update();
+        next();
+
         ((SewerBossLevel) Dungeon.level).onBerserkBegin();
         berserkUnannounced = false;
-        spend(1f);
-        next();
-        GLog.i("logic done");
-        GLog.i("all done");
     }
 
     @Override

@@ -109,7 +109,6 @@ import com.unifier.arknightspixeldungeon.levels.Terrain;
 import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.plants.Earthroot;
-import com.unifier.arknightspixeldungeon.scenes.AmuletScene;
 import com.unifier.arknightspixeldungeon.scenes.DemoScene;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.InterlevelScene;
@@ -150,7 +149,7 @@ public class Hero extends Char {
 	
 	public static final int MAX_LEVEL = 30;
 
-	public static final int STARTING_STR = 10;
+	public static final int STARTING_STR = 18;
 	
 	private static final float TIME_TO_REST		    = 1f;
 	private static final float TIME_TO_SEARCH	    = 2f;
@@ -182,7 +181,7 @@ public class Hero extends Char {
 	
 	public float awareness;
 	
-	public int lvl = 1;
+	public int lvl = 16;
 	public int exp = 0;
 	
 	public int HTBoost = 0;

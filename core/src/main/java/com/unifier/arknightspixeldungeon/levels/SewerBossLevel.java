@@ -60,7 +60,7 @@ public class SewerBossLevel extends Level {
     private static final Rect arena = new Rect(2, 2, 13, 13);
 
     private static final int bottomDoor = 7 + (arena.bottom) * WIDTH;
-    private static final int topDoor = 7 + WIDTH;
+    private static final int topDoor = 7 + WIDTH; //(2,7)
 
     private boolean triggered = false;
 
@@ -268,21 +268,21 @@ public class SewerBossLevel extends Level {
 
     static {
         int k;
-        for (int i = 1;i < 11;i++) {
-            //1,1 to 10,1
-            k = i + 1 * WIDTH;
+        for (int i = 2;i < 12;i++) {
+            //3,2 to 3,12
+            k = i + 3 * WIDTH;
             positions.add(k);
 
-            //11,1 to 11,10
-            k = 11 + i * WIDTH;
+            //3,2 to 13,2
+            k = 2 + (i + 1) * WIDTH;
             positions.add(k);
 
-            //1,2 to 1,11
-            k = 1 + (i + 1) * WIDTH;
+            //3,12 to 13,12
+            k = 12 + (i + 1) * WIDTH;
             positions.add(k);
 
-            //2,11 to 11,11
-            k =(i + 1) + 11 * WIDTH;
+            //13,2 to 13,12
+            k = i + 13 * WIDTH;
             positions.add(k);
         }
 

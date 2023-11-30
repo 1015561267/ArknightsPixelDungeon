@@ -32,6 +32,7 @@ import com.unifier.arknightspixeldungeon.effects.Pushing;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MagesStaff;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
 import com.unifier.arknightspixeldungeon.tiles.DungeonTilemap;
 import com.unifier.arknightspixeldungeon.utils.GLog;
@@ -126,14 +127,15 @@ public class WandOfBlastWave extends DamageWand {
 		final int finalDist = dist;
 		final int initialpos = ch.pos;
 
-		Actor.addDelayed(new Pushing(ch, ch.pos, newPos, new Callback() {
+		Actor.add(new Pushing(ch, ch.pos, newPos, new Callback() {
 			public void call() {
-				if (initialpos != ch.pos) {
+				if (initialpos != ch.pos || Actor.findChar(newPos) != null) {
 					//something cased movement before pushing resolved, cancel to be safe.
 					ch.sprite.place(ch.pos);
 					return;
 				}
-				ch.pos = newPos;
+                int oldPos = ch.pos;
+                ch.pos = newPos;
 				if (ch.pos == trajectory.collisionPos) {
 					ch.damage(Random.NormalIntRange((finalDist + 1) / 2, finalDist), this);
 					Paralysis.prolong(ch, Paralysis.class, Random.NormalIntRange((finalDist + 1) / 2, finalDist));
@@ -141,9 +143,10 @@ public class WandOfBlastWave extends DamageWand {
 				Dungeon.level.press(ch.pos, ch, true);
 				if (ch == Dungeon.hero){
 					Dungeon.observe();
-				}
+                    GameScene.updateFog();
+                }
 			}
-		}), -1);
+		}));
 	}
 
 	@Override

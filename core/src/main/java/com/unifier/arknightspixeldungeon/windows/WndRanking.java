@@ -153,7 +153,8 @@ public class WndRanking extends WndTabbed {
 			String heroClass = Dungeon.hero.operatorName();
 			
 			IconTitle title = new IconTitle();
-			title.icon( HeroSprite.avatar( Dungeon.hero.heroClass, Dungeon.hero.tier() ) );
+			//FIXME quite a mess,due to each one is same for now,it should be improved
+			title.icon( HeroSprite.avatar( Dungeon.hero.heroClass, 0 ) );
 			title.label( Messages.get(this, "title", Dungeon.hero.lvl, heroClass ).toUpperCase( Locale.ENGLISH ) );
 			title.color(Window.SHPX_COLOR);
 			title.setRect( 0, 0, WIDTH, 0 );

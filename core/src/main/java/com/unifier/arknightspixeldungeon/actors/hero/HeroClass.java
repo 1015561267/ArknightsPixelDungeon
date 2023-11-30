@@ -31,7 +31,6 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.GrenadeLauncher;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Shotgun;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
-import com.unifier.arknightspixeldungeon.items.BrokenSeal;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Honeypot;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -55,10 +54,9 @@ import com.unifier.arknightspixeldungeon.items.potions.PotionOfStrength;
 import com.unifier.arknightspixeldungeon.items.rings.Ring;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfHaste;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMirrorImage;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
-import com.unifier.arknightspixeldungeon.items.wands.Wand;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfMagicMissile;
-import com.unifier.arknightspixeldungeon.items.weapon.Weapon;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Dagger;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Knuckles;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MagesStaff;
@@ -79,9 +77,6 @@ import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHADOWLESS;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATHED_STRIKE;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.UNSHEATH;
 import static com.unifier.arknightspixeldungeon.actors.hero.Talent.WEAPON_ADAPT;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public enum HeroClass {
 
@@ -166,6 +161,7 @@ public enum HeroClass {
             new ScrollOfRage().identify().collect();
             new SmallRation().collect();
             new ScrollOfRemoveCurse().identify().collect();*/
+            new ScrollOfMirrorImage().identify().collect();
             new PotionOfStrength().identify().collect();
             new ScrollOfMagicMapping().identify().collect();
             new PotionOfLiquidFlame().identify().collect();

@@ -33,7 +33,6 @@ import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scenes.PixelScene;
 import com.unifier.arknightspixeldungeon.scenes.TalentScene;
-import com.unifier.arknightspixeldungeon.sprites.HeroSprite;
 import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
 import com.unifier.arknightspixeldungeon.ui.RedButton;
 import com.unifier.arknightspixeldungeon.ui.RenderedTextBlock;
@@ -136,7 +135,10 @@ public class WndHero extends WndTabbed {
 			Hero hero = Dungeon.hero;
 
 			IconTitle title = new IconTitle();
-			title.icon( HeroSprite.avatar(hero.heroClass, hero.tier()) );
+
+			//Image image = ;
+            title.icon( new Image(hero.heroClass.spritesheet(), 0, 17*hero.tier(), 13, 17) );
+            //title.icon( HeroSprite.avatar(hero.heroClass, hero.tier()) );
 
 		//	if (hero.givenName().equals(hero.className()))
 		//		title.label( Messages.get(this, "title", hero.lvl, hero.className() ).toUpperCase( Locale.ENGLISH ) );

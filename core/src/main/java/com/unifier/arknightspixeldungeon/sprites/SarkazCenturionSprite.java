@@ -3,12 +3,10 @@ package com.unifier.arknightspixeldungeon.sprites;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.mobs.SarkazCenturion;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.particles.BloodParticle;
 import com.unifier.arknightspixeldungeon.effects.particles.ElmoParticle;
-import com.unifier.arknightspixeldungeon.levels.SewerBossLevel;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.watabou.gltextures.SmartTexture;
@@ -106,9 +104,6 @@ public class SarkazCenturionSprite extends MobSprite {
 
     @Override
     public void play(Animation anim) {
-        if(anim == berserk) {
-            GLog.i("play assigned");
-        }
         if (anim != charging && anim!=abilityAttack){
             clearEmitters();
         }
@@ -138,6 +133,7 @@ public class SarkazCenturionSprite extends MobSprite {
             showStatus(CharSprite.WARNING, "狂暴化！");
             ((SarkazCenturion)ch).afterBerserk();
             GLog.i("berserk onComplete");
+            idle();
         }
 
         if (anim == abilityAttack){
@@ -166,7 +162,6 @@ public class SarkazCenturionSprite extends MobSprite {
     public void performAbility() { play(abilityAttack); }
 
     public void playBerserk() { play(berserk); }
-
 
     public void showWarn( int warnDist ) {
         if (warnDist == 0){

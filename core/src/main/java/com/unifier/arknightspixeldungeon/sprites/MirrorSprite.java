@@ -21,8 +21,10 @@
 
 package com.unifier.arknightspixeldungeon.sprites;
 
+import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.MirrorImage;
 import com.watabou.noosa.TextureFilm;
 
@@ -30,12 +32,22 @@ public class MirrorSprite extends MobSprite {
 	
 	private static final int FRAME_WIDTH	= 13;
 	private static final int FRAME_HEIGHT	= 17;
-	
-	public MirrorSprite() {
+
+    private static final int IMPROVED_FRAME_WIDTH	= 32;
+    private static final int IMPROVED_FRAME_HEIGHT	= 27;
+
+
+    public MirrorSprite() {
 		super();
-		
-		texture( Dungeon.hero.heroClass.spritesheet() );
-		updateArmor( 0 );
+
+        if(Dungeon.hero.heroClass== HeroClass.WARRIOR ) {
+            texture(Assets.CHEN);
+        }
+        else {
+            texture( Dungeon.hero.heroClass.spritesheet() );
+        }
+
+        updateArmor( 0 );
 		idle();
 	}
 	
@@ -46,6 +58,26 @@ public class MirrorSprite extends MobSprite {
 	}
 	
 	public void updateArmor( int tier ) {
+
+        if(Dungeon.hero.heroClass==HeroClass.WARRIOR ) {
+            //SmartTexture texture = TextureCache.get(Assets.CHEN);
+            //tiers = new TextureFilm(texture, texture.width, IMPROVED_FRAME_HEIGHT);
+            TextureFilm film = new TextureFilm(HeroSprite.improvedTiers(), tier, IMPROVED_FRAME_WIDTH, IMPROVED_FRAME_HEIGHT);
+
+            idle = new Animation(6, true);
+            idle.frames(film, 0, 1, 2, 3);
+
+            run = new Animation(16, true);
+            run.frames(film, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+
+            die = new Animation(4, false);
+            die.frames(film, 13, 14, 15, 16, 17, 18, 19, 20);
+
+            attack = new Animation(15, false);
+            attack.frames(film, 21, 22, 23, 24, 25, 26, 27, 22);
+            return;
+        }
+
 		TextureFilm film = new TextureFilm( HeroSprite.tiers(), tier, FRAME_WIDTH, FRAME_HEIGHT );
 		
 		idle = new Animation( 1, true );
