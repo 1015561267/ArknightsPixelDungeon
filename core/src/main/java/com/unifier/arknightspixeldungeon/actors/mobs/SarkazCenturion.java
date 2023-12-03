@@ -51,8 +51,6 @@ public class SarkazCenturion extends Mob {
         if (abilityCd == 0 && paralysed <= 0){
             //if can use ability then always use it,unless controlled
             ((SarkazCenturionSprite)sprite).performAbility();
-            spend(attackDelay());
-            next();
             return true;
         }
 
@@ -108,6 +106,7 @@ public class SarkazCenturion extends Mob {
             abilityCd --;
             if (abilityCd == 0){
                 ((SarkazCenturionSprite)sprite).chargingAbility();
+                return false;
             }
         }
         return result;
@@ -140,6 +139,8 @@ public class SarkazCenturion extends Mob {
         Camera.main.shake( 2 + GameMath.gate( 1, count, 8), 0.2f );
 
         abilityCd = resetAbilityCd();
+        spend(attackDelay());
+        next();
     }
 
     @Override

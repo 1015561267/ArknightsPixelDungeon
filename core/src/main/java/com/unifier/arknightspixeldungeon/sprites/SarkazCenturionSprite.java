@@ -127,7 +127,7 @@ public class SarkazCenturionSprite extends MobSprite {
 
     @Override
     public void onComplete( Animation anim ) {
-
+        super.onComplete(anim);
         if (anim == berserk) {
             GLog.i("berserk Complete");
             showStatus(CharSprite.WARNING, "狂暴化！");
@@ -142,7 +142,7 @@ public class SarkazCenturionSprite extends MobSprite {
             idle();
         }
 
-        super.onComplete(anim);
+
 
         if (anim == die) {
             spray.killAndErase();

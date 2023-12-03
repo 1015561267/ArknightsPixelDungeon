@@ -293,7 +293,7 @@ public class SewerBossLevel extends Level {
         for(int i = 0;i<10;i++)
         {
             int temp = Random.element(positions);
-            if(Actor.findChar(temp)==null){
+            if(Actor.findChar(temp)==null && !solid[temp]){
                 return temp;
             }
         }

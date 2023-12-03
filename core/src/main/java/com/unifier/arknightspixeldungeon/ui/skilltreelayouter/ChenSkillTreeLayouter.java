@@ -159,7 +159,7 @@ public class ChenSkillTreeLayouter {
     private static void layoutTitle(TalentsPane talentsPane,int tier) {
         talentsPane.points.get(tier-1).measure();
         PixelScene.align(talentsPane.points.get(tier-1));
-        talentsPane.points.get(tier-1).x = getTierHorizontalCenter(tier) - titleWidth()/2;
+        talentsPane.points.get(tier-1).x = getTierHorizontalCenter(tier) - titleWidth()/2 + 5;
         talentsPane.points.get(tier-1).y = 0f;
     }
 

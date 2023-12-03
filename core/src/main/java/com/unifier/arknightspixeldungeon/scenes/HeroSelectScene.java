@@ -508,6 +508,12 @@ public class HeroSelectScene extends PixelScene {
         protected void onClick() {
             super.onClick();
 
+            //TODO release包禁用其他三角色
+            if (!DeviceCompat.isDebug() && !(cl == HeroClass.WARRIOR)) {
+                Game.scene().add(new WndMessage("demo版本暂不开放其他角色"));
+                return;
+            }
+
             if( !cl.isUnlocked() ){
                 ArknightsPixelDungeon.scene().addToFront( new WndMessage(cl.unlockMsg()));
             } else if (GamesInProgress.selectedClass == cl) {
