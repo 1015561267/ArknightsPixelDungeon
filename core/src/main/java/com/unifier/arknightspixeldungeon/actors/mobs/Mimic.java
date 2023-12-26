@@ -35,6 +35,7 @@ import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfPsionicBlast;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.MimicSprite;
+import com.unifier.arknightspixeldungeon.sprites.NewMimicSprite;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
@@ -49,7 +50,7 @@ public class Mimic extends Mob {
 	private int level;
 	
 	{
-		spriteClass = MimicSprite.class;
+		spriteClass = NewMimicSprite.class;
 
 		properties.add(Property.DEMONIC);
 	}

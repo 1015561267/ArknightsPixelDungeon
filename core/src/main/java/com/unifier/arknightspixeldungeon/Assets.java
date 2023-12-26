@@ -89,6 +89,7 @@ public class Assets {
     public static final String YOG		= MOBS + "yog.png";
     public static final String LARVA	= MOBS + "larva.png";
     public static final String MIMIC    = MOBS + "mimic.png";
+    public static final String NEW_MIMIC    = MOBS + "new_mimic.png";
     public static final String ROT_LASH = MOBS + "rot_lasher.png";
     public static final String ROT_HEART= MOBS + "rot_heart.png";
     public static final String GUARD    = MOBS + "guard.png";
