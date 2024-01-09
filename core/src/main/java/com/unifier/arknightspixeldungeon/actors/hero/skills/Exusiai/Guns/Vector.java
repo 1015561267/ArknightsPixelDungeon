@@ -3,30 +3,18 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
-import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
-import com.unifier.arknightspixeldungeon.actors.buffs.Frost;
-import com.unifier.arknightspixeldungeon.actors.buffs.MagicalSleep;
-import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
-import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.effects.Splash;
 import com.unifier.arknightspixeldungeon.items.Item;
-import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
-import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.sprites.ItemSpriteSheet;
-import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
-
-import java.util.ArrayList;
 
 public class Vector extends ExusiaiSkill {
 
-    //FIXME Well it's a temporary variant for handling,may be changed later
+    //FIXME Well it's a temporary variant for handling visual,may be changed later
 
     static int burstTemp;
 
@@ -110,115 +98,21 @@ public class Vector extends ExusiaiSkill {
     }
 
     protected void doShoot(Hero owner,Integer cell){
-        int from = owner.pos;
-        int to = cell;
-
-        Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.PROJECTILE);
-        int result = ballistica.collisionPos;
-
         burstTemp = burstNum();
-
-        ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(from, result, ammoSprite() , new Callback() {
-            @Override
-            public void call() {
-                doEnemyCheck(from,result);
-            }
-        });
+        super.doShoot(owner,cell);
     }
 
     protected void doEnemyCheck(int from, int to){
         Char enemy = Char.findChar(to);
         boolean visibleFight = Dungeon.level.heroFOV[to];
 
-        int burst = burstTemp;
-
         if(enemy != null && enemy.alignment == Char.Alignment.ENEMY){
-            startBurst( burst , from , to , enemy );
+            startBurst( burstTemp , from , to , enemy );
         }else {
             if (visibleFight) {
                 Splash.at(to, 0xCCFFC800, 1);
             }
-            doCheckAfterShooting(burst,false);
+            doCheckAfterShooting(burstTemp,false);
         }
     }
-
-    private void startBurst(int burst, int from, int to, Char enemy) {
-
-        ArrayList<Boolean> burstArray = new ArrayList<>();
-
-        String defense = enemy.defenseVerb();
-
-        Boolean everHitted = false;
-
-        while (burst>0){
-
-            if(doHitCheck(from,to,enemy)){
-                everHitted = true;
-                burstArray.add(true);
-            }else {
-                //enemy.sprite.showStatus( CharSprite.NEUTRAL, defense );
-                burstArray.add(false);
-            }
-            burst --;
-        }
-
-        if(everHitted){
-            if (enemy.buff(Frost.class) != null){
-                Buff.detach( enemy, Frost.class );
-            }
-            if (enemy.buff(MagicalSleep.class) != null){
-                Buff.detach(enemy, MagicalSleep.class);
-            }
-
-            doDamageCalculation(from,to,enemy,burstArray);
-
-        }else {
-            Splash.at( to, 0xCCFFC800, 1 );
-            Sample.INSTANCE.play(Assets.SND_MISS);
-            enemy.sprite.showStatus( CharSprite.NEUTRAL,defense);
-            doCheckAfterShooting(burst,false);
-        }
-    }
-
-    protected void doDamageCalculation(int from, int to, Char enemy, ArrayList<Boolean> burstArray){
-
-        ArrayList<Integer> damageArray = new ArrayList<>();
-
-        int i=0;
-
-        int hittedTime = 0;
-        for(Boolean record : burstArray){
-
-            if(record){
-                int damage = Random.Int(shootDamageMin(),shootDamageMax());
-                int dr = enemy.drRoll();
-
-                int effectiveDamage = damage;
-                //int effectiveDamage = enemy.defenseProc( enemy, damage );
-                effectiveDamage = Math.max( effectiveDamage - dr, 0 );
-
-                if ( enemy.buff( Vulnerable.class ) != null){
-                    effectiveDamage *= 1.33f;
-                }
-
-                if ( owner.buff(Weakness.class) != null ){
-                    effectiveDamage *= 0.67f;
-                }
-
-                damageArray.add(effectiveDamage);
-                hittedTime++;
-            }
-            else {
-                damageArray.add(0);
-            }
-        }
-
-        damageArray = enemy.multipleDefenseProc(owner,damageArray,burstArray,hittedTime);
-        //FIXME better change this to "multiple attack" to keep same logic,what works now makes defenseProc after Vulnerable/weakness,not before,as what happen in attack()
-
-        enemy.multipleDamage(burstArray,damageArray,this,hittedTime);
-
-        doCheckAfterShooting(burstArray.size(),false);
-    }
-
 }

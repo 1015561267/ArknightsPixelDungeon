@@ -4,6 +4,7 @@ import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Chrome;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.AssaultRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.ExusiaiSkill;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.GrenadeLauncher;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Revolver;
@@ -38,6 +39,8 @@ public class WndExusiaiSkill extends Window {
     private static final int HEIGHT   = 150;
 
     protected static final int GAP	= 2;
+
+    private static final float BUTTON_HEIGHT	= 16;
 
     public WndExusiaiSkill(ExusiaiSkill skill) {
 
@@ -96,7 +99,46 @@ public class WndExusiaiSkill extends Window {
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
-        }else if(skill instanceof SniperRifle){
+        }else if(skill instanceof AssaultRifle){
+
+            button = new AttachmentSlot(Attachment.AttachType.FRONT_HANG , skill.getFRONT_HANG(), skill,this);
+            button.setPos( (bluePrint.width * 8 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+
+            button = new AttachmentSlot(Attachment.AttachType.BELOW_HANG , skill.getBELOW_HANG(), skill,this);
+            button.setPos( (bluePrint.width * 31 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+
+
+            button = new AttachmentSlot(Attachment.AttachType.AMMO_BOX , skill.getAMMO_BOX(), skill,this);
+            button.setPos( (bluePrint.width * 53 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+
+            button = new AttachmentSlot(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT(), skill ,this);
+            button.setPos( (bluePrint.width * 77 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+
+            button = new AttachmentSlot(Attachment.AttachType.BULLET , skill.getAMMO_BOX(), skill,this);
+            button.setPos( (bluePrint.width * 99 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+
+            button = new AttachmentSlot(Attachment.AttachType.BACK_HANG , skill.getBELOW_HANG(), skill,this);
+            button.setPos( (bluePrint.width * 122 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            attachmentSlot.add(button);
+            addToFront(button);
+            add(button);
+        }
+        else if(skill instanceof SniperRifle){
 
             button = new AttachmentSlot(Attachment.AttachType.FRONT_HANG , skill.getFRONT_HANG(), skill,this);
             button.setPos( (bluePrint.width * 17 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
@@ -160,7 +202,6 @@ public class WndExusiaiSkill extends Window {
             addToFront(button);
             add(button);
         }
-
         String message = skill.desc();
         RenderedTextBlock text = PixelScene.renderTextBlock( 6 );
         text.text( message, WIDTH - 2 * GAP );
@@ -170,8 +211,107 @@ public class WndExusiaiSkill extends Window {
         int height = layOutNecessaryButton(skill,text.bottom());
 
         update();
-
         resize( WIDTH, HEIGHT);
+
+        float y = HEIGHT;
+
+        if (Dungeon.hero.isAlive() && !skill.windowActions().isEmpty()) {
+            y += GAP;
+            ArrayList<RedButton> buttons = new ArrayList<>();
+            for (final String action : skill.windowActions()) {
+
+                RedButton btn = new RedButton( skill.actionName(action), 8 ) {
+                    @Override
+                    protected void onClick() {
+                        hide();
+                        //if (owner != null && owner.parent != null) owner.hide();
+                        skill.excuteActions(action);
+                    }
+                };
+
+                btn.setSize( btn.reqWidth(), BUTTON_HEIGHT );
+                buttons.add(btn);
+                add( btn );
+            }
+            y = layoutButtons(buttons, width, y);
+        }
+        resize( WIDTH, (int)(y) );
+    }
+
+    private static float layoutButtons(ArrayList<RedButton> buttons, float width, float y){
+        ArrayList<RedButton> curRow = new ArrayList<>();
+        float widthLeftThisRow = width;
+        while( !buttons.isEmpty() ){
+            RedButton btn = buttons.get(0);
+            widthLeftThisRow -= btn.width();
+            if (curRow.isEmpty()) {
+                curRow.add(btn);
+                buttons.remove(btn);
+            } else {
+                widthLeftThisRow -= 1;
+                if (widthLeftThisRow >= 0) {
+                    curRow.add(btn);
+                    buttons.remove(btn);
+                }
+            }
+            //layout current row. Currently forces a max of 3 buttons but can work with more
+            if (buttons.isEmpty() || widthLeftThisRow <= 0 || curRow.size() >= 3){
+
+                //re-use this variable for laying out the buttons
+                widthLeftThisRow = width - (curRow.size()-1);
+                for (RedButton b : curRow){
+                    widthLeftThisRow -= b.width();
+                }
+                //while we still have space in this row, find the shortest button(s) and extend them
+                while (widthLeftThisRow > 0){
+                    ArrayList<RedButton> shortest = new ArrayList<>();
+                    RedButton secondShortest = null;
+                    for (RedButton b : curRow) {
+                        if (shortest.isEmpty()) {
+                            shortest.add(b);
+                        } else {
+                            if (b.width() < shortest.get(0).width()) {
+                                secondShortest = shortest.get(0);
+                                shortest.clear();
+                                shortest.add(b);
+                            } else if (b.width() == shortest.get(0).width()) {
+                                shortest.add(b);
+                            } else if (secondShortest == null || secondShortest.width() > b.width()){
+                                secondShortest = b;
+                            }
+                        }
+                    }
+                    float widthToGrow;
+
+                    if (secondShortest == null){
+                        widthToGrow = widthLeftThisRow / shortest.size();
+                        widthLeftThisRow = 0;
+                    } else {
+                        widthToGrow = secondShortest.width() - shortest.get(0).width();
+                        if ((widthToGrow * shortest.size()) >= widthLeftThisRow){
+                            widthToGrow = widthLeftThisRow / shortest.size();
+                            widthLeftThisRow = 0;
+                        } else {
+                            widthLeftThisRow -= widthToGrow * shortest.size();
+                        }
+                    }
+                    for (RedButton toGrow : shortest){
+                        toGrow.setRect(0, 0, toGrow.width()+widthToGrow, toGrow.height());
+                    }
+                }
+                //finally set positions
+                float x = 0;
+                for (RedButton b : curRow){
+                    b.setRect(x, y, b.width(), b.height());
+                    x += b.width() + 1;
+                }
+                //move to next line and reset variables
+                y += BUTTON_HEIGHT+1;
+                widthLeftThisRow = width;
+                curRow.clear();
+            }
+        }
+        return y - 1;
     }
 
     private int layOutNecessaryButton(ExusiaiSkill skill, float bottom) {

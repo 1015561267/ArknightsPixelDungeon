@@ -28,6 +28,7 @@ import com.unifier.arknightspixeldungeon.actors.Actor;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.SarkazCenturion;
+import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Heap;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.levels.painters.Painter;
@@ -161,6 +162,13 @@ public class SewerBossLevel extends Level {
                 pos = randomRespawnCell();
             } while (pos == entrance);
             drop( item, pos ).type = Heap.Type.REMAINS;
+        }else {
+            Item toDrop = Generator.random();
+            int pos;
+            do {
+                pos = randomRespawnCell();
+            } while (pos == entrance);
+            drop( toDrop, pos ).type = Heap.Type.MIMIC;
         }
 	}
 

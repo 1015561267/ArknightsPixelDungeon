@@ -28,9 +28,9 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Shadowless;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
-import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.GrenadeLauncher;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.AssaultRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Shotgun;
-import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Vector;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Honeypot;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -268,10 +268,10 @@ public enum HeroClass {
 		hero.skill_1 = new Shotgun();
 		hero.skill_1.attachTo(hero);
 
-		hero.skill_2 = new GrenadeLauncher();
+		hero.skill_2 = new Vector();
         hero.skill_2.attachTo(hero);
 
-		hero.skill_3  = new SniperRifle();
+		hero.skill_3  = new AssaultRifle();
 		hero.skill_3.attachTo(hero);
 	}
 	

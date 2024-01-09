@@ -6,7 +6,9 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Bless;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Burning;
+import com.unifier.arknightspixeldungeon.actors.buffs.Frost;
 import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
+import com.unifier.arknightspixeldungeon.actors.buffs.MagicalSleep;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
@@ -35,7 +37,6 @@ import com.watabou.utils.Random;
 import java.util.ArrayList;
 
 public abstract class ExusiaiSkill extends HeroSkill {
-
     Attachment GUN_SIGHT = Attachment.NULL_ATTACHMENT;
     Attachment FRONT_HANG= Attachment.NULL_ATTACHMENT;
     Attachment BELOW_HANG= Attachment.NULL_ATTACHMENT;
@@ -289,6 +290,42 @@ public abstract class ExusiaiSkill extends HeroSkill {
        return acuRoll >= defRoll;
     }
 
+    //for burst attack,decrease unnecessary check and code hope for better performance
+    protected void startBurst(int burst, int from, int to, Char enemy) {
+
+        ArrayList<Boolean> burstArray = new ArrayList<>();
+
+        String defense = enemy.defenseVerb();
+
+        Boolean everHitted = false;
+
+        while (burst>0){
+
+            if(doHitCheck(from,to,enemy)){
+                everHitted = true;
+                burstArray.add(true);
+            }else {
+                burstArray.add(false);
+            }
+            burst --;
+        }
+
+        if(everHitted){
+            if (enemy.buff(Frost.class) != null){
+                Buff.detach( enemy, Frost.class );
+            }
+            if (enemy.buff(MagicalSleep.class) != null){
+                Buff.detach(enemy, MagicalSleep.class);
+            }
+            doDamageCalculation(from,to,enemy,burstArray);
+        }else {
+            Splash.at( to, 0xCCFFC800, 1 );
+            Sample.INSTANCE.play(Assets.SND_MISS);
+            enemy.sprite.showStatus( CharSprite.NEUTRAL,defense);
+            doCheckAfterShooting(burst,false);
+        }
+    }
+
     protected void doDamageCalculation(int from, int to, Char enemy){
 
         int damage = Random.Int(shootDamageMin(),shootDamageMax());
@@ -322,6 +359,52 @@ public abstract class ExusiaiSkill extends HeroSkill {
         }
 
         doCheckAfterShooting(1,false);
+    }
+
+    protected void doDamageCalculation(int from, int to, Char enemy, ArrayList<Boolean> burstArray){
+
+        ArrayList<Integer> damageArray = new ArrayList<>();
+
+        int i=0;
+
+        int hittedTime = 0;
+        for(Boolean record : burstArray){
+
+            if(record){
+                int damage = Random.Int(shootDamageMin(),shootDamageMax());
+                int dr = enemy.drRoll();
+
+                int effectiveDamage = damage;
+                //int effectiveDamage = enemy.defenseProc( enemy, damage );
+                effectiveDamage = Math.max( effectiveDamage - dr, 0 );
+
+                if ( enemy.buff( Vulnerable.class ) != null){
+                    effectiveDamage *= 1.33f;
+                }
+
+                if ( owner.buff(Weakness.class) != null ){
+                    effectiveDamage *= 0.67f;
+                }
+
+                damageArray.add(effectiveDamage);
+                hittedTime++;
+            }
+            else {
+                damageArray.add(0);
+            }
+        }
+        damageArray = enemy.multipleDefenseProc(owner,damageArray,burstArray,hittedTime);
+        //FIXME better change this to "multiple attack" to keep same logic,what works now makes defenseProc after Vulnerable/weakness,not before,as what happen in attack()
+        enemy.multipleDamage(burstArray,damageArray,this,hittedTime);
+
+        if (!enemy.isAlive()) {
+            GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())) );
+        }else {
+            QuickSlotButton.lastTarget = enemy;
+            SkillLoader.lastTarget = enemy;
+        }
+
+        doCheckAfterShooting(burstArray.size(),false);
     }
 
     protected void doCheckAfterShooting(int cost,boolean useHeat){
@@ -529,4 +612,23 @@ public abstract class ExusiaiSkill extends HeroSkill {
         return arrayList;
     }
 
+    private static final String AC_RELOAD		= "RELOAD";
+    //just work like item actions
+    public ArrayList<String> windowActions() {
+        ArrayList<String> actions = new ArrayList<String>();
+        actions.add(AC_RELOAD);
+        return actions;
+    }
+
+    public void excuteActions(String action) {
+        GameScene.cancel();
+        if (action.equals( AC_RELOAD )) {
+            startReload();
+        }
+        return;
+    }
+
+    public String actionName(String action){
+        return Messages.get(this, "ac_" + action);
+    }
 }

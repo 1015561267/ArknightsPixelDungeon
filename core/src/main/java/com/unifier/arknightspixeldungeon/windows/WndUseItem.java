@@ -38,9 +38,6 @@ public class WndUseItem extends WndInfoItem {
             y += GAP;
             ArrayList<RedButton> buttons = new ArrayList<>();
             for (final String action : item.actions( Dungeon.hero )) {
-
-                //GLog.i(action);
-
                 RedButton btn = new RedButton( item.actionName(action, Dungeon.hero), 8 ) {
                     @Override
                     protected void onClick() {
