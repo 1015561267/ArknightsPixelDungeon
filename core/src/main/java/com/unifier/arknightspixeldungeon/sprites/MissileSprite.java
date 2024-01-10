@@ -101,8 +101,13 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 
 		originToCenter();
 
-        from.x -= width()/2;
-        to.x -= width()/2;
+        //from.x -= width()/2;
+        //to.x -= width()/2;
+        //from.y -= height()/2;
+        //to.y -= height()/2;
+
+        from.x -= width();
+        to.x -= width();
         from.y -= height()/2;
         to.y -= height()/2;
 

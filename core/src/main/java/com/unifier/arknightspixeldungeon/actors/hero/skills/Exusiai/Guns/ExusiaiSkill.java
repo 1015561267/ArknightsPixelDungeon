@@ -217,7 +217,7 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
         owner.busy();
 
-        ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(from, result, ammoSprite() , new Callback() {
+        ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(owner.sprite ,result, ammoSprite() , new Callback() {
             @Override
             public void call() {
                 doEnemyCheck(from,result);

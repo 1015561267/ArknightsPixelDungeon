@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class AssaultRifle extends ExusiaiSkill{
 
-    public boolean fireMode = false;
+    public boolean burstFireMode = false;
 
     @Override
     public Image bluePrintPicture() {
@@ -61,13 +61,13 @@ public class AssaultRifle extends ExusiaiSkill{
     @Override
     public void storeInBundle( Bundle bundle ) {
         super.storeInBundle( bundle );
-        bundle.put(BURST_FIRE_MODE, fireMode);
+        bundle.put(BURST_FIRE_MODE, burstFireMode);
     }
 
     @Override
     public void restoreFromBundle( Bundle bundle ) {
         super.restoreFromBundle(bundle);
-        fireMode = bundle.getBoolean(BURST_FIRE_MODE);
+        burstFireMode = bundle.getBoolean(BURST_FIRE_MODE);
     }
 
     @Override
@@ -95,9 +95,15 @@ public class AssaultRifle extends ExusiaiSkill{
         return 20;
     }
 
+    public int burstNum(){
+        if (burstFireMode){
+            return Math.min( 3,charge);
+        }else return 1;
+    }
+
     public String otherInfo() {
         String otherInfo = super.otherInfo()+ "\n\n";
-        otherInfo+= fireMode ? Messages.get(this, "burstfireon") : Messages.get(this, "burstfireoff");
+        otherInfo+= burstFireMode ? Messages.get(this, "burstfireon") : Messages.get(this, "burstfireoff");
         return otherInfo;
     }
 
@@ -105,7 +111,7 @@ public class AssaultRifle extends ExusiaiSkill{
     protected Item ammoSprite(){
         return new Item(){
             {
-                image = fireMode ? ItemSpriteSheet.ONE_BURST : ItemSpriteSheet.THREE_BURST;
+                image = burstFireMode ? ItemSpriteSheet.THREE_BURST : ItemSpriteSheet.ONE_BURST;
             }
             @Override
             public boolean isBulletForEffect(){return true;}
@@ -129,7 +135,7 @@ public class AssaultRifle extends ExusiaiSkill{
 
     protected void doEnemyCheck(int from, int to){
 
-        int burstNum = fireMode ?3:1;
+        int burstNum = burstNum();
 
         Char enemy = Char.findChar(to);
         boolean visibleFight = Dungeon.level.heroFOV[to];
@@ -156,8 +162,8 @@ public class AssaultRifle extends ExusiaiSkill{
         super.excuteActions(action );
 
         if (action.equals(AC_SWITCH)) {
-            fireMode = !fireMode;
-            GLog.p(Messages.get(this, "switch"));
+            burstFireMode = !burstFireMode;
+            GLog.i(Messages.get(this, "switch"));
             Dungeon.hero.sprite.operate(Dungeon.hero.pos);
         }
         return;

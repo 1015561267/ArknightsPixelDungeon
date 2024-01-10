@@ -63,77 +63,77 @@ public class WndExusiaiSkill extends Window {
         if(skill instanceof Revolver){
 
             button = new AttachmentSlot(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT(), skill,this);
-            button.setPos( (bluePrint.width * 27 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 62 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 27 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 62 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BULLET , skill.getBULLET(), skill,this);
-            button.setPos( (bluePrint.width * 102 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 62 / 64) );
+            button.setPos( bluePrint.x +(bluePrint.width * 102 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 62 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
         }else if(skill instanceof Vector){
 
             button = new AttachmentSlot(Attachment.AttachType.FRONT_HANG , skill.getFRONT_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 17 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x +(bluePrint.width * 17 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BELOW_HANG , skill.getBELOW_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 48 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 48 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
 
             button = new AttachmentSlot(Attachment.AttachType.AMMO_BOX , skill.getAMMO_BOX(), skill,this);
-            button.setPos( (bluePrint.width * 79 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 79 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT(), skill ,this);
-            button.setPos( (bluePrint.width * 111 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 111 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
         }else if(skill instanceof AssaultRifle){
 
             button = new AttachmentSlot(Attachment.AttachType.FRONT_HANG , skill.getFRONT_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 8 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 8 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BELOW_HANG , skill.getBELOW_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 31 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 31 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
 
             button = new AttachmentSlot(Attachment.AttachType.AMMO_BOX , skill.getAMMO_BOX(), skill,this);
-            button.setPos( (bluePrint.width * 53 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 53 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT(), skill ,this);
-            button.setPos( (bluePrint.width * 77 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 77 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BULLET , skill.getAMMO_BOX(), skill,this);
-            button.setPos( (bluePrint.width * 99 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 97 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BACK_HANG , skill.getBELOW_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 122 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 120 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
@@ -141,68 +141,68 @@ public class WndExusiaiSkill extends Window {
         else if(skill instanceof SniperRifle){
 
             button = new AttachmentSlot(Attachment.AttachType.FRONT_HANG , skill.getFRONT_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 17 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 17 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.GUN_SIGHT , skill.getGUN_SIGHT(), skill ,this);
-            button.setPos( (bluePrint.width * 49 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 49 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.AMMO_BOX , skill.getAMMO_BOX(), skill,this);
-            button.setPos( (bluePrint.width * 80 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 80 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BACK_HANG , skill.getBELOW_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 111 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 111 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
         }else if(skill instanceof Shotgun){
 
             button = new AttachmentSlot(Attachment.AttachType.FRONT_HANG , skill.getFRONT_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 21 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 21 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BELOW_HANG , skill.getGUN_SIGHT(), skill ,this);
-            button.setPos( (bluePrint.width * 50 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 50 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BULLET , skill.getAMMO_BOX(), skill,this);
-            button.setPos( (bluePrint.width * 79 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 79 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BACK_HANG , skill.getBELOW_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 109 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 109 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
         }else if(skill instanceof GrenadeLauncher){
 
             button = new AttachmentSlot(Attachment.AttachType.BELOW_HANG , skill.getFRONT_HANG(), skill,this);
-            button.setPos( (bluePrint.width * 27 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 27 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
 
             button = new AttachmentSlot(Attachment.AttachType.BACK_HANG , skill.getGUN_SIGHT(), skill ,this);
-            button.setPos( (bluePrint.width * 102 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
+            button.setPos( bluePrint.x + (bluePrint.width * 102 / 128) - (button.width() / 2) , bluePrint.y + (bluePrint.height * 61 / 64) );
             attachmentSlot.add(button);
             addToFront(button);
             add(button);
         }
-        String message = skill.desc();
+        String message = skill.desc() + "\n\n" +skill.otherInfo();
         RenderedTextBlock text = PixelScene.renderTextBlock( 6 );
         text.text( message, WIDTH - 2 * GAP );
         text.setPos( GAP, attachmentSlot.get(attachmentSlot.size() - 1).bottom() + GAP );
