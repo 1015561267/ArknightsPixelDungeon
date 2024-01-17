@@ -52,7 +52,7 @@ public class WarpingTrap extends Trap {
 		
 		Char ch = Actor.findChar( pos);
 		if (ch instanceof Hero){
-			ScrollOfTeleportation.teleportHero( (Hero)ch);
+			ScrollOfTeleportation.teleportChar( (Hero)ch);
 			BArray.setFalse(Dungeon.level.visited);
 			BArray.setFalse(Dungeon.level.mapped);
 			GameScene.updateFog();

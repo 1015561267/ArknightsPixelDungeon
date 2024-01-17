@@ -147,7 +147,7 @@ public class CursedWand {
 			case 2:
 				switch(Random.Int(2)){
 					case 0:
-						ScrollOfTeleportation.teleportHero(user);
+						ScrollOfTeleportation.teleportChar(user);
 						wand.wandUsed();
 						break;
 					case 1:
@@ -155,7 +155,7 @@ public class CursedWand {
 							public void call() {
 								Char ch = Actor.findChar( bolt.collisionPos );
 								if (ch == user){
-									ScrollOfTeleportation.teleportHero(user);
+									ScrollOfTeleportation.teleportChar(user);
 									wand.wandUsed();
 								} else if (ch != null && !ch.properties().contains(Char.Property.IMMOVABLE)) {
 									int count = 10;
@@ -346,7 +346,7 @@ public class CursedWand {
 					Game.switchScene(InterlevelScene.class);
 
 				} else {
-					ScrollOfTeleportation.teleportHero(user);
+					ScrollOfTeleportation.teleportChar(user);
 					wand.wandUsed();
 				}
 				break;

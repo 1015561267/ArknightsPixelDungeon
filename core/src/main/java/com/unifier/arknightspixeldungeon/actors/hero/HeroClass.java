@@ -38,8 +38,8 @@ import com.unifier.arknightspixeldungeon.items.LevelTeleporter;
 import com.unifier.arknightspixeldungeon.items.TomeOfMastery;
 import com.unifier.arknightspixeldungeon.items.Torch;
 import com.unifier.arknightspixeldungeon.items.armor.ClothArmor;
-import com.unifier.arknightspixeldungeon.items.artifacts.Artifact;
 import com.unifier.arknightspixeldungeon.items.artifacts.CloakOfShadows;
+import com.unifier.arknightspixeldungeon.items.artifacts.DriedRose;
 import com.unifier.arknightspixeldungeon.items.bags.MagicalHolster;
 import com.unifier.arknightspixeldungeon.items.bags.PotionBandolier;
 import com.unifier.arknightspixeldungeon.items.bags.ScrollHolder;
@@ -55,6 +55,7 @@ import com.unifier.arknightspixeldungeon.items.rings.Ring;
 import com.unifier.arknightspixeldungeon.items.rings.RingOfHaste;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfMirrorImage;
+import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.unifier.arknightspixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.unifier.arknightspixeldungeon.items.wands.WandOfMagicMissile;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.Dagger;
@@ -64,6 +65,7 @@ import com.unifier.arknightspixeldungeon.items.weapon.melee.WornShortsword;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.unifier.arknightspixeldungeon.items.weapon.missiles.ThrowingStone;
 import com.unifier.arknightspixeldungeon.messages.Messages;
+import com.unifier.arknightspixeldungeon.plants.Firebloom;
 import com.unifier.arknightspixeldungeon.ui.TalentIcon;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
@@ -136,9 +138,9 @@ public enum HeroClass {
 		new MagicalHolster().collect();
 		Dungeon.LimitedDrops.MAGICAL_HOLSTER.drop();
 
+		new DriedRose().identify().collect();
+
         for(int j=0;j<3;j++) {
-            Artifact artifact = Generator.randomArtifact();
-            artifact.identify().collect();
 
 			Item wand = Generator.random(Generator.Category.WAND);
         	wand.identify().collect();
@@ -162,20 +164,21 @@ public enum HeroClass {
             new SmallRation().collect();
             new ScrollOfRemoveCurse().identify().collect();*/
             new ScrollOfMirrorImage().identify().collect();
+            new ScrollOfTeleportation().identify().collect();
             new PotionOfStrength().identify().collect();
             new ScrollOfMagicMapping().identify().collect();
             new PotionOfLiquidFlame().identify().collect();
             new Honeypot().collect();
+            new PotionOfExperience().identify().collect();
         }
 
 		for(int j=0;j<30;j++) {
-			new PotionOfExperience().identify().collect();
-			new Generator().random(Generator.Category.SEED).collect();
+		    new Firebloom.Seed().collect();
+            Generator.random(Generator.Category.SEED).collect();
 		}
 
-        new LevelTeleporter().identify().collect();
-
-        new Torch().collect();
+		new LevelTeleporter().identify().collect();
+		new Torch().collect();
 	}
 
 	public Badges.Badge masteryBadge() {
@@ -201,6 +204,9 @@ public enum HeroClass {
 		if (hero.belongings.armor != null){
 			//hero.belongings.armor.affixSeal(new BrokenSeal());
 		}
+
+        //new VelvetPouch().collect();
+        //Dungeon.LimitedDrops.VELVET_POUCH.drop();
 		
 		new PotionBandolier().collect();
 		Dungeon.LimitedDrops.POTION_BANDOLIER.drop();

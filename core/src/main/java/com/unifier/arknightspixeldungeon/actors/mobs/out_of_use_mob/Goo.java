@@ -212,9 +212,9 @@ public class Goo extends Mob {
 	}
 	
 	@Override
-	public void move( int step ) {
+	public void move( int step , boolean travelling) {
 		Dungeon.level.seal();
-		super.move( step );
+		super.move( step , travelling);
 	}
 
 	@Override

@@ -264,6 +264,12 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
     protected float attachmentAccuracyModifier(int from, int to, Char enemy){
         float result = 0f;
+
+        
+
+
+
+
         return result;}//FIXME most accuracy modifier attachment will take affect at here,but the most important thing is get the whole process done first.
 
     protected boolean doHitCheck(int from, int to,Char enemy){

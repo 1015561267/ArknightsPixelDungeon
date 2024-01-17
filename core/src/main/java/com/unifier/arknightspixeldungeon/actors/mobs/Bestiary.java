@@ -47,7 +47,7 @@ public class Bestiary {
 				//10x 源石虫
 				return new ArrayList<Class<? extends Mob>>(Arrays.asList(
                         OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class,
-						SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class, SarkazWitherer.class));
+                        OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class, OriginiumSlug.class));
 			case 2:
 				//2x 源石虫, 3x 深池侦察兵 1x 大君之触
 				return new ArrayList<>(Arrays.asList(OriginiumSlug.class, OriginiumSlug.class, DublinnScout.class,

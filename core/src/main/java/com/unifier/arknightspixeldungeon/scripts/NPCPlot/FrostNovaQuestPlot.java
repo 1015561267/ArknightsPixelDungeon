@@ -8,7 +8,6 @@ import com.unifier.arknightspixeldungeon.actors.mobs.DublinnHeavyDefender;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.SarkazSniper;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.Ghost;
-import com.unifier.arknightspixeldungeon.actors.mobs.npcs.NPC;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.armor.Armor;
@@ -482,7 +481,7 @@ public class FrostNovaQuestPlot extends Plot {
         public static Weapon weapon;
         public static Armor armor;
 
-        public static NPC ghost;
+        public static Ghost ghost;
 
         public static void reset() {
             spawned = false;
@@ -638,7 +637,7 @@ public class FrostNovaQuestPlot extends Plot {
         public static boolean rewarding(){
             return processed() && (weapon !=null || armor != null);
         }
-        public static void setGhost(NPC ghost)
+        public static void setGhost(Ghost ghost)
         {
             Quest.ghost = ghost;
         }
@@ -666,7 +665,7 @@ public class FrostNovaQuestPlot extends Plot {
             {
                 if(mob instanceof Ghost)
                 {
-                    Quest.setGhost((NPC) mob);
+                    Quest.setGhost((Ghost) mob);
                 }
             }
 
@@ -676,9 +675,7 @@ public class FrostNovaQuestPlot extends Plot {
                 Dungeon.level.drop( reward, Quest.ghost.pos).sprite.drop();
             }
 
-
-
-            Quest.ghost.die(null);
+            Quest.ghost.leave(null);
             FrostNovaQuestPlot.Quest.complete();
 
             WndDialog.settedPlot.process = 15;
@@ -704,7 +701,7 @@ public class FrostNovaQuestPlot extends Plot {
             {
                 if(mob instanceof Ghost)
                 {
-                    Quest.setGhost((NPC) mob);
+                    Quest.setGhost((Ghost) mob);
                 }
             }
 
@@ -714,7 +711,7 @@ public class FrostNovaQuestPlot extends Plot {
                 Dungeon.level.drop( reward, Quest.ghost.pos).sprite.drop();
             }
 
-            Quest.ghost.die(null);
+            Quest.ghost.leave(null);
             FrostNovaQuestPlot.Quest.complete();
 
             WndDialog.settedPlot.process = 15;

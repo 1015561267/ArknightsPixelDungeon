@@ -19,11 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.unifier.arknightspixeldungeon.actors.mobs;
+package com.unifier.arknightspixeldungeon.actors.mobs.out_of_use_mob;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
+import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Item;
 import com.unifier.arknightspixeldungeon.items.weapon.melee.MeleeWeapon;

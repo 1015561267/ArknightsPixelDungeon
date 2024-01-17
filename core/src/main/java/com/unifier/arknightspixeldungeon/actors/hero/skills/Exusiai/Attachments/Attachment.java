@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public enum Attachment {
     //FIXME type judgement should be unnecessary as window should filte already,just in case
 
-    NULL_ATTACHMENT(0,null),//FIXME have to add this as enum cannot be saved as null and it's to complex and unnecessary to repeat try-catch
+    NULL_ATTACHMENT(0,null),//FIXME have to add this as enum cannot be saved as null and it's too complex and unnecessary to repeat try-catch
 
     RED_DOT_SIGHT(1,AttachType.GUN_SIGHT),
     CLOSE_COMBAT_OPTICAL_SIGHT(2,AttachType.GUN_SIGHT),
@@ -60,7 +60,7 @@ public enum Attachment {
 
     public void doDetach(ExusiaiSkill exusiaiSkill) { }//it involved in some necessary handle,or just do some penalty to avoid repeatedly switching
 
-    public void doAttach(ExusiaiSkill exusiaiSkill) { }//almost same,involve in som
+    public void doAttach(ExusiaiSkill exusiaiSkill) { }//almost same
 
     public enum AttachType{
         GUN_SIGHT,

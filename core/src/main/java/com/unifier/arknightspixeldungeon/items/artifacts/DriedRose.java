@@ -411,7 +411,7 @@ public class DriedRose extends Artifact {
 			
 			defenseSkill = (Dungeon.hero.lvl+4)*2;
 			if (rose == null) return;
-			HT = 20 + 4*rose.level();
+			HT = 2 + 4*rose.level();
 		}
 
 		public void saySpawned(){

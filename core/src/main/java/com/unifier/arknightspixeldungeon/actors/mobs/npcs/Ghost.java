@@ -29,6 +29,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
 import com.unifier.arknightspixeldungeon.actors.buffs.Roots;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.Speck;
+import com.unifier.arknightspixeldungeon.levels.features.Chasm;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.scripts.NPCPlot.FrostNovaQuestPlot;
 import com.unifier.arknightspixeldungeon.sprites.GhostSprite;
@@ -157,4 +158,8 @@ public class Ghost extends NPC {
 		immunities.add( Roots.class );
 	}
 
+    public void leave(Object src) {
+        destroy();
+        if (src != Chasm.class) ((GhostSprite)sprite).leave();
+    }
 }

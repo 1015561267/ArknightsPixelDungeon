@@ -92,8 +92,8 @@ public class DM300 extends Mob {
 	}
 	
 	@Override
-	public void move( int step ) {
-		super.move( step );
+	public void move( int step , boolean travelling) {
+		super.move( step , travelling);
 		
 		if (Dungeon.level.map[step] == Terrain.INACTIVE_TRAP && HP < HT) {
 

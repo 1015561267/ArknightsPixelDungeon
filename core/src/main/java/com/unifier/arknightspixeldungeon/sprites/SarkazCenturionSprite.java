@@ -142,8 +142,6 @@ public class SarkazCenturionSprite extends MobSprite {
             idle();
         }
 
-
-
         if (anim == die) {
             spray.killAndErase();
         }

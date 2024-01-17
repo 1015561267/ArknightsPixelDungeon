@@ -1709,8 +1709,8 @@ public class Hero extends Char {
     }
 
 	@Override
-	public void move( int step ) {
-		super.move( step );
+	public void move( int step , boolean travelling) {
+		super.move( step , travelling);
 		
 		if (!flying) {
 			if (Dungeon.level.water[pos]) {

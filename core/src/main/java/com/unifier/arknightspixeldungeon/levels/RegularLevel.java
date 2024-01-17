@@ -465,5 +465,8 @@ public abstract class RegularLevel extends Level {
 			}
 		}
 	}
-	
+
+    public ArrayList<Room> rooms() {
+	    return rooms;
+    }
 }

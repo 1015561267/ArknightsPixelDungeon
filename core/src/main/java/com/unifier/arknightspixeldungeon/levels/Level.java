@@ -520,6 +520,7 @@ public abstract class Level implements Bundlable {
 				|| Actor.findChar( cell ) != null);
 		return cell;
 	}
+
 	
 	public int randomDestination() {
 		int cell;

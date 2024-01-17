@@ -51,7 +51,7 @@ public class SarkazCenturion extends Mob {
         if (abilityCd == 0 && paralysed <= 0){
             //if can use ability then always use it,unless controlled
             ((SarkazCenturionSprite)sprite).performAbility();
-            return true;
+            return false;
         }
 
         return super.act();

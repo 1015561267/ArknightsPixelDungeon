@@ -371,8 +371,24 @@ public abstract class Room extends Rect implements Graph.Node, Bundlable {
 	public void onLevelLoad( Level level ){
 		//does nothing by default
 	}
-	
-	public static class Door extends Point {
+
+    //whether or not a character can be placed here (usually via spawn, tele, or wander)
+    public boolean canPlaceCharacter(Point p, Level l){
+        return inside(p);
+    }
+
+    public final ArrayList<Point> charPlaceablePoints(Level l){
+        ArrayList<Point> points = new ArrayList<>();
+        for (int i = left; i <= right; i++) {
+            for (int j = top; j <= bottom; j++) {
+                Point p = new Point(i, j);
+                if (canPlaceCharacter(p, l)) points.add(p);
+            }
+        }
+        return points;
+    }
+
+    public static class Door extends Point {
 		
 		public enum Type {
 			EMPTY, TUNNEL, REGULAR, UNLOCKED, HIDDEN, BARRICADE, LOCKED

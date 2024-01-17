@@ -55,7 +55,6 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.RageT
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.ReflectTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WeaponThrowTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.WellPreparedTracker;
-import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
@@ -941,8 +940,12 @@ public abstract class Char extends Actor {
 
     public boolean isInvulnerable(Class effect){return false;};
 
-    public void move(int step ) {
+    public final void move( int step ) {
+        move( step, true );
+    }
 
+    //travelling may be false when a character is moving instantaneously, such as via teleportation
+    public void move( int step, boolean travelling ) {
 		if (Dungeon.level.adjacent( step, pos ) && buff( Vertigo.class ) != null) {
 			sprite.interruptMotion();
 			int newPos = pos + PathFinder.NEIGHBOURS8[Random.Int( 8 )];
@@ -953,6 +956,19 @@ public abstract class Char extends Actor {
 				step = newPos;
 			}
 		}
+
+        if (travelling && Dungeon.level.adjacent( step, pos ) && buff( Vertigo.class ) != null) {
+            sprite.interruptMotion();
+            int newPos = pos + PathFinder.NEIGHBOURS8[Random.Int( 8 )];
+            if (!(Dungeon.level.passable[newPos] || Dungeon.level.avoid[newPos])
+                    //|| (properties().contains(Property.LARGE) && !Dungeon.level.openSpace[newPos])
+                    || Actor.findChar( newPos ) != null)
+                return;
+            else {
+                sprite.move(pos, newPos);
+                step = newPos;
+            }
+        }
 
 		if (Dungeon.level.map[pos] == Terrain.OPEN_DOOR) {
 			Door.leave( pos );
@@ -1166,6 +1182,10 @@ public abstract class Char extends Actor {
             sprite.place( to );
             return true;
         }
+    }
+
+    public static boolean hasProp(Char ch, Property p) {
+        return (ch != null && ch.properties().contains(p));
     }
 
     //It is a process mainly for calculating the damage while don't consult result at once, we only care if the enemy should die.
