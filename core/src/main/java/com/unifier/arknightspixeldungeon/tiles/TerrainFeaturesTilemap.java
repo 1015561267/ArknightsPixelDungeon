@@ -68,8 +68,10 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 		if (Dungeon.depth == 21) stage--;
 		if (tile == Terrain.HIGH_GRASS){
 			return 9 + 16*stage + (DungeonTileSheet.tileVariance[pos] >= 50 ? 1 : 0);
+            //return  -1;
 		} else if (tile == Terrain.GRASS) {
 			return 11 + 16*stage + (DungeonTileSheet.tileVariance[pos] >= 50 ? 1 : 0);
+            //return -1;
 		} else if (tile == Terrain.EMBERS) {
 			return 13 + (DungeonTileSheet.tileVariance[pos] >= 50 ? 1 : 0);
 		}
@@ -91,7 +93,7 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 		final Image plant = tile( pos, map[pos] );
 		if (plant == null) return;
 		
-		plant.origin.set( 8, 12 );
+		plant.origin.set( 16, 24 );//NOTE in because of the change of tile size
 		plant.scale.set( 0 );
 		plant.point( DungeonTilemap.tileToWorld( pos ) );
 

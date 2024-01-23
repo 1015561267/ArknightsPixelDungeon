@@ -24,7 +24,6 @@ package com.unifier.arknightspixeldungeon.levels;
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.effects.Ripple;
-import com.unifier.arknightspixeldungeon.items.DewVial;
 import com.unifier.arknightspixeldungeon.levels.painters.Painter;
 import com.unifier.arknightspixeldungeon.levels.painters.SewerPainter;
 import com.unifier.arknightspixeldungeon.levels.traps.AlarmTrap;
@@ -112,10 +111,10 @@ public class SewerLevel extends RegularLevel {
 	
 	@Override
 	protected void createItems() {
-		if (!Dungeon.LimitedDrops.DEW_VIAL.dropped()) {
-			addItemToSpawn( new DewVial() );
-			Dungeon.LimitedDrops.DEW_VIAL.drop();
-		}
+		//if (!Dungeon.LimitedDrops.DEW_VIAL.dropped()) {
+		///	addItemToSpawn( new DewVial() );
+		//	Dungeon.LimitedDrops.DEW_VIAL.drop();
+		//}
 
 		FrostNovaQuestPlot.Quest.spawn( this );
 		

@@ -690,10 +690,11 @@ public abstract class Level implements Bundlable {
 			plant.wither();
 		}
 
-		if (map[pos] == Terrain.HIGH_GRASS ||
-				map[pos] == Terrain.EMPTY ||
-				map[pos] == Terrain.EMBERS ||
-				map[pos] == Terrain.EMPTY_DECO) {
+		if (map[pos] == Terrain.HIGH_GRASS
+                ||map[pos] == Terrain.EMPTY
+				||map[pos] == Terrain.EMBERS
+				||map[pos] == Terrain.EMPTY_DECO
+        ) {
 			set(pos, Terrain.GRASS, this);
 			GameScene.updateMap(pos);
 		}

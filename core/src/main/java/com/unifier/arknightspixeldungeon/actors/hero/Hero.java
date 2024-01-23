@@ -909,7 +909,25 @@ public class Hero extends Char {
 					
 					curAction = null;
 				} else {
-					heap.sprite.drop();
+				    //if (waitOrPickup) {
+                    //    spendAndNextConstant(TIME_TO_REST);
+                    //}
+                    //allow the hero to move between levels even if they can't collect the item
+                    //if (Dungeon.level.getTransition(pos) != null){
+                    //    throwItems();
+                    //} else {
+                        heap.sprite.drop();
+                    //}
+
+                    if (item instanceof Dewdrop
+                            || item instanceof TimekeepersHourglass.sandBag
+                            || item instanceof DriedRose.Petal
+                            || item instanceof Key) {
+                        //Do Nothing
+                    } else {
+                        GLog.newLine();
+                        GLog.n(Messages.capitalize(Messages.get(this, "you_cant_have", item.name())));
+                    }
 					ready();
 				}
 			} else {

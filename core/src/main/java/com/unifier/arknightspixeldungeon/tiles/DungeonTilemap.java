@@ -50,10 +50,10 @@ public abstract class DungeonTilemap extends Tilemap {
 
 	@Override
 	public synchronized void updateMap() {
-		super.updateMap();
 		for (int i = 0; i < data.length; i++)
 			data[i] = getTileVisual(i ,map[i], false);
-	}
+        super.updateMap();
+    }
 
 	@Override
 	public synchronized void updateMapCell(int cell) {

@@ -31,6 +31,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.AssaultRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Shotgun;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Vector;
+import com.unifier.arknightspixeldungeon.items.DewVial;
 import com.unifier.arknightspixeldungeon.items.Generator;
 import com.unifier.arknightspixeldungeon.items.Honeypot;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -132,6 +133,9 @@ public enum HeroClass {
 			new SmallRation().collect();
 		}
 
+        new DewVial().collect();
+        Dungeon.LimitedDrops.DEW_VIAL.drop();
+
 		new ScrollHolder().collect();
 		Dungeon.LimitedDrops.SCROLL_HOLDER.drop();
 
@@ -155,14 +159,6 @@ public enum HeroClass {
 		ring.identify().collect();
 
         for(int j=0;j<10;j++) {
-            /*new ScrollOfMagicalInfusion().identify().collect();
-            new StoneOfAugmentation().collect();
-            new ScrollOfUpgrade().identify().collect();
-            new ScrollOfMagicMapping().identify().collect();
-            new ScrollOfMagicMapping().identify().collect();
-            new ScrollOfRage().identify().collect();
-            new SmallRation().collect();
-            new ScrollOfRemoveCurse().identify().collect();*/
             new ScrollOfMirrorImage().identify().collect();
             new ScrollOfTeleportation().identify().collect();
             new PotionOfStrength().identify().collect();
@@ -170,6 +166,8 @@ public enum HeroClass {
             new PotionOfLiquidFlame().identify().collect();
             new Honeypot().collect();
             new PotionOfExperience().identify().collect();
+            Generator.random(Generator.Category.SCROLL).collect();
+
         }
 
 		for(int j=0;j<30;j++) {
