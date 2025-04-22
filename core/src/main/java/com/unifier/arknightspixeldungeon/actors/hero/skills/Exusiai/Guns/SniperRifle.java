@@ -10,13 +10,14 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
+import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.CheckedCell;
+import com.unifier.arknightspixeldungeon.effects.particles.SnipeParticle;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.mechanics.ConeAOE;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.CellSelector;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
-import com.unifier.arknightspixeldungeon.sprites.MissileSprite;
 import com.unifier.arknightspixeldungeon.ui.QuickSlotButton;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.ui.SkillLoader;
@@ -106,7 +107,7 @@ public class SniperRifle extends ExusiaiSkill {
             if (cell == null) return;
 
             else {
-                if(owner.buff(SniperSight .class)==null){
+                if(owner.buff(SniperSight.class)==null){
 
                     if(cell != owner.pos){
 
@@ -163,7 +164,7 @@ public class SniperRifle extends ExusiaiSkill {
 
     protected boolean doCheckCell(int cell, Hero owner) {
 
-        Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.STOP_CHARS);
+        Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.WONT_STOP);
         int result = ballistica.collisionPos;
 
         if(result == owner.pos){
@@ -180,15 +181,31 @@ public class SniperRifle extends ExusiaiSkill {
 
         int from = owner.pos;
 
-        Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.STOP_CHARS);
-        int result = ballistica.collisionPos;
+        //Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.STOP_CHARS);
+        //int result = ballistica.collisionPos;
 
-        ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(from, result, ammoSprite() , new Callback() {
+        //((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(from, cell, ammoSprite() , new Callback() {
+        //    @Override
+        //    public void call() {
+        //        doEnemyCheck(from,cell);
+        //    }
+        //});
+
+        //Inspired by new blue archive pd from cocoa
+        Dungeon.hero.sprite.operate(Dungeon.hero.pos, new Callback() {//FIXME need animation later
             @Override
             public void call() {
-                doEnemyCheck(from,result);
+                Dungeon.hero.sprite.idle();
+                Callback callback = new Callback() {
+                    @Override
+                    public void call() {
+                        Dungeon.hero.spendAndNext(1); //턴을 소모하지 않음
+                    }
+                };
+                CellEmitter.center( Dungeon.hero.pos).burst(SnipeParticle.factory(cell,callback), 1);
             }
         });
+
     }
 
     protected void doDamageCalculation(int from, int to, Char enemy){

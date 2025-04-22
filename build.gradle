@@ -5,7 +5,7 @@ buildscript {
         //maven { url "https://maven.google.com" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.4'
+        classpath 'com.android.tools.build:gradle:8.0.2'
     }
 }
 
@@ -15,16 +15,16 @@ allprojects {
         appPackageName = 'com.unifier.arknightspixeldungeon'
 
         appVersionCode = 1
-        appVersionName = 'Arknights PD Demo'
+        appVersionName = '0.0.1'
 
         appJavaCompatibility = JavaVersion.VERSION_1_8
 
-        appAndroidCompileSDK = 30
-        appAndroidMinSDK = 16
-        appAndroidTargetSDK = 30
+        appAndroidCompileSDK = 33 //compile SDK is still 33 atm as we're sticking with AGP 8.0.2
+        appAndroidMinSDK = 14
+        appAndroidTargetSDK = 34
 
-        gdxVersion = '1.11.0'
-        gdxControllersVersion = '2.2.2'
+        gdxVersion = '1.12.1'
+        gdxControllersVersion = '2.2.4-SNAPSHOT'
     }
 
     version = appVersionName
@@ -32,11 +32,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
-        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven { url 'https://github.com/steffenschaefer/gwt-gradle-plugin/raw/maven-repo/' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
     }
 }
 

@@ -128,6 +128,7 @@ import com.watabou.utils.RectF;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class GameScene extends PixelScene {
@@ -167,6 +168,7 @@ public class GameScene extends PixelScene {
 	private Group heaps;
 	private Group mobs;
 	private Group emitters;
+    private Group floorEmitters;
 	private Group effects;
 	private Group gases;
 	private Group spells;
@@ -263,6 +265,9 @@ public class GameScene extends PixelScene {
 
 		levelVisuals = Dungeon.level.addVisuals();
 		add(levelVisuals);
+
+        floorEmitters = new Group();
+        add(floorEmitters);
 
 		heaps = new Group();
 		add( heaps );
@@ -877,6 +882,30 @@ public class GameScene extends PixelScene {
         }
 	}
 
+    //ensures that mob sprites are drawn from top to bottom, in case of overlap
+    public static void sortMobSprites(){
+        if (scene != null){
+            synchronized (scene) {
+                scene.mobs.sort(new Comparator() {
+                    @Override
+                    public int compare(Object a, Object b) {
+                        //elements that aren't visual go to the end of the list
+                        if (a instanceof Visual && b instanceof Visual) {
+                            return (int) Math.signum((((Visual) a).y + ((Visual) a).height())
+                                    - (((Visual) b).y + ((Visual) b).height()));
+                        } else if (a instanceof Visual){
+                            return -1;
+                        } else if (b instanceof Visual){
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
+            }
+        }
+    }
+
 	private synchronized void prompt( String text ) {
 
 		if (prompt != null) {
@@ -990,7 +1019,7 @@ public class GameScene extends PixelScene {
         return (TalentSprite)scene.talents.recycle( TalentSprite.class );
     }
 
-	public static Emitter emitter() {
+	public static synchronized Emitter emitter() {
 		if (scene != null) {
 			Emitter emitter = (Emitter)scene.emitters.recycle( Emitter.class );
 			emitter.revive();
@@ -999,6 +1028,16 @@ public class GameScene extends PixelScene {
 			return null;
 		}
 	}
+
+    public static synchronized Emitter floorEmitter() {
+        if (scene != null) {
+            Emitter emitter = (Emitter)scene.floorEmitters.recycle( Emitter.class );
+            emitter.revive();
+            return emitter;
+        } else {
+            return null;
+        }
+    }
 
 	public static FloatingText status() {
 		return scene != null ? (FloatingText)scene.statuses.recycle( FloatingText.class ) : null;

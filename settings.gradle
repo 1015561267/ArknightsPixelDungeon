@@ -1,5 +1,3 @@
-include ':core', ':SPD-classes', ':android', ':desktop'
-
 //core game code modules
 include ':SPD-classes'
 include ':core'

@@ -76,7 +76,7 @@ public abstract class ExusiaiSkill extends HeroSkill {
     public Attachment getBULLET(){ return BULLET; }
 
     public static Char lastTarget = null;
-    //just like quickSlotButton,make it
+    //just like quickSlotButton
 
     public float heat;
     public boolean overHeat;
@@ -264,12 +264,6 @@ public abstract class ExusiaiSkill extends HeroSkill {
 
     protected float attachmentAccuracyModifier(int from, int to, Char enemy){
         float result = 0f;
-
-        
-
-
-
-
         return result;}//FIXME most accuracy modifier attachment will take affect at here,but the most important thing is get the whole process done first.
 
     protected boolean doHitCheck(int from, int to,Char enemy){

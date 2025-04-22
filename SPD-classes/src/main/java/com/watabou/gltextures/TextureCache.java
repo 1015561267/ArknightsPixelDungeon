@@ -94,11 +94,15 @@ public class TextureCache {
 
             Pixmap pixmap = new Pixmap(2*RADIUS+1, 2*RADIUS+1, Pixmap.Format.RGBA8888);
 
-            int color = 0x000000A0;
-            //int color = landscape() ? 0x000000A0 : 0x00000008;
-            for (int i = 0; i < RADIUS; i+=4 ) {
+            //int color = 0x000001E;
+            int color = 0x00000FF;
+
+            for (int i = 0; i < RADIUS; i+=2 ) {
                 //pixmap.setColor((colors[i] << 8) | (colors[i] >>> 24));
-                color += landscape() ? 0x00000008 : 0x0000000C;
+                //color += landscape() ? 0x00000008 : 0x0000000C;
+
+                color -= landscape() ? 1f : 1.5f;
+
                 //pixmap.setColor(color);
                 //pixmap.drawCircle(RADIUS , RADIUS, RADIUS - i);
                 pixmap.setColor(color);
@@ -106,9 +110,7 @@ public class TextureCache {
             }
 
             SmartTexture tx = new SmartTexture(pixmap);
-
             tx.filter(Texture.NEAREST, Texture.NEAREST);
-            //tx.wrap(Texture.CLAMP, Texture.CLAMP);
             all.put(key, tx);
 
             return tx;

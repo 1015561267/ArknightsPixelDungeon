@@ -211,12 +211,13 @@ public class Assets {
     public static final String TALENT_ICONS   = ICON + "talent_icons.png";
     public static final String TALENT_BUTTON   = ICON + "talent_button.png";
     public static final String SKILL_ICONS = ICON + "skill_icons.png";
-
+    public static final String TEXT_ICONS = ICON + "text_icons.png";
 
     private static final String MAINMENU= MISCS + "mainmenu/";
     public static final String ARCS_BG		= MAINMENU + "arcs1.png";
 	public static final String ARCS_FG		= MAINMENU + "arcs2.png";
 	public static final String DASHBOARD	= MAINMENU + "dashboard.png";
+    public static final String LOGINELEMENT = MAINMENU + "loginelement.png";;
 
     public static final String AMULET	= MISCS + "amulet.png";
 	public static final String BANNERS	= MISCS + "banners.png";

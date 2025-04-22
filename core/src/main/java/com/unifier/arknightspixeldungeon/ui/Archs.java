@@ -41,6 +41,7 @@ public class Archs extends Component {
 	private SkinnedBlock arcsBg;
 	private SkinnedBlock arcsFg;
     private Image darkness;
+    private LoginElemet loginElement;
 
 	private static float offsB = 0;
 	private static float offsF = 0;
@@ -77,17 +78,24 @@ public class Archs extends Component {
 		arcsFg.offsetTo( 0,  offsF );
 		add( arcsFg );
 
+        //loginElement.origin.set(loginElement.width / 2, loginElement.height / 2);
+
         if(landscape())
+        {
+            darkness= new Image(TextureCache.createCircle(120));
+        }
+        else
         {
             darkness= new Image(TextureCache.createCircle(80));
         }
-        else
-            darkness= new Image(TextureCache.createCircle(120));
 
+        darkness.origin.set(darkness.width / 2, darkness.height / 2);
         add(darkness);
 
-	    darkness.origin.set(darkness.width / 2, darkness.height / 2);
-	}
+        loginElement = new LoginElemet();
+        loginElement.visible = true;
+        add(loginElement);
+    }
 
 
 	@Override
@@ -97,6 +105,9 @@ public class Archs extends Component {
 
 		arcsFg.size( width, height );
 		arcsFg.offset( arcsFg.texture.width / 4 - (width % arcsFg.texture.width) / 2, 0 );
+
+        loginElement.x = width/2f - (loginElement.width() / 2f);
+        loginElement.y = 0;//-(loginElement.height() / 2f);
 
         darkness.x = width/2f - (darkness.width() / 2f);
         darkness.y = -(darkness.height() / 2f);
@@ -115,15 +126,12 @@ public class Archs extends Component {
 
 		arcsBg.offset( 0, shift );
 		//arcsFg.offset( 0, shift * 2 );
-
         //arcsBg.offset( shift, shift );
         arcsFg.offset( -shift*2, -shift * 2 );
-
 
 		offsB = arcsBg.offsetY();
 		offsF = arcsFg.offsetY();
 
-
-		darkness.angle += shift * 2;
+        darkness.angle += shift * 2;
 	}
 }
