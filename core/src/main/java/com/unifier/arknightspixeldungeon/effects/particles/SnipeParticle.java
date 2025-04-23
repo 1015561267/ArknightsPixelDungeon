@@ -1,6 +1,5 @@
 package com.unifier.arknightspixeldungeon.effects.particles;
 
-import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
@@ -118,87 +117,3 @@ public class SnipeParticle extends PixelParticle {
     }
 }
 
-class ShootParticle extends SnipeParticle {
-    public static Emitter.Factory factory(Callback callback) {
-        return new Emitter.Factory() {
-            @Override
-            public void emit(Emitter emitter, int index, float x, float y) {
-                ((ShootParticle)emitter.recycle( ShootParticle.class )).reset( x, y, callback );
-            }
-        };
-    }
-
-    public ShootParticle() {
-        super();
-        color(0x000000);
-        am = 0;
-    }
-
-    boolean shoot; //총 발사 여부
-    Char target = null;
-    int tier = 1;
-    int lvl = 0;
-    Callback callback;
-    //총 발사 후 쉬는 구간 이후 마지막 구간 사이는 아무것도 하지 않음
-
-    public void reset( float x, float y, Callback callback) {
-        reset(x, y);
-
-        size(2f);
-
-        shoot = false;
-
-        this.callback = callback;
-    }
-
-    @Override
-    public void update() {
-        super.update();
-
-        if (!shoot && left <= lifespan- FIRST - MIDDLE_REST) { //left가 총 발사 타이밍과 완벽하게 일치하지 않아서 범위로 지정
-            //Gun gun = Gun.getGun(SR.class, this.tier, this.lvl);
-            //Gun.Bullet bullet = gun.knockBullet();
-            //bullet.throwSound();
-            //bullet.shoot(this.target.pos, false);
-
-            CellEmitter.center(this.target.pos).burst(BlastParticle.FACTORY, 4);
-            shoot = true;
-        }
-
-        if (left <= 0) {
-            this.callback.call();
-        }
-    }
-}
-
-class SnipeOuterParticle extends SnipeParticle {
-    private static final ArrayList<PointF> POINTS = new ArrayList<>();
-    static {
-        POINTS.add( new PointF( 0, 0 ) );
-
-        float radius = 11f;
-        for (int angleDeg = 0; angleDeg < 360; angleDeg += 3) {
-            float angleRad = (float) Math.toRadians(angleDeg); // 도 → 라디안
-            float x = radius * (float) Math.cos(angleRad);
-            float y = radius * (float) Math.sin(angleRad);
-            POINTS.add( new PointF( x, y ) );
-        }
-    }
-
-    public static Emitter.Factory factory() {
-        return new Emitter.Factory() {
-            @Override
-            public void emit(Emitter emitter, int index, float x, float y) {
-                for (PointF p : POINTS) {
-                    ((SnipeOuterParticle)emitter.recycle( SnipeOuterParticle.class )).reset( x + p.x, y + p.y );
-                }
-            }
-        };
-    }
-
-    public SnipeOuterParticle() {
-        super();
-        color(0xCCCCCC);
-        am = 0;
-    }
-}

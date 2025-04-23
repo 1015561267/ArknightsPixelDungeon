@@ -21,6 +21,14 @@
 
 package com.unifier.arknightspixeldungeon.actors.hero;
 
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.CONTINUOUS_ASSAULT;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.FAST_RECOVERY;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.REFLECT;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHADOWLESS;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATHED_STRIKE;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.UNSHEATH;
+import static com.unifier.arknightspixeldungeon.actors.hero.Talent.WEAPON_ADAPT;
+
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Badges;
 import com.unifier.arknightspixeldungeon.Challenges;
@@ -29,7 +37,7 @@ import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Shadowless;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.SheathedStrike;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Chen.Unsheath;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.AssaultRifle;
-import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Shotgun;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.Vector;
 import com.unifier.arknightspixeldungeon.items.DewVial;
 import com.unifier.arknightspixeldungeon.items.Generator;
@@ -72,14 +80,6 @@ import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Random;
-
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.CONTINUOUS_ASSAULT;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.FAST_RECOVERY;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.REFLECT;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHADOWLESS;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.SHEATHED_STRIKE;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.UNSHEATH;
-import static com.unifier.arknightspixeldungeon.actors.hero.Talent.WEAPON_ADAPT;
 
 public enum HeroClass {
 
@@ -269,7 +269,7 @@ public enum HeroClass {
 
 		new TomeOfMastery().identify().collect();
 
-		hero.skill_1 = new Shotgun();
+		hero.skill_1 = new SniperRifle();
 		hero.skill_1.attachTo(hero);
 
 		hero.skill_2 = new Vector();

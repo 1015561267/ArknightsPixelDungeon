@@ -12,18 +12,21 @@ import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.unifier.arknightspixeldungeon.effects.CheckedCell;
+import com.unifier.arknightspixeldungeon.effects.Splash;
 import com.unifier.arknightspixeldungeon.effects.particles.SnipeParticle;
 import com.unifier.arknightspixeldungeon.mechanics.Ballistica;
 import com.unifier.arknightspixeldungeon.mechanics.ConeAOE;
 import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.CellSelector;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
+import com.unifier.arknightspixeldungeon.sprites.CharSprite;
 import com.unifier.arknightspixeldungeon.ui.QuickSlotButton;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.ui.SkillLoader;
 import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.unifier.arknightspixeldungeon.windows.WndExusiaiSkill;
 import com.watabou.noosa.Image;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
@@ -108,13 +111,11 @@ public class SniperRifle extends ExusiaiSkill {
 
             else {
                 if(owner.buff(SniperSight.class)==null){
-
                     if(cell != owner.pos){
 
                         PointF fromP = new PointF(Dungeon.level.cellToPoint(owner.pos));
                         fromP.x += 0.5f;
                         fromP.y += 0.5f;
-
                         PointF toP = new PointF(Dungeon.level.cellToPoint(cell));
                         toP.x += 0.5f;
                         toP.y += 0.5f;
@@ -134,7 +135,6 @@ public class SniperRifle extends ExusiaiSkill {
                     }else {
                         GLog.i(Messages.get(ExusiaiSkill.class, "self_targeting"));
                     }
-
                 }
                 else {
                     if(doCheckCell(cell,owner)){
@@ -146,7 +146,6 @@ public class SniperRifle extends ExusiaiSkill {
 
         @Override
         public String prompt() {
-
             if(owner.buff(SniperSight.class)!=null)
             {
                 return Messages.get(CellSelector.class, "prompt");
@@ -162,25 +161,34 @@ public class SniperRifle extends ExusiaiSkill {
         return 60;
     }
 
+    @Override
     protected boolean doCheckCell(int cell, Hero owner) {
+        boolean visibleFight = Dungeon.level.heroFOV[cell];
+        if(!visibleFight)
+        {
+            GLog.i(Messages.get(SniperRifle.class, "out_of_sight"));
+            return false;
+        }
 
-        Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.WONT_STOP);
-        int result = ballistica.collisionPos;
-
-        if(result == owner.pos){
+        if(cell == owner.pos){
             GLog.i(Messages.get(ExusiaiSkill.class, "self_targeting"));
             return false;
         }
 
+        Char enemy = Char.findChar(cell);
+        if(enemy==null||!(enemy.alignment == Char.Alignment.ENEMY)){
+            GLog.i(Messages.get(SniperRifle.class, "no_targeting"));
+            return false;
+        }
         return true;
     }
 
+    @Override
     protected void doShoot(Hero owner,Integer cell){
 
         owner.busy();
 
         int from = owner.pos;
-
         //Ballistica ballistica = new Ballistica(owner.pos, cell, Ballistica.STOP_CHARS);
         //int result = ballistica.collisionPos;
 
@@ -196,27 +204,50 @@ public class SniperRifle extends ExusiaiSkill {
             @Override
             public void call() {
                 Dungeon.hero.sprite.idle();
-                Callback callback = new Callback() {
+                CellEmitter.center(cell).burst(SnipeParticle.factory(cell,new Callback() {
                     @Override
                     public void call() {
-                        Dungeon.hero.spendAndNext(1); //턴을 소모하지 않음
+                        doEnemyCheck(from,cell); //턴을 소모하지 않음
                     }
-                };
-                CellEmitter.center( Dungeon.hero.pos).burst(SnipeParticle.factory(cell,callback), 1);
+                }), 1);
             }
         });
-
     }
 
+    @Override
+    protected void doEnemyCheck(int from, int to){
+        Char enemy = Char.findChar(to);
+        boolean visibleFight = Dungeon.level.heroFOV[to];
+        if(enemy != null && enemy.alignment == Char.Alignment.ENEMY){
+            if(doHitCheck(from,to,enemy)){
+                doDamageCalculation(from,to,enemy);
+            }else {
+                if (visibleFight) {
+                    Splash.at( to, 0xCCFFC800, 1 );
+                    String defense = enemy.defenseVerb();
+                    enemy.sprite.showStatus( CharSprite.NEUTRAL, defense );
+                    Sample.INSTANCE.play(Assets.SND_MISS);
+                }
+                doCheckAfterShooting(1,false);
+            }
+        }else {
+            if (visibleFight) {
+                Splash.at(to, 0xCCFFC800, 1);
+            }
+            doCheckAfterShooting(1,false);
+        }
+    }
+
+    @Override
     protected void doDamageCalculation(int from, int to, Char enemy){
 
-        int unPassableCounts = 0;
-        Ballistica ballistica = new Ballistica(from, to, Ballistica.STOP_CHARS);
-        for(int t : ballistica.subPath(1, ballistica.dist - 1)){
-            if(!Dungeon.level.solid[t]) unPassableCounts++;
-        }
+        //int unPassableCounts = 0;
+        //Ballistica ballistica = new Ballistica(from, to, Ballistica.STOP_CHARS);
+        //for(int t : ballistica.subPath(1, ballistica.dist - 1)){
+        //    if(!Dungeon.level.solid[t]) unPassableCounts++;
+        //}
 
-        int damage = (int) (Random.Int(shootDamageMin(),shootDamageMax()) * (Math.max(0.5f,1 - 0.1f * unPassableCounts)));
+        int damage = Random.Int(shootDamageMin(),shootDamageMax());
         int dr = enemy.drRoll();
 
         int effectiveDamage = enemy.defenseProc( enemy, damage );
@@ -241,7 +272,7 @@ public class SniperRifle extends ExusiaiSkill {
 
         if (!enemy.isAlive()) {
             GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())) );
-        }else {
+        }else{
             QuickSlotButton.lastTarget = enemy;
             SkillLoader.lastTarget = enemy;
         }
@@ -290,6 +321,7 @@ public class SniperRifle extends ExusiaiSkill {
         owner.spendAndNext(2f);
     }
 
+    @Override
     public void handleLongClick() {
         if(owner.buff(SniperSight.class)!= null){
             owner.buff(SniperSight.class).detach();
@@ -301,6 +333,7 @@ public class SniperRifle extends ExusiaiSkill {
         else GameScene.show(new WndExusiaiSkill(this));
     }
 
+    @Override
     public boolean useTargetting(){
         return owner.buff(SniperSight.class)!=null;
     }
