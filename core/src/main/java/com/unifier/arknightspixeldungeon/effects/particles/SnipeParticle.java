@@ -1,5 +1,6 @@
 package com.unifier.arknightspixeldungeon.effects.particles;
 
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.effects.CellEmitter;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
@@ -27,14 +28,17 @@ public class SnipeParticle extends PixelParticle {
         }
     }
 
-    public static Emitter.Factory factory(int cell, Callback callback) {
+    public static Emitter.Factory factory(SniperRifle trigger,int cell, Callback callback) {
         return new Emitter.Factory() {
             @Override
             public void emit(Emitter emitter, int index, float x, float y) {
                 for (PointF p : POINTS) {
                     ((SnipeParticle)emitter.recycle( SnipeParticle.class )).reset( x + p.x, y + p.y );
                 }
-                CellEmitter.center(cell).burst(ShootParticle.factory(callback), 1);
+                //CellEmitter.center(cell).burst(FlameParticle.FACTORY, 1);
+                Emitter.Factory temp = null;
+                temp = ShootParticle.factory(trigger,cell,callback);
+                CellEmitter.center(cell).burst(ShootParticle.factory(trigger,cell,callback), 1);
                 CellEmitter.center(cell).burst(SnipeOuterParticle.factory(), 1);
             }
         };

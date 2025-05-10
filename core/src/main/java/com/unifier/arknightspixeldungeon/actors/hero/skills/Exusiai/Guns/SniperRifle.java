@@ -200,18 +200,23 @@ public class SniperRifle extends ExusiaiSkill {
         //});
 
         //Inspired by new blue archive pd from cocoa
+        SniperRifle trigger = this;
         Dungeon.hero.sprite.operate(Dungeon.hero.pos, new Callback() {//FIXME need animation later
             @Override
             public void call() {
                 Dungeon.hero.sprite.idle();
-                CellEmitter.center(cell).burst(SnipeParticle.factory(cell,new Callback() {
+                CellEmitter.center(cell).burst(SnipeParticle.factory(trigger,cell,new Callback() {
                     @Override
                     public void call() {
-                        doEnemyCheck(from,cell); //턴을 소모하지 않음
+                        doCheckAfterShooting(1,false);  //턴을 소모하지 않음
                     }
                 }), 1);
             }
         });
+    }
+
+    public void doShot(int cell){
+        this.doEnemyCheck(Dungeon.hero.pos, cell);//gota fix it
     }
 
     @Override
@@ -228,13 +233,13 @@ public class SniperRifle extends ExusiaiSkill {
                     enemy.sprite.showStatus( CharSprite.NEUTRAL, defense );
                     Sample.INSTANCE.play(Assets.SND_MISS);
                 }
-                doCheckAfterShooting(1,false);
+                //doCheckAfterShooting(1,false);
             }
         }else {
             if (visibleFight) {
                 Splash.at(to, 0xCCFFC800, 1);
             }
-            doCheckAfterShooting(1,false);
+            //doCheckAfterShooting(1,false);
         }
     }
 

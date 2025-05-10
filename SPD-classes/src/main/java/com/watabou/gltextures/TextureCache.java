@@ -21,14 +21,17 @@
 
 package com.watabou.gltextures;
 
+import static com.watabou.noosa.Scene.landscape;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.watabou.glwrap.Texture;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.Image;
+import com.watabou.utils.PointF;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-
-import static com.watabou.noosa.Scene.landscape;
 
 public class TextureCache {
 
@@ -115,6 +118,28 @@ public class TextureCache {
 
             return tx;
         }
+    }
+
+    public synchronized static Image createNewCircle(int r , int ...colors )
+    {
+        ArrayList<PointF> POINTS = new ArrayList<>();
+
+        POINTS.add( new PointF( 0, 0 ) );
+
+        float radius = 10f;
+        for (float i=-radius; i<=radius; i++) {
+            //POINTS.add( new PointF( 0, i) );
+            //POINTS.add( new PointF( i, 0) );
+        }
+
+        for (int angleDeg = 0; angleDeg < 360; angleDeg += 3) {
+            float angleRad = (float) Math.toRadians(angleDeg); // 도 → 라디안
+            float x = radius * (float) Math.cos(angleRad);
+            float y = radius * (float) Math.sin(angleRad);
+            POINTS.add( new PointF( x, y ) );
+        }
+
+       return null;
     }
 
     //texture is created at given size, but size is not enforced if it already exists
