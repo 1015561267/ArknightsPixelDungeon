@@ -208,7 +208,7 @@ public class SniperRifle extends ExusiaiSkill {
                 CellEmitter.center(cell).burst(SnipeParticle.factory(trigger,cell,new Callback() {
                     @Override
                     public void call() {
-                        doCheckAfterShooting(1,false);  //턴을 소모하지 않음
+                        doCheckAfterShooting(owner.pos,cell,1,false);  //턴을 소모하지 않음
                     }
                 }), 1);
             }
@@ -282,11 +282,11 @@ public class SniperRifle extends ExusiaiSkill {
             SkillLoader.lastTarget = enemy;
         }
 
-        doCheckAfterShooting(1,false);
+        doCheckAfterShooting(from, to,1,false);
     }
 
     @Override
-    protected void doCheckAfterShooting(int cost,boolean useHeat){
+    protected void doCheckAfterShooting(int from, int to,int cost,boolean useHeat){
 
         boolean forceCancel = false;
 
@@ -318,12 +318,12 @@ public class SniperRifle extends ExusiaiSkill {
             GameScene.flash(0x88000000, false);
         }
 
-        doTimeSpend();
+        doTimeSpend(from, to, cost, useHeat);
     }
 
     @Override
-    protected void doTimeSpend(){
-        owner.spendAndNext(2f);
+    protected float shootTime(){
+       return 2f;
     }
 
     @Override

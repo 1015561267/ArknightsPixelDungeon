@@ -112,7 +112,7 @@ public class Vector extends ExusiaiSkill {
             if (visibleFight) {
                 Splash.at(to, 0xCCFFC800, 1);
             }
-            doCheckAfterShooting(burstTemp,false);
+            doCheckAfterShooting(from,to,burstTemp,false);
         }
     }
 }

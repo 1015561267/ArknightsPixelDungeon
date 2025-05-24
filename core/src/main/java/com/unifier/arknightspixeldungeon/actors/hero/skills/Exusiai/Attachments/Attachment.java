@@ -1,6 +1,10 @@
 package com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments;
 
+import static com.unifier.arknightspixeldungeon.Dungeon.hero;
+
 import com.unifier.arknightspixeldungeon.Assets;
+import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
+import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.ExusiaiSkill;
@@ -15,8 +19,25 @@ public enum Attachment {
 
     NULL_ATTACHMENT(0,null),//FIXME have to add this as enum cannot be saved as null and it's too complex and unnecessary to repeat try-catch
 
-    RED_DOT_SIGHT(1,AttachType.GUN_SIGHT),
-    CLOSE_COMBAT_OPTICAL_SIGHT(2,AttachType.GUN_SIGHT),
+    RED_DOT_SIGHT(1,AttachType.GUN_SIGHT){
+        @Override
+        public void doDetach(ExusiaiSkill exusiaiSkill) {
+            if(hero.buff(RedDotSightCoolDown.class) != null){
+                hero.buff(RedDotSightCoolDown.class).detach();
+            }
+        }
+        public void doAttach(ExusiaiSkill exusiaiSkill) {
+            Buff.affect(hero, RedDotSightCoolDown.class, RedDotSightCoolDown.DURATION);
+        }
+    },
+    CLOSE_COMBAT_OPTICAL_SIGHT(2,AttachType.GUN_SIGHT){
+        @Override
+        public void doDetach(ExusiaiSkill exusiaiSkill) {
+            if(hero.buff(CloseCombatOpticalSightFlag.class) != null){
+                hero.buff(CloseCombatOpticalSightFlag.class).detach();
+            }
+        }
+    },
     THERMAL_IMAGING_SIGHT(3,AttachType.GUN_SIGHT),
     MEDIUM_RANGE_SIGHT(4,AttachType.GUN_SIGHT),
     LONG_RANGE_SNIPERSCOPE(5,AttachType.GUN_SIGHT),
@@ -212,5 +233,10 @@ public enum Attachment {
 
     }
 
+    public static class RedDotSightCoolDown extends FlavourBuff {
+        public static final float DURATION = 5f;
+    }
+
+    public static class CloseCombatOpticalSightFlag extends FlavourBuff {}
 }
 

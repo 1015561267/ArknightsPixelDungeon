@@ -1,5 +1,7 @@
 package com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns;
 
+import static com.unifier.arknightspixeldungeon.Dungeon.hero;
+
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
@@ -126,15 +128,14 @@ public abstract class ExusiaiSkill extends HeroSkill {
     };
 
     public void getCoolDown(float amount){
-
         if(charge == 0){
             cooldown -= amount;
             if(cooldown <= 0){
                 charge = getMaxCharge();
                 cooldown = 0;//before run out of ammo,skill would never cool down,unless use a HIGH_POWERED_BATTERY,see startReload() to get more info;
+                afterReload();
             }
         }
-
     }
 
     @Override
@@ -250,13 +251,13 @@ public abstract class ExusiaiSkill extends HeroSkill {
                     enemy.sprite.showStatus( CharSprite.NEUTRAL, defense );
                     Sample.INSTANCE.play(Assets.SND_MISS);
                 }
-                doCheckAfterShooting(1,false);
+                doCheckAfterShooting(from,to,1,false);
             }
         }else {
             if (visibleFight) {
                 Splash.at(to, 0xCCFFC800, 1);
             }
-            doCheckAfterShooting(1,false);
+            doCheckAfterShooting(from,to,1,false);
         }
     }
 
@@ -300,7 +301,6 @@ public abstract class ExusiaiSkill extends HeroSkill {
         Boolean everHitted = false;
 
         while (burst>0){
-
             if(doHitCheck(from,to,enemy)){
                 everHitted = true;
                 burstArray.add(true);
@@ -322,13 +322,33 @@ public abstract class ExusiaiSkill extends HeroSkill {
             Splash.at( to, 0xCCFFC800, 1 );
             Sample.INSTANCE.play(Assets.SND_MISS);
             enemy.sprite.showStatus( CharSprite.NEUTRAL,defense);
-            doCheckAfterShooting(burst,false);
+            doCheckAfterShooting(from,to,burst,false);
         }
     }
 
     protected void doDamageCalculation(int from, int to, Char enemy){
 
-        int damage = Random.Int(shootDamageMin(),shootDamageMax());
+        int min = shootDamageMin();
+        int max = shootDamageMax();
+
+        float magnification = 1f;
+
+        if(this.GUN_SIGHT == Attachment.CLOSE_COMBAT_OPTICAL_SIGHT){
+            if(hero.buff(Attachment.CloseCombatOpticalSightFlag.class) != null && Dungeon.level.distance(from,to) <= 4){
+                magnification += 0.25f;
+                hero.buff(Attachment.CloseCombatOpticalSightFlag.class).detach();
+            }
+        }
+        else if(this.GUN_SIGHT == Attachment.MEDIUM_RANGE_SIGHT){
+            if(Dungeon.level.distance(from,to) >= 4 && Dungeon.level.distance(from,to) <= 6){
+                magnification += 0.15f;
+            }
+        }
+
+        min *= magnification;
+        max *= magnification;
+
+        int damage = Random.NormalIntRange(min,max);
         int dr = enemy.drRoll();
 
         int effectiveDamage = enemy.defenseProc( enemy, damage );
@@ -358,7 +378,7 @@ public abstract class ExusiaiSkill extends HeroSkill {
             SkillLoader.lastTarget = enemy;
         }
 
-        doCheckAfterShooting(1,false);
+        doCheckAfterShooting(from,to,1,false);
     }
 
     protected void doDamageCalculation(int from, int to, Char enemy, ArrayList<Boolean> burstArray){
@@ -371,7 +391,29 @@ public abstract class ExusiaiSkill extends HeroSkill {
         for(Boolean record : burstArray){
 
             if(record){
-                int damage = Random.Int(shootDamageMin(),shootDamageMax());
+
+                int min = shootDamageMin();
+                int max = shootDamageMax();
+
+                float magnification = 1f;
+
+                if(this.GUN_SIGHT == Attachment.CLOSE_COMBAT_OPTICAL_SIGHT){
+                    if(hero.buff(Attachment.CloseCombatOpticalSightFlag.class) != null && Dungeon.level.distance(from,to) <= 4){
+                        magnification += 0.25f;
+                        hero.buff(Attachment.CloseCombatOpticalSightFlag.class).detach();
+                    }
+                }
+                else if(this.GUN_SIGHT == Attachment.MEDIUM_RANGE_SIGHT){
+                    if(Dungeon.level.distance(from,to) >= 4 && Dungeon.level.distance(from,to) <= 6){
+                        magnification += 0.15f;
+                        hero.buff(Attachment.CloseCombatOpticalSightFlag.class).detach();
+                    }
+                }
+
+                min *= magnification;
+                max *= magnification;
+
+                int damage = Random.NormalIntRange(min,max);
                 int dr = enemy.drRoll();
 
                 int effectiveDamage = damage;
@@ -404,10 +446,10 @@ public abstract class ExusiaiSkill extends HeroSkill {
             SkillLoader.lastTarget = enemy;
         }
 
-        doCheckAfterShooting(burstArray.size(),false);
+        doCheckAfterShooting(from,to,burstArray.size(),false);
     }
 
-    protected void doCheckAfterShooting(int cost,boolean useHeat){
+    protected void doCheckAfterShooting(int from, int to,int cost,boolean useHeat){
         if(useHeat){
             heat += cost;
             if(heat >= heatThreshold()){
@@ -426,7 +468,7 @@ public abstract class ExusiaiSkill extends HeroSkill {
             }
         }
 
-        doTimeSpend();
+        doTimeSpend(from,to,cost,useHeat);
     }
 
     protected void startReload(){
@@ -441,18 +483,35 @@ public abstract class ExusiaiSkill extends HeroSkill {
         }
     }
 
+    protected void afterReload(){
+        if(this.GUN_SIGHT == Attachment.CLOSE_COMBAT_OPTICAL_SIGHT){
+            Buff.affect(hero, Attachment.CloseCombatOpticalSightFlag.class);
+        }
+    }
+
     protected float getReloadTime(){
         return rawCD();
     }
 
-    protected void doTimeSpend(){
-        owner.spendAndNext(1f);
+    protected void doTimeSpend(int from, int to, int cost, boolean useHeat){
+        float time = shootTime();
+
+        if(this.GUN_SIGHT == Attachment.RED_DOT_SIGHT && hero.buff(Attachment.RedDotSightCoolDown.class)==null){
+            if(Dungeon.level.distance(from,to) <= 2 || this.getType() == GunType.SHOTGUN){
+                time = 0f;
+                Buff.affect(hero, Attachment.RedDotSightCoolDown.class, Attachment.RedDotSightCoolDown.DURATION);
+            }
+        }
+        owner.spendAndNext(time);
     }
 
     public float heatThreshold(){
         return 100;
     }
 
+    protected float shootTime(){
+        return 1f;
+    }
 
     private static final String HEAT = "heat";
     private static final String OVERHEAT = "overHeat";
@@ -546,6 +605,7 @@ public abstract class ExusiaiSkill extends HeroSkill {
             case AMMO_BOX:AMMO_BOX = Attachment.NULL_ATTACHMENT;break;
             case BULLET:BULLET = Attachment.NULL_ATTACHMENT;break;
         }
+        attachment.doDetach(this);
     }
 
     public void doAttach(Attachment attachment) {
@@ -557,12 +617,14 @@ public abstract class ExusiaiSkill extends HeroSkill {
             case AMMO_BOX:AMMO_BOX = attachment;break;
             case BULLET:BULLET = attachment;break;
         }
+        attachment.doAttach(this);
     }
 
     private static void allDetach(Attachment replaced) {
         for(ExusiaiSkill temp:getSkillList()){
             if (temp.equippingAttachment(replaced)){
                 temp.doDetach(replaced);
+                replaced.doDetach(temp);
             }
         }
     }

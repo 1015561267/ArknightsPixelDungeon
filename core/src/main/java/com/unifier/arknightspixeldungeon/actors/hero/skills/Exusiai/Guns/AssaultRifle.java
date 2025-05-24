@@ -141,12 +141,12 @@ public class AssaultRifle extends ExusiaiSkill{
         boolean visibleFight = Dungeon.level.heroFOV[to];
 
         if(enemy != null && enemy.alignment == Char.Alignment.ENEMY){
-            startBurst( burstNum , from , to , enemy );
+            startBurst( burstNum,from,to,enemy );
         }else {
             if (visibleFight) {
                 Splash.at(to, 0xCCFFC800, 1);
             }
-            doCheckAfterShooting(burstNum,false);
+            doCheckAfterShooting(from,to,burstNum,false);
         }
     }
 

@@ -219,7 +219,6 @@ public class Shotgun extends ExusiaiSkill {
 
         for(Integer pos : bulletResult) {
             doEnemyCheck(owner.pos,pos);
-
             ((MissileSprite)owner.sprite.parent.recycle(MissileSprite.class)).reset(owner.pos, pos, ammoSprite() , new Callback() {
                 @Override
                 public void call() {
@@ -229,7 +228,7 @@ public class Shotgun extends ExusiaiSkill {
             });
         }
 
-        doCheckAfterShooting(1,false);
+        doCheckAfterShooting(owner.pos,ballistica.collisionPos,1,false);
     }
 
     protected void doEnemyCheck(int from, int to){
