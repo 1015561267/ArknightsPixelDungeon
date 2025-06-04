@@ -528,35 +528,45 @@ public abstract class Char extends Actor {
         }
     }
 
-
+    public static int INFINITE_ACCURACY = 1_000_000;
+    public static int INFINITE_EVASION = 1_000_000;
 	
 	public static boolean hit( Char attacker, Char defender, boolean magic ) {
-	    float acuRoll = Random.Float( attacker.attackSkill( defender ) );
-	    float defRoll = Random.Float( defender.defenseSkill( attacker ) );
 
-		if (attacker.buff(Bless.class) != null) acuRoll *= 1.25f;
-        if (attacker.buff(Hex.class) != null) acuRoll *= 0.8f;
-
-		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
-        if (defender.buff(Hex.class) != null) defRoll *= 0.8f;
+        float acuStat = attacker.attackSkill( defender );
+        float defStat = defender.defenseSkill( attacker );
 
         //if (attacker instanceof Hero && attacker.buff(Talent.SeizeOpportunityTracker.class) != null && attacker.buff(TimeBubble.class) != null) {
         if (attacker instanceof Hero && attacker.buff(Talent.SeizeOpportunityTracker.class) != null) {
             attacker.buff(Talent.SeizeOpportunityTracker.class).detach();
-        	return true;
-		}
+            acuStat = INFINITE_ACCURACY;
+        }
 
         if (defender instanceof Hero && defender.buff(WellPreparedTracker.class) != null) {
-        	int newTime = defender.buff(WellPreparedTracker.class).time - 1;
+            int newTime = defender.buff(WellPreparedTracker.class).time - 1;
+            if (newTime == 0) {
+                defender.buff(WellPreparedTracker.class).detach();
+            } else {
+                defender.buff(WellPreparedTracker.class).setTime(newTime);
+            }
+            defStat = INFINITE_EVASION;
+        }//FIXME warning that attacker.attackSkill() and defender.defenseSkill() might be used in talent etc. so have to make buff affected effect at here to avoid unwanted problem
 
-        	if (newTime == 0) {
-				defender.buff(WellPreparedTracker.class).detach();
-			} else {
-				defender.buff(WellPreparedTracker.class).setTime(newTime);
-			}
+        //if accuracy or evasion are large enough, treat them as infinite.
+        //note that infinite evasion beats infinite accuracy
+        if (defStat >= INFINITE_EVASION){
+            return false;
+        } else if (acuStat >= INFINITE_ACCURACY){
+            return true;
+        }
 
-        	return false;
-		}
+	    float acuRoll = Random.Float( acuStat );
+        if (attacker.buff(Bless.class) != null) acuRoll *= 1.25f;
+        if (attacker.buff(Hex.class) != null) acuRoll *= 0.8f;
+
+	    float defRoll = Random.Float( defStat );
+		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
+        if (defender.buff(Hex.class) != null) defRoll *= 0.8f;
 
         return (magic ? acuRoll * 2 : acuRoll) >= defRoll;
 	}

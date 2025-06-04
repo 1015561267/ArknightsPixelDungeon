@@ -342,4 +342,19 @@ public class SniperRifle extends ExusiaiSkill {
     public boolean useTargetting(){
         return owner.buff(SniperSight.class)!=null;
     }
+
+    @Override
+    protected float gunAccuracyModifier(int from, int to, Char enemy){
+        float modifier = super.gunAccuracyModifier(from,to,enemy);
+            int dis = Dungeon.level.distance(from,to);
+            if(dis<=4) {
+                modifier -= (0.2f + 0.1f*(4-dis));//-20% acc when have a distance of 4 grids,then -10% for each grid till adjacent
+            }else if(dis>=8){
+                modifier -= 0.1f*(dis-7);//-10% acc for each grid above 7
+            }else {
+                modifier += 0.5f;//otherwise +50% acc
+            }
+
+        return modifier;
+    }
 }

@@ -160,12 +160,22 @@ public class AssaultRifle extends ExusiaiSkill{
 
     public void excuteActions(String action) {
         super.excuteActions(action );
-
         if (action.equals(AC_SWITCH)) {
             burstFireMode = !burstFireMode;
             GLog.i(Messages.get(this, "switch"));
             Dungeon.hero.sprite.operate(Dungeon.hero.pos);
         }
         return;
+    }
+
+    protected float gunAccuracyModifier(int from, int to, Char enemy){
+        float modifier = super.gunAccuracyModifier(from,to,enemy);
+        if(burstFireMode){
+            int dis = Dungeon.level.distance(from,to);
+            if(dis>=4) {
+                modifier -= (0.3f + 0.1f*(dis-4));//in burst mode,-30% acc when have a distance of 4 grids,then -10% for each grid further
+            }
+        }
+        return modifier;//otherwise no acc modifier
     }
 }

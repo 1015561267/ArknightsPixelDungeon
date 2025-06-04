@@ -72,6 +72,11 @@ public abstract class Sheep extends NPC {
     public void multipleDamage(ArrayList<Boolean> burstArray, ArrayList<Integer> damageArray, Object src, int hittedTime){
     }
 
+    @Override
+    public int defenseSkill(Char enemy) {
+        return INFINITE_EVASION;
+    }
+
 	@Override
 	public void add( Buff buff ) {
 	}

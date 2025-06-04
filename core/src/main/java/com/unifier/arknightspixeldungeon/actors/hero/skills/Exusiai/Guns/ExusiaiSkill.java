@@ -261,23 +261,46 @@ public abstract class ExusiaiSkill extends HeroSkill {
         }
     }
 
-    protected float gunAccuracyModifier(int from, int to, Char enemy){return 0f;}//basiclly there are no accuracy change,details are written in extended class
+    protected float gunAccuracyModifier(int from, int to, Char enemy){
+        return 0f;
+    }
+    //here have acc modifier take effect before self distance modifier,the later one are written in extended class
 
-    protected float attachmentAccuracyModifier(int from, int to, Char enemy){
-        float result = 0f;
-        return result;}//FIXME most accuracy modifier attachment will take affect at here,but the most important thing is get the whole process done first.
+    protected float attachmentAccuracyModifier(int from, int to, Char enemy,float gunAccuracyModifier){
+        float result = gunAccuracyModifier;
+        int dis = Dungeon.level.distance(from,to);
+        if(this.GUN_SIGHT == Attachment.MEDIUM_RANGE_SIGHT && (dis < 4 || dis >6) ){
+            result -= 0.5f;//MEDIUM_RANGE_SIGHT have -50% acc if out of ideal range
+        }
+        return result;
+    }//FIXME most accuracy modifier attachment will take affect at here,but the most important thing is get the whole process done first.
 
     protected boolean doHitCheck(int from, int to,Char enemy){
 
-        int basicAccuracy = owner.getAttackSkill();
+        float acuStat = owner.attackSkill( enemy );
+        float defStat = enemy.defenseSkill( owner );
 
-        float gunAccuracyModifier = this.gunAccuracyModifier(from,to,enemy);
+        float modifiedAccuracy = this.gunAccuracyModifier(from,to,enemy);
 
-        float attachmentAccuracyModifier = this.attachmentAccuracyModifier(from,to,enemy);
+        modifiedAccuracy = this.attachmentAccuracyModifier(from,to,enemy,modifiedAccuracy);
 
-        basicAccuracy = (int) (basicAccuracy + (gunAccuracyModifier * basicAccuracy) + (attachmentAccuracyModifier * basicAccuracy));
+        acuStat = (int) (acuStat * (1f + modifiedAccuracy));
 
-        float acuRoll = Random.Float( basicAccuracy );
+        int dis = Dungeon.level.distance(from,to);
+
+        if(this.GUN_SIGHT == Attachment.LONG_RANGE_SNIPERSCOPE && dis>6){
+            //guaranteed hit could override result above
+            acuStat = Char.INFINITE_ACCURACY;
+        }
+
+        //same as char.hit
+        if (defStat >= Char.INFINITE_EVASION){
+            return false;
+        } else if (acuStat >= Char.INFINITE_ACCURACY){
+            return true;
+        }
+
+        float acuRoll = Random.Float( acuStat );
         float defRoll = Random.Float( enemy.defenseSkill( owner ) );
 
         if (owner.buff(Bless.class) != null) acuRoll *= 1.25f;
@@ -502,6 +525,11 @@ public abstract class ExusiaiSkill extends HeroSkill {
                 Buff.affect(hero, Attachment.RedDotSightCoolDown.class, Attachment.RedDotSightCoolDown.DURATION);
             }
         }
+
+        if(this.GUN_SIGHT == Attachment.LONG_RANGE_SNIPERSCOPE){
+            time *= 1.5f;
+        }
+
         owner.spendAndNext(time);
     }
 

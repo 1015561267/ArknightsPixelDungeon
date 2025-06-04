@@ -342,4 +342,15 @@ public class Shotgun extends ExusiaiSkill {
         //TODO it should not need save/load as this is only for data transfer,will add if it really cause bug
     }
 
+    @Override
+    protected float gunAccuracyModifier(int from, int to, Char enemy){
+        float modifier = super.gunAccuracyModifier(from,to,enemy);
+        int dis = Dungeon.level.distance(from,to);
+        if(dis > 4) {
+           return -1f;//cannot hit enemy above 4 grid,check for final modifier
+        }
+        else modifier -= 0.2f*(dis-1);//otherwise -20% acc for each grid above adjacent one
+
+        return modifier;
+    }
 }

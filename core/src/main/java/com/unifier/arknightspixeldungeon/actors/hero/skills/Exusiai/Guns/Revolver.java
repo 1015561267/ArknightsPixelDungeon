@@ -2,6 +2,7 @@ package com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns;
 
 import com.unifier.arknightspixeldungeon.Assets;
 import com.unifier.arknightspixeldungeon.Dungeon;
+import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Attachments.Attachment;
 import com.unifier.arknightspixeldungeon.items.Item;
@@ -63,6 +64,7 @@ public class Revolver extends ExusiaiSkill {
         return 6;
     }
 
+    @Override
     protected Item ammoSprite(){
         return new Item(){
             {
@@ -73,4 +75,18 @@ public class Revolver extends ExusiaiSkill {
             public boolean isBulletForEffect(){return true;}
         };
     };
+
+    @Override
+    protected float gunAccuracyModifier(int from, int to, Char enemy){
+        float modifier = super.gunAccuracyModifier(from,to,enemy);
+        int dis = Dungeon.level.distance(from,to);
+
+        if(dis >= 6) {
+            modifier -= 0.5f;//-50% acc when distance >= 6
+        }else if(dis <= 4 && dis >= 2) {
+            modifier += 0.2f;//+20% acc when between 2~4 distance
+        }
+
+        return modifier;
+    }
 }

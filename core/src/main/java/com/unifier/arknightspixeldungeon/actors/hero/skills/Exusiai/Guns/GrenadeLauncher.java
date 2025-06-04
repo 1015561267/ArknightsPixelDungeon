@@ -259,4 +259,18 @@ public class GrenadeLauncher extends ExusiaiSkill {
             actPriority = VFX_PRIO - 1; //always first as it could explode rightly after bounce,but after visual effect to avoid logic error
         }
     }
+
+    @Override
+    protected float gunAccuracyModifier(int from, int to, Char enemy){
+        float modifier = super.gunAccuracyModifier(from,to,enemy);
+
+        if(Dungeon.level.adjacent( from, to )) {
+            modifier -= 0.5f;//this is the hit acc modifier of bomb itself,similar to missile weapon,explosion always hit
+        }
+        else {
+            modifier += 0.5f;
+        }
+
+        return modifier;
+    }
 }

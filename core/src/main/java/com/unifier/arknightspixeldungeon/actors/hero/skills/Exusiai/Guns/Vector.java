@@ -115,4 +115,15 @@ public class Vector extends ExusiaiSkill {
             doCheckAfterShooting(from,to,burstTemp,false);
         }
     }
+
+    protected float gunAccuracyModifier(int from, int to, Char enemy){
+        float modifier = super.gunAccuracyModifier(from,to,enemy);
+        int dis = Dungeon.level.distance(from,to);
+
+        if(dis>=4) {
+            modifier -= (0.5f + 0.1f*(dis-4));//-50% acc when have a distance of 4 grids,then -10% for each grid further
+        }
+
+        return modifier;
+    }
 }
