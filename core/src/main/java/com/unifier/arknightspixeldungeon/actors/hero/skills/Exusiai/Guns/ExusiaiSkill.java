@@ -293,12 +293,14 @@ public abstract class ExusiaiSkill extends HeroSkill {
             acuStat = Char.INFINITE_ACCURACY;
         }
 
-        //same as char.hit
+        //almost same as char.hit
         if (defStat >= Char.INFINITE_EVASION){
             return false;
         } else if (acuStat >= Char.INFINITE_ACCURACY){
             return true;
         }
+
+        if (acuStat < 0) return false;//to avoid unexpected negative value due to Random.Float
 
         float acuRoll = Random.Float( acuStat );
         float defRoll = Random.Float( enemy.defenseSkill( owner ) );

@@ -27,6 +27,7 @@ import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
+import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Hex;
 import com.unifier.arknightspixeldungeon.actors.buffs.KineticDamage;
 import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
@@ -216,7 +217,9 @@ public class MeleeWeapon extends Weapon {
 
 			KindOfWeapon thisWeapon = curUser.belongings.weapon;
 			curUser.belongings.weapon = this;
-			curUser.guaranteedAttack(enemy);
+
+            Buff.affect(curUser, GuaranteedTracker.class);
+            curUser.attack(enemy);
 			curUser.belongings.weapon = thisWeapon;
 
 			if(curUser.buff(WeaponThrowTracker.class)!=null){
@@ -228,4 +231,6 @@ public class MeleeWeapon extends Weapon {
 
         super.onThrow(cell);
     }
+
+    public static class GuaranteedTracker extends FlavourBuff {}
 }

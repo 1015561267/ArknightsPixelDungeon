@@ -1,9 +1,10 @@
 package com.unifier.arknightspixeldungeon.actors.hero;
 
+import static com.unifier.arknightspixeldungeon.Dungeon.hero;
+
 import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Bleeding;
-import com.unifier.arknightspixeldungeon.actors.buffs.Bless;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Cripple;
 import com.unifier.arknightspixeldungeon.actors.buffs.FlavourBuff;
@@ -45,8 +46,6 @@ import com.watabou.utils.Random;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-
-import static com.unifier.arknightspixeldungeon.Dungeon.hero;
 
 public enum Talent {
     //Chen
@@ -714,14 +713,7 @@ public enum Talent {
 
         if(hero.pointsInTalent(HEAVY_WEAPON_MASTERY) == 2)
         {
-            float acuRoll = Random.Float( hero.attackSkill( enemy ) / 2 );
-            float defRoll = Random.Float( enemy.defenseSkill( hero ) );
-            if (hero.buff(Bless.class) != null) acuRoll *= 1.25f;
-            if (hero.buff(Hex.class) != null) acuRoll *= 0.8f;
-            if (enemy.buff(Bless.class) != null) defRoll *= 1.25f;
-            if (enemy.buff(Hex.class) != null) defRoll *= 0.8f;//FIXME Well may improve it with char.hit() later
-
-            if(acuRoll > defRoll){
+            if(Char.hit(hero,enemy,0.5f,false)){
                 int result = Random.Int(100);//20% Weakness,20% Vulnerable,20% Cripple,20% Bleeding,10% Hex,10% Paralysis
                 if(result <= 20)
                 {
