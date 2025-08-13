@@ -5,7 +5,6 @@ import com.unifier.arknightspixeldungeon.Dungeon;
 import com.unifier.arknightspixeldungeon.actors.Char;
 import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.Burning;
-import com.unifier.arknightspixeldungeon.actors.buffs.SniperSight;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vulnerable;
 import com.unifier.arknightspixeldungeon.actors.buffs.Weakness;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
@@ -20,6 +19,7 @@ import com.unifier.arknightspixeldungeon.messages.Messages;
 import com.unifier.arknightspixeldungeon.scenes.CellSelector;
 import com.unifier.arknightspixeldungeon.scenes.GameScene;
 import com.unifier.arknightspixeldungeon.sprites.CharSprite;
+import com.unifier.arknightspixeldungeon.ui.BuffIndicator;
 import com.unifier.arknightspixeldungeon.ui.QuickSlotButton;
 import com.unifier.arknightspixeldungeon.ui.SkillIcons;
 import com.unifier.arknightspixeldungeon.ui.SkillLoader;
@@ -27,6 +27,7 @@ import com.unifier.arknightspixeldungeon.utils.GLog;
 import com.unifier.arknightspixeldungeon.windows.WndExusiaiSkill;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
@@ -122,7 +123,7 @@ public class SniperRifle extends ExusiaiSkill {
 
                         float initalAngle = PointF.angle(fromP, toP)/PointF.G2R;
 
-                        Buff.affect(owner,SniperSight.class).set(initalAngle,initDistance(),degrees());
+                        Buff.affect(owner,SniperSight.class).set(fatherObject(),initalAngle,initDistance(),degrees());
 
                         ConeAOE coneAOE = new ConeAOE(owner.pos ,initDistance(),initalAngle,degrees(),Ballistica.WONT_STOP);
                         for(int i : coneAOE.cells)
@@ -156,6 +157,10 @@ public class SniperRifle extends ExusiaiSkill {
     private int initDistance() {
         return owner.viewDistance;
     }
+
+    private SniperRifle fatherObject(){
+        return this;
+    }//FIXME have to make this pass on attachment and other effect,but could there be other ways?
 
     private int degrees() {
         return 60;
@@ -245,12 +250,6 @@ public class SniperRifle extends ExusiaiSkill {
 
     @Override
     protected void doDamageCalculation(int from, int to, Char enemy){
-
-        //int unPassableCounts = 0;
-        //Ballistica ballistica = new Ballistica(from, to, Ballistica.STOP_CHARS);
-        //for(int t : ballistica.subPath(1, ballistica.dist - 1)){
-        //    if(!Dungeon.level.solid[t]) unPassableCounts++;
-        //}
 
         int damage = Random.Int(shootDamageMin(),shootDamageMax());
         int dr = enemy.drRoll();
@@ -357,4 +356,105 @@ public class SniperRifle extends ExusiaiSkill {
 
         return modifier;
     }
+
+    public static class SniperSight extends Buff{
+
+        {
+            type = Buff.buffType.POSITIVE;
+        }
+
+        public float angle = 0;
+        public int distance = 0;
+        public int degrees = 60;
+
+        private SniperRifle fatherObject;
+
+        public int distanceMax(){
+            int distance = 12;
+            if(fatherObject!=null&&fatherObject.GUN_SIGHT == Attachment.LONG_RANGE_SNIPERSCOPE){
+                distance += 2;
+            }
+            return distance;
+        }
+
+        public void set( SniperRifle fatherObject,float angle ,int initDistance,int degrees) {
+            this.fatherObject = fatherObject;
+            this.angle = angle;
+            this.distance = Math.min(initDistance,distanceMax());
+            this.degrees = degrees;
+        }
+
+        @Override
+        public int icon() {
+            return BuffIndicator.MARK;
+        }
+        //temporarily,for it should be merged into skill ui
+
+        @Override
+        public void tintIcon(Image icon) {
+            icon.hardlight(1f, 1.67f, 1f);
+        }
+
+        @Override
+        public String toString() {
+            return Messages.get(this, "name");
+        }
+
+        @Override
+        public String desc(){
+            return Messages.get(this, "desc", distance ,distanceMax());
+        }
+
+        @Override
+        public boolean act() {
+            if (target.isAlive()) {
+                if(distance<distanceMax()){
+                    distance++;
+                    Dungeon.observe();
+                    GameScene.updateFog();
+                }else{
+                    distance = distanceMax();//reset distance if attachment modified during buff
+                }
+                spend( TICK );
+            } else {
+                detach();
+            }
+            return true;
+        }
+
+        @Override
+        public boolean attachTo(Char target) {
+            if (super.attachTo(target)){
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void detach() {
+            super.detach();
+            Dungeon.observe();
+            GameScene.updateFog();
+        }
+
+        private static final String ANGLE	= "angle";
+        private static final String DISTANCE	= "distance";
+
+
+        @Override
+        public void storeInBundle( Bundle bundle ) {
+            super.storeInBundle( bundle );
+            bundle.put( ANGLE, angle );
+            bundle.put( DISTANCE, distance );
+        }
+
+        @Override
+        public void restoreFromBundle( Bundle bundle ) {
+            super.restoreFromBundle( bundle );
+            angle = bundle.getInt( ANGLE );
+            distance = bundle.getInt( DISTANCE );
+        }
+    }
 }
+
+

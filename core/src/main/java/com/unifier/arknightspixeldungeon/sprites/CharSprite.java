@@ -33,6 +33,7 @@ import com.unifier.arknightspixeldungeon.effects.IceBlock;
 import com.unifier.arknightspixeldungeon.effects.ShieldHalo;
 import com.unifier.arknightspixeldungeon.effects.Speck;
 import com.unifier.arknightspixeldungeon.effects.Splash;
+import com.unifier.arknightspixeldungeon.effects.ThermalImaging;
 import com.unifier.arknightspixeldungeon.effects.TorchHalo;
 import com.unifier.arknightspixeldungeon.effects.particles.FlameParticle;
 import com.unifier.arknightspixeldungeon.effects.particles.ShadowParticle;
@@ -90,6 +91,11 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
         BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, GLOWING, AURA
     }
 
+    public enum CustomState {//have this to avoid messing with raw codes
+        THERMALIMAGING
+    }
+
+
     protected Animation idle;
     protected Animation run;
     protected Animation attack;
@@ -115,6 +121,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
     protected ShieldHalo shield;
     protected AlphaTweener invisible;
     protected Flare aura;
+
+    protected ThermalImaging thermalImaging;
 
     protected EmoIcon emo;
     protected CharHealthIndicator health;
@@ -370,11 +378,23 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
     }
 
     private final HashSet<State> stateAdditions = new HashSet<>();
+    private final HashSet<State> stateRemovals = new HashSet<>();
+
+    private final HashSet<CustomState> customStateAdditions = new HashSet<>();
+    private final HashSet<CustomState> customStateRemovals = new HashSet<>();
+
 
     public void add(State state) {
         synchronized (State.class) {
             stateRemovals.remove(state);
             stateAdditions.add(state);
+        }
+    }
+
+    public void add(CustomState state) {
+        synchronized (State.class) {
+            customStateRemovals.remove(state);
+            customStateAdditions.add(state);
         }
     }
 
@@ -468,7 +488,14 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
         }
     }
 
-    private final HashSet<State> stateRemovals = new HashSet<>();
+    protected synchronized void processCustomStateAddition(CustomState state) {
+        switch (state) {
+            case THERMALIMAGING:
+                if (thermalImaging != null) thermalImaging.killAndErase();
+                GameScene.effect(thermalImaging = new ThermalImaging(this));
+                break;
+        }
+    }
 
     public void remove(State state) {
         synchronized (State.class) {
@@ -567,6 +594,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
         }
     }
 
+    protected synchronized void processCustomStateRemoval(CustomState state) {
+        switch (state) {
+            case THERMALIMAGING:break;
+        }
+    }
+
     @Override
     public void update() {
         if (paused && ch != null && curAnim != null && !curAnim.looped && !finished) {
@@ -589,6 +622,15 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 processStateRemoval(s);
             }
             stateRemovals.clear();
+
+            for (CustomState s : customStateAdditions) {
+                processCustomStateAddition(s);
+            }
+            customStateAdditions.clear();
+            for (CustomState s : customStateRemovals) {
+                processCustomStateRemoval(s);
+            }
+            customStateRemovals.clear();
         }
 
         if (burning != null) {
@@ -640,6 +682,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 emo.visible = visible;
             }
         }
+
+
     }
 
     @Override

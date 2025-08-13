@@ -35,12 +35,12 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Buff;
 import com.unifier.arknightspixeldungeon.actors.buffs.LockedFloor;
 import com.unifier.arknightspixeldungeon.actors.buffs.MindVision;
 import com.unifier.arknightspixeldungeon.actors.buffs.Shadows;
-import com.unifier.arknightspixeldungeon.actors.buffs.SniperSight;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
 import com.unifier.arknightspixeldungeon.actors.hero.HeroClass;
 import com.unifier.arknightspixeldungeon.actors.hero.Talent;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.GrenadeLauncher;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.effects.particles.FlowParticle;
 import com.unifier.arknightspixeldungeon.effects.particles.WindParticle;
@@ -859,7 +859,7 @@ public abstract class Level implements Bundlable {
 		boolean sighted = c.buff( Blindness.class ) == null
                 && c.buff( Shadows.class ) == null
                 && c.buff( TimekeepersHourglass.timeStasis.class ) == null
-                && c.buff(SniperSight.class) == null
+                && c.buff(SniperRifle.SniperSight.class) == null
                 && c.isAlive();
 
 		if (sighted) {
@@ -928,8 +928,8 @@ public abstract class Level implements Bundlable {
 				}
 			}
 
-            if (c.buff(SniperSight.class)!=null && c.buff(Blindness.class)==null) {
-                SniperSight t = c.buff(SniperSight.class);
+            if (c.buff(SniperRifle.SniperSight.class)!=null && c.buff(Blindness.class)==null) {
+                SniperRifle.SniperSight t = c.buff(SniperRifle.SniperSight.class);
                 ConeAOE cone = new ConeAOE(c.pos, t.distance, t.angle, t.degrees, Ballistica.WONT_STOP);
                 for (int cell : cone.cells) {
                     fieldOfView[cell] = true;

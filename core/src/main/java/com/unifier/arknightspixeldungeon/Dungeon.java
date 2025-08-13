@@ -29,8 +29,8 @@ import com.unifier.arknightspixeldungeon.actors.buffs.Blindness;
 import com.unifier.arknightspixeldungeon.actors.buffs.Light;
 import com.unifier.arknightspixeldungeon.actors.buffs.MagicalSight;
 import com.unifier.arknightspixeldungeon.actors.buffs.MindVision;
-import com.unifier.arknightspixeldungeon.actors.buffs.SniperSight;
 import com.unifier.arknightspixeldungeon.actors.hero.Hero;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.Imp;
@@ -742,7 +742,7 @@ public class Dungeon {
         }
 
         //we have to update gunSight at here,before fog of war as this is not a completion like MindVision or so,it can be narrowed and changed,and performs better as it contains a considerable amount of cells
-        if(hero.buff(SniperSight.class)!= null && hero.buff(Blindness.class)== null)
+        if(hero.buff(SniperRifle.SniperSight.class)!= null && hero.buff(Blindness.class)== null)
         {
             GameScene.updateFog();
         }

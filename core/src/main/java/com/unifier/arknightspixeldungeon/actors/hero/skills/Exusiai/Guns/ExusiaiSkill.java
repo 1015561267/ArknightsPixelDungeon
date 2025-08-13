@@ -172,6 +172,10 @@ public abstract class ExusiaiSkill extends HeroSkill {
     }
 
     protected boolean doCheckBeforeAiming(){
+
+        if(this.GUN_SIGHT == Attachment.THERMAL_IMAGING_SIGHT){
+
+        }
         return true;
     };
 

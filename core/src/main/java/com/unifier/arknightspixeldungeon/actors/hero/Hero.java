@@ -46,7 +46,6 @@ import com.unifier.arknightspixeldungeon.actors.buffs.MindVision;
 import com.unifier.arknightspixeldungeon.actors.buffs.Momentum;
 import com.unifier.arknightspixeldungeon.actors.buffs.Paralysis;
 import com.unifier.arknightspixeldungeon.actors.buffs.Regeneration;
-import com.unifier.arknightspixeldungeon.actors.buffs.SniperSight;
 import com.unifier.arknightspixeldungeon.actors.buffs.SnipersMark;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.BladeStormTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.CollectComboTracker;
@@ -57,6 +56,7 @@ import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.Refle
 import com.unifier.arknightspixeldungeon.actors.buffs.TalentRelatedTracker.SharpJudgementTracker;
 import com.unifier.arknightspixeldungeon.actors.buffs.TimeBubble;
 import com.unifier.arknightspixeldungeon.actors.buffs.Vertigo;
+import com.unifier.arknightspixeldungeon.actors.hero.skills.Exusiai.Guns.SniperRifle;
 import com.unifier.arknightspixeldungeon.actors.hero.skills.HeroSkill;
 import com.unifier.arknightspixeldungeon.actors.mobs.Mob;
 import com.unifier.arknightspixeldungeon.actors.mobs.npcs.NPC;
@@ -547,7 +547,7 @@ public class Hero extends Char {
 			speed *= momentum.speedMultiplier();
 		}
 
-		if(buff(SniperSight.class)!=null)
+		if(buff(SniperRifle.SniperSight.class)!=null)
         {
             speed *= 0.5f;
         }
